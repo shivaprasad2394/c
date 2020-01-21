@@ -1,0 +1,113 @@
+Trees
+			====
+		-->non linear data structure
+		-->first node is called as root node
+		-->node having no child is called as leaf node
+		
+		Binary Tree
+		==========
+		-->any node will have maximum of 2 child
+		-->it can be 0 child or 1 child  or 2 childs
+		
+		----------------------------------------------------
+		Binary Search Tree(BST)
+		===============
+		
+		-->ANY node will be checked with root node,if it 
+		is gretaer it will go to right subtree,if it is
+		lesser it will go  to left subtrree
+		-->no duplicates are allowed
+----------------- -----------------------------------------------
+		typedef struct tree
+		{
+			int data;
+			struct tree *rchild;
+	    		struct tree *lchild;
+		}node;
+		node *root=NULL;
+		node *memalloc(int ele)
+		{
+			node *new=(node *)malloc(sizeof(node));
+			if(new==NULL)
+			{
+				printf("cant allocte memory\n");
+				exit(2);
+			}
+			new->data=ele;
+			new->rchild=NULL;
+			new->lchild=NULL;
+			return new;
+		}
+		void insert(int ele)
+		{
+			node* new=memalloc(ele);
+			if(root==NULL)
+			{
+				root=new;
+				return;
+			}
+			node *temp=root,*par=NULL;
+			while(temp!=NULL)
+			{
+				if(ele>temp->data)
+				{
+					par=temp;
+					temp=temp->rchild;
+				}
+				else if(ele<temp->data)
+				{
+					par=temp;
+					temp=temp->lchild;
+				}
+				else
+				{
+					printf("dupliactes are not allowed\n");
+				free(new);
+				return;
+				}
+			}
+			if(ele>par->data)
+				par->rchild=new;
+			else
+				par->lchild=new;
+			
+		}
+		void inorder(node *ptr)
+		{
+			if(ptr==NULL)
+				return;
+			inorder(ptr->lchild);
+			printf("%d",ptr->data);
+			inorder(ptr->rchild);
+		}
+		void preorder(node *ptr)
+		{
+			if(ptr==NULL)
+				return;
+			printf("%d",ptr->data);
+			preorder(ptr->lchild);
+			preorder(ptr->rchild);
+		}
+		void postorder(node *ptr)
+		{
+			if(ptr==NULL)
+				return;
+			postorder(ptr->lchild);
+			postorder(ptr->rchild);
+			printf("%d",ptr->data);
+		}
+		
+		int main()
+		{
+			insert(20);
+			insert(30);
+			insert(10);
+			insert(23);
+			inorder(root);
+			printf("\n");
+			preorder(root);
+			printf("\n");
+			postorder(root);
+			printf("\n");
+		}
+

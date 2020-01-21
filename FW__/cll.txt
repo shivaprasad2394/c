@@ -1,0 +1,123 @@
+#include<stdio.h>
+#include<stdlib.h>
+typedef struct node
+{
+        int data;
+        struct node *link;
+}name;
+name *head=NULL;
+name * create(int ele)
+{
+        name *new=(name *)malloc(sizeof(name));
+        if(new==NULL)
+        {
+                printf("memory allocation failed\n");
+                return;
+	}
+        new->data=ele;
+        new->link=NULL;
+        return new;
+}
+void insertbeg(int ele)
+{
+        name *new1=create(ele);
+        if(new1==NULL)
+        {
+                printf("memory allocation failed\n");
+                return;
+        }
+        if(head==NULL)
+        {
+                head=new1;
+                new1->link=head;
+        }
+        name *temp=head;
+        while(temp->link!=head)
+                temp=temp->link;
+        temp->link=new1;
+        new1->link=head;
+        head=new1;
+}
+void delend()
+{
+        if(head==NULL)
+        {
+                printf("list is empty\n");
+                return;
+        }
+        name *temp=head;
+        name *temp1=NULL;
+        while(temp->link!=head)
+        {
+                temp1=temp;
+                temp=temp->link;
+        }
+        temp1->link=head;
+        int a=temp->data;
+        free(temp);
+        printf("%d\n",a);
+}
+void delbeg()
+{
+        if(head==NULL)
+        {
+                printf("list is empty\n");
+                return;
+        }
+        name *temp=head;
+        name *temp1=head;
+        while(temp->link!=head)
+ temp=temp->link;
+        temp->link=temp1->link;
+        head=temp1->link;
+        int a=temp1->data;
+        free(temp1);
+        printf("%d\n",a);
+}
+void insertend(int ele)
+{
+        name *new2=create(ele);
+        if(new2==NULL)
+                return;
+        if(head==NULL)
+                insertbeg(ele);
+        name *temp=head;
+        while(temp->link!=head)
+                temp=temp->link;
+        temp->link=new2;
+        new2->link=head;
+}
+void disp()
+{
+        if(head==NULL)
+        {
+                printf("list is empty\n");
+                return;
+        }
+        name *temp=head;
+        do
+        {
+                printf("%d\t",temp->data);
+                temp=temp->link;
+        }while(temp!=head);
+        printf("\n");
+}
+int main()
+{
+        insertbeg(10);
+        insertbeg(20);
+        insertbeg(30);
+        disp();
+        insertend(40);
+        insertend(50);
+        disp();
+        //insertpos(50,3);
+        //insertpos(51,3);
+        //disp();
+        delend();
+        delend();
+        disp();
+        delbeg();
+        delbeg();
+        disp();
+}

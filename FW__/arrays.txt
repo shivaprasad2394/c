@@ -1,0 +1,1015 @@
+data types
+=========
+int 
+char 
+float
+double 
+
+they are constrained by the fact that the variable of this type can hold only one value(data) at any given time
+
+if we want to store more amount of data(value) at a time?
+we require arrays 
+----------------------------------------------------------------
+			ARRAYS
+			=======
+
+	->collections of elements of similar data types
+	fixed size
+	sequenced
+	they share a common name
+	->each and every element of an array should be separated by commas and it represented by index or subscript in bracket after name
+---------------------------------------------------------------------------------------
+Declaration:
+============
+	data types array_name[size];
+
+this type of array is called as 1-D array
+---------------------------------------------------------------------------------------
+Example:
+========
+	To store the age of all the 10 students in a class?
+	
+without array:
+++++++++++++++
+		int age1;
+		int age2;
+		:
+		:
+		:
+		int age10;
+		age1=10;
+		age2=9;
+		:
+		:
+		:
+		age10=11;
+
+this becomes very complicated for declaring each and every variable for all 10 students and initialing them 
+
+with array:
++++++++++++
+		age
+		-------------------------------------------------------------
+		|      |     |     |    |     |     |    |     |      |     |    
+		|      |     |     |    |     |     |    |     |      |     |   		-------------------------------------------------------------
+		    0     1     2     3    4     5     6    7     8      9
+		
+int age[10];
+age[0]=10;
+age[3]=12;
+ and so on
+
+------------------------------------------------------------------------------------------------------------------------------------------------
+program:
+========
+1)sizeof
+	int main()
+	{
+
+		int age[10];
+		printf("%d\n",sizeof(age));//40
+	}
+-----------------------------------------------------------------
+2)assigning a value
+	int main()
+	{
+		int age[10];
+		age[0]=10;
+		age[1]=9;
+		age[2]=11;
+	}
+-------------------------------------------------------------------
+3)accessing a array a elements
+	int main()
+	{
+		int age[10];
+		age[0]=10;
+		age[1]=9;
+		age[2]=11;//assigning a value to a array
+		printf("age[0]:%d\n",age[0]);
+		printf("age[1]:%d\n",age[1]);
+		printf("age[2]:%d\n",age[2]);
+	}
+OR
+	int main()
+	{
+		int age[10],i;
+		age[0]=10;
+		age[1]=9;
+		age[2]=11;
+		for(i=0;i<10;i++)
+			printf("age[%d]:%d\n",i,age[i]);
+		printf("\n");
+	}
+OR
+	int age[10],i;
+	int main()
+	{
+		age[0]=10;
+		age[1]=9;
+		age[2]=11;
+		for(i=0;i<10;i++)
+			printf("age[%d]:%d\n",i,age[i]);
+		printf("\n");
+	}
+-----------------------------------------------------------------
+4)address of array elements
+	int main()
+        {
+                int age[10]={1,2,3,4,5,6,7,8,9,10},i;
+                for(i=0;i<10;i++)
+                        printf("age[%d]:%u\n",i,&age[i]);
+                printf("\n");
+        }  
+How the memory is allocated for array?
+
+	Q) int main()
+		{
+			int arr[5];
+			int i=5;
+			for(i=0;i<5;i++)
+				printf("%u\n",&arr[i]);
+		
+		}
+          
+-------------------------------------------------------------------------54)		5)		Array Initialization
+		=====================
+initialing a array
+		
+	a)compile time 
+	b)run time
+	
+a)run time
+	int main()
+        {
+                int age[10],i;
+                for(i=0;i<10;i++)
+                        scanf("%d",&age[i]);
+                for(i=0;i<10;i++)
+                        printf("age[%d]:%d\n",i,age[i]);
+                printf("\n");
+        }
+------------------------------------------------------
+b)compile time
+
+	Declaration
+	===========
+	data_type array_name[size]={list of elements};
+list of elements shud be separated by commas 
+ 	int main()
+        {
+                int age[10]={1,2,3,4,5,6,7,8,9,10},i;
+                for(i=0;i<10;i++)
+                        printf("age[%d]:%d\n",i,age[i]);
+                printf("\n");
+        }
+--------------------------------------
+you can omit the size int bracket the compiler allocates a sufficient space to initialize	elements
+
+	int main()
+        {
+                int age[]={1,2,3,4,5,6,7,8,9,10},i;
+                for(i=0;i<10;i++)
+                        printf("age[%d]:%d\n",i,age[i]);
+                printf("\n");
+        }
+----------------------------------------	
+	#define SIZE 10
+	int main()
+        {
+                int age[SIZE]={1,2,3,4,5,6,7,8,9,10},i;
+                for(i=0;i<SIZE;i++)
+                        printf("age[%d]:%d\n",i,age[i]);
+                printf("\n");
+        }
+-------------------------------------------
+check 
+	int size=10;
+	int main()
+	{
+		int age[size]={1,2,3,4,5,6,7,8,9,10}; //error invalid its valid if you have c99 library
+
+	}
+-----------------------------------------------
+		Partial Initialization
+		======================
+here the number of elements in an array is 10 but we hav initialized only 7 elements
+	int main()
+        {
+                int age[10]={1,2,3,4,5,6,7},i;
+                printf("sizeof:%lu\n",sizeof(age));
+                for(i=0;i<10;i++)
+                        printf("age[%d]:%d\n",i,age[i]);
+                printf("\n");
+        }
+output:
+	1 2 3 4 5 6 7 0 0 0
+------------------------------------------------------------------------
+
+Predict output
+===============
+Q) list the valid declarations?
+
+		#define max 5
+		
+		int arr[5];	//valid	
+		int arr1[max];	//valid
+		float arr2[10.2];//invalid subscript or index shud be integer  error: size of array ‘age’ has non-integer type
+	
+		int arr3['a'];//valid bcoz 'a' gives a ascii value which is of integer type
+--------------------------------------------------------------------
+Q)Find difference between below three statements
+	int a;//declaration
+	int a = 10;//initialization
+	a = 30; //assignment
+-----------------------------------------------------------------------
+int arr[10];
+	int arr[] = {1,2,4,5};
+
+is this valid?
+
+	arr[5] = {1,2,3,4};
+--------------------------------------------------------------------
+	Q) int main()
+		{
+			int arr[3];
+			int i=5;
+			arr[0]=10;
+			arr[1]=20;
+			arr[2]=30;
+			for(i=0;i<5;i++)
+				printf("%d\t",arr[i]);
+	
+		}
+-----------------------------------------------------------------------
+
+ Q) is it Possible to assign an element later to the already assigned array?
+		arr[4]=40; 	
+
+-----------------------------------------------------------------------------
+	
+		arr[6]=60;
+	/* their is no array bound checking in c ,so it leads to 			unpredictable behaviour.*/ 
+----------------------------------------------------------------------------
+
+
+---->when we are assigning only the elements which are 
+assigned will be getting the values other elements will be 
+holding garbage value.
+
+	-----> their is no order in accessing the elements.
+	
+-------------------------------------------------------------------
+int main()
+{
+        int a[3]={1,2,3,4,5};
+        int i;
+        for(i=0;i<5;i++)
+                printf("%d\t",a[i]);
+        printf("\n");
+}
+ramya@ramya-Inspiron-3521:~/cprgm/array$ gcc 7.c
+7.c: In function ‘main’:
+7.c:4:2: warning: excess elements in array initializer [enabled by default]
+  int a[3]={1,2,3,4,5};
+  ^
+7.c:4:2: warning: (near initialization for ‘a’) [enabled by default]
+7.c:4:2: warning: excess elements in array initializer [enabled by default]
+7.c:4:2: warning: (near initialization for ‘a’) [enabled by default]
+ramya@ramya-Inspiron-3521:~/cprgm/array$ ./a.out 
+1	2	3	0	0	
+---------------------------------------------------------------------
+Assignment
+===========
+Q)	WAP to find the sum of elements of an array
+Q)	WAP to find the largest element in an array
+Q)	WAP to reverse the array elements
+Q)	WAP to find the third largest element in an array
+1.Wap to print the even numbers of the array
+2.wap to print the odd numbers of an array
+3. wap to compute the sum of all even numbers of an array and all odd numbers of an array and print them seperately
+4. wap to print the array in the reverse order
+5. wap to print the nth even number from the beginning of array
+6.wap to print the nth even number from the end of array.
+7.wap to print the prime numbers of an array.
+-----------------------------------------------------
+	Q) Predict the output?
+	#define MAX 5
+	int arr[MAX]={10,20,30,40,50};
+	int brr[MAX];
+	brr=arr;	
+------------------------------------------------------------
+	To copy one array to another array
+	=============================
+		#define size 5
+		int main()
+		{
+			int arr[size]={10,20,30,40,50};
+			int b[size];
+			int i;
+`			for(i=0;i<size;i++)
+				b[i]=arr[i];
+			for(i=0;i<size;i++)
+				printf("%d\t",b[i]);
+		
+		}
+--------------------------------------------------------------------
+
+	How to pass 1-D array to function
+	=================================
+	
+function declaration
+function call
+function definition
+	
+		syntax:
+		=======
+	function declaration :
+	====================
+			r_type funname(d_type arrayname[]);
+		----> size can be skipped
+
+	function definiotion:
+	====================
+			r_type funname(d_type arrayname[][])
+			{
+				statements;
+			}
+
+	function call:
+	==============
+			funname(arrayname);
+		
+void display(datatype arrayname[],int number of elements);->function declaration
+
+display(arrayname); ->function call
+
+
+void display(datatype arrayname[],int number of elements)
+{
+
+
+} -> function definition
+
+#include<stdio.h>
+void display(int a[],int n);
+OR
+void display(int [],int );
+int main()
+{
+        int a[]={1,2,3,4,5};
+        printf("sizeof:%lu\n",sizeof(a));
+        display(a,5);
+        return 0;
+}
+void display(int a[],int n)
+{
+        printf("INSIDE DISPLAY function\n");
+        int i;
+        for(i=0;i<n;i++)
+                printf("a[%d]:%d\n",i,a[i]);
+}
+--------------------------------------------------------
+#include<stdio.h>
+int i;
+void display(int a[],int n);
+int main()
+{
+	int a[]={1,2,3,4,5};
+	printf("sizeof:%lu\n",sizeof(a));
+	printf("bfore calling func\n");
+	for(i=0;i<5;i++)
+		printf("a[%d]:%d\n",i,a[i]);
+	display(a,5);
+	printf("after calling func\n");
+	for(i=0;i<5;i++)
+		printf("a[%d]:%d\n",i,a[i]);
+	return 0;
+}
+void display(int a[],int n)
+{
+	printf("INSIDE DISPLAY function\n");
+	a[0]=10;
+	a[2]=30;
+	a[4]=50;
+	for(i=0;i<n;i++)
+		printf("a[%d]:%d\n",i,a[i]);
+}
+NOTE:what ever the changes you make in the function for a array it will affected to original array
+------------------------------------------------------------------
+	Searching Algorithm
+	=================
+	Linear Search
+	Binary Search
+		
+	Linear Search
+	============
+	-->can be applied for both sorted or unsorted array
+	-->Worst case complexity is O(n) if n elemnts are there
+int linearsearch(int [],int,int);
+		int main()
+		{
+			int arr[]={10,20,30,40,50};
+			int key=10;
+			int pos=linearsearch(arr,key,5);
+			if(pos)
+				printf("elemnt found at %d position\n",pos);
+			else
+				pritnf("elemnt not found\n");
+				
+		}
+		int linearsearch(int a[],int key,int n)
+		{
+			int i;
+			for(i=0;i<n;i++)
+			{
+				if(key==arr[i])
+					return i+1;
+			}
+			return 0;
+		}
+------------------------------------------------------------
+			
+		Binary Search
+		============
+		-->can be applied for sorted  array
+		-->Worst case complexity is O(log2n) if n elemnts are there
+
+
+
+		int binarysearch(int [],int,int);
+		int main()
+		{
+			int arr[]={10,20,30,40,50};
+			int key=10;
+			int pos=binarysearch(arr,key,5);
+			if(pos)
+				printf("elemnt found at %d position\n",pos);
+			else
+				pritnf("elemnt not found\n");
+				
+		}
+		int binarysearch(int a[],int key,int n)
+		{
+			int low,mid,high;
+			low=0;
+			high=n-1;
+			while(low<=high)
+			{
+				mid=(low+high)/2;
+				if(a[mid]==key)
+					return mid+1;
+				else if(key>a[mid])
+					low=mid+1;
+				else
+					high=mid-1;
+			}
+			return 0;
+		}
+----------------------------------------------------------------------------
+	Sorting
+	========
+
+	Bubble sort
+	===========
+->we checking the adjacent elements in a array if they are greather we will swap it at same time
+->arr[6] array of 6 elements 
+	arr[0] arr[1] arr[2] arr[3] arr[4] arr[5]
+if(arr[0] > arr[1])
+	exchange arr[0] with arr[1]
+otherwise leave it
+if(arr[1]>arr[2])
+	exchange arr[1] with arr[2]
+
+--------------------------------------------------------------------
+Sorting in ascending order
+==========================
+#include<stdio.h>
+int i,j;
+int main()
+{
+        int a[]={5,11,8,2,6,1};
+        int n=sizeof(a)/sizeof(a[0]);
+        printf("array\n");
+        for(i=0;i<n;i++)
+                printf("%d\t",a[i]);
+        printf("\n");
+        bubble(a,n);
+        return 0;
+}
+int bubble(int a[],int n)
+{
+        int temp;
+        for(i=0;i<n-1;i++)
+        {
+                for(j=0;j<n-1-i;j++)
+                {
+                        if(a[j]>a[j+1])
+                        {
+                                temp=a[j];
+                                a[j]=a[j+1];
+                                a[j+1]=temp;
+                        }
+                }
+        }
+        printf("sorted array\n");
+        for(i=0;i<n;i++)
+                printf("%d\t",a[i]);
+        printf("\n");
+}
+---------------------------------------------------------------------
+Sorting in descending order
+===========================
+#include<stdio.h>
+int i,j;
+int main()
+{
+        int a[]={5,11,8,2,6,1};
+        int n=sizeof(a)/sizeof(a[0]);
+        printf("array\n");
+        for(i=0;i<n;i++)
+                printf("%d\t",a[i]);
+        printf("\n");
+        bubble(a,n);
+        return 0;
+}
+int bubble(int a[],int n)
+{
+        int temp;
+        for(i=0;i<n-1;i++)
+        {
+                for(j=0;j<n-1-i;j++)
+                {
+                        if(a[j]<a[j+1])
+                        {
+                                temp=a[j];
+                                a[j]=a[j+1];
+                                a[j+1]=temp;
+                        }
+                }
+        }
+        printf("sorted array\n");
+        for(i=0;i<n;i++)
+                printf("%d\t",a[i]);
+        printf("\n");
+}
+--------------------------------------------------------------------
+with this input
+================
+		2,1,11,8,5,6
+#include<stdio.h>
+int i,j;
+int main()
+{
+        int a[]={2,1,11,8,5,6};
+        int n=sizeof(a)/sizeof(a[0]);
+        printf("array\n");
+        for(i=0;i<n;i++)
+                printf("%d\t",a[i]);
+        printf("\n");
+        bubble(a,n);
+        return 0;
+}
+int bubble(int a[],int n)
+{
+        int temp,xchange;
+        for(i=0;i<n-1;i++)
+        {
+                xchange=0;
+                for(j=0;j<n-1-i;j++)
+                {
+                        if(a[j]<a[j+1])
+                        {
+                                temp=a[j];
+                                a[j]=a[j+1];
+                                a[j+1]=temp;
+                                xchange++;
+                        }
+                }
+                if(xchange==0)
+                break;
+        }
+        printf("sorted array\n");
+        for(i=0;i<n;i++)
+                printf("%d\t",a[i]);
+        printf("\n");
+}
+--------------------------------------------------------------------
+Q) find the smallest element of the array and swap to 0th element of the array	
+	Selection sort
+	==============
+->find the smallest element in an array and place in first place
+->find the second smallest element in an array and place in second  place and so on..
+in each iteration it selects the smallest element and place in the right place
+
+Pass 1:search fo smallest element from 
+arr[0]-------arr[n-1]
+exchange with arr[0]
+
+Pass 2:search fo smallest element from
+arr[1]--------arr[n-1]
+exchange with arr[1]
+
+Result now arr[0] ,arr[1] are sorted 
+
+and so on
+Pass n-1
+till the end of the array arr[n-1]
+
+Sorting in ascending order
+==========================
+#include<stdio.h>
+int i;
+int main()
+{
+        int a[]={5,11,8,2,6,1};
+        int n=sizeof(a)/sizeof(a[0]);
+        printf("array\n");
+        for(i=0;i<n;i++)
+                printf("%d\t",a[i]);
+        printf("\n");
+        selection(a,n);
+        return 0;
+}
+int selection(int a[],int n)
+{
+        int i,min,j,temp;
+        for(i=0;i<n-1;i++)
+        {
+                min=i;
+                for(j=i+1;j<n;j++)
+                {
+                        if(a[min]>a[j])
+                        min=j;
+                }
+                if(min!=i)
+                {
+                        temp=a[i];
+                        a[i]=a[min];
+                        a[min]=temp;
+                }
+        }
+        printf("sorted array\n");
+        for(i=0;i<n;i++)
+                printf("%d\t",a[i]);
+        printf("\n");
+}
+---------------------------------------------------------------------
+Sorting in descending order
+===========================
+
+#include<stdio.h>
+int i;
+int main()
+{
+        int a[]={5,11,8,2,6,1};
+        int n=sizeof(a)/sizeof(a[0]);
+        printf("array\n");
+        for(i=0;i<n;i++)
+                printf("%d\t",a[i]);
+        printf("\n");
+        selection(a,n);
+        return 0;
+}
+int selection(int a[],int n)
+{
+        int i,min,j,temp;
+        for(i=0;i<n-1;i++)
+        {
+                min=i;
+                for(j=i+1;j<n;j++)
+                {
+                        if(a[min]<a[j])
+                        min=j;
+                }
+                if(min!=i)
+                {
+                        temp=a[i];
+                        a[i]=a[min];
+                        a[min]=temp;
+                }
+        }
+        printf("sorted array\n");
+        for(i=0;i<n;i++)
+                printf("%d\t",a[i]);
+        printf("\n");
+}
+---------------------------------------------------------------------
+		2D-array
+		========
+its called as matrix
+represented by two subscript
+Declaration
+===========
+	datatype arrayname[ROW][COL];	
+
+int a[2][3];
+
+two rows
+three colums
+
+sizeof and accessing the matrix elements
+=========================================
+#include<stdio.h>
+int i,j;
+int a[2][3];
+int main()
+{
+//      int a[2][3];
+        printf("sizeof:%d\n",sizeof(a));
+        for(i=0;i<2;i++){
+                for(j=0;j<3;j++)
+                        printf("%d\t",a[i][j]);
+                printf("\n");
+        }
+} 
+----------------------------------------------------
+How the memory allocated for matrix?
+====================================
+
+#include<stdio.h>
+int i,j;
+int a[2][3];
+int main()
+{
+//	int a[2][3];
+	for(i=0;i<2;i++){
+		for(j=0;j<3;j++)
+			printf("%u\t",&a[i][j]);
+		printf("\n");
+	}
+}
+----------------------------------------------------
+Initializing elements to matrix
+===============================
+a)run time
+b)compile time
+
+
+a)run time
+===========
+#include<stdio.h>
+int i,j;
+#define ROW 2
+#define COL 3
+int main()
+{
+        int a[ROW][COL];
+        for(i=0;i<ROW;i++)
+                for(j=0;j<COL;j++)
+                        scanf("%d",&a[i][j]);
+        for(i=0;i<ROW;i++){
+                for(j=0;j<COL;j++)
+                        printf("%d\t",a[i][j]);
+                printf("\n");
+        }
+}
+-----------------------------------------------------------
+b)compile time
+===============
+	Declaration
+	===========
+		datatype arrayname[ROW][COL]={list of values};	
+
+list of values are separated by commas
+
+#include<stdio.h>
+int i,j;
+#define ROW 2
+#define COL 3
+int main()
+{
+	int a[ROW][COL]={1,2,3,4,5,6};
+	for(i=0;i<ROW;i++){
+		for(j=0;j<COL;j++)
+			printf("%d\t",a[i][j]);
+		printf("\n");
+	}
+}
+----------------------------------------------------
+#include<stdio.h>
+int i,j;
+#define ROW 2
+#define COL 3
+int main()
+{
+//	int a[ROW][COL]={1,2,3,4,5,6};
+	int a[][COL]={1,2,3,4,5,6};//row size can be omitted
+	for(i=0;i<ROW;i++){
+		for(j=0;j<COL;j++)
+			printf("%d\t",a[i][j]);
+		printf("\n");
+	}
+}
+----------------------------------------------------------
+PArtial initialiazation
+=======================
+#include<stdio.h>
+int i,j;
+#define ROW 2
+#define COL 3
+int main()
+{
+//	int a[ROW][COL]={1,2,3,4,5,6};
+	int a[][COL]={1,2,3,4};//row size can be omitted
+	for(i=0;i<ROW;i++){
+		for(j=0;j<COL;j++)
+			printf("%d\t",a[i][j]);
+		printf("\n");
+	}
+}
+./a.out 
+1	2	3	
+4	0	0	
+-----------------------------------------------------------
+	int a[][COL]={{1,2,3},{4}};//row size can be omitted valid
+	int a[][COL]={{1,2,3},{4,5,6}};//row size can be omitted valid
+	int a[][COL]={{1,2},{3,4,5}};//row size can be omitted
+	 int a[][COL]={{1},{3,4,5}};//row size can be omitted valid
+	 int a[][COL]={
+                        {1},
+                        {3,4,5}
+                };//row size can be omitted
+	 int a[][COL]={[0][2]=2,[1][1]=3,4};//row size can be omitted
+	  int a[ROW][COL]={1,2,3,4,5,6,7};//warning: excess elements in array initializer [enabled by default]
+  int a[ROW][COL]={1,2,3,4,5,6,7};
+
+--------------------------------------------------------------------------------
+	Q) which all are valid 
+
+		int arr2[3][3]={1,2,3,4,5,6,7,8,9};	
+		int arr3[3][3]={1,2,3,4};		
+		int arr4[3][3]={{1},{2,3},{4}}		
+		int arr[]={1,2,3,4,5};	
+		int arr2[][]={1,2,3,4,5};
+
+----------------------------------------------------------------------------
+Assignment
+==========
+	ADD two matrix
+	Transpose of a matrix
+	multiple the two matrix
+	Rotate the matrix by 90 degree
+-----------------------------------------------------------------------------
+	How to passs 2-D array to function
+	==================================
+	>> Write a display function, which will print all elements in 
+		a matrix?
+		
+		syntax:
+		=======
+	function declaration :
+	====================
+			r_type funname(d_type arr[row][col]);
+		----> row can be skipped but col is must
+
+	function definiotion:
+	====================
+			r_type funname(d_type arr[row][col])
+			{
+				statements;
+			}
+
+	function call:
+	==============
+			funname(arrayname);
+		
+		void fun(int [][3],int);
+		int main()
+		{
+			int arr[2][3];
+			printf("%d",sizeof(arr));//24
+			fun(arr,2);
+		}
+		void fun(int a[][3],int row)
+		{
+		}
+----------------------------------------------------------------------------
+	Predict the output ?
+	
+	main()
+	{
+		int arr[][3] = {1,2,3,4,5,6,7};
+		printf("%d\n", arr[2][2]);//0
+	}	
+
+----------------------------------------------------------------------------
+	Q) Predict the output?
+
+	main()
+	{
+		int arr[][3] = {1,2,3,4,5,6,7};
+		printf("%d\n", sizeof(arr));//36
+	}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+		
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

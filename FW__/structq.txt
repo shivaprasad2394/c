@@ -1,0 +1,509 @@
+What is the output of this C code?
+        #include <stdio.h>
+        struct student
+        {
+            int no = 5;
+            char name[20];
+        };
+
+        void main()
+        {
+            struct student s;
+            s.no = 8;
+            printf("hello");
+        }
+
+a) Nothing
+b) Compile time error
+c) hello
+d) Varies
+-------------------------------------------------------
+What is the output of this C code?
+
+        #include <stdio.h>
+        struct student
+        {
+            int no;
+            char name[20];
+        };
+
+        void main()
+        {
+            student s;
+            s.no = 8;
+            printf("hello");
+        }
+
+a) Nothing
+b) hello
+c) Compile time error
+d) Varies
+--------------------------------------
+#include <stdio.h>
+	
+        void main()
+        {
+            struct student
+            {
+                int no;
+                char name[20];
+            };
+            struct student s;
+            s.no = 8;
+            printf("%d", s.no);
+
+        }
+
+advertisements
+a) Nothing
+b) Compile time error
+c) Junk
+d) 8
+-----------------------------------------------------
+What is the output of this C code?
+
+        #include <stdio.h>
+        void main()
+        {
+            struct student
+            {
+                int no;
+                char name[20];
+            };
+            struct student s;
+            no = 8;
+            printf("%d", no);
+        }
+
+a) Nothing
+b) Compile time error
+c) Junk
+d) 8
+-----------------------------------------------------
+What is the output of this C code?
+        #include <stdio.h>
+        struct
+        {
+            int k;
+            char c;
+        };
+        int main()
+        {
+            struct p;
+            p.k = 10;
+            printf("%d\n", p.k);
+        }
+
+a) Compile time error
+b) 10
+c) Undefined behaviour
+d) Segmentation fault
+----------------------------------------------------------------
+ #include <stdio.h>
+        struct p
+        {
+            int k;
+            char c;
+        };
+	struct q
+        {
+            int k;
+            char c;
+        };
+        int p = 10;
+	char c=10;
+	int k=20;
+        int main()
+        {
+
+            struct p x;
+            x.k = 10;
+            printf("%d %d\n", x.k, p);
+        }
+
+a) Compile time error
+b) 10 10
+c) Depends on the standard
+d) Depends on the compiler
+-----------------------------------------------
+Which of the given option is the correct method for initialization?
+    typedef char *string;
+===================================
+
+a) *string *p = “Hello”;
+b) string p = “Hello”;
+c) *string p = ‘A’;
+d) Not more than one space should be given when using typedef
+-------------------------------------------------------------------
+For the following expression to work, which option should be selected.
+    string p = “HELLO”;
+a) typedef char [] string;
+b) typedef char *string;
+c) Both (a) and (b)
+d) Such expression cannot be generated in C
+----------------------------------------------------------
+typdef char s[10];
+
+s p="hello"
+------------------------------------------------------
+
+  1. What is the output of this C code?
+
+        #include <stdio.h>
+        typedef struct student
+        {
+            char *a;
+        }stu;
+        void main()
+        {
+            struct stu s;
+            s.a = "hi";
+            printf("%s", s.a);
+        }
+
+a) Compile time error
+b) Varies
+c) hi
+d) h
+----------------------------------------------------
+ What is the output of this C code?
+        #include <stdio.h>
+        typedef struct p
+        {
+            int x, y;
+        };
+
+        int main()
+        {
+            p k1 = {1, 2};
+            printf("%d\n", k1.x);
+        }
+
+a) Compile time error
+b) 1
+c) 0
+d) Depends on the standard
+------------------------------------------------------------------
+What is the output of this C code?
+
+        #include <stdio.h>
+        typedef struct p
+        {
+            int x, y;
+        }k = {1, 2};
+        int main()
+        {
+            p k1 = k;
+            printf("%d\n", k1.x);
+        }
+
+a) Compile time error
+b) 1
+c) 0
+d) Depends on the standard
+--------------------------------------------------------
+#include <stdio.h>
+        typedef struct student
+        {
+            char *a;
+        }stu;
+        void main()
+        {
+            stu s;
+            s.a = "hi";
+            printf("%s", s.a);
+        }
+a) Compile time error
+b) Varies
+c) hi
+d) h
+------------------------------------------------
+1. Which of the following are themselves a collection of different data types?
+a) string
+b) structures
+c) char
+d) All of the mentioned
+--------------------------------------------------
+2. Which of the following cannot be a structure member?
+a) Another structure
+b) Function
+c) Array
+d) None of the mentioned
+-----------------------------------------------------
+ Which of the following structure declaration will throw an error?
+a) struct temp{}s;
+    main(){}
+b) struct temp{};
+    struct temp s;
+    main(){}
+c) struct temp s;
+    struct temp{};
+    main(){}
+d) None of the mentioned
+--------------------------------------------------------
+What is the output of this C code?
+
+        #include <stdio.h>
+        struct
+        {
+            int k;
+            char c;
+        };
+        int main()
+        {
+            struct p;
+            p.k = 10;
+            printf("%d\n", p.k);
+        }
+
+a) Compile time error
+b) 10
+c) Undefined behaviour
+d) Segmentation fault
+-------------------------------------------------
+6. What is the output of this C code?
+
+        #include <stdio.h>
+        struct p
+        {
+            int k;
+            char c;
+            float f;
+        };
+        int p = 10;
+        int main()
+        {
+            struct p x = {1, 97};
+            printf("%f %d\n", x.f, p);
+        }
+--------------------------------------------------
+1. The correct syntax to access the member of the ith structure in the array of structures is?
+Assuming: 
+struct temp
+    {
+        int b;
+    }s[50];
+a) s.b.[i];
+b) s.[i].b;
+c) s.b[i];
+d) s[i].b;
+
+------------------------------------------------
+2. Comment on the output of this C code?
+
+        #include <stdio.h>
+        struct temp
+        {
+            int a;
+            int b;
+            int c;
+        };
+        main()
+        {
+            struct temp p[] = {{1, 2, 3}, {4, 5, 6}, {7, 8, 9}};
+        }
+a) No Compile time error, generates an array of structure of size 3
+b) No Compile time error, generates an array of structure of size 9
+c) Compile time error, illegal declaration of a multidimensional array
+d) Compile time error, illegal assignment to members of structure
+----------------------------------------------------------
+        #include <stdio.h>
+        struct temp
+        {
+            int a;
+            int b;
+            int c;
+        } p[] = {0};
+        main()
+        {
+            printf("%d", sizeof(p));
+        }
+
+
+a) 4
+b) 12
+c) 16
+d) Can’t be estimated due to ambigous initialization of array
+-------------------------------------------------------------
+What is the output of this C code?
+        #include <stdio.h>
+        struct student
+        {
+            char *name;
+        };
+        struct student s[2];
+        void main()
+        {
+            s[0].name = "alan";
+            s[1] = s[0];
+            printf("%s%s", s[0].name, s[1].name);
+            s[1].name = "turing";
+            printf("%s%s", s[0].name, s[1].name);
+        }
+
+a) alan alan alan turing
+b) alan alan turing turing
+c) alan turing alan turing
+d) Run time error
+----------------------------------------------------------------
+What is the correct syntax to declare a function foo() which receives an array of structure in     function?
+a) void foo(struct *var);
+b) void foo(struct *var[]);
+c) void foo(struct var);
+d) None of the mentioned
+--------------------------------------------------------------
+7. What is the output of this C code?
+
+        #include <stdio.h>
+        struct student
+        {
+            char *name;
+        };
+        struct student s[2], r[2];
+        void main()
+        {
+            s[0].name = "alan";
+            s[1] = s[0];
+            r = s;
+            printf("%s%s", r[0].name, r[1].name);
+        }
+
+a) alan alan
+b) Compile time error
+c) Varies
+d) Nothing
+-----------------------------------------------------------
+ What is the output of this C code?
+
+        #include <stdio.h>
+        struct student
+        {
+		
+        };
+        void main()
+        {
+            struct student s[2];
+            printf("%d", sizeof(s));
+        }
+
+a) 2
+b) 4
+c) 8
+d) 0
+-------------------------------------------------------
+1. What is the output of this C code?
+        #include <stdio.h>
+        struct point
+        {
+            int x;
+            int y;
+        };
+        void foo(struct point*);
+        int main()
+        {
+            struct point p1[]  =  {1, 2, 3, 4};
+            foo(p1);
+        }
+        void foo(struct point p[])
+        {
+            printf("%d\n", p[1].x);
+        }
+
+a) Compile time error
+b) 3
+c) 2
+d) 1
+----------------------------------------------------------
+What is the output of this C code?
+        #include <stdio.h>
+        struct student
+        {
+           char *c;
+        };
+        void main()
+        {
+            struct student s[2];
+            printf("%d", sizeof(s));
+        }
+a) 2
+b) 4
+c) 16
+d) 8
+----------------------------------------------------------
+Q)
+   		struct emp
+		{
+			int a;
+			char ch;
+		}s1={100,'a'};
+		int main()
+		{
+			struct emp *ptr=&s1;
+			printf("%d  %c",ptr->a,ptr->ch);
+		}
+		
+-----------------------------------------------------------------------------
+
+
+		structure pointer to structure arrays:
+		------------------------------------------------
+	Q)	struct
+		{
+		  char *name;
+		  int emp_id;
+		}emp1={"STEPHEN",123},*p;
+
+		p=&emp1;
+
+		printf("%c  %s",p->name[2],p->name+2);
+		printf("%c  %c",*p->name+1,*(p->name+1)); 
+
+
+------------------------------------------------------------------------------
+
+
+		struct tag
+		{
+			char name[18];
+			int id;
+		}s1={"cranes",34};
+		int main(
+		{
+			struct tag s2;
+			s2=s1;
+
+			printf("%s  %d",s2.name,s2.id);
+			struct tag s3;
+
+			s3=s2+s1;
+		}
+------------------------------------------------------------------------
+
+		is this valid?
+		=============
+
+		struct o1
+		{
+			int a;
+		};
+		struct o2
+		{
+			int b;
+			struct o1 j;
+		};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

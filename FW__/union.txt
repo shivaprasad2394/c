@@ -1,0 +1,236 @@
+Union
+=======
+-->	derived datatype it also like a structure which is a collections of different datatypes 
+-->	but the difference between union and structure is the way the memory is allocated for a member
+--> the diff b/w structure and union
+	structure
+=========================
+	each member has its own memory allocated.
+
+
+union
+=========
+	all members share the same memory location
+
+	it allocated memory to largest member of union
+	since all members shares same memory we can use only one memeber at a time.
+	its used for saving the memory.
+	
+the union when its not necessary to use all members of union at time
+
+declaration
+============
+struct tag
+{
+	d_type mem1;
+	d_type mem2;
+
+}var;
+
+
+---------------------------------------------------------------------------------------
+syntax:
+=====
+union tag
+{
+	d_type mem1;
+	d_type mem2;
+
+}var;
+
+	to access members  var.mem1=10;
+---------------------------------------------------------
+int main()
+		{
+			printf("%d",sizeof(u1));//4
+			printf("%d",sizeof(s1));//12
+			printf("%d",u1.data);//12
+			u1.ch='h';
+			printf("%c",u1.ch);//h
+			u1.f=89.9;
+			printf("%f",u1.f);//89.9
+		}
+-->size of union will be size of its highest datamember
+-->union will follow shared memory concept
+-->only one datamember can be initialised at a time
+--> you can initialize a union but you can give only one value by default it goes to first memeber
+union stu1
+{
+        int roll;
+        char grade;
+        float per;
+}u={10};
+now roll is 10
+-----------------------------------------------------------------------
+program to compare the memeory allocated for the union and structure
+=======================================================================
+#include<stdio.h>
+struct stu
+{
+        int roll;
+        char grade;
+        float per;
+}v={10,'a',56.78};
+union stu1
+{
+        int roll;
+        char grade;
+        float per;
+}u={10,'b',45.78};
+int main()
+{
+        printf(" %d %d \n",sizeof(u),sizeof(v));
+        printf("%p %p %p\n",&v.roll,&v.grade,&v.per);
+
+	printf("%p %p %p\n",&u.roll,&u.grade,&u.per);
+        printf("union %d %c %f\n",u.roll,u.grade,u.per);
+        u.roll=20;
+        printf("%d %d",u.roll,u.grade);
+
+
+}
+----------------------------------------------------------------
+			union tag
+			{
+				int ralign;
+				int lalign;
+			
+			}mem;
+			int main()
+			{
+
+				printf("%u\n",&mem.ralign);
+				printf("%u\n",&mem.lalign);
+				int d;
+				while(1)
+				{
+					printf("enetr the choice\n");
+					scanf("%d",&d);
+					switch(d)
+					{
+						case 1:mem.rallign=60;
+							break;
+						case 2:mem.lalign=40;
+							break;
+							
+					}
+				}
+				if(mem.ralign==60)
+					fun();
+				else if(mem.lalign==40)
+					fun2();
+			}
+--------------------------------------------------------------------------------------
+A structure can be member of union and union may be member of structure
+============================================================================
+union may be member of structure
+=======================================
+union result
+{
+	int marks;
+	char grade;
+};
+struct student
+{
+	char name[10];
+	int rollno;
+	union result performance;
+}stu;
+
+accessing
+	stu.performance.grade for grade of a student
+	stu.performance.marks for marks of a student
+-------------------------------------------------------------- 
+union may be member of structure
+=================================
+union stu
+{
+	struct stu1
+	{
+		int m1;
+		int m2;
+		int m3;
+		int m4;
+	}u;
+}v;
+-------------------------------------------------------------------------------------
+union tag
+{
+	int a;
+	char b;
+}varsity;
+main()
+{
+	varsity.a=0x1234;
+	varsity.b=varsity.b| 0x8;
+	printf("%x  %x",varsity.a,varsity.b);
+}
+
+-----------------------------------------------------------
+
+		union byte
+		{
+			int x;
+			char byte[4];
+
+		}obj={0x12345678};
+		int main()
+		{
+			printf("%x",obj.byte[1]);
+		}
+-----------------------------------------------------------------
+	union data
+		{
+			struct s1
+			{
+				char a,b,c,d;
+			}s1;
+			struct s2
+			{
+				short int i,j;
+			}s2;
+			int z;
+		}u;
+		main()
+		{
+		u.s1.a=3;
+		u.s1.b=2;
+		u.s1.c=3;
+		u.s1.d=4;
+		printf("%x %x\n",u.s2.i,u.s2.j);
+		printf("%x\n",u.z);
+		}
+----------------------------------------------------------------
+other features of union
+=======================
+	1)array of unions
+	2)passing union to function
+	3)pointers to union
+	4)unions can be nested
+	5)unions can be selfreferencial like structure
+
+-------------------------------------------------------------------------
+program to demonstrate array of unions to hold the values of diffrent data types
+=================================================================================
+union num
+{
+	int i;
+	long int l;
+	char c;
+	float f;	
+};
+int main()
+{
+	union num arr[4]; array of unions
+	arr[0].i=10;
+	arr[1].l=23;
+	arr[2].c='a';
+	arr[3].f=23.14;
+	printf("arr[0]=%d\t",arr[0].i);
+	printf("arr[1]=%d\t",arr[1].l);
+	printf("arr[2]=%c\t",arr[2].c);
+	printf("arr[3]=%f\t",arr[3].f);
+}
+
+arr[0]=10	arr[1]=23	arr[2]=a	arr[3]=23.139999	
+----------------------------------------------------------------------------------

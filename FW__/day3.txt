@@ -1,0 +1,218 @@
+Bitwise  Operator
+			=================
+			|
+			&
+			^
+			~     unary
+			<<
+			>>
+
+
+			|
+			==
+			bit1  bit2  res
+			0      0     0
+			0     1      1
+			1      0      1
+			1      1      1
+
+			&
+			==
+			bit1  bit2  res
+			0      0     0
+			0     1      0
+			1      0      0
+			1      1      1
+
+
+			^
+			==
+			bit1  bit2  res
+			0      0     0
+			0     1      1
+			1      0      1
+			1      1     0
+
+------------------------------------------------------------------------
+			9  &&  8   -->1
+			9 & 8    -->8
+			1001
+			1000
+			------
+			1000
+-----------------------------------------------------------------------
+			7 &  1   -->1
+			111
+			001
+			----
+			001
+------------------------------------------------------------------
+			~   -->1's compliment
+			~0   -->11111111111111111
+			
+			!0  -->1
+-----------------------------------------------------------------------
+			<<  left shift
+			>> right shift
+-----------------------------------------------------------
+				Comma Operator
+				==============
+				,   -->sepaarting expression
+
+				int main()
+				{
+					int a=10,20,30;//invalid
+				}
+				int main()
+				{
+					int a=(10,20,30);//valid
+					printf("%d\n",a);//30
+					int b=30,c=45;
+					c=(a=20,b=100,a=400);
+					printf("%d%d%d",a,b,c);//400  100 400
+				}
+--------------------------------------------------------------------------------------
+					shorthand operator
+						========
+					+=,-=,*=...
+					int a=10;
+					a+=3;
+					//a=a+3
+---------------------------------------------------------------------------
+					Control Flow
+					===========
+					Control Statemnets
+					
+					Selection Statement
+					Iterative Statement
+					Jump Statements
+
+
+					Selection Statement
+					-->conditionla operator
+					
+					if   -->one way selection
+					==
+					if(condition)
+					{
+						statemnts;
+					}
+
+					int  num;
+					scanf("%d",&num);
+					if(num&1)
+						printf("odd number\n");
+--------------------------------------------------------------------------
+				if  else    ->two way selection 
+				if(condition)
+				{
+				}
+				else
+				{
+				}
+-----------------------------------------------------
+				int  num;
+				scanf("%d",&num);
+				if(num&1)
+					printf("odd number\n");	
+				else
+					printf("even numbert\n");
+--------------------------------------------------------------------------------------
+				int main()
+				{
+					int a=20,b=30;
+					if(a==20)
+						a=a+2;
+					else
+						b=b+2;
+						a=a+4;
+					printf("%d %d\n",a,b);//26 30
+						
+				}
+----------------------------------------------------------------------------------------------
+				if(-7)
+					printf("inside if\n");
+				else
+					printf("inside else\n");
+				//inside if
+----------------------------------------------------------------------------------
+				Dangling else
+				int main()
+				{
+					int a=1;
+					if(a==2)
+					if(a==3)
+					a=a*2;
+					else
+					a=a*3;
+					printf("%d\n",a);//1
+				}
+--------------------------------------------------------------------------------
+				Greatest among 3 numbers using conditionla operator
+				==========================================
+				int max=a>b&&a>c?a:b>c?b:c;
+					or
+				int max=a>b?(a>c?a:c):(b>c?b:c);
+			NESTED If  else
+			=================
+
+				if(a>b)
+				{
+					if(a>c)
+						max=a;
+					else
+						max=c;
+				}
+				else
+				{
+					if(b>c)
+						max=b;
+					else
+						max=c;
+				}
+---------------------------------------------------------------------------
+				else if ladder ->multi way selection statement
+				============================================
+				if(condition)
+				{
+					statement;
+				}
+				else if(condition2)
+				{
+					Statemnts;
+				}
+				else if(condition3)
+				{
+					statemnts
+				}
+				.
+				.
+				.
+				else
+				{
+					statemnts;
+				}
+----------------------------------------------------------------------------------------
+			Assignmets
+			=========
+			Wap to accept age & classify under child or teenage or
+			adult  or senior citizen
+			Wap to find greatest among three numbers using condtiona; 
+			operator
+			Wap to find greatest among three numbers using nested
+			if -else
+			
+				
+
+
+
+
+
+	
+
+
+
+
+
+
+

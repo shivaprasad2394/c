@@ -1,0 +1,234 @@
+Storage Class Specifier
+					======================
+			datatype variable_name;
+			
+				4 types
+				========
+				auto
+				register
+				static
+				extern
+
+
+			eg:	auto char a;
+				register int r;
+				static float s;
+---------------------------------------------------------------------------------------
+				Storage Class specifier is going to specify
+				the folowing things:
+				
+				1)Where the variable wil get memory
+				2)Default value
+				3)Scope(visibility)
+				-->whwre this variable can be used
+				4)Lifetime-->time between variables'
+					creation & destruction
+				5)LInkage
+					No linkage
+					Internal Linkage
+					External Linkage
+------------------------------------------------------------------------------
+				auto
+				====
+				-->automatic
+				auto datatype varaiable_name;
+				-->auto can be applied only to local varaiables
+
+				int main()
+				{
+					int a;
+					printf("%d\n",a);//garbage
+				}
+				A block
+				========
+				{
+				}
+
+
+				int main()
+				{
+					int a;
+					int a;
+				}//invalid
+
+				int a;//declaration+definition
+
+
+				----------------------------
+				
+				int main()
+				{
+					int a=20,c=90;
+					{
+						int a=10,b=89;
+						printf("%d %d  %d\n",a,b,c);//10  89  90
+					}
+					printf("%d\n",a);//20
+				}
+-----------------------------------------------------------------------------
+
+				Memory:stack
+				Default value:garbage value
+				Scope:within the block
+				LIfetime:within the block
+				Linkage:No linkage
+
+
+				int main()
+				{
+					fun();
+					fun();
+					fun();
+				}
+				void fun()
+				{
+					int l=20;
+					l=l+20;
+					printf("%d\n",l);
+				}//40 40 40
+				
+------------------------------------------------------------------------------
+				Register
+				=======
+				register datatype variable_name;
+				-->regsiter can be applied only to
+				local variables
+			
+				Memory:CPU REGISTERS
+				Default Valu:Garbage Value
+				Scope:Within the block
+				Lifetime:Within the block
+				LInkage:No linkage
+
+				int main()
+				{
+					register int reg=90;
+					&rag//invalid
+					int a;
+					scanf("%d",&a);
+					reg=a;
+				}
+				-->faster execution of prograee
+				-->variables which are used frequently can be made as
+					register
+				-->register can be applied to int or char,or pointers
+
+			
+-------------------------------------------------------------------------------------------- 
+			Static
+			======
+			-->can be applied for local variable & gloabal variable
+
+				-->local static
+				-->global static
+
+				Memory:Data SEgment
+				Default:0
+----------------------------------------------------------------------------------------------------
+				Local Static
+				===========
+
+				int main()
+				{
+					fun();
+					fun();
+					fun();
+				}
+				void fun()
+				{
+					static int l=20;
+					l=l+20;
+					printf("%d\n",l);
+				}//40 60 80
+
+				scope:	within the block
+				lifetime:throughout the program
+				LInkage:No linkage
+------------------------------------------------------------------------------
+
+			Global Static
+		--------------------------------------------------------------
+				Extern
+				======
+				extern can be applied only to global variables
+				
+							
+				int main()
+				{
+					extern int g;//extern declaration
+					printf("%d\n",g);//45
+				}
+				int g=45;//extern definition
+--------------------------------------------------------------------------------
+				int g=20;
+				int main()
+				{
+					{
+					int g=10;
+					}
+					printf("%d\n",g);//20
+				}	
+
+			---------------------------------------------------
+				int g=20;
+				int main()
+				{
+					int g=10;
+					{
+					extern int g;
+					printf("%d\n",g);//20
+					}
+				}
+-------------------------------------------------------------------------------------------
+				Multiple File Compilation
+				========================
+				vi file1.c                         vi file2.c
+
+				int g=20;                        extern int g;
+				int main()                       void fun()
+				{                                {
+					fun();                        printf("inside fun\n");
+                                                                      printf("%d\n",g);//20
+					                               g=100; 																																
+				}                                }
+				gcc file1.c  //linker error
+				gcc file2.c    //invalid
+
+				gcc file1.c file2.c
+--------------------------------------------------
+					By default all global vraibles & functions have 
+					external linkage
+
+
+					extern:
+					memory:data segment
+					default value:0
+					scope:throughout the program
+					lifetime:throughout the program
+					linkage:external linkge
+					
+------------------------------------------------------------------------------------------------
+				Global Static
+				============
+				vi file1.c                         vi file2.c
+
+				static int g=20;                  extern int g;
+				int main()                       void fun()
+				{                                {
+					fun();                        printf("inside fun\n");
+                                                                      printf("%d\n",g);//20
+					                               g=100; 																																
+				}                                }
+				-->linker error
+				-->global static variable have internal linkage
+
+				-->scope:within the file
+				-->lifetime:throughout the program
+				-->linkage:internal linkage
+--------------------------------------------------------------------------------------
+
+
+
+
+
+

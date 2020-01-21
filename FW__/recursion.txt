@@ -1,0 +1,275 @@
+Recursion
+		=========
+
+	->function calling itself
+			
+	---> in recursive functions, 3 important things should be taken care
+		1)base condition
+		condition where the recursive call should be stopped.
+		2)Function calls made---> each call should be made approaching 			the base condition
+		3) should avoid infinit recursion
+--------------------------------------------------------------------------------------
+		Factorial
+		=========
+		5*4!
+		5*4*3!
+		5*4*3*2!
+		5*4*3*2*1!
+		5*4*3*2*1
+		Base condition:
+		===============
+		n==0||n==1
+			return 1
+		n*(n-1)!
+
+		int main()
+		{
+			int n=3;
+			int res=fact(n);
+			printf("factoroial is %d\n",res);
+
+		}
+		int fact(int n)
+		{
+			if(n==0 || n==1)
+				return 1;
+			return n*fact(n-1);
+		}
+----------------------------------------------------------------------------
+			Printing numbers from 1 to n
+			=============================
+			int main()
+			{
+				int n=5;
+				display(n);
+				display2(n);	
+			}
+			void display(int n)
+			{
+				if(n==0)
+					return;
+				printf("%d",n);
+				display(n-1);
+			}//5 4 3 2 1
+			void display2(int n)
+			{
+				if(n==0)
+					return;
+				
+				display2(n-1);
+				printf("%d",n);
+			}//1 2 3 4 5
+--------------------------------------------------------------------------------------
+			
+			Itertaion code for finding Sum of Digits
+			========================================
+			int main()
+			{
+				int n=123;
+				int sum=0,rem=0;
+				while(n!=0)
+				{
+					rem=n%10;
+					sum=sum+rem;
+					n=n/10;
+				}
+				printf("%d",sum);
+			}
+			Recursion code for finding Sum of Digits
+			========================================
+			int main()
+			{
+				int n=123;
+				fun(n);
+			}
+			int fun(int n)
+			{
+				int rem;
+				if(n/10==0)
+					return n;
+				rem=n%10;
+				return rem+fun(n/10);
+			
+			}
+======================================================================
+			Fibonocci Series
+			-----------------
+			 1 1 2 3 5 8 13..................
+			int main()
+			{
+				int n=5;
+				for(i=0;i<n;i++)
+				{
+					printf("%d",fib(i));
+				}
+			}
+			int fib(int n)
+			{
+				if(n==0 || n==1)
+					return 1;
+				return fib(n-2)+fib(n-1);
+			}
+-----------------------------------------------------------------------------
+			Recursive function for finding strlen
+			======================================
+
+		Iterartive code for finding strlen
+		==================================		
+		int main()
+		{
+			char str[]="hello";
+			int len=mystrlen(str);
+			printf("%d",len);
+			
+		}
+		int mystrlen(char *str)
+		{
+			int count=0;
+			while(*str!='\0')
+			{
+				count++;
+				str++;
+			}
+			return count;
+
+			
+		}
+		Recursive function for finding strlen
+		======================================	
+		
+			
+		int main()
+		{
+			char str[]="hello";
+			int len=mystrlen(str);
+			printf("%d",len);
+			
+		}
+		int mystrlen(char *str)
+		{
+			if(*str=='\0')
+				return 0;
+			return 1+mystrlen(str+1);
+		}
+		================================================
+		void mystrcpy(char *dest,char *src)
+		{
+			if(*src=='\0')
+				return;
+			*dest=*src;
+			mystrcpy(dest+1,src+1);
+		}
+----------------------------------------------------------------------------------
+Recursion
+		=======
+		-->function calling itself
+		-->Recursive code should have one base consition
+		-->base condition will finally stop recursion
+
+		factorial of a numbber using recursion
+			===========
+		4!
+		4*3!
+		4*3*2!
+		4*3*2*1!
+
+		n*(n-1)!
+
+		int main()
+		{
+			int num=4;
+			int n=fact(num);
+			printf("%d",n);
+		}
+		int fact(int num)
+		{
+			if(num==1 || num==0)
+				return 1;
+			return num*fact(num-1);
+		}
+-----------------------------------------------------------------
+
+		Displaying numbers from n to 1
+		==============================
+		
+		int main()
+		{
+			int i=4;
+			fun(i);
+		}
+		void fun(int n)
+		{
+			if(n==0)
+				return;
+			printf("%d",n);
+			fun(n-1);
+		}
+
+		Displaying numbers from 1 to n
+		==============================
+		int main()
+		{
+			int i=4;
+			fun(i);
+		}
+		void fun(int n)
+		{
+			if(n==0)
+				return;
+			fun(n-1);
+			printf("%d",n);
+		}
+-----------------------------------------------------------
+		Finding sum of digits using recursion
+		====================================
+
+		int main()
+		{
+			int num=123;
+			int sum=fun(num);
+			printf("%d",sum);
+		}
+		int fun(int num)
+		{
+			if(num/10==0)
+				return num;
+			return num%10+fun(num/10);
+		}
+-------------------------------------------------------------
+
+		strlen using recursion
+		======================
+		int main()
+		{
+			char str[]="he";
+			int len=fun(str);
+			printf("%d",len);
+		}
+		int fun(char str[])
+		{
+			if(*str=='\0')
+				return 0;
+			return 1+fun(str+1);
+		}
+-------------------------------------------------------------
+
+	implement strcpy
+	==============
+		int main()
+		{
+			char src[]="hi";
+			char dest[5];
+			fun(dest,src);
+		}	
+		void fun(char *dest,char *src)
+		{
+			if(*src=='\0')
+			{
+				*dest='\0';
+				return;
+			}
+			*dest=*src;
+			fun(dest+1,src+1);
+		}
+----------------------------------------------------------------------
+

@@ -1,0 +1,66 @@
+Predict output
+===============
+Q) list the valid declarations?
+
+		#define max 5
+		
+		int arr[5];	
+		int arr1[max];	
+		float arr2[10.2];
+	
+		int arr3['a'];
+------------------------------------------------------
+int arr[10];
+	int arr[] = {1,2,4,5};
+
+is this valid?
+
+	arr[5] = {1,2,3,4};
+
+
+
+---------------------------------------------------------
+	Q) Predict the output?
+	#define MAX 5
+	int arr[MAX]={10,20,30,40,50};
+	int brr[MAX];
+	brr=arr;	
+
+-----------------------------------------------------------
+Q) Is this a valid initialization?
+
+		int arr[1000]={[0]=5,[1]=10,[99]=40};
+		printf("%d %d %d\n", arr[0], arr[1], arr[99]);
+--------------------------------------------------------------
+Assignment
+===========
+Q)	WAP to find the sum of elements of an array
+Q)	WAP to find the largest element in an array
+Q)	WAP to reverse the array elements
+Q)	WAP to count the number of odd numbers in array
+Q)	WAP to count the number of even numbers in array
+Q)	WAP to find the third largest element in an array
+----------------------------------------------------------
+
+
+
+
+
+	2D-array
+==================
+Q) which all are valid 
+
+		int arr2[3][3]={1,2,3,4,5,6,7,8,9};	
+		int arr3[3][3]={1,2,3,4};		
+		int arr4[3][3]={{1},{2,3},{4}}		
+		int arr[]={1,2,3,4,5};	
+		int arr2[][]={1,2,3,4,5};
+
+-------------------------------------------------------------
+Assignment
+==========
+	ADD two matrix
+	Transpose of a matrix
+	multiple the two matrix
+	Rotate the matrix by 90 degree
+

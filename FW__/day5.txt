@@ -1,0 +1,190 @@
+Function
+			=======
+		-->piece of code which can perform some 
+		task
+		-->avoid repitition of code
+		-->modularity 
+------------------------------------------------------------
+		Two types
+		Library Function
+			printf,scanf,pow,sqrt,__fpurge.....
+		user defined function
+		
+		Any function will have 3 parts
+		==============================
+		1)Function Declaration/Function Prototype
+		2)Function Call
+		3)Function Definition
+
+		Function Declaration/Function Prototype
+		=====================================
+		return_type function_name(datatype argumnet);
+			
+			-->Function Dclaration can be placed local or globally
+----------------------------------------------------------	
+
+		Function Call
+		============
+			function_name(argument);
+
+			-->argumnet can be a constatnt,variable,expression
+			-->Function Call should be always local
+
+		Function Definition
+		===================
+		return_type function_name(datatype argumnet)
+		{
+			statemnts;
+		}
+------------------------------------------
+			int main()
+			{
+			}
+			//function call is done by OS
+			//Function Dclartaion is provided by
+			Compiler
+			//Function Definition is given by user
+-------------------------------------------------------------------
+			Function definition can take any number of argummnets
+			Only one return_type(datatype)
+			Function Definition should be global
+
+				int a;//global
+				int main()
+				{
+					int l;//local variabe
+				}
+------------------------------------------------------------------------------
+				int main()
+				{
+					int num=3;
+					int fact=1,i;
+					for(i=num;i>=1;i--)
+					{
+						fact=fact*i;
+					}
+					printf("%d\n",fact);
+				}
+----------------------------------------------------------------------
+			Function taking no argumnet & no return_type
+			void factorial();
+			int main()//calling function
+			{
+				
+				factorial();	
+			}
+			void factorial()//called function
+			{
+				int num=3;
+				int fact=1,i;
+				for(i=num;i>=1;i--)
+				{
+					fact=fact*i;
+				}
+				printf("%d\n",fact);
+				
+			}
+-----------------------------------------------------------------------------------
+				//function with no return_type but taking
+					argumnet
+			void factorial(int);
+			int main()//calling function
+			{
+				int num=3;
+				factorial(num);	
+				factorial(5);
+			}
+			void factorial(int num)//called function
+			{
+				int fact=1,i;
+				for(i=num;i>=1;i--)
+				{
+					fact=fact*i;
+				}
+				printf("%d\n",fact);
+				
+			}
+-------------------------------------------------------------
+			//Function taking argumnet & return_type
+			int factorial(int);
+			int main()//calling function
+			{
+				int num=3,op;
+				op=factorial(num);
+				pritnf("%d\n",op);
+				op=factorial(5);
+				pritnf("%d\n",op);	
+				
+			}
+			int factorial(int num)//called function
+			{
+				int fact=1,i;
+				for(i=num;i>=1;i--)
+				{
+					fact=fact*i;
+				}
+				return fact;
+				
+			}
+-------------------------------------------------------------------
+			void fun();
+			int main()
+			{
+				fun();
+			}
+			void fun()
+			{
+				printf("hello\n");
+				printf("hi\n");
+			}//hello
+			hi
+-------------------------------------------------
+			int fun();
+			int main()
+			{
+				fun();
+			}
+			int fun()
+			{
+				printf("hello\n");
+				printf("hi\n");
+				return 1;
+			}//hello
+			hi
+----------------------------------------------------------
+			int fun();
+			int main()
+			{
+				fun();
+			}
+			int fun()
+			{
+				printf("hello\n");
+				return 1;
+				printf("hi\n");
+				
+			}//hello
+--------------------------------------------------------
+			int main()
+			{
+				printf("hello\n");
+				return 0;
+				printf("hi\n");
+			}//hello
+--------------------------------------------------------------------
+			
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

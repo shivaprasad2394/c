@@ -1,0 +1,264 @@
+switch   -->multi way selection
+			
+			-->writing menu driven programs
+
+			switch(condition)
+			{
+				case label1:statemnt;
+					    break;
+				case label2:statement;
+						break;
+				.
+				.
+				.
+				default:statemnt;
+			}
+			-->condition -->integral expression(int or char)
+			-->labels  -->should be integral constatnts
+			-->labels should be unique
+			-->default is optional
+			-->break is optional
+			-->default can be placed anywhere inside switch
+			-->default will be checked at last
+-------------------------------------------------------------------------------------	
+			int main()
+			{
+				int d;
+				scanf("%d",&d);//2
+				switch(d)
+				{
+					case 1:printf("one\n");
+					case 2:printf("two\n");
+					case 3:printf("three\n");
+					default:printf("default\n");
+				}
+			}//two 
+				three
+				default
+----------------------------------------------------------	
+			int main()
+			{
+				int d;
+				scanf("%d",&d);//2
+				switch(d)
+				{
+					case 1:printf("one\n");
+						break;
+					case 2:printf("two\n");
+						break;
+					case 3:printf("three\n");
+						break;
+					default:printf("default\n");
+				}
+			}//two
+---------------------------------------------------------------------
+			int main()
+			{
+				int d;
+				scanf("%d",&d);//2
+				switch(d)
+				{
+					printf("inside switch\n");
+					case 1:printf("one\n");
+						break;
+					case 2:printf("two\n");
+						break;
+					case 3:printf("three\n");
+						break;
+					default:printf("default\n");
+				}
+			}//two
+-------------------------------------------------------------------------------
+			
+			int main()
+			{
+\				char ch;
+				scanf("%c",&ch);
+				swicth(ch)
+				{
+					case 'a':printf("vowel\n");
+						break;
+					case 'e':printf("vowel\n");
+						break;
+					case 'i':printf("vowel\n");
+						break;
+					case 'o':printf("vowel\n");
+						break;
+					case 'u':printf("vowel\n");
+						break;
+					default:printf("consonant\n");
+					
+				}
+			}
+------------------------------------------------------------------------------
+			int main()
+			{
+\				char ch;
+				scanf("%c",&ch);
+				swicth(ch)
+				{
+					case 'a':
+					case 'e':
+					case 'i':
+					case 'o':
+					case 'u':printf("vowel\n");
+						break;
+					default:printf("consonant\n");
+					
+				}
+			}
+---------------------------------------------------------------------------------
+			swicth()
+			
+
+			case 0 ... 9:
+			case 10 ... 99:
+
+			case 'a' ... 'z'
+-----------------------------------------------------------------------
+			wap to check whether entered character is
+			uppercase or lowercase using switch
+----------------------------------------------------------------------------
+			Iterative Staemnets(loop)
+			===================
+			while
+			do while
+			for
+
+
+			while(condition)
+			{
+				statemnts;
+			}
+-----------------------------------------------------------
+			do
+			{
+				statement;
+			}while(condition);
+-------------------------------------------------------------------------------
+			for(initialization;condition;update)
+			{
+				statemnts;
+			}
+---------------------------------------------------------------------------------
+					while
+					=====
+				int i=0;
+				while(i<5)
+				{
+					pritnf("%d\n",i);
+					i++;
+				}//0  1 2 3 4
+
+				int i=0;
+				if(i<5)
+				{
+					pritnf("%d\n",i);
+					i++;
+				}//0
+----------------------------------------------------------------
+				int i=0;
+				do 
+				{
+					pritnf("%d\n",i);
+					 i++;
+				}while(i<5);
+				//0 1 2 3 4
+-----------------------------------------------------------------------------
+				int i;
+				for(i=0;i<5;i++)
+				{
+					printf("%d\n",i);
+				}//0  1 2 3 4
+-------------------------------------------------------------------------
+				Jump Statements
+				===============
+				break
+					-->should be place inside switch
+						or
+						inside loop
+					-->inside loop or break,it will take control 						out of loop or  switch
+				continue
+				-->should be placed only inside loop
+				--->it will take control to beginning of loop
+
+-------------------------------------------------------------
+			break inside loop
+			=================
+				int i=0;
+				while(i<5)
+				{
+					if(i==3)
+						break;
+					pritnf("%d\n",i);
+					i++;
+				}//0 1 	2
+--------------------------------------------------------------------------------
+				continue inside loop
+				=====================
+				
+				int i=0;
+				while(i<5)
+				{
+					if(i==3)
+						continue;
+					pritnf("%d\n",i);
+					i++;
+				}//0 1 2  infinite
+------------------------------------------------------------------
+				int i=0;
+				while(i<5)
+				{
+					if(i==3)
+					{
+						i++;
+						continue;
+					}
+					pritnf("%d\n",i);
+					i++;
+				}//0 1 2 4
+--------------------------------------------------------------------------
+				for(i=0;i<5;i++)
+				{
+					if(i==3)
+						continue;
+					printf("%d\n",i);
+				}//0 1 2 4
+			--->inside for loop continue will take control
+				to update part
+			-->inside while loop continue will take control
+				to condition
+----------------------------------------------------------------------------
+			Nested Loops
+			=============
+			int i,j;
+			for(i=0;i<2;i++)
+			{
+				for(j=0;j<3;j++)
+				{
+					printf("%d  %d\t",i,j);
+				}
+				printf("\n");
+			}//0 0     0 1      0 2
+			1 0      1 1       1 2
+------------------------------------------------------------------
+			int i,j;
+			for(i=0,j=10;i<2,j>=2;i++,j--)
+			{
+				
+				printf("%d  %d\n",i,j);
+			}//0  10
+			1  9
+			2  8
+			3  7
+			4  6
+			5  5
+			6  4
+			7  3
+			8  2
+-------------------------------------------------------------------------
+			 
+
+
+
+

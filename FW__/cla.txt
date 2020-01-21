@@ -1,0 +1,89 @@
+		Command Line Argument
+		=====================
+		argc-->argument count
+			
+		argv-->argument vector
+			-->arary of character pointers
+			
+		int main(int argc,char *argv[])
+		{
+			printf("%d",argc);//
+			printf("%s",argv[0]);//./a.out
+			for(i=0;i<argc;i++)
+			{
+				printf("%s\n",argv[i]);
+			}
+		}
+--------------------------------------------------------------------------------
+		./a.out 23 45 67 81
+
+		char str1[]="45a";
+		char str2[]="23";
+		printf("%d",atoi(str1)+atoi(str2));
+		//
+		char str[]="123abc567";
+		printf("%d",atoi(str));//123
+		
+		char str[]="abc567";
+		printf("%d",atoi(str));//0
+-------------------------------------------------
+		./a.out 23 45 67 81
+		int main(int argc,char *argv[])
+		{
+			int i,sum=0;
+			for(i=1;i<argc;i++)
+			{
+				sum=sum+atoi(argv[i]);
+			}
+			printf("%d",sum);
+		}
+------------------------------------------------
+		./a.out 56 45 87 100 85
+		int main(int argc,char **argv)
+		{
+			int i,large=0;
+			large=atoi(argv[1]);//56
+			for(i=2;i<argc;i++)
+			{
+				if(atoi(argv[i])>large)
+					large=atoi(argv[i]);
+			}
+			printf("%d\n",large);
+		}
+---------------------------------------------------------------------
+		cp command using CMA
+		========================
+		cp src_fil destfile
+		
+		int main(int argc,char **argv)
+		{
+			if(argc!=3)
+			{
+				printf("invalid number of argumnets\n");
+				exit(2);
+			}
+			FILE *src=fopen(argv[1],"r");
+			if(src==NULL)
+			{
+				printf("file doesnt exidt\n");
+				exit(2);
+			}
+			FILE *dest=fopen(argv[2],"w");
+			if(dest==NULL)
+			{
+				printf("file cant be opened\n");
+				exit(2);
+			}
+			char ch;
+			while((ch=fgetc(src))!=EOF)
+			{
+				fputc(ch,dest);
+			}
+			fclose(src);
+			fclose(dest);
+))
+			
+		}
+		
+;
+

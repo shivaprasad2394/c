@@ -1,0 +1,401 @@
+----------------------------------------------------
+	Stack implementation using Linked List
+	====================================
+	typedef struct stack
+	{
+		int data;
+		struct stack *link;
+	}stak;
+	#define size 5
+	int s=0;
+	stak *top=NULL;
+	stak *memalloc(int ele)
+		{
+			stak *new=(stak *)malloc(sizeof(stak));
+			if(new==NULL)
+			{
+				pritnf("cant allocate memeory\n");
+				exit(2);
+			}
+			new->data=ele;
+			new->link=NULL;
+			return new;
+		}
+	void push(int ele)
+	{
+		if(s==size)
+		{
+			printf("stack is full\n");
+			return;
+		}
+		stak *new=memalloc(ele);
+		if(top==NULL)
+		{
+			top=new;
+			s++;
+			return;
+		}
+		new->link=top;
+		top=new;
+		s++;
+	}
+	void display()
+	{
+		if(top==NULL || s==0)
+		{
+			printf("stack is empty\n");
+			return;
+		}
+		stak *temp=top;
+		while(temp!=NULL)
+		{
+			printf("%d\t",temp->data);
+			temp=temp->link;
+		}
+	}
+	int pop()
+	{
+		if(top==NULL || s==0)
+		{
+			printf("stack is empty\n");
+			return -1;
+		}
+		stak *temp=top;
+		top=top->link;
+		s--;
+		int a=temp->data;
+		free(temp);
+		return a;
+	}
+	int main()
+	{
+		push(10);
+		push(20);
+		push(30);
+		display();
+		printf("%d\n"pop());
+		display();
+	}
+----------------------------------------------------------------
+	Queue implementation using Linked List
+	====================================
+	typedef struct queue
+	{
+		int data;
+		struct stack *link;
+	}queue;
+	#define size 5
+	int q=0;
+	queue *rear=NULL;
+	queue *front=NULL;
+	queue *memalloc(int ele)
+		{
+			queue *new=(queue *)malloc(sizeof(queue));
+			if(new==NULL)
+			{
+				pritnf("cant allocate memeory\n");
+				exit(2);
+			}
+			new->data=ele;
+			new->link=NULL;
+			return new;
+		}
+	void insert(int ele)
+	{
+		if(s==size)
+		{
+			printf("stack is full\n");
+			return;
+		}
+		queue *new=memalloc(ele);
+		if(rear==NULL)
+		{
+			rear=new;
+			front=new;
+			q++;
+			return;
+		}
+		rear->link=new;
+		rear=new;
+		q++;
+	}
+	void display()
+	{
+		if(q==0)
+		{
+			printf("queue is empty\n");
+			return;
+		}
+		queue *temp=front;
+		while(temp!=NULL)
+		{
+			printf("%d\t",temp->data);
+			temp=temp->link;
+		}
+	}
+	int delete()
+	{
+		if(q==0 || front==NULL)
+		{
+			printf("queue is empty\n");
+			return -1;
+		}
+		queue *temp=front;
+		front=front->link;
+		q--;
+		int a=temp->data;
+		free(temp);
+		return a;
+	}
+	int main()
+	{
+		insert(10);
+		insert(20);
+		insert(30);
+		display();
+		printf("%d\n",delete());
+		display();
+	}
+-------------------------------------------------------------
+		FILES
+		=====
+	-->PARMANENT STORAGE	
+	Operation with File
+	===================
+	1)Open the file/creating the file
+	2)read/write
+	3)closing the file
+
+				
+	1)Open the file/creating the file
+	===================================
+	FILE *ptr=fopen(file_name,mode);
+	FILE -->struucture which is defined in stdio.h
+	modes
+	=====
+	r-->read mode
+		-->file should exist
+		FILE *fp=fopen("file","r");
+		if(fp==NULL)
+		{
+			printf("file doesnt exist\n");
+			exit(2);
+		}
+		fclose(fp);
+		
+	w  -->write mode
+		-->file if it is not existing one,it will create new
+		-->if it existing one ,it will erase the content
+	a
+		-->append
+		-->-->file if it is not existing one,it will create new
+		-->if it existing one,it will not erase the content
+	r+
+	w+
+	a+
+--------------------------------------------------------
+		
+			Read from file
+			=============
+	int fgetc(file_pointer)
+		int main()
+		{
+			FILE *fp=fopen("file.txt","r");
+			if(fp==NULL)
+			{
+				printf("file doesnt exist\n");
+				exit(2);
+			}
+			char ch;
+			while((ch=fgetc(fp))!=EOF)
+			{
+				printf("%c",ch);
+			}
+			fclose(fp);
+		}
+----------------------------------------------------------------
+		Write to File
+		===========
+	fputc  for writing a charcter to file
+
+	OS will provide following 3 File pointers to any file	
+	stdin
+	stdout
+	stderr
+----------------------------------------------------
+		int main()
+		{
+			FILE *fp=fopen("file.txt","w");
+			if(fp==NULL)
+			{
+				printf("file doesnt exist\n");
+				exit(2);
+			}
+			char ch;
+			while((ch=fgetc(stdin))!=EOF)
+			{
+				fputc(ch,fp);
+			}
+			fclose(fp);
+		}
+		-------------------------------------
+		fgets(str,20,stdin)
+		fputs
+	---------------------------------------------------------
+		Reading from a file
+		=================	
+		int main()
+		{
+			FILE *fp=fopen("file.txt","r");
+			if(fp==NULL)
+			{
+				printf("file doesnt exist\n");
+				exit(2);
+			}
+			char str[20];
+			while(fgets(str,20,fp)!=NULL)
+			{
+				//printf("%s",str);
+				fputs(str,stdout);
+			}
+			fclose(fp);
+		}
+------------------------------------------------------------------
+		Writing to a file
+		=================	
+		int main()
+		{
+			FILE *fp=fopen("file.txt","w");
+			if(fp==NULL)
+			{
+				printf("file doesnt exist\n");
+				exit(2);
+			}
+			char str[20];
+			while(fgets(str,20,stdin)!=NULL)
+			{
+				fputs(str,fp);
+			}
+			fclose(fp);
+		}
+	
+----------------------------------------------------------------
+		Copy a file to other file
+		int main()
+		{
+			FILE *src=fopen("file1.txt","r");
+			if(src==NULL)
+			{
+				printf("file doesnt exist\n");
+				exit(2);
+			}
+			FILE *dest=fopen("file2.txt","w");
+			if(dest==NULL)
+			{
+				printf("file cant be opened\n");
+				exit(2);
+			}
+			char ch;
+			while((ch=fgetc(src))!=EOF)
+			{
+				fputc(ch,dest);
+			}
+			fclose(src);
+			fclose(dest);
+		}
+--------------------------------------------------
+		int ftell(fil_pointer)
+		-->current file cursor position
+		
+		int main()
+		{
+			FILE *fp=fopen("file.txt","r");
+			if(fp==NULL)
+			{
+				printf("file doesnt exist\n");
+				exit(2);
+			}
+			printf("%d\n",ftell(fp));//0
+			char ch;
+			while((ch=fgetc(fp))!=EOF)
+			{
+				printf("%c",ch);
+			}
+			printf("%d\n",ftell(fp));//
+			rewind(fp);
+			fclose(fp);
+		}
+------------------------------------------------------------
+		rewind(file_pointer)
+--------------------------------------------------------------
+		w+
+		==
+		int main()
+		{
+			FILE *fp=fopen("file.txt","w+");
+			if(fp==NULL)
+			{
+				printf("file doesnt exist\n");
+				exit(2);
+			}
+			char str[20]="hihello";
+			fputs(str,fp);
+			//Irewind(fp);
+			fseek(fp,2,SEEK_SET);
+			char str2[20];
+			fgets(str2,20,fp);
+			printf("%s",str2);//hihello
+		}
+---------------------------------------------------------------
+		fseek(file_pointer,displacemnt,whence);
+		whence
+		====
+		0  SEEK_SET
+		1   SEEK_CUR
+		2   SEEK_END
+		fseek(fp,-6,0)//FAIL
+-----------------------------------------------------------------
+		int main()
+		{
+			int a=23;
+			char ch='h';
+			float f=8.9;
+			
+			FILE *fp=fopen("file.txt","w");
+			if(fp==NULL)
+			{
+				printf("file doesnt exist\n");
+				exit(2);
+			}
+		fprintf(fp,"int is %d char is %c float is %f",a,ch,f);
+		}
+---------------------------------------------------------------
+		write Block of data to file/read a block of data from file
+=============================================================
+	fread
+	fwrite
+
+	struct tag
+	{
+		int a;
+		float f;
+		char str[20];
+	}s1={2,5.6,"cranes"},s2;
+	int main()
+	{
+		FILE *fp=fopen("file.txt","w+");
+		if(fp==NULL)
+		{
+			printf("file doesnt exist\n");
+			exit(2);
+		}
+		fwrite(&s1,sizeof(s1),1,fp);
+		rewind(fp);
+		fread(&s2,sizeof(s2),1),fp);
+		printf("%d  %f  %s",s2.a,s2.f,s2.str);
+	}
+------------------------------------------------------	
+
+
+
+

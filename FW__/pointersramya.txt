@@ -1,0 +1,1034 @@
+Pointers:
+=========
+
+	-----> they are special data types ,which can hold the address of other variables as data and point to that variable.
+
+
+Specially used for
+			---> indirect referencing
+			----> call by reference(return more number of values)
+			---->Data structures
+			---->Dynamic memory Allocation.
+			
+
+	Pointers are a special data types , it can store only address of another variables.
+		int b;	---> it can hold a int value.
+	-----> a pointer can hold only addresses not values.
+
+---> it cannot directly hold some data but it can always point to a variable which holds a data
+	
+	int a;
+
+	1000 1001 1002 1003
+
+
+	scanf("%d",&a);	//10	
+	
+
+	&:
+	==
+		---> to get the address of a variable
+
+		&(a+10);	//INVALID
+		&MACRO;	//invalid
+		&reg;	//invalid
+
+
+	int a;
+	printf("&a=%p",&a);
+	a=10;
+
+		*:(dereferencing or value at )
+		==
+
+	----> it can be applied only on address of variables or at addresses.
+
+	int a;
+	printf("&a=%p",&a);
+	a=10;
+	printf("a=%d\n",*(&a));
+
+	----> * will give the value stored at the location.
+		*(&a)==a
+		
+		----------> it cannot be applied for normal variables.
+
+
+	*address;
+	*a;	//invalid
+	*(a+10);	//invalid
+
+int main()
+{
+	int a=10;
+	printf("%d\n",a);	//10
+	printf("%p\n",&a);	//1000
+
+	printf("%d\n",*(&a));	//10
+
+
+}
+---------------------------------------------------------------------
+
+Pointers:
+========
+	syntax declaration
+	===================
+	
+		datatype *pointervariable_name;
+
+
+int a=10;
+int *ptr=&a;
+
+
+ptr=10;//in valid
+int *ptr=10;//in valid
+-----------------------------------------------------------------------
+if you declare a pointer variable locally or globally it initial value will be NULL,
+if you dont assign anything..
+
+#include<stdio.h>
+int main()
+{
+//      int *ptr;
+//      char *ptr;
+//      float *ptr;
+        double *ptr;
+//      long double *ptr;
+        printf("ptr :%p\n",ptr);
+        printf("ptr :%u\n",ptr);
+return 0;
+}
+OR
+#include<stdio.h>
+double *ptr;
+int main()
+{
+//      int *ptr;
+//      char *ptr;
+//      float *ptr;
+//      double *ptr;
+//      long double *ptr;
+        printf("ptr :%p\n",ptr);
+        printf("ptr :%u\n",ptr);
+return 0;
+}
+ramya@ramya-Inspiron-3521:~/cprgm/pointer$ ./a.out 
+ptr :(nil)
+ptr :0
+---------------------------------------------------------------------
+Address operator
+================
+
+	& -> ampersand returns the address of a variable..
+to get the address of the variable
+
+once the pointer is declarced we have to assign a address for the pointer
+
+& cannot be used with constant ,expression or register variable
+
+&j //valid
+&5 //in valid
+&(k+j) //in valid
+&a[i] //valid
+&rvar //not valid for register variable
+
+scanf("%d",&a); to store a value at that address
+----------------------------------------------------------------------
+Derefrence operator
+===================
+	
+		* indirect operator 
+			OR
+		dereference operator // value at operator to retrive the value at the address
+
+----------------------------------------------------------------------------
+#include<stdio.h>
+int main()
+{
+        int a=10;
+        int *ptr;
+        ptr=&a;
+        printf("%d\n",a);
+        printf("%u\n",&a);
+        printf("%d\n",*(&a));
+
+        printf("%u\n",ptr);
+        printf("%d\n",*ptr);
+return 0;
+}
+----------------------------------------------------------
+#include<stdio.h>
+int main()
+{
+        char a='A';
+        char *ptr;
+        ptr=&a;
+        printf("%c\n",a);
+        printf("%u\n",&a);
+        printf("%c\n",*(&a));
+
+        printf("%u\n",ptr);
+        printf("%c\n",*ptr);
+return 0;
+}
+------------------------------------------------------------------------------------
+
+int main()
+{
+	int a=10,*ptr;
+	char ch='a',*cp;
+	float f=10.345,*fp;
+	ptr=&a;
+	cp=&ch;
+	fp=&f;	
+
+	printf("int  &a %u %u \n",&a,ptr);	//
+	printf("char   &ch %u %u \n",&ch,cp);	//
+	printf("float  &f %u %u \n",&f,fp);	//
+
+	*ptr=20;
+	*cp='b';
+	*fp=3.14567;
+
+	printf("int  &a %u %u \n",a,*ptr);	// 
+	printf("char   &ch %c %c \n",ch,*cp);	//
+	printf("float  &f %f %f \n",f,*fp);	//
+
+//sizeof operator
+==================
+
+	printf(" size int ptr %u %u \n",sizeof(a),sizeof(ptr));	//	4 4	
+	printf("size char   ch %u %u \n",sizeof ch,sizeof cp);	// 	1 4
+	printf("size float  &f %u %u \n",sizeof f,sizeof fp);	//	4 4
+
+}
+---------------------------------------------------------------------------------------------
+Size of all the pointers are 4 (or) sizeof int on the machine
+
+
+what is the need for data types for pointers???
+
+
+	1.Dereferencing Purpose
+	2.Pointer arithmetic.
+
+
+1.Dereferencing Purpose:
+=========================
+
+Dereferencing:
+--------------
+
+	it says the compiler how many bytes has to be fetched from the address.
+
+	
+		char *ch;
+		int p=10;		//100.......104				000000000000000000000001010
+		ch=&p;	
+		*ch;
+
+
+	#include<stdio.h>
+	int main()
+	{
+		int a=0x1234;
+		char *cptr;
+		printf("%x\n",a);
+		cptr=&a;
+		printf("%u\n",&a);
+		printf("%u\n",cptr);
+		printf("%x\n",*cptr);//34
+	return 0;
+	}
+
+int main()
+{
+	int a=258;
+	int *ptr=&a;
+	char *cptr=&a;
+	printf("&A=%p ptr=%p cptr=%p\n",&a,ptr,cptr);	//1000 1000 1000
+	printf("a=%d *ptr=%d *cptr=%d\n",a,*ptr,*cptr);	//258 258 2
+
+
+}
+----------------
+#include<stdio.h>
+int main()
+{
+        int a=0x1234;
+        char *cptr;
+        printf("%d\n",a);
+        cptr=&a;
+        printf("%u\n",&a);
+        printf("%u\n",cptr);
+        printf("%d\n",*cptr);//52
+
+        int *iptr;
+        iptr=&a;
+        printf("%u\n",&a);
+        printf("%u\n",iptr);
+        printf("%d\n",*iptr);//52
+return 0;
+}
+
+	----> on dereferencing depending on the data type of the pointer the number of bytes will be dereferenced.
+---------------------------------------------------------------------------
+2.Pointer arithmetic:
+======================
+	Increment a pointer
+	Decrement a pointer
+	can add integer to pointer
+	can subtract integer to pinter
+	subtract two pointers
+
+	INVALID POINTER OPERATION
+	========================
+	Cannot two pointers
+	cannot multiply integer to pointer
+	cannot multiply two pointers
+	cannot divide integer to pointer
+	cannot divide two pointers
+--------------------------------------------------------------------		
+			Pointer Arithmetic:
+			==================
+
+--------------------------------------------------------------------
+			Increment a pointer
+			==================
+			ptr++;  //ptr=ptr+1;
+			++ptr;
+			int main()
+			{
+				int a=20;
+				int *ptr=&a;
+				printf("%u",ptr);//1000
+				printf("%u",ptr++);//1000
+				printf("%u",ptr);//1004
+			}
+example
+++++++++
+		ptr++
+		++ptr
+		ptr=ptr+1
+
+		int a=7;
+		int *ptr=&a;
+		printf("%u\n",&a);
+		printf("ptr:%u\n",ptr);//1000
+		ptr++;
+        	printf("ptr++:%u\n",ptr);//1004
+		++ptr;
+        	printf("++ptr:%u\n",ptr);
+
+
+		char b='a';
+		char *cptr=&b;
+		printf("%u\n",&b);
+		printf("cptr:%u\n",cptr);//1000
+		cptr++;
+		printf("cptr++:%u\n",cptr);//1001
+		++cptr;
+        	printf("++cptr:%u\n",cptr);
+
+
+---------------------------------------------------------------------
+			Decrement a pointer
+			==================
+			--ptr;
+			ptr--;
+
+			int main()
+			{
+				char a='g';
+				char *ptr=&a;
+				printf("%u",ptr);//1000
+				printf("%u",--ptr);//999
+				printf("%u",ptr);//999
+			}
+example
++++++++
+		--ptr
+		ptr--
+		ptr=ptr-1;
+		
+	int main()
+	{
+		int a=10;
+		int *ptr=&a;
+		printf("%u\n",&a);//1000
+		printf("ptr:%u\n",ptr);//1000
+		ptr--;
+		printf("ptr--:%u\n",ptr);//996
+		--ptr;
+		printf("--ptr:%u\n",ptr);//992
+
+		char b='a';
+		char *cptr=&b;
+		printf("%u\n",&b);//2000
+		printf("cptr:%u\n",cptr);//2000
+		cptr--;
+		printf("cptr--:%u\n",cptr);//1999
+		--cptr;
+		printf("--cptr:%u\n",cptr);//1998
+	return 0;
+	}
+
+-------------------------------------------------------------------------------
+		1.Pointer addition to a integer:
+		=================================
+
+			char ch='A';
+			char *ptr=&ch;		//1000
+			ptr=ptr+1;		//1001
+			
+
+		
+			---> post and pre increment is possible
+
+			ptr++;
+
+			++ptr;
+
+			int p=100;
+			int *ptr=&p;		//1000
+			ptr=ptr+1;		//1004
+
+		---> we cannot add two pointer variables
+			ptr1+ptr2	//invalid
+
+example
++++++++
+		can add integer to pointer
+		========================
+		
+		int main()
+		{
+			int a=20;
+			int *ptr=&a;
+			printf("%u",ptr);//1000
+			ptr=ptr+5;
+			
+			printf("%u",ptr);//1020
+		}
+		
+		int main()
+		{
+			char a='g';
+			char *ptr=&a;
+			printf("%u",ptr);//1000
+			ptr=ptr-5;
+			printf("%u",ptr);//995
+		}
+example
++++++++
+		Add an integer to pointer
+		==========================
+
+	#include<stdio.h>
+	int main()
+	{
+		int a=10;
+		int *ptr=&a;
+		printf("%u\n",&a);//1000
+		printf("ptr:%u\n",ptr);//1000
+		ptr=ptr+1;//1004
+		printf("ptr+1:%u\n",ptr);//1004
+		ptr=ptr+2;//1012
+		printf("ptr+2:%u\n",ptr);//1012
+		printf("character pointer\n");
+		char b='a';
+		char *cptr=&b;
+		printf("%u\n",&b);//2000
+		printf("cptr:%u\n",cptr);//2000
+		cptr=cptr+1;//2001
+		printf("cptr+1:%u\n",cptr);//2001
+		cptr=cptr+2;//2003
+		printf("cptr+2:%u\n",cptr);//2003
+	return 0;
+	}
+-------------------------------------------------------------------------------
+		2.Pointer subtraction with a integer is also possible:
+		------------------------------------------------------
+			char ah='A'	//1000
+			char *ptr=&ah;
+			
+				ptr=ptr-1;		//999
+			
+		ptr--;
+		--ptr;
+example
++++++++
+		#include<stdio.h>
+		int main()
+		{
+			int a=10;
+			int *ptr=&a;
+			printf("%u\n",&a);//1000
+			printf("ptr:%u\n",ptr);//1000
+			ptr=ptr-1;//996
+			printf("ptr-1:%u\n",ptr);//996
+			ptr=ptr-2;//988
+			printf("ptr-2:%u\n",ptr);//988
+
+
+			printf("character pointer\n");
+			char b='a';
+			char *cptr=&b;
+			printf("%u\n",&b);//2000
+			printf("cptr:%u\n",cptr);//2000
+			cptr=cptr-1;//1999
+			printf("cptr-1:%u\n",cptr);//1999
+			cptr=cptr-2;//1997
+			printf("cptr-2:%u\n",cptr);//1997
+		return 0;
+		}
+---------------------------------------------------------------------------------------------------------------
+		3.Subraction of two pointers:
+		-----------------------------
+			
+			char *ptr1,*ptr2;
+			
+			ptr1-ptr2;
+			//the difference will be the no of elements which can be present within the range
+//to find the block difference between the two pointers
+example
++++++++
+		subtract two pointers
+		=====================
+		#include<stdio.h>
+		int main()
+		{
+			int a=10;
+			int b=20;
+			int *ptr1=&a;
+			int *ptr2=&b;
+			printf("&a:%u\n",&a);
+			printf("&b:%u\n",&b);
+			printf("ptr1:%u\n",ptr1);
+			printf("ptr2:%u\n",ptr2);
+			printf("ptr1-ptr2:%d\n",ptr1-ptr2);
+			printf("ptr2-ptr1:%d\n",ptr2-ptr1);
+		return 0;
+		}
+
+ramya>>./a.out 
+&a:185990312
+&b:185990316
+ptr1:185990312
+ptr2:185990316
+ptr1-ptr2:-1
+ptr2-ptr1:1
+------------------------------------------------
+#include<stdio.h>
+int main()
+{
+	int a[]={10,11,12,13,14};
+	int *p1,*p2;
+	p1=a;
+	p2=&a[4];
+	printf("a:%u\n",a);//1000
+	printf("p1:%u\n",p1);//1000
+	printf("&a[4]:%u\n",&a[4]);//1016
+	printf("p2:%u\n",p2);//1016
+	printf("p1-p2:%d\n",p1-p2);//-4
+	printf("p2-p1:%d\n",p2-p1);//4
+	printf("*p1-*p2:%d\n",*p1-*p2);//-4
+	printf("*p2-*p1:%d\n",*p2-*p1);//4
+return 0;
+}
+ramya>>./a.out 
+a:432332176
+p1:432332176
+&a[4]:432332192
+p2:432332192
+p1-p2:-4
+p2-p1:4
+*p1-*p2:-4
+*p2-*p1:4
+----------------------------------------------------------
+Arithmetic operations which should not be done:
+-----------------------------------------------
+	
+
+
+		1.Addition of two pointers is not possible.
+			ptr1+ptr2	//invalid;
+
+		2.Multiplication is also not possible
+		
+		3.division is also not possible
+
+
+
+-----------------------------------------------------------------------
+
+------------------------------------------------------------
+	char ch='A';	//	&ch is 1000
+
+	char *cptr = &ch;
+
+	printf("%p\n",cptr);	// 	1000	
+
+	cptr + 1;	// 	1000
+	
+	cptr += 1;	// 	1001
+
+	cptr++;		// 	1001
+
+	++cptr;		//	1003
+
+	++cptr++;	// 	invalidincrementdec.c:29:2: error: 					lvalue required as decrement operand
+ 					 --cptr--;
+ 					 ^
+
+
+	cptr -- ;	// 	1003
+	
+ ----------------------------------------------
+	int a ;		//	1000
+	int *iptr = &a;
+	printf("%p",iptr);		//1000
+	printf("%p",++iptr);		//1004  
+
+
+	--iptr;		// 	1000
+
+------------------------------------------------------
+	int main()
+	{
+		int arr[]={10,11,12,22,24};
+		
+		int *p1,*p2;
+
+		p1 = arr;	// 	=> p1=&arr[0];		&arr--->points to whole array
+		
+		p2 = &arr[4];
+
+		printf("%d\n",*p2-*p1);		// 14 
+ 
+		printf("%d\n",p2 -p1);		//  4
+
+		printf("%d\n",p1 -p2);		//  -4
+		
+		return 0;
+	}	
+
+-------------------------------------------------------------------
+
+
+int main()
+{
+	int a=258;
+	int *ptr=&a;
+	char *cptr=(char *)&a;
+	double *dptr=(char *)&a;
+	printf("&A=%u ptr=%u cptr=%u\n",&a,ptr,cptr);	//1000 1000 1000
+	cptr=cptr+1;
+	printf("cptr=%u\n ",cptr);	//1001	
+	ptr=ptr+1;
+	printf("ptr=%u\n ",ptr);	//1004	
+	dptr=dptr+1;
+	printf("dptr=%u\n ",dptr);	//1008	
+	
+
+}
+-----------------------------------------------------------------------
+Precedence of derefrencing operator and increment ,decrement operator
+=====================================================================
+derefrencing operator --> *
+
+increment ,decrement operator --> ++ and --
+
+precedence of both operators are same so the follow the associvity rule from right to left..
+
+int x=10;
+int *ptr=&x;
+let &x -->1000
+	ptr -->1000
+x=*ptr++;
+x=*++ptr;
+x=++*ptr;
+x=(*ptr)++;
+#include<stdio.h>
+int main()
+{
+        int a=10;
+        int *ptr=&a;
+        printf("&a:%u\n",&a);
+        printf("ptr:%u\n",ptr);
+        printf("*ptr:%d\n",*ptr);
+        a=*ptr++;
+        printf("a:%d\n",a);
+        printf("ptr:%u\n",ptr);
+        printf("*ptr:%d\n",*ptr);
+return 0;
+}
+ramya>>./a.out 
+&a:1696699844
+ptr:1696699844
+*ptr:10
+a:10
+ptr:1696699848
+*ptr:1696699848
+-------------------------------------------------
+  a=*++ptr;
+===============
+ramya>>./a.out 
+&a:791635540
+ptr:791635540
+*ptr:10
+a:791635544
+ptr:791635544
+*ptr:791635544
+------------------------------------------------------
+ a=++*ptr;
+==============
+ramya>>./a.out 
+&a:771432820
+ptr:771432820
+*ptr:10
+a:11
+ptr:771432820
+*ptr:11
+---------------------------------------
+a=(*ptr)++;
+=============
+ramya>>./a.out 
+&a:11743908
+ptr:11743908
+*ptr:10
+a:10
+ptr:11743908
+*ptr:10
+------------------------------------------------------------------------------
+Arrays and pointers
+====================
+Arrays & Pointers
+		=================
+		arr <-->&arr[0] <-->base address of array
+internally all arrays are going to be treated as pointers.
+
+
+arr[0]	--------> will be represented as *(arr+0);// where arr gives the base address of array
+
+arr[1]	--------> will be represented as *(arr+1);
+
+arr[2]	--------> will be represented as *(arr+2);
+
+
+arr[SIZE-1]	--------> will be represented as *(arr+SIZE-1);
+
+ptr=a;
+	a[i]=*(a+i)=*(i+a)=i[a]=*(ptr+i)=ptr[i]=i[ptr]=*(i+ptr)
+
+
+
+		int main()
+		{
+			int arr[]={34,78,54,21,89};
+			printf("%u",arr);//1000
+			printf("%u",&arr[0]);//1000
+			printf("%u",&arr[1]);//1004
+			printf("%d",arr[2]);//54
+			printf("%d",2[arr]);//54
+			printf("%u",arr+2);//1008
+			printf("%d",*(arr+2));//54
+			printf("%d",*(2+arr));	//54
+			printf("%d",*arr+2);//36
+			printf("%d",arr[-1]);//undefined
+			int *ptr=arr;  //int *ptr=&arr[0]
+			printf("%d",ptr[2]);//54
+			printf("%d",2[ptr]);//54
+			printf("%d",*(ptr+2));//54
+			printf("%d",*(2+ptr));//54
+			ptr=&arr[3];//1012
+			printf("%d",ptr[-1]);//54
+		}
+		-->arr[i]  <-->*(arr+i)
+
+		ptr[2]   -->   *(ptr+2)
+------------------------------------------------------------------------------------------------
+	----> array indexing is cumulative
+		arr[i]==i[arr];
+	
+
+	arr[i]==*(arr+i)==*(i+arr)==i[arr]
+	*(ptr+i)==ptr[i]==>i[ptr]==*(i+ptr)
+
+internally all arrays are going to be treated as pointers.
+
+
+arr[0]	--------> will be represented as *(arr+0);// where arr gives the base address of array
+
+arr[1]	--------> will be represented as *(arr+1);
+
+arr[2]	--------> will be represented as *(arr+2);
+
+
+arr[SIZE-1]	--------> will be represented as *(arr+SIZE-1);
+
+ptr=a;
+	a[i]=*(a+i)=*(i+a)=i[a]=*(ptr+i)=ptr[i]=i[ptr]=*(i+ptr)
+
+
+
+----------------------------------------------------------------------------------
+
+	int main()
+	{
+		int a=10;		//1000
+		int *ptr=&a;
+		printf("ptr=%p &a=%p &ptr=%p \n",ptr,&a,&ptr);	//1000	1000	2000
+		int b=20;	//3000
+		int *ptr1=&ptr;	//2000
+		
+		printf("ptr1=%p &ptr=%p \n",ptr1,&ptr);//2000	2000
+
+		*ptr1=&b;	//ptr=3000
+		printf("ptr=%p &b=%p \n",ptr,&b);	//3000 3000
+
+	}
+
+------------------------------------------------------------------------------
+strings with pointers
+=====================
+
+int main()
+{
+        char str[]="India";
+        char *ptr=str;
+	printf("%d",sizeof(ptr)); //4
+	printf("%d",sizeof(str));//6
+
+        printf("string is %s \n",ptr); //India
+
+        printf("Address of str or ptr value = %p \n",ptr);   //100
+        printf("%c\n ", *ptr++); //I
+        printf("%p\n ", ptr); //101
+        printf("%s\n ", ptr); //ndia
+
+        printf("%c\n ", ++*ptr); //o
+
+        printf("Actual string = %s\n",str); //odia
+
+        printf("%c\n " , *--ptr); //I
+        printf("%c\n " , *++ptr);//o
+        printf("%c \n" , *ptr++);//o
+
+        printf("%c \n" , *ptr--); //d
+
+        printf("%c \n" , (*ptr)--); //o
+	ptr--;
+        printf("%s \n" , ptr); //India
+}
+--------------------------------------------
+#include<stdio.h>
+int main()
+{
+        char str[]="hello";
+        printf("Str:%c\n",*str++);
+        printf("Str:%s\n",str);
+        printf("Str:%c\n",*++str);
+        printf("Str:%s\n",str);
+}
+
+-----------------------------------------------------------------------
+	#include<stdio.h>
+	int main()
+	{
+		char *str="hello";
+		printf("Str:%c\n",*str++);
+		printf("Str:%s\n",str);
+		printf("Str:%c\n",*++str);
+		printf("Str:%s\n",str);
+		str="hii";
+		printf("Str:%c\n",*str++);
+		printf("Str:%s\n",str);
+		printf("Str:%c\n",*++str);
+		printf("Str:%s\n",str);
+		strcpy(str,"cranes");
+		printf("Str:%s\n",str);
+	}
+
+	char *str="my string is a bigger one";
+---> when we initialise like this the string gets memory in read only segment so we can read and use the datas but we cannot modify them.
+
+---> if we modify we will get segmentation fault.
+------------------------------------------------------------------------
+Call by value:
+=============
+
+
+	void sqr(int a)
+	{
+		a=a*a;
+		printf("in fun a=%d\n",a);	//25
+	}
+
+
+	int main()
+	{
+		int a=5;
+		
+		sqr(a);
+
+		printf("in main a=%d\n",a);	//5
+
+	}
+
+Call by reference (call by address):
+=======================================
+
+	---> here int *a in function formal parameter is going to be a loacal formal parameter but it is going to point to main functions variable a.
+
+	----> so watever modification we do using the pointer will affect the main variable.
+
+
+	void sqr(int *a)
+	{
+		*a=(*a)*(*a);
+		printf("in fun a=%d\n",*a);	//25
+	}
+
+
+	int main()
+	{
+		int a=5;
+		
+		sqr(&a);
+
+		printf("in main a=%d\n",a);	//25
+
+	}
+
+
+	----------------------------------------------------------------
+	
+
+	void swap(int a,int b)
+	{
+		int temp=a;
+		a=b;
+		b=temp;
+
+		printf("in fun a=%d b=%d before swap\n",a,b);	//5 10
+		
+
+	}
+	int main()
+	{
+		int a=10,b=5;
+		printf("a=%d b=%d before swap\n",a,b);	//10 5
+		swap(a,b);
+		printf("a=%d b=%d after swap\n",a,b);	//10 5
+		
+
+	}
+
+------------------------------------------------------------------------
+
+	void swap(int *a,int *b)
+	{
+		int temp=*a;
+		*a=*b;
+		*b=temp;
+
+		printf("in fun a=%d b=%d before swap\n",*a,*b);	//5 10
+		
+
+	}
+	int main()
+	{
+		int a=10,b=5;
+		printf("a=%d b=%d before swap\n",a,b);	//10 5
+		swap(&a,&b);
+		printf("a=%d b=%d after swap\n",a,b);	//5 10
+		
+
+	}
+
+---------------------------------------------------------------
+---------
+
+	void swap(int *a,int *b)
+	{
+		int *temp=a;
+		a=b;
+		b=temp;
+
+		printf("in fun a=%d b=%d before swap\n",*a,*b);	//5 10
+		
+
+	}
+	int main()
+	{
+		int a=10,b=5;
+		printf("a=%d b=%d before swap\n",a,b);	//10 5
+		swap(&a,&b);
+		printf("a=%d b=%d after swap\n",a,b);	//10 5
+		
+
+	}
+--------------------------------------------------------------
+	char str[]="cranes";
+	char *ptr=str;
+	printf("%c",++*ptr);//d
+	printf("%s",str);//dranes
+	printf("%c",*ptr++);//d
+	printf("%s",ptr);//ranes	
+	printf("%s",str);//dranes
+	str++;//invalid
+--------------------------------------------------------------------------------------------
+	Pointer to Pointer
+	==================
+	datatype **pointer_name;
+
+		int a=6;
+		int *ptr=&a;
+		int **pptr=&ptr;
+		printf("%u",pptr);//2000
+		printf("%u",*pptr);//1000
+		printf("%d",**pptr);//6
+-------------------------------------------------------------------------------
+Pointer to a Pointer:
+================
+
+-----> will always point to a pointer variable;
+	syntax
+		d_type  **p_name;
+		int **p1;
+		
+int main()
+{
+	int a=10;
+	int *ptr=&a;
+	int **dptr=&ptr;
+	printf("add of a=%u\n",&a);
+	printf("add of a=%u\n",ptr);
+	printf("add of a=%u\n",*dptr);
+	printf("add of ptr=%u\n",&ptr);
+	printf("add of ptr=%u\n",dptr);
+	printf("value of a=%d\n",a);
+	printf("value of a=%d\n",*ptr);
+	printf("value of a=%d\n",**dptr);
+}
+--------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

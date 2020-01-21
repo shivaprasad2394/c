@@ -1,0 +1,282 @@
+
+		Conditional Compilation
+		=======================
+		-->manipulated by preprocessor
+		-->#if,#else,#elif,#endif,#ifdef,#ifndef
+		
+		int main()
+		{
+			#if 0
+			printf("inside #if");
+			printf("inside #if");
+			printf("inside #if");
+			printf("inside #if");
+			#endif
+			
+		}
+--------------------------------------------------------
+		int main()
+		{
+			#if 0
+				printf("inside #if");
+				printf("inside #if");
+				printf("inside #if");
+				printf("inside #if");
+			#else
+				printf("inside #else");
+				printf("inside #else");
+				printf("inside #else");
+				printf("inside #else");
+			#endif
+			
+		}
+---------------------------------------------------
+		if -->compiler
+		#if  -->preprocessor
+		
+		if(sizeof(int))  //valid
+		#if sizeof(int) //invalid
+		if(6.7)//valid
+		#if 8.9 //invalid
+		-->#if condition cant be sizeof,floating poin copnstant
+			enum constants.
+------------------------------------------------------------------
+		#define flag 3
+		int main()
+		{
+			#if flag>0
+				printf("inside #if");
+			#else
+				printf("inside #else\n");
+			#endif
+		}
+		o/p==>inside #if
+---------------------------------------------------
+		#define flag 3
+		int main()
+		{
+			int a=30;
+			#if flag>a
+				printf("inside #if");
+			#else
+				printf("inside #else\n");
+			#endif
+		}
+		o/p==>inside #if
+		-->for any unknown identifier,preprocessor will
+		give the value 0
+-------------------------------------------------------------
+		#define flag 3
+		int main()
+		{
+			#if flag>0
+				printf("inside #if");
+			#elif flag<0
+				printf("inside #elif");
+			#else
+				printf("inside #else\n");
+			#endif
+		}
+		-->inside #if
+--------------------------------------------------------------------
+		#ifdef,#ifndef
+		=============
+		#define max
+		int main()
+		{
+			#ifdef max
+				printf("inside #ifdef\n");
+			#endif
+		}
+		//inside #ifdef
+		--------------------------------------------
+		#define max
+		int main()
+		{
+			#ifndef max
+				printf("inside #ifdef\n");
+			#endif
+		}
+		//no output
+----------------------------------------------------------------
+		
+		#ifdef,#ifndef
+		=============
+		-->can be used to avoid multiple file inclusion
+
+		#ifndef std
+		#define std
+		-------------
+		--------------
+		--------------
+		-----------
+		#endif
+----------------------------------------------------
+		Bitfields
+		=========
+		-->can be applied only to structure datamebers
+		-->can be applied only intgral datamembers(int & char)
+		
+		struct tag
+		{
+			int a:5;
+			char ch:3;
+			float f;
+		};
+		-->bitfield value given should be less than sizeof dataype & it cant be 0
+		-->struct tag
+		{
+			int a:5;
+			char ch:3;
+			float f;
+		}s1;
+		int main()
+		{
+			scanf("%d",&s1.a);//invalid
+			scanf("%c",&s1.ch);//invalid
+			scanf("%f",&s1.f);//valid
+		}
+------------------------------------------------------------------
+		struct emp
+		{
+			int a:3;
+			int b:3;
+			int c:3;
+			int d:4;
+		}s1={2,12,7,12};
+		int main()
+		{
+			printf("%d  %d %d  %d",s1.a,s1.b,s1.c,s1.d);
+		}
+		//2  -4  -1  -4
+----------------------------------------------------------------
+		struct emp
+		{
+			unsigned int a:3;
+			unsigned int b:3;
+			unsigned int c:3;
+			unsigned int d:4;
+		}s1={2,12,7,12};
+		int main()
+		{
+			printf("%d  %d %d  %d",s1.a,s1.b,s1.c,s1.d);
+		}
+	//2 4 7 12
+---------------------------------------------------------
+		Union
+		=====
+		union tag_name
+		{
+			int data;
+			char ch;
+			float f;
+		}u1={12,'a',8.9};//warning
+		struct tag_name
+		{
+			int data;
+			char ch;
+			float f;
+		}s1={12,'k',8.9};
+		int main()
+		{
+			printf("%d",sizeof(u1));//4
+			printf("%d",sizeof(s1));//12
+			printf("%d",u1.data);//12
+			u1.ch='h';
+			printf("%c",u1.ch);//h
+			u1.f=89.9;
+			printf("%f",u1.f);//89.9
+		}
+-->size of union will be size of its highest datamember
+-->union will follow shared memory concept
+-->only one datamember can be initialised at a time
+---------------------------------------------------------------------
+
+
+union tag
+{
+	int a;
+	char b;
+}varsity;
+main()
+{
+	varsity.a=0x1234;
+	varsity.b=varsity.b| 0x8;
+	printf("%x  %x",varsity.a,varsity.b);
+}
+
+-----------------------------------------------------------
+
+		union byte
+		{
+			int x;
+			char byte[4];
+
+		}obj={0x12345678};
+		int main()
+		{
+			printf("%x",obj.byte[1]);
+		}
+-------------------------------------------------
+		enumeration(enum)
+		==============
+	-->creating userdefined datatype
+		
+	enum tag{datamembers};
+		-->datamembers are identifiers
+		-->internalyy thsese identifiers represent
+			named integer constants
+
+		enum week{mon,tue,wed,thu,fri,sat,sun};
+		int main()
+		{
+			printf("%d",mon);//0
+		}
+		---------------------------------------------
+		enum week{mon,tue,wed,thu=10,fri,sat,sun};
+		int main()
+		{
+			printf("%d",mon);//0
+			printf("%d",tue);//1
+			printf("%d",thu);//10
+			printf("%d",fri);/11
+
+		}
+------------------------------------------------------------
+		enum bool{false,true};
+		int main()
+		{
+			search(100);
+		}
+		int search(int ele)
+		{
+			node *temp=root;
+			while(temp!=NULL)
+			{
+				if(ele>temp->data)
+				{
+					temp=temp->rchild;
+				}
+				else if(ele<temp->data)
+				{
+					temp=temp->lchild;
+				}
+				else
+				{
+					return true;
+				}
+			}
+			return false;
+				
+		}
+------------------------------------------------------------------
+
+
+	
+		
+
+
+
+
+
+

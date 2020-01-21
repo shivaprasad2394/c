@@ -1,0 +1,319 @@
+Single linked list
+==================
+
+Each node
+===============
+typedef s
+truct node{
+int data;
+struct node *link;
+}node;
+
+Head pointer
+=============
+node *head=NULL;
+
+creating a node
+===============
+node *createnode(int data)
+{
+        node *new=(node *)malloc(sizeof(node));
+        if(new==NULL)
+        {
+                printf("memory not allocated\n");
+                exit(0);
+        }
+        new->data=data;
+        new->link=NULL;
+        return new;
+}
+
+Inserting a node at front
+==========================
+void insertfront(int data)
+{
+        node *new=createnode(data);
+        if(head==NULL)
+        {
+                head=new;
+                return;
+        }
+        else
+        {
+                new->link=head;
+                head=new;
+        }
+}
+
+display the list
+==================
+void display()
+{
+        if(head==NULL)
+        {
+                printf("link is empty\n");
+                return;
+        }
+        node *temp=head;
+        while(temp!=NULL)
+        {
+                printf("%d\t",temp->data);
+                temp=temp->link;
+        }
+        printf("\n");
+}
+
+insert node at end
+===================
+ void insertend(int data)
+{
+        node *new=createnode(data);
+        if(head==NULL)
+        {
+                head=new;
+                return;
+        }
+        node *temp=head;
+        node *prev=NULL;
+        while(temp!=NULL)
+        {
+                prev=temp;
+                temp=temp->link;
+        }
+        prev->link=new;
+}
+
+OR
+void insertend(int data)
+{
+        node *new=createnode(data);
+        if(head==NULL)
+        {
+                head=new;
+                return;
+        }
+        node *temp=head;
+        while(temp->link!=NULL)
+        {
+                temp=temp->link;
+        }
+        temp->link=new;
+}
+
+
+insert node at the particular position
+=======================================
+
+void insertpos(int ele,int pos)
+		{
+			int c=count();
+			if(pos<=0 || pos>c)
+			{
+				printf("invalid position\n");
+				return;
+			}
+			if(pos==1)
+			{
+				insertfront(ele);
+				return;
+			}
+			node *new=createnode(ele);
+			int i=1;
+			node *temp=head;
+			while(i<pos-1)
+			{
+				i++;
+				temp=temp->link;
+			}
+			new->link=temp->link;
+			temp->link=new;
+			
+		}
+----------------------------------------------------------
+to count the number of nodes
+================================
+
+int count()
+		{
+			int c=0;
+			node *temp=head;
+			while(temp!=NULL)
+			{
+				c++;
+				temp=temp->link;
+			}
+			return c;
+		}
+-------------------------------------------
+delete at end
+==============
+		void deleteend()
+		{
+			if(head==NULL)
+			{
+				printf("list is empty\n");
+				return;
+			}
+			node *temp=head,*prev=NULL;
+			while(temp->link!=NULL)
+			{
+				prev=temp;
+				temp=temp->link;
+			}
+			prev->link=NULL;
+			printf("%d got deleted\n",temp->data);
+			free(temp);
+			
+
+		}
+-----------------------------------------------------------------------
+delete front
+==============
+void deletefront()
+		{
+			if(head==NULL)
+			{
+				printf("list is empty\n");
+				return;
+			}
+			node *temp=head;
+			head=head->link;
+			printf("%d got deleted\n",temp->data);
+			free(temp);
+		}
+--------------------------------------------------------------------------
+int main()
+		{
+			int key;
+			insertfront(50);
+			insertfront(100);
+			insertfront(200);
+			insertfront(300);
+			insertfront(800);
+			insertfront(900);
+			display();
+			deletefront();
+			display();
+			deleteend();
+			display();
+			printf("count =%d\n",count());
+			insertpos(56,3);
+			display();
+		}
+--------------------------------------------------------
+delete at position
+==================
+ 		int deleteatpos(int pos)
+                {
+                        node *temp=head;
+                        node *prev=NULL;
+                        int i=1;
+                        while(i<pos)
+                        {
+                                prev=temp;
+                                temp=temp->link;
+                                i++;
+                        }
+                        prev->link=temp->link;
+                        int a=temp->data;
+                       free(temp);
+                        return a;
+                }
+--------------------------------------------------------------------
+sort(bubble sort)
+=====
+ 	void sort()
+                {
+                        int i,temp=0;
+                        int c=count();
+                        for(i=0;i<c-1;i++)
+                        {
+                                node *cur=head;
+                                node *next=cur->link;
+                                while(next!=NULL)
+                                {
+                                        if(cur->data > next->data)
+                                        {
+                                                temp=cur->data;
+                                                cur->data=next->data;
+                                                next->data=temp;
+                                        }
+                                        cur=cur->link;
+                                        next=cur->link;
+                                }
+                        }
+                }
+---------------------------------------------------------------------------------
+sort(selection sort)
+====================
+     void sort()
+                {
+                        int i,temp=0;
+                        int c=count();
+/*                      for(i=0;i<c-1;i++)
+                        {*/
+                                node *cur=head;
+                                node *next=cur->link;
+                        while(cur->link!=NULL)
+                        {
+                                while(next!=NULL)
+                                {
+                                        if(cur->data > next->data)
+                                        {
+                                                temp=cur->data;
+                                                cur->data=next->data;
+                                                next->data=temp;
+                                        }
+                                        next=next->link;
+                                }
+                                cur=cur->link;
+                                next=cur->link;
+                        }
+                }
+-------------------------------------------------------------------------------------
+Assignment
+===========
+write a function to search for a key element
+write a function to find the number of duplicates present for a key in a linked list
+write a function to find the datas which are having duplicates.
+write a function to sort the linked list
+write a function to reverse the linked list
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

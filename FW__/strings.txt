@@ -1,0 +1,740 @@
+		Strings
+		=======
+
+		-->Array of characters
+		-->array of a type char which terminate with a null character
+strings:
+=======	
+	----> character array is called as strings.
+	      
+	----> strings can be initialised by both using " " or character by character
+	char arr[]="abcd";	//valid
+        char ch[]={'a','b','c','d'};	//valid
+
+        printf("%d %d\n",sizeof(arr),sizeof(ch));	//5 4
+
+	----> when we initialise within " " along with the characters ,a special character called as NULL character will be added at the end of string.
+
+	'\0'	--->NULL character  ascii value is 0.
+
+	---> to indicate end of string
+
+		Declaration
+		===========
+		char str[20];	---->string
+
+
+		Initialisation:
+		===============
+a)compile time
+b)run time
+	
+		int arr[5]={1,2,3,4,5}; //integer array
+		
+		char ch[]={'a','b','c','d','e'}; //character array
+		char ch1[]="abcde";
+	
+		printf("%d\n",sizeof(ch));	//5
+	
+		printf("%d\n",sizeof(ch1));	//6
+----------------------------------------------------------------------------------------------
+		char str[6]={'a','r','r','a','y'};	printf("%d\n",sizeof(str));
+		char str[6]={'a','r','r','a','y','\0'};	printf("%d\n",sizeof(str));
+		char str[]={'a','r','r','a','y'};	printf("%d\n",sizeof(str));
+		char str[]={'a','r','r','a','y','\0'};	printf("%d\n",sizeof(str));
+		char str[6]="array";	printf("%d\n",sizeof(str));
+		char str[]="array";	printf("%d\n",sizeof(str));
+----> when we do string initialisation a null character('\0') will be added to the end of the string indicating the end.
+anything inside a double quote is a string literal 
+-----------------------------------------------------------------------------------------------
+	int arr[5]={1,2,3,4,5};
+	printf("arr[2]=%d\n",arr[2]);	//3
+
+
+	char ch[]={'a','b','c','d','e'};
+	char ch1[]="abcde";
+	
+	printf("ch1[2]=%c\n",ch1[2]);	//c
+	printf("ch[2]=%c\n",ch[2]);	//c
+
+
+
+	----> other arrays we cannot process entire array in a single form.
+	---->but strings can be processed.
+
+
+	%s:
+	===
+		---> it can access entire string elements .
+		--->it expects a starting address.
+		--->it will process each and every byte as a character till it encounters null character.
+
+#include<stdio.h>
+int main()
+{
+//      char str[]="array";
+//      char str[]={'a','r','r','a','y'};
+//      char str[]={'a','r','r','a','y','\0'};
+        char str[]={'a','\0','r','a','y','\0'};
+        printf("sizeof:%d\n",sizeof(str));
+        printf("%s\n",str);
+        printf("%s\n",&str);
+        printf("%s\n",str+1);
+        printf("%c\n",str[1]);
+        printf("%c\n",str[2]);
+return 0;
+}
+
+int main()
+{
+        char ch[]={'a','b','0','c','d'};	//it is character 0 not null
+        char arr[]="abcd";
+
+        printf("%d %d\n",sizeof(arr),sizeof(ch));
+        printf("ch=%s\n",ch);		// ab0cdsomejunk
+
+}
+--------------------------------------------------------------------------------------------------
+To read the string from the keyboard
+=====================================
+run time initialization
+
+#include<stdio.h>
+int main()
+{
+	char str[10];
+	printf("%d\n",sizeof(str));
+	printf("Enter the string\n");
+	scanf("%s",str);
+	printf("%s\n",str);
+}
+ramya@ramya-Inspiron-3521:~/cprgm/string$ ./a.out 
+10
+Enter the string
+hello
+hello
+ramya@ramya-Inspiron-3521:~/cprgm/string$ ./a.out 
+10
+Enter the string
+hello world
+hello
+-->scanf will stop reading once it detects space character
+-----> scanf will take only one word as input
+-----> the moment it detects ' ' or  '\n' it will stop taking the string put it in the string array with a terminating null charactrer.
+
+----> scanf doesnt check if we cross array bound.
+
+--------------------------------------
+gets(string_name);
+----> to get input of multiple words.
+#include<stdio.h>
+int main()
+{
+        char str[10];
+        printf("%d\n",sizeof(str));
+        printf("Enter the string\n");
+        gets(str);
+        printf("%s\n",str);
+}
+ramya@ramya-Inspiron-3521:~/cprgm/string$ ./a.out 
+10
+Enter the string
+hello world
+hello world
+-->gets will take a string from the keyboard with space 
+----> to get input of multiple words.
+#include<stdio.h>
+int main()
+{
+        char str[5];//here a string is of size 5 which can hold only 5 characters
+        printf("%d\n",sizeof(str));
+        printf("Enter the string\n");
+        gets(str);
+        printf("%s\n",str);
+}
+#include<stdio.h>
+int main()
+{
+        char str[10];
+        printf("%d\n",sizeof(str));
+        printf("Enter the string\n");
+        gets(str);
+        printf("%s\n",str);
+}
+-->gets take more than 5 characters which may lead to core dumped there is no bound checking
+----> even gets doesnt check for memory bounds.
+-----------------------------------------------------------------------------------------------
+fgets
+ char *fgets(char *s, int size, FILE *stream);
+fgets-->reading string
+		fgets(string_name,string_size,stdin);
+		#include<stdio.h>
+		int main()
+		{
+			char str[5];
+			printf("%d\n",sizeof(str));
+			printf("Enter the string\n");
+			fgets(str,5,stdin);
+			printf("%s\n",str);
+		}
+ramya@ramya-Inspiron-3521:~/cprgm/string$ ./a.out 
+5
+Enter the string
+hello world
+hell
+fgets read the string until it finds end of file EOF or newline
+here string size is 5 if if give more than 5 characters it will not read it will read till 4 characters and it adds null at end
+ramya@ramya-Inspiron-3521:~/cprgm/string$ ./a.out 
+5
+Enter the string
+hii
+hii
+
+here hii less than the string size declared hii 3 characters soo fgets will store the string in a buffer as
+hii\n\0 so u will get a newline after printing hii 
+----------------------------------------------------------------
+ char ch='a';
+ char ch2[]="a";
+-----------------------------------------------------------
+	String Library Functions:
+	=========================
+
+---->#include<string.h>
+1.string length:
+================
+
+	int len=strlen(stringname);
+
+	-----> strlen will start detecting the characters from the base address and keep on incrementing the count value till it encounters null character.
+
+	----->'\0' will not be included in strlen.
+
+#include<stdio.h>
+#include<string.h>
+int main()
+{
+/*	char str1[100]="My string";
+	printf("sizeof:%d\n",sizeof(str1));
+	printf("strlen:%u\n",strlen(str1));
+	char str2[]="My string";
+	printf("sizeof:%d\n",sizeof(str2));
+	printf("strlen:%u\n",strlen(str2));
+	char str3[]="Mystring";
+	printf("sizeof:%d\n",sizeof(str3));
+	printf("strlen:%u\n",strlen(str3));
+	char str4[]={'M','y','s','t','r','i','n','g'};
+	printf("sizeof:%d\n",sizeof(str4));
+	printf("strlen:%u\n",strlen(str4));
+	char str5[]={'M','y','0','s','t','r','i','n','g'};
+	printf("sizeof:%d\n",sizeof(str5));
+	printf("strlen:%u\n",strlen(str5));
+	char str6[]={'M','y','\0','s','t','r','i','n','g'};
+	printf("sizeof:%d\n",sizeof(str6));
+	printf("strlen:%u\n",strlen(str6));
+	char str7[]={'M','y','\0','\0','s','t','r','i','n','g'};
+	printf("sizeof:%d\n",sizeof(str7));
+	printf("strlen:%u\n",strlen(str7));*/
+	char str8[]={'M','y',0,'s','t','r','i','n','g'};
+	printf("sizeof:%d\n",sizeof(str8));
+	printf("strlen:%u\n",strlen(str8));
+return 0;
+}
+Q) Predict the output?
+
+		syntax:int g=strlen(string_name);
+
+		int main()
+		{
+			char str2[]="hello";
+			printf("%d",sizeof(str2));
+			printf("%d",strlen(str2));
+		}
+------------------------------------------------------------------------
+	
+	Q) Predict the output?
+
+		char str[]={'a','b','c','\0','e','f','g'};
+		printf("%d",sizeof(str));
+		printf("%d",strlen(str));
+
+
+------------------------------------------------------------------------
+	Q) Predict the output?
+	
+	
+		char str[10]={'a','b','c','\0','e','f','g'};
+		printf("%d",sizeof(str));
+		printf("%d",strlen(str));
+
+
+----------------------------------------------------------------------
+2)strcpy
+========
+	----> to copy one string to another string
+		strcpy(dest,source);
+
+	----> it will copy along with null character.
+	
+#include<stdio.h>
+#include<string.h>
+int main()
+{
+	char str1[]="my string";
+	char str2[10];
+	printf("bfore copy\n");
+	printf("string 1:%s\n",str1);
+	printf("string 2:%s\n",str2);
+	strcpy(str2,str1);
+	printf("after copy\n");
+	printf("string 1:%s\n",str1);
+	printf("string 2:%s\n",str2);
+return 0;
+}
+-------------
+strncpy->n functions
+=======
+	strncpy(dest,source,n);
+-->work same as strcpy but it copies only n characters from source to destination
+#include<stdio.h>
+#include<string.h>
+int main()
+{
+	char str1[]="my string";
+	char str2[5];
+	printf("bfore copying\n");
+	printf("string1:%s\n",str1);	
+	printf("string2:%s\n",str2);	
+	strncpy(str2,str1,5);
+	printf("after copying\n");
+	printf("string1:%s\n",str1);	
+	printf("string2:%s\n",str2);	
+return 0;
+}
+ramya@ramya-Inspiron-3521:~/cprgm/string$ ./a.out 
+bfore copying
+string1:my string
+string2:
+after copying
+string1:my string
+string2:my st
+----------------------------------------
+#include<stdio.h>
+#include<string.h>
+int main()
+{
+	char str1[]="my string";
+	char str2[10];
+	printf("bfore copy\n");
+	printf("string 1:%s\n",str1);
+	printf("string 2:%s\n",str2);
+	strcpy(str2,str1);
+	printf("after copy\n");
+	printf("string 1:%s\n",str1);
+	printf("string 2:%s\n",str2);
+	if(str1==str2)
+		printf("copied\n");
+	else
+		printf("not copied\n");
+return 0;
+}
+output = not copied because we are not comparing the strings we are comparing the addresses so it prints the else part
+----> we are not comparing string but their addresses so condition fails.
+----------------------------------------------------------------------
+3).strcmp:
+   ======
+	strcmp(str1,str2)
+#include<stdio.h>
+#include<string.h>
+int main()
+{
+        char str1[]="my string";
+        char str2[10];
+        printf("bfore copy\n");
+        printf("string 1:%s\n",str1);
+        printf("string 2:%s\n",str2);
+        strcpy(str2,str1);
+        printf("after copy\n");
+        printf("string 1:%s\n",str1);
+        printf("string 2:%s\n",str2);
+        if(strcmp(str1,str2))
+                printf("copied\n");
+        else
+                printf("not copied\n");
+return 0;
+}
+output = not copied because
+	----> strcmp compares both the strings character by character
+	----> if both are equal it return 0
+		if str1 is greater it returns +ve
+		if str2 is greater it returns -ve.
+
+
+#include<stdio.h>
+#include<string.h>
+int main()
+{
+        char str1[]="my string";
+        char str2[10];
+        printf("bfore copy\n");
+        printf("string 1:%s\n",str1);
+        printf("string 2:%s\n",str2);
+        strcpy(str2,str1);
+        printf("after copy\n");
+        printf("string 1:%s\n",str1);
+        printf("string 2:%s\n",str2);
+        if(strcmp(str1,str2)==0)
+                printf("copied\n");
+        else
+                printf("not copied\n");
+return 0;
+}
+-----------------------------------------------------------------
+#include<stdio.h>
+#include<string.h>
+int main()
+{
+        char str1[]="my string";
+        char str2[]="my";
+        printf("string 1:%s\n",str1);
+        printf("string 2:%s\n",str2);
+        if(strcmp(str1,str2)==0)
+                printf("equal\n");
+        else if(strcmp(str1,str2)>0)
+                printf("str1 is greather\n");
+        else if(strcmp(str1,str2)<0)
+                printf("str1 is lesser\n");
+return 0;
+}
+ramya@ramya-Inspiron-3521:~/cprgm/string$ ./a.out 
+string 1:my string
+string 2:my
+str1 is greather
+-----------------------------------------------------
+include<stdio.h>
+#include<string.h>
+int main()
+{
+        char str1[]="my";
+        char str2[]="my string";
+        printf("string 1:%s\n",str1);
+        printf("string 2:%s\n",str2);
+        if(strcmp(str1,str2)==0)
+                printf("equal\n");
+        else if(strcmp(str1,str2)>0)
+                printf("str1 is greather\n");
+        else if(strcmp(str1,str2)<0)
+                printf("str1 is lesser\n");
+return 0;
+}
+ramya@ramya-Inspiron-3521:~/cprgm/string$ ./a.out 
+string 1:my
+string 2:my string
+str1 is lesser
+-------------------------------------------------------------------
+n functions
+	strncmp
+	=======
+	strncmp(string1,string2,n);
+-->it compares only first n characters of string1 and string2
+
+#include<stdio.h>
+#include<string.h>
+int main()
+{
+	char str1[]="my";
+	char str2[]="my string";
+	printf("string 1:%s\n",str1);
+	printf("string 2:%s\n",str2);
+	if(strncmp(str1,str2,2)==0)
+		printf("equal\n");
+	else if(strncmp(str1,str2,2)>0)
+		printf("str1 is greather\n");
+	else if(strncmp(str1,str2,2)<0)
+		printf("str1 is lesser\n");
+return 0;
+}
+ramya@ramya-Inspiron-3521:~/cprgm/string$ ./a.out 
+string 1:my
+string 2:my string
+equal
+-------------------------------------------------------------------
+#include<stdio.h>
+#include<string.h>
+int main()
+{
+        char str1[]="My class is";
+        char str2[5];
+        printf("Enter your class\n");
+        scanf("%s",str2);
+        char str3[20];
+        strcpy(str3,str1);
+        strcpy(str3,str2);
+        printf("%s\n",str3);
+return 0;
+}
+ramya@ramya-Inspiron-3521:~/cprgm/string$ ./a.out 
+Enter your class
+classa
+classa
+	-----> copying will overwrite the existing data.
+	-----> here we need to concatenate the strings
+		----> add a string to the end of the existing string.
+-------------------------------------------------------------------------
+4.strcat
+========
+	strcat(dest,src);
+	
+	----> it will go the end of the existing dest string and copy the source.
+	----> dest string should be having enough space to hold the source string.
+#include<stdio.h>
+#include<string.h>
+int main()
+{
+        char str1[]="My class is ";
+        char str2[5];
+        printf("Enter your class\n");
+        scanf("%s",str2);
+        char str3[20];
+        strcpy(str3,str1);
+        strcat(str3,str2);
+        printf("%s\n",str3);
+return 0;
+}
+ramya@ramya-Inspiron-3521:~/cprgm/string$ ./a.out 
+Enter your class
+classA
+My class is classA
+---------------------------------------------------------------------
+n functions:
+============
+
+	strncpy(dest,source,n);
+	strncmp(dest,source,n);
+	strncat(dest,source,n)
+strncat(dest,source,n)
+======================
+	works exactly as that of strcat but it concatinate only n characters from the source to destintion string
+	
+#include<stdio.h>
+#include<string.h>
+int main()
+{
+        char str1[]="My class is ";
+        char str2[5];
+        printf("Enter your class\n");
+        scanf("%s",str2);
+        char str3[20];
+        printf("string1:%s\n",str1);
+        printf("string2:%s\n",str2);
+        strcpy(str3,str1);
+        strncat(str3,str2,3);
+        printf("%s\n",str3);
+return 0;
+}
+ramya@ramya-Inspiron-3521:~/cprgm/string$ ./a.out 
+Enter your class
+classA
+string1:My class is 
+string2:classA
+My class is cla
+here  strncat(str3,str2,3); it concatinates only 3 characters from the str2 to str3
+-------------------------------------------------------------------------------
+==================================================================
+
+1.wap to get a multi word string as input and check how many words are present in it
+2.wap to get a multi word string as input and check how many vowels are present in it
+3.wap to get a multi word string as input and check how many times 'a' is present in it.
+4.wap to reverse a string
+5.wap to check whether it is palindrome or not
+
+------------------------------------------
+strlen
+========
+#include<stdio.h>
+unsigned int mystrlen(char str[]);
+unsigned int mysizeof(char str[]);
+int main()
+{
+        char s[]="hello world";
+        int len1=mystrlen(s);
+        printf("len1:%d\n",len1);
+        int len2=mysizeof(s);
+        printf("len2:%d\n",len2);
+return 0;
+}
+unsigned int mystrlen(char str[])
+{
+        int i=0;
+        while(str[i]!='\0')
+                i++;
+
+        return i;
+}
+unsigned int mysizeof(char str[])
+{
+        int i=0;
+        while(str[i]!='\0')
+                i++;
+        return i+1;
+}
+-----------------------------------------------------------------
+strcpy
+======
+#include<stdio.h>
+void mystrcpy(char str1[],char str2[]);
+int main()
+{
+        char s1[]="hello";
+        char s2[10];
+        printf("%s\n",s1);
+        printf("%s\n",s2);
+        mystrcpy(s2,s1);
+        printf("%s\n",s1);
+        printf("%s\n",s2);
+return 0;
+}
+void mystrcpy(char str1[],char str2[])
+{
+        int i=0;
+        while(str2[i]!='\0')
+        {
+                str1[i]=str2[i];
+                i++;
+        }
+        str1[i]='\0';
+}
+-----------------------------------------------------------------------
+strcmp
+======
+#include<stdio.h>
+int mystrcomp(char str1[],char str2[]);
+int main()
+{
+        char str1[]="hell";
+        char str2[]="hello";
+        if(mystrcomp(str1,str2)==0)
+                printf("equal\n");
+        else if(mystrcomp(str1,str2)>0)
+                printf("string 1 is greather\n");
+        else if(mystrcomp(str1,str2)<0)
+                printf("string 1 is lesser\n");
+return 0;
+}
+int mystrcomp(char str1[],char str2[])
+{
+        int i=0;
+        while(str1[i]==str2[i])
+        {
+                if(str1[i]=='\0')
+                        return 0;
+                else
+                        i++;
+        }
+        return str1[i]-str2[i];
+}
+----------------------------------------------------
+strcat:
+======
+#include<stdio.h>
+void mystrcat(char str1[],char str2[]);
+int main()
+{
+	char s1[20]="hello ";
+	char s2[]="hii";
+	mystrcat(s1,s2);
+	printf("%s\n",s1);
+return 0;
+}
+void mystrcat(char str1[],char str2[])
+{
+	int i=0,j=0;
+	while(str1[i]!='\0')
+		i++;
+	while((str1[i]=str2[j])!='\0')
+	{
+		i++;
+		j++;
+	}
+}
+----------------------------------------------------------------
+n functions implementation
+===========================
+strncpy
+=======
+#include<stdio.h>
+void mystrncpy(char str1[],char str2[],int n);
+int main()
+{
+	char s1[]="hello";
+	char s2[10];
+	printf("%s\n",s1);
+	printf("%s\n",s2);
+	mystrncpy(s2,s1,2);
+	printf("%s\n",s1);
+	printf("%s\n",s2);
+return 0;
+}
+void mystrncpy(char str1[],char str2[],int n)
+{
+	int i=0;
+	while(i<n)
+	{
+		str1[i]=str2[i];
+		i++;
+	}
+	str1[i]='\0';
+}
+----------------------------------------------------------
+strncmp
+=======
+#include<stdio.h>
+int mystrncomp(char str1[],char str2[],int n);
+int main()
+{
+	char str1[]="hello";
+	char str2[]="hel";
+	if(mystrncomp(str1,str2,2)==0)
+		printf("equal\n");
+	else if(mystrncomp(str1,str2,2)>0)
+		printf("string 1 is greather\n");
+	else if(mystrncomp(str1,str2,2)<0)
+		printf("string 1 is lesser\n");	
+return 0;
+}
+int mystrncomp(char str1[],char str2[],int n)
+{
+        int i=0;
+        while(i<n && (str1[i]!='\0')){
+                if(str1[i]==str2[i])
+                        i++;
+                else
+                        break;
+        }
+        return str1[i]-str2[i];
+}
+----------------------------------------------------------
+strncat
+=======
+
+#include<stdio.h>
+void mystrncat(char str1[],char str2[],int n);
+int main()
+{
+        char s1[20]="hello ";
+        char s2[]="hii";
+        mystrncat(s1,s2,1);
+        printf("%s\n",s1);
+return 0;
+}
+void mystrncat(char str1[],char str2[],int n)
+{
+        int i=0,j=0;
+        while(str1[i]!='\0')
+                i++;
+        while(j<n && ((str1[i]=str2[j])!='\0'))
+        {
+                i++;
+                j++;
+        }
+}
+--------------------------------------------------------------

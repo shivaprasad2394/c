@@ -1,0 +1,1429 @@
+datastructure			Advance pointers
+				================
+
+prgm 1--
+->>>>
+int main()
+{
+	char str[]="hello"; //string defined as an array
+	char *ptr=str;
+	printf("%c",++*ptr);
+}
+prgm 2---
+->>>>
+#include<stdio.h>
+int main()
+{
+        char str[]="hello";
+        char *ptr=str; //giving  addr of str to *ptr
+        printf("%c",++*ptr);// o/p =i;
+        char *ptr1="hello";//valid bcoz you can give and it assigned as readonly memory,here string defined as a string
+        int i=strcmp(ptr,ptr1);//strcmp it compare the contents here value of i=0
+        printf("%c",++*ptr1);//segmentation fault bcoz your changing the readonly memory
+        return 0;
+}
+prgm 3---
+->>>>
+#include<stdio.h>
+int main()
+{
+        char str[]="hello";//str will get memory in stack segment 
+        char *ptr=str; //giving  addr of str to *ptr in stack memory you have flexiblity to change the content
+        printf("%c",++*ptr);// o/p =i;
+        char *ptr1="hello";//valid bcoz you can give and it assigned as readonly memory ptr will get memory in like ROM memory segment 
+        int i=strcmp(ptr,ptr1);//strcmp it compare the contents here value of i=0
+//      printf("%c",++*ptr1);//segmentation fault bcoz your changing the readonly memory here *ptr=*ptr+1 means here your assigning back to *ptr which is readonly memory
+        printf("%c",(*ptr1+1));//o/p is 1 bcoz *ptr+1 here your not assigning back to *ptr your only incrementing it
+	ptr++;//valid 
+       return 0;
+}
+=====================================
+++*ptr=> ++(*ptr)
+	here ++  and * will have highest pirority so we have to go for Right to left associvity
+--------------------------------------------------------------------------------------------------------------------------------------------
+	int main()
+	{
+		char str[]="cranes";
+		char *ptr=str;
+		char *str2="cranes";
+		int i=strcmp(str,str2);//0
+		*ptr='f';
+		printf("%s",ptr);//franes
+		printf("%c",++*str2);//segmentation fault 
+		
+	}
+	--->segmentation fault -->bcz trying to modify
+		content of read only data
+
+int main()
+{
+	int a=30;
+	int *ptr;
+	ptr=&a;
+	*ptr=56;
+	printf("%d",a);///56
+	printf("%u",&ptr);//address of pointer
+	printf("%d",*a);//invalid
+	printf("%d",*&a);//56
+}
+------------------------------------------------------------------------------------------------
+predict output
+===============
+﻿Void display(char ch[])
+{
+	printf(“%s”,ch);
+}
+Int main()
+{
+	char ch1[]=”itap48”;
+	char ch2[]=”itap48”;
+	char *ptr2=ch1;
+	char *ptr1=”itap48”;
+	int i=strcmp(ptr1,ch1);
+	printf(“i=%d\n”,i);		//0
+
+	int i=strcmp(ch2,ch1);
+	printf(“i=%d\n”,i);		//0
+
+	printf(“ptr1=%s ch1=%s ch2=%s\n”,ptr1,ch1,ch2);
+							//itap48 itap48 itap48
+
+	display(ch1);
+	display(ptr1);
+	
+	*(ptr2)='a';
+	printf(“%s %s”,ch1,ptr2);		//atap48 atap48
+
+	*ptr1='b';
+	printf(“%s”,ptr1);			//?
+
+
+	int a=10;
+	int *iptr=&a;
+	*iptr=20;
+	printf(“%d %d”,a,*iptr);
+}
+int main()
+{
+	int a=10;
+	int b=30;
+	int *ptr1;
+	int *ptr=&a;
+	printf(“%d”,*ptr);	///10
+	a=20;
+	*ptr=25;
+	printf(“%d”,*ptr);	//25
+	printf(“%d”,*ptr1);	//
+
+}
+---------------------------------------------------------------------------------------------------------------------------------------------
+	wild pointer(uninitialized pointer)
+======================================
+-----> pointer pointing to some garbage location.
+	----->on dereferencing behaviour is unpredictable
+	----> all uninitialised pointers are wild pointers.
+int main()
+{
+	int *ptr;		//wild pointer.
+
+}
+		int main()
+		{
+			int *ptr;//wild pointer
+			printf("%d",*ptr);//behaviour is undefined
+		}
+
+->>>>uninitialized pointer
+int main()
+{
+	int *ptr;//wild pointer -->stored in stack segment by default it stored as auto variable
+	printf("%d",*ptr);//value at ptr o/p is junk value if it is valid memory //if the value at the ptr is undefined is the address is not valid address it will lead to segmentation fault
+}
+output is unbehavior bcoz it may b junk or segmentation fault
+-----------------------------------------------------------------------------------------
+NULL Pointer:
+============	
+	----> pointer pointing to NULL is called as NULL pointer.
+	---> on dereferencing segmentation fault is assured.
+	---> wild pointers are made NULL pointers in order to avoid unpredictable behaviours.
+
+
+	int  *ptr=NULL;
+
+NULL is macro whose value is zero defined in stdio.h
+int main()
+{
+	int *ptr=NULL;
+	printf("%d\n",*ptr);//segmentation fault bcoz your pointing to zeroth address which is not allocated to you
+}
+-----------------------------------------------------------------------------------------------------
+	int main()
+	{
+		int a=5;//1000
+		int *ptr=fun(&a);
+		printf("%u",ptr);//1012
+	}
+	int *fun(int *a)
+	{
+		a=a+3;
+		return a;
+	}
+	Dangling pointer
+	================
+Dangling pointer 
+	-->pointer pointing to freed memory
+	int main()
+	{
+		
+		int *ptr=fun();
+		printf("sasasasa\n");
+		printf("%d\n",*ptr);//
+	}
+	int *fun()
+	{
+		int x=5;
+		int *ptr1=&x;
+		return ptr1;
+	}
+
+
+		derefencing a dangling poinetr ,behavior is unpredictable
+	example
+============
+	int main()
+	{
+		int a=5;
+		fun(&a);
+		printf("%d\n",a)//10
+	}
+	void fun(int *ptr)
+	{
+		*ptr=*ptr+5;
+		printf("%d\n",*ptr);//10
+	}
+-------------------------
+example 2
+===============
+Dangling pointer 
+	-->pointer pointing to freed memory
+exp 1--
+	int main()
+	{
+		
+		int *p=fun();//p is dangling pointer
+		printf("%d\n",*p)//undefined dangling pointer
+	}
+/*	int * fun()
+	{
+	int a=5;
+	int *ptr=&a;
+	return ptrl
+	}*/here fun() it get placed in stack memory or stack frame stack memory get unwinding bcz stack has refreshed or free memory
+output -
+5
+----------------------------------------------------------------------------------------------------------------------------------
+exp 2--
+
+#include<stdio.h>
+        int * fun();
+int main()
+{
+//      int *ptr=NULL;
+//      printf("%d\n",*ptr);
+//      int main()
+//      {
+
+                int *p=fun();//p is dangling pointer
+                printf("hello\n");
+                printf("%d\n",*p);//behaviour is unprecdictable dangling pointer
+        }
+        int * fun()
+        {
+        int a=5;
+        int *ptr=&a;
+        return ptr;
+        }//it get placed in stack memory or stack frame stack unwinding bcz stack has refreshed or free memory}
+output -
+hello
+0
+if your using any statement in between *p declaration and printing *p your clearing stack memory Or using the same stack as that os the fun() used
+----------------------------------------------------------------------------------------------------------------------------------------
+exp 3-->
+#include<stdio.h>
+	int * fun();
+int main()
+{
+//	int *ptr=NULL;
+//	printf("%d\n",*ptr);
+//	int main()
+//	{
+		
+		int *p=fun();//p is dangling pointer
+		//printf("hello\n");
+/*	int a[100]={0};
+	int h;
+	char str[]="hello";
+	printf("%d",h);*/
+	fun2();
+		printf("%d",*p);//undefined dangling pointer
+	}
+int fun2()
+{
+	int g=100;
+	int hi=10;
+}
+	int * fun()
+	{
+	int a=5;
+	int *ptr=&a;
+	return ptr;
+	}//it get placed in stack memory or stack frame stack unwinding bcz stack has refreshed or free memory}
+--------------------------------------------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+CONST:
+
+	----> to say the compiler that the value should not be modified throughout the program.
+CONSTANTS
+====================================
+Declaracration
+---------------
+const datatype name;
+OR
+datatype const name;
+
+int main()
+{
+	const int a=20; OR int const a=20;
+	a=10;// invalid your chnaging the constant value
+/*	//you can take address and change the value
+	int *ptr=&a;
+	*ptr=10; */
+/* using the scanf also you can change
+	scanf("%d",&a);//100
+	printf("%d",a);
+}
+const int b; //valid bcoz declaring no defining not in c++ here b will be having junk value is constant value fo b 
+b=10;//invalid your changing the constant value
+----->constants in C can be chamged indirectly using pointers OR scanf
+-------------------------------------------------------------------------------------------------------------------
+int main()
+{
+	const int a=20;
+	//a=20;
+	const int ar[3]={0};
+        ar[0]=1;
+        ar[1]=2;
+        ar[2]=3;
+//here for arrays alos you will get error as assignment to read only location
+	int *ptr;
+	ptr=&a;
+	*ptr=30;
+	printf(“%d”,a);
+
+	scanf(“%d”,&a);
+}
+------------------------------------------------
+		int main()
+		{
+			const int a=20;  //int const a=20
+			a=10; //is this valid?
+			int *ptr=&a;
+			*ptr=10;
+			printf("%d",a);
+			scanf("%d",&a);
+			printf("%d",a);
+
+			const int b;//valid
+			b=10;//invalid
+		}
+		-->constants in C can be changed indirectly using pointers
+			or scanf
+---------------------------------------------------------------
+pointers with const:
+
+
+1. const int *ptr	----> ptr is a pointer to a integer constant
+2.int const *ptr	----> ptr is a pointer to a constant integer
+
+3.int *const ptr	---->ptr is a constant pointer to an integer element
+
+4.const int *const ptr----> ptr is a constant pointer to an int constant
+5.int const *const ptr	-----> ptr is a constant pointer to a 	constant integer
+constants &pointers
+---------
+3 types
+--------
+1)pointer to const
+2)constant pointer
+3)both pointer to const & constant pointer
+
+pointer to constant
+========================
+pointer pointing to constant
+1. const int *ptr	----> ptr is a pointer to a integer constant
+2.int const *ptr	----> ptr is a pointer to a constant integer
+
+Declaration:
+	
+	const datatype *pointer_name;	
+	OR
+	datatype const *pointer_name;
+int main()
+{
+	int a=30;b=50;
+	const int *ptr=&a;
+	*ptr=78;//invalid
+	ptr=&b;//valid
+	//you can give a=78 bcz your changing the variable a
+	*ptr=100;//invalid
+	b=100//valid
+}
+
+ const int *ptr;
+	----> we can make ptr point to different variables.
+	----> but we cannot modify the values using ptr.
+
+int main()
+{
+	const int a=20;
+	//a=30;
+	int b=30;
+	b=40;
+
+	const int *ptr;
+	ptr=&a;
+	//*ptr=40;				//invalid
+	printf(“%d”,*ptr);		//
+	
+	ptr=&b;		//valid
+	printf(“%d”,*ptr);
+
+}
+------------------------------------------------------------------------------
+constant pointer
+===================
+	Declarattion
+		datatype *const pointer_name;
+		here pointer is a constant
+3.int *const ptr	---->ptr is a constant pointer to an integer element
+int main()
+{
+	int a=30;b=50;
+	int *const ptr=&a;
+	*ptr=78;//valid here *ptr is constant bcz pointer is constant
+	ptr=&b;//invalid here your changing the address 
+	//you can give a=78 bcz your changing the variable a
+	*ptr=100;//invalid
+	b=100//valid
+}
+int main()
+		{
+			int a=30,b=50;
+			int *const ptr=&a;
+			*ptr=78;//valid
+			a=78;//valid
+			ptr=&b;//invalid
+		}
+3.int *const ptr	---->ptr is a constant pointer to an integer element
+	-----> we can modify the values through ptr
+	-----> but we cannot make ptr point to some other variables.
+
+
+int main()
+{
+	const int a=10;
+	int b=30;
+	int *const ptr=&a;
+	//a=20;
+	*ptr=20;
+	printf(“%d”,a);
+	++(*ptr);
+	printf(“%d”,a);
+	
+	ptr=&b;			//invalid
+	printf(“%d”,*ptr);
+
+
+
+}
+--------------------------------------------------------------------------------------
+both pointer to const & constant pointer
+	=================================
+	Declaration:
+		const datatype *const pointer_name;
+		or
+		datatype const *const pointer_nmae;
+
+		int main()
+		{
+			int a=30,b=50;
+			const int *const ptr=&a;
+			*ptr=45;//invalid
+			ptr=&b;//invalid
+		}
+int main()
+{
+	int a=30;b=50;
+	const int *const ptr=&a;
+	*ptr=78;//invalid
+	ptr=&b;//invalid
+	//you can give a=78 bcz your changing the variable a
+	*ptr=100;//invalid
+	b=100//valid
+}
+man 3 strlen
+man 3 strcat
+man 3 strcmp
+size_t--unsigned int
+const char *s-->here string should not be change you can increment but you cannot change
+/*char str[]="hello";
+	strlen(str);*/
+here we can increment the str++ but you cannnot change the value
+prototype in terms of const
+
+
+const int *const ptr;
+	---> we cannot modify the values 
+	---> we cannot modify the ptr to point to diff variables. 
+
+int main()
+{
+	int a=10;
+	int b=20;
+	const int *const ptr=&a;
+	(*ptr)++;		//invalid
+	*ptr=20;		//invalid
+	
+	ptr=&b;	//invalid
+
+
+}
+Genric Pointers:
+	
+	----> it can point to any data typr;
+	----> before dereferencing or doing arithmetic operation it should be explicitly type casted.
+
+
+int main()
+{
+	void *vptr;
+	int a=10,*ptr=&a;
+	char b='a',*cptr=&b;
+	float f=10.5,*fptr=&f;
+	double d=20.56,*dptr=&d;
+	printf(“%d\n”,*ptr);	
+	printf(“%c\n”,*cptr);
+	printf(“%f\n”,*fptr);
+	printf(“%lf\n”,*dptr);
+
+	vptr=&a;
+	printf(“a=%d”,*(int *)vptr);	//10
+	vptr=&b;
+	printf(“b=%c”,*(char *)ptr);		//a	
+	vptr=&f;
+	printf(“f=%f”,*(float *)ptr);
+
+	vptr=(int *)vptr+1;
+
+}
+--------------------------------------------------------------------------------
+	void pointer
+	============
+	--->generic poinetr
+	void *ptr;
+
+	int main()
+	{
+		int a=34;
+		char ch='a';
+		float f=6.5;
+		int *ptr=&a;
+		char *c_ptr=&ch;
+		float *f_ptr=&f;
+		printf("%d",*ptr);//34
+		printf("%c",*c_ptr);//a
+		printf("%f",*f_ptr);//6.5
+		void *v_ptr;
+		v_ptr=&a;
+		printf("%d",*(int *)v_ptr);//34
+		v_ptr=&ch;
+		printf("%c",*(char *)v_ptr);//'a'
+		v_ptr=&f;
+		printf("%f",*(float *)v_ptr);//6.5
+		v_ptr=(float *)v_ptr+2;//increment to 8 bytes
+	}
+-------------------------------------------------------------------------------------
+------------------------------------------------------------------------------
+
+	Arrays & pointers
+=================================================================
+	int main()
+	{
+		int arr[]={10,20,30,40,50};
+		int *ptr=arr; //&arr[0]
+		printf("%d",*ptr);//10
+		ptr++;//increment by one base addr increment by 4 bytes
+		printf("%d",*ptr);//20	
+	}
+to jump to out of array
+Pointer to array(multi dimentional array)
+========================
+Declaration:
+	datatype (*pointer_name)[size];
+			size--->number of columns
+
+
+int main()
+	{
+		int arr[]={10,20,30,40,50};
+		int *ptr=arr; //&arr[0]-->addr of base addr of arr[]
+		printf("%u\n",ptr);//1000
+		ptr++;
+		printf("%u\n",ptr);//1004 addr
+		printf("%d\n",*ptr);//10
+		int (*pptr)[5]=&arr; //here your  making to hold whole arr[] ,it can hold whole array arr[]={}
+		printf("%u\n",pptr);//1000
+		pptr++;
+		printf("%u\n",pptr);//1020
+		printf("%u\n",*pptr);//1000 one * you will get base addr
+		*pptr+1;	 
+		printf("%u\n",*pptr);//1004  you will get base addr		
+		printf("%d\n",**pptr);//10	
+		*pptr+1;	 
+		printf("%d\n",**pptr);//1008
+		printf("%d\n",*(*pptr+1));//20
+		printf("%d\n",*(*pptr+3));//40
+		printf("%d\n",**pptr+3));//13
+		sizeof(ptr)=4 bytes //sizeof machine
+		sizeof(pptr)=4 bytes //sizeof machine
+		sizeof(*ptr)=4 bytes //sizeof machine
+		sizeof(*pptr)=20 bytes //sizeof machine base addr
+		sizeof(arr)=20 bytes //sizeof machine
+		sizeof(**pptr)=4 bytes //sizeof machine
+		int (*pptr)[3]=&arr;
+		sizeof(*pptr)=12 bytes //sizeof machine base addr
+	}
+-------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------
+	Pointer to 2-D array
+==============================================================
+int arr[][3]={1,2,3,4,5,6,7};
+/*1=1000 addr
+2=1004
+3=1008*/ 1-D arry
+4=1012
+1-D arry arry name is base addr of arr
+2-D arry -- collections os 1-D arry
+in 2-D arrry-- arry name indicate the will b having the base addr af the first 1-D arry
+----------------------------------------
+arr=1000 -->1,2,3 //it will hold the addr of whole arr[][];
+arr+1=1012 -->4,5,6
+arr+2=1024 -->7,0,0 
+----------------------------------------
+*arr=1000 -->**arr=1-->arr[0][0]
+*arr+1=1004 -->*(*arr+1)=2-->arr[0][1]
+*arr+2=1008 -->*(*arr+2)=3
+*arr+3=1012 -->*(*arr+3)=4
+*arr+4=1016 -->*(*arr+4)=5
+*arr+5=1020 -->*(*arr+5)=6 
+*arr+6=1024 -->*(*arr+6)=7
+*arr+7=1028 -->*(*arr+7)=0
+*arr+8=1032 -->*(*arr+8)=0 
+----------------------------------------
+
+for getting 2 or getting second element
+
+===========================================================================================================================
+int main()
+{
+	int arr[][3]={};
+}
+2-D array is collection of 1-d array
+arr ->whole addr of 0th 1-d array
+arr+1 ->whole addr of 1th 1-d array
+arr+i ->whole addr of ith 1-d array
+
+*arr--> arr[0]-->base addr of 0th 1-d array
+*(arr+1)--> arr[1]-->base addr of 1th 1-d array
+*(arr+i)--> arr[i]-->base addr of ith 1-d array
+
+*(arr+i)+j-->&arr[i][j]
+*((arr+i)+j)-->arr[i][j]
+----------------------------------------------------------------------------
+prgm 1:
+-->
+		int main()
+		{
+
+			int arr[][3]={1,2,3,4,5,6,7};
+			int (*ptr)[3]=&arr;
+			printf("%d",ptr[0][0]);//1
+/*			printf("%u",ptr);//1000 base addr of 1,2,3 --> 0th 1-D array
+			printf("%u",ptr+1);//1012 base addr of 4,5,6 --> 1th 1-D array
+			printf("%u",ptr+2);//1024 base addr of 7,0,0 --> 2th 1-D array
+*/	
+/*Base address
+------------------------------------------------------------------------------------------------------	
+			printf("%u",*ptr);//1000 base addr of 1 -->1st element 0th 1-D array
+			printf("%u",*ptr+1);//1004 base addr of 2 --> 2nt element 0th 1-D array
+			printf("%u",*ptr+2);//1008 base addr of 3 --> 3rd element 0th 1-D array
+-----------------------------------------------------------------------------------------------------
+			printf("%u",*(ptr+1));//1012 base addr of 4 -->1st element 1th 1-D array
+			printf("%u",*(ptr+1)+1);//1016 base addr of 5 --> 2nt element 1th 1-D array
+			printf("%u",*(ptr+1)+2);//1020 base addr of 6 --> 3rd element 1th 1-D array
+--------------------------------------------------------------------------------------------------------
+			printf("%u",*(ptr+2));//1024 base addr of 7 -->1st element 2th 1-D array
+			printf("%u",*(ptr+2)+1);//1028 base addr of 0 --> 2nt element 2th 1-D array
+			printf("%u",*(ptr+2)+2);//1032 base addr of 0 --> 3rd element 2th 1-D array
+------------------------------------------------------------------------------------------------------------
+*/	
+/*value at that base address
+------------------------------------------------------------------------------------------------------	
+			printf("%d",**ptr);//1 -->1st element 0th 1-D array
+			printf("%d",*(*ptr+1));//2 --> 2nt element 0th 1-D array
+			printf("%d",*(*ptr+2));//3 --> 3rd element 0th 1-D array
+-----------------------------------------------------------------------------------------------------
+			printf("%d",*(*(ptr+1)));//4 -->1st element 1th 1-D array
+			printf("%d",*(*(ptr+1)+1));//5 --> 2nt element 1th 1-D array
+			printf("%d",*(*(ptr+1)+2));//6 --> 3rd element 1th 1-D array
+--------------------------------------------------------------------------------------------------------
+			printf("%d",*(*(ptr+2)));//7 -->1st element 2th 1-D array
+			printf("%d",*(*(ptr+2)+1));//0 --> 2nt element 2th 1-D array
+			printf("%d",*(*(ptr+2)+2));//0 --> 3rd element 2th 1-D array
+------------------------------------------------------------------------------------------------------------
+*/												
+			printf("%d",ptr[1][2]);//6
+			printf("%d",*(*(ptr+1)+2);//6
+			printf("%u",*(ptr+1)+2;//1020 base addr of 6			
+			printf("%d",ptr[1][-1]);//3
+			printf("%d",*(*(ptr+1)-1));//3
+			for(i=0i<3;i++)
+			{
+				for(j=0;j<3;j++)
+				{
+					printf("%d\n",arr[i][j]);
+				}
+				printf("\n");
+			}
+			
+			for(i=0i<3;i++)
+			{
+				for(j=0;j<3;j++)
+				{
+					printf("%d\n",ptr[i][j]);
+				}
+				printf("\n");
+			}
+}
+-----------------------------------------------------------------------------------------------
+int main()
+{
+	int arr[][3]={1,2,3,4,5,6,7,8};//int arr[][3]={{1,2,3},{4,5,6},{7,8}};
+	sizeof(arr);//36	
+	fun(arr);
+	
+	int ar[5];
+	fun(ar);
+}
+
+void fun(int arr[][3])/int (*arr)[3]//pointer to array 4 bytes
+{
+	sizeof(arr);//4
+	sizeof(*arr);//12
+}
+-----------------------------------------------------
+void fun(int *ar)
+{
+}
+OR
+void fun(int ar[])//invalid  int *ar
+{
+}
+----------------------------------------------------
+	ARRAy of Pointers
+==================================================
+
+	int a[4]; array in int type
+	char str[20];
+	DEclaration :
+	datatype *array_name[size];	
+	datatype (*array_name)[size];//pointer to array
+
+	int *ptr[4];//ptr[0]-----ptr[4] are integer pointers
+	ptr[0]//
+	ptr[1]//
+	-
+	-
+	-
+	ptr[4]//
+	
+	
+int *p[10];	----> p is a array of 10 pointers to integer elements
+
+
+	-----> 40 bytes will be allocated contiguously
+	----> 10 pointers starts from p[0] to p[9].
+	---->each pointer can point individual int elements.
+
+
+
+p---> starts allocating from 1000 to 1040
+p[0]--->1000 to 1004
+.
+.
+.
+p[9]--->1036 to 1040
+
+
+	int main()
+	{
+		int a=10,b=20,c=30,d=40,i;
+		int *ptr[4];
+		ptr[0]=&a;
+		ptr[1]=&b;
+		ptr[2]=&c;
+		ptr[3]=&d;
+		for(1=0;i<4;i++)
+			printf("%d\n",*ptr[i]);
+
+	}
+-----------------------------------------------------------------------------
+	int main()
+	{
+		int *arr[3];4 bytes size of pointer is 4 bytes
+		sizeof(arr);//12 bytes
+		sizeof(*arr);//14 bytes
+		char *ptr[3];//4 bytes size of pointer is 4 bytes	
+		sizeof(ptr);//12 bytes
+		double *dptr[5];//20
+		
+	}
+here size of the pointer is always 4 bytes whether it made may b char *ptr OR int *ptr size will b same
+
+--------------------------------------------------------------------------------------------------------------------------
+int main()
+{
+	int *arr[3];
+	int a=7,b=10,c=30;
+	arr[0]=&a;
+	arr[1]=&b;
+	arr[2]=&c;
+	printf("%u %u\n",arr[0],&a);
+	printf("%u %u\n",arr[1],&b);
+	printf("%u %u\n",arr[2],&c);
+	printf("%d",*arr[0]);
+	printf("%d",*arr[1]);
+	printf("%d",*arr[2]);	
+}
+------------------
+---------------------------------------------------
+	int main()
+	{
+		int arr[]={1,2,3,4,5};
+		int i;
+		for(i=0;i<5;i++)
+			ptr[i]=&arr[i];
+		for(i=0;i<5;i++)
+			printf("%d",*ptr[i]);
+	}
+
+--------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------------------------------------------
+(interviews)array of pointers in 2D-array
+===========================================================
+2x3			     arr[0]+1 arr[0]+2
+addr 1000(arr[0])	10	20	30
+
+addr 1012(arr[1])	40	50	56
+			     arr[1]+1 arr[1]+2
+pointer  to array ==> int *ptr[column size]===>int *ptr[3]=arr;
+array of pointer int *arr1[row size] ==> int *arr1[2];
+arr1[0]=arr[0];
+arr1[1]=arr[1];
+------------------------
+example
+int main()
+{
+	int arr[2][3]={23,43,67,89,100,200};
+	int *ptr[2];//array of pointers
+	int i,j;
+	for(i=0;i<2;i++)
+		ptr[i]=arr[i];
+	printf("%u\n",ptr[0]);//base addr of 0th 1-D array
+		for(i=0;i<3;i++)
+		{
+			for(j=0;j<3;j++)
+			{
+				printf("%d\t",arr[i][j]);
+			}
+		printf("\n");
+		}
+
+		for(i=0;i<3;i++)
+		{
+			for(j=0;j<3;j++)
+			{
+				printf("%d\t",ptr[i][j]);
+			}
+		printf("\n");
+		}
+
+}
+-----------------------------------------------------------------------------------------------------------------------------
+int main()
+{
+	int arr[3][4]={1,2,3,4,5,6,7,8,9,10,11,21};
+	int i,j;
+	int *ptr[4]=arr[0];
+	for(i=0;i<3;i++)
+		ptr[i]=arr[i];		
+	for(i=0;i<3;i++)
+	{
+		for(j=0;j<4;j++)
+			printf("a[%d][%d]=%d\t",i,j,*(ptr[i]+j));
+		printf("\n");
+	}
+
+	for(i=0;i<3;i++)
+	{
+		for(j=0;j<4;j++)
+			printf("a[%d][%d]=%d\t",i,j,ptr[i][j]);
+		printf("\n");
+	}
+
+}
+------------------------------------------------------------------------------------------------
+Array of pointers and pointer to an array both are more or less same,but the diff is 
+	---->in array of pointers their are n no of pointers pointing to different 1-d array elements(rows)
+	---->in pointer to an array we have only one pointer points to a entire row.
+-------------------------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------------------------------------
+(interviews)Array of character pointers
+======================================================
+declaration:
+	datatype *array_name[size];
+int main()
+{
+	char *arr[5];
+	sizeof(arr);//4 bytes
+	arr[0]="hello";//stored in RO segment read only memory
+	arr[1]="hii";
+	Or
+	char *arr[5]={"hello","hii","cranes","bye","ll"}; //read only memory
+	Or	
+	char *arr[]={"hello","hii","cranes","bye","ll"}; //read only memory
+	
+	}
+char **ptr=&arr[0];
+arr[0] 5000==> addr 100 hello arr[0]=addr of pointer
+arr[1] 5004==>addr 200 hii
+arr[2] 5008==>addr 300 cranes
+arr[3] 5012==>addr 400 bye
+arr[4] 5016==>addr 500 ll
+
+ptr=
+*ptr=
+**ptr=
+
+int main()
+{
+
+	char *arr[]={"hello","hii","cranes","bye","ll"}; //read only memory
+	char **ptr=arr; //char **ptr=&arr[0];
+	%u ptr //5000
+	%u *ptr//100
+	%s *ptr//hello
+	%c **ptr//h 
+	ptr++
+	%u ptr//5004
+	%u *ptr//200
+	%s *ptr//hii
+	%c **ptr//h
+}
+
+----------------------------------------------------------------------------------------------------------------
+
+int main()
+{
+	char *a[]={"world","earth","universe"};
+	char **b=&a[1];
+	%c ,**--b;==> (*(*(--b)) binding //w
+	%s,*++b+2;==>((*(++b))+2) //rth
+	%c,*++b+2;==>*((*(++b))+2) //i
+}
+#include<stdio.h>
+int main()
+{
+	char *a[]={"world","earth","universe"};
+	char **b=&a[1];
+	printf("%c\n" ,**--b);//==> (*(*(--b)) binding //w
+	 printf("%s\n",*++b+2);//==>((*(++b))+2) //rth
+	 printf("%c\n",*(*++b+2));//==>((*(++b))+2) //rth
+//	 printf("%c\n",*(*++b+2));//==>((*(++b))+2) //i
+return 0;
+}
+
+-----------------------------------------------------------------------------------------
+int main()
+{
+	char *a[]={"edit","search","file"};
+	fun(a+1);//&a[1]
+	%s,a[0];//dit
+}
+void fun(char *b[]) //char **b
+{
+	%c, *++*--b;//*(++(*(--b))) o/p-d
+	%s,*++b+2;//((*(++b))+2)arch
+}
+
+#include<stdio.h>
+void fun(char *b[]); //char **b
+int main()
+{
+        char *a[]={"edit","search","file"};
+        fun(a+1);//&a[1]
+        printf("%s\n",a[0]);//dit
+}
+void fun(char *b[]) //char **b
+{
+        printf("%c\n", *++*--b);//*(++(*(--b))) o/p-d
+        printf("%s\n",*++b+2);//((*(++b))+2)earch
+}
+
+
+-------------------------------------------------------------------------------------------------
+int main(){
+	char *n[]=("miller","johns","anderson"};
+	%c,*(*n+1)+2 ;//k
+}
+
+#include<stdio.h>
+int main()
+{
+        char *n[]={"miller","johns","anderson"};
+        printf("%c\n",*(*n+1)+2) ;//k
+return 0;
+}
+
+------------------------------------------------------------------------
+int main()
+{
+	char *a[]={"sam","faud","neem"};
+	%s,++*p;
+	%s,*p++;
+}
+#include<stdio.h>
+int main()
+{
+	char *p[]={"sam","faud","neem"};
+	//char **p=ptr;
+	printf("%s\n",++*p);
+	printf("%s\n",*p++);//you cannot increment base addr of array
+return 0;
+}
+varsity@varsity-HP-dx2080-MT-GN203AV:~/ramya/datastructure$ gcc 6.c
+6.c: In function ‘main’:
+6.c:6:18: error: lvalue required as increment operand
+varsity@varsity-HP-dx2080-MT-GN203AV:~/ramya/datastructure$ vi 6.c +6
+varsity@varsity-HP-dx2080-MT-GN203AV:~/ramya/datastructure$ cat 6.c
+#include<stdio.h>
+int main()
+{
+	char *ptr[]={"sam","faud","neem"};
+	char **p=ptr;
+	printf("%s\n",++*p);
+	printf("%s\n",*p++);//you cannot increment base addr of array
+return 0;
+}
+varsity@varsity-HP-dx2080-MT-GN203AV:~/ramya/datastructure$ gcc 6.c
+varsity@varsity-HP-dx2080-MT-GN203AV:~/ramya/datastructure$ ./a.out 
+am
+am
+
+--------------------------------------------------------------------------
+int main()
+{
+	char *ptr[3]={“itap38”,”itap48”,”itap50”};
+	char **pptr=ptr;
+	printf(“%s”,*pptr);
+	printf(“%c”,**pptr);
+	printf(“%s”,(*pptr)++);
+	printf(“%s”,ptr[0]);
+	printf(“%s”,*pptr++);
+	printf(“%s”,*pptr);
+
+}
+------------------------------------------------------------------------------
+
+Assignment
+============================
+int main()
+{
+`int a=0xfd;
+int *p,*q,*r;
+q=p=&a;
+a=++*q;
+r=(char *)&a;
+printf("%x %x \n",*r,a);
+}
+
+o/p-fe
+   fe
+#include<stdio.h>
+int main()
+{
+int a=0xfd;
+int *p,*q,*r;
+q=p=&a;
+a=++*q; // ++(*q) ==>*q=0xfd and ++(*q) is 0xfd + 1==>fe
+r=(char *)&a; OR r=(int *)&a; Or r=(float *)&a;
+printf("%x %x \n",*r,a);
+}
+output
+fe fe 
+
+-------------------------------------------------------------------------------------------
+--------------------------------------------------------------
+
+#include<stdio.h>
+#include<string.h>
+
+
+void fun(const char *s)					
+{
+	char *q=s+6;
+	char *p=&s[6];
+	++p;
+	printf("%d %d\n",p-q);		// 1  garbage value
+	++p;
+	printf("%d \n",p-q);		// 2
+}
+
+
+int main()
+{
+
+	const char *p = "hello";
+	fun(p);
+}
+----------------------------------------------------------------
+
+
+void fun()
+{
+	printf(“in function fun\n”);
+
+}
+int fun1()
+{
+	printf(“in function fun1\n”);
+	return 10;
+
+}
+
+int main()
+{
+	printf(“before fun=%u\n”,fun);
+
+	printf(“before fun1 =%u\n”,fun1);
+}
+
+	----> every functions have their own addresses.
+	----> we can store funcion address in a function pointer
+
+
+
+
+		Function pointers / Pointers to functions
+		=================  ========================
+		
+		Declaration:
+		===========
+		
+		return_type (*pointer_name)(argumnts' datatype);
+		====================================================
+
+		--> The code of a function resides in a memory and so every function
+		    has an address like all other variables in the program.
+
+		--> pointer which can hold the address of function
+
+		-- > FP is a Pointer to a function points to the address of the 
+			function which is in code segment.
+
+		--> Same pointer can be used to point to different functions 
+			with same return and parameter declarations. 
+
+		Note 
+		====
+		--> We cannot perform pointer arithmetic operations on 
+			function pointers.
+ 
+		
+----------------Normal function call-----------------------------
+
+		int main()
+		{
+			printf("%u",fun());//2
+		}
+		int fun()
+		{
+			return 2;
+		}
+-------------------------------------------------------------------------
+
+	==> Program to illustrate that every funtion has an address and how
+		to access that address.
+	-----------------------------------------------------------
+
+		int main()
+		{
+		   printf("%p\n",main);//address of the main
+		   printf("%p\n",fun);//address of the function
+		}
+		int fun()
+		{
+			printf("function pointers\n");
+		}
+-------------------------------------------------------------------------
+		Explain the meaning of following statements
+		==========================================
+	
+	>>  int *f(int ,int );
+
+	>> int (*p)(void);
+	
+	>> char* (*q)(int ,int );
+
+---------------------------------------------------------------------------
+
+	How to call a function via function pointer ??
+	********************************************
+
+
+	--> (*fp)(); 
+	-->  fp(); 
+	-->  fun();//normal function call
+		All the three have same meaning,But the first call tells the user 
+		that calling is done via a function pointer.
+
+		int main()
+		{
+			void (*fp)(int);
+			printf("%d",sizeof(fp));//4
+
+			fp=fun;  //fp=&fun-->both have same meaning.
+			
+			fun();invoking a function via function name
+			 (*fp)(5);   //invoking via function pointer.
+					
+		}
+		void fun(int a)
+		{
+			printf("function pointers");
+		}
+--------------------------------------------------------------------------------------------
+		Function pointer which can point to strcmp??
+		-------------------------------------------
+
+		int (*ptr)(const char *,const char *);
+		ptr=strcmp;
+		char str[]="hello";
+		char str2[]="hello";
+		int a=(*ptr)(str1,str2);
+		printf("%d",a);//0
+--------------------------------------------------------------------------------------
+	
+		int *fun2(int,int);//function declaration
+		int main()
+		{
+			int (*fp)(int,int);
+		}
+		int fun(int a,int b)
+		{
+		}
+		int *fun2(int a,int b)
+		{
+			return &a;
+		}
+----------------------------------------------------------------------------------------
+		void fun(int ,void (*)(int));
+		void fun2(int a)
+		{
+		}
+		
+		int main()
+		{
+			fun(3,fun2);
+		}
+		void fun(int x,void (*ptr)(int))
+		{
+			(*ptr)(5);//fun2(5);
+		}
+----------------------------------------------------------------------------------
+		
+		
+		PASSING A FUNCTIONS ADDRESS AS AN ARGUMENT TO OTHER FUNCTION
+		************************************************************
+-------------------------------------------------------------------------------------------	
+		void func1(char b, void (*fp)(float));
+                void func2(float a);
+                int main()
+                {
+                        printf("inside main\n");
+                        func1('a', func2);
+                }
+
+                void func1(char b, void (*fp)(float))
+                {
+                        printf("inside func1, goinng to call func2 \n");
+                        (*fp)(2.345);
+                }
+
+                void func2(float a)
+                {
+
+                        printf("inside func2 \n");
+                        printf("received value = %f",a);
+                }
+      
+		
+---------------------------------------------------------------------------------------------
+
+			Arrays of function pointers
+			=============================
+			
+		Declaration: return_type (*pointer_name[size])(argumnts' datatype);
+-------------------------------illustration via program-----------------------------
+	
+		consider the following functions:
+
+		float add(float,int);
+		float sub(float,int);
+		float mul(float,int);
+		float div(float,int);
+----------------------------declaration and assignment-----------------------------
+
+
+		float (*fp_arr[4])(float,int);//fp_arr is an array of function pointers
+		
+			fp_arr[0] = add;
+			fp_arr[1] = sub;
+			fp_arr[2] = mul;
+			fp_arr[3] = div;
+			
+---------------------------------------------------------------------------------------------
+		
+		initialization: float(*fp_arr[])(float,int) = {add,sub,mul,div};
+
+
+------------------------------------------------------------------------------------------
+
+Function pointer which point to strcmp??
+======================================================
+int (*ptr)(const char *,const char *);
+ptr=strcmp;
+char str1[]="hello";
+char str2[]="hello";
+int a=(*ptr)(str1,str2);
+printf("%d",a);//0
+----------------------------------------------------------------------
+#include<stdio.h>
+void fun(int a);
+int main()
+{
+        int (*fp)(int,int);//  int (*fp)(int,int)=fun;
+        printf("%d\n",sizeof(fp));//4 bytes
+        fp=fun; //fp=&fun
+        (*fp)(5); //fp(5);//fun(5);
+}
+int fun(int a,int b)
+{
+
+}
+----------------------------------------------------------------------------------------------------------------------------
+ int *fp(int,int); answer ??//compiler thinks like fp is a function and it return type is (int *) with arguments int ,int 
+you should give as ==> int (*fp)(int,int);
+---------------------------------------------------------------------------------------------------------------------------
+int * fp (int a,int b)
+{
+	return &a;
+}
+---------------------------------------------
+what is the use of function pointers
+void fun(int x,void (*fp)(int));
+void fun2(int a)
+{
+
+}
+int main()
+{
+
+	fun(3,fun2);
+}
+void fun(int x,void (*fp)(int))
+{
+	(*ptr)(5);//fun2(5);
+}
+
+-----------------------------------------------------
+Array of Function pointers
+========================================
+Declaration:
+	return_type (*pointer_name[size])(arguments' datatype);
+	
+
+	int (*fp[4])(int,int);
+	int sum(int a,int b)
+	{
+		return a+b;
+	}
+
+	int sub(int a,int b)
+	{
+		return a-b;
+	}
+
+	int pro(int a,int b)
+	{
+		return a*b;
+	}
+	
+	int div(int a,int b)
+	{
+		return a/b;
+	}
+	
+
+	int main()
+	{
+		int (*fp[4])(int ,int)={sum,sub,prob,div};
+		(*fp[0])(5,6);//sum(5,6);
+		(*fp[1])(5,6)://sub(5,6);
+		(*fp[2])(5,6);//prob(5,6);
+		(*fp[3])(5,6);//div(5,6);
+		
+
+		int ch,a,b,res;
+		switch(ch)
+		{
+			case 1;
+				res=(*fp[0])(5,6);
+				break;
+			
+			case 2;
+				res=(*fp[1])(5,6);
+				break;
+
+			case 3;
+				res=(*fp[2])(5,6);
+				break;
+
+			case 4;
+				res=(*fp[3])(5,6);
+				break;
+		}
+		printf("%d\n",res);
+	}
+--------------------------------------------------------------------------------------------------------------------

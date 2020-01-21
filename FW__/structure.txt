@@ -1,0 +1,1459 @@
+Arrays:
+=====
+	----> collection of similar data elements;
+
+	int arr[10];
+	---> 0 to 10-1;
+
+
+	int stuid[10];
+
+	int date[10];
+
+	date--> day/month/year.
+
+	int day[10];
+	int month[10];
+	int year[10];
+
+	----> special or user defined data types:
+
+
+	structure:
+	======= 
+		---> it is a user defined data type which can have collection of similar or diff data members.
+
+		----> for structures we have to create a structure template (or) define the data type.
+
+Syntax:
+--------- 
+	struct tag_name
+	{
+		d_type mem_name;
+		d_type mem_name;
+		.
+		.
+		.
+	};
+	
+-->structure template
+	-->For a structure template no memory is allocated
+	-->Memory for structure will be allocted if variable is
+		defined
+----> each structure variables can hold all the structure members.
+
+Two ways of declaring structure variables.
+==========================================
+1)with structure definition
+2)using structure tag
+
+1)with structure definition
+++++++++++++++++++++++++++++
+		
+		struct tagname
+		{
+			int a;//data members
+			char ch;
+			float f;
+		}s1,s2;
+
+s1,s2 are the variables of the type struct tagname
+
+example
+=======
+	struct date
+	{
+		int date;
+		int month;
+		int year;
+	}x;	// variable declaration near template.
+	
+	struct student
+	{
+		char name[10];
+		int rollno;
+		float marks;
+	}stu1,stu2; 
+stu1,stu2 are the variables of the type struct student
+
+--->when we declare a variable (structure variable )whie defining a structure templete ,tagname is optional so we can declare as 
+	struct
+	{
+		int a;//data members
+		char ch;
+		float f;
+	}s1,s2;
+if we want to declare other variable of type this structure  anywhere else in program ,we have to define a structure (structure templete)one more time 	
+so although tag name is optional it is always better to specify tagname for structure
+
+-------------------------------------------------------------------
+2)using structure tag
+++++++++++++++++++++++
+
+		
+	struct datatype
+	{
+		int a;//data members
+		char ch;
+		float f;
+	};
+	
+	struct datatype s1,s2;
+	struct datatype s3;
+
+Declaring a structure variable compiler reserves a space or a memory each structure will be having 3 members /all members 
+-----------------------------------------------------------------------
+Initialization of structure variable
+=====================================
+	
+---> no memory is allocated for structure templates so individual structure members cannot be initialised.
+
+---> structure variables can be initialised.
+
+struct student
+{
+	int rol=5;		//invalid	
+	float per=10.52;	//invalid
+	double avg=15.67;	//invalid
+	char gender='m';	//invalid
+};
+----> struct variables can be initialised within { , , ,}
+----> care should be taken in intialising the members in the same order.
+
+struct student
+{
+	int rol;	
+	float per;
+	double avg;
+	char gender;
+}stu1={5,15.67,67.89,'m'},stu2={'f',15,20.67,45.89};
+int main()
+{
+	int arr5[5]={1,2,3,4,5},arr[5]={2,3,4,5,6};	//valid
+	arr[5]={6,7,8,9,10};	//invalid
+	stuct student stu3={20,55.35,78.65,'m'},s4={6},s5;	//valid
+	s4={30,20.5,68.75,'f'};	//invalid
+
+
+}
+----------------------------------------------------------------------------
+Acessing members of structure
+=============================
+
+	To acess any member from structure we use Dot(.) operator OR period OR membership operator
+
+format
+======
+	structure_variable.member;
+
+struct student
+	{
+		char name[10];
+		int rollno;
+		float marks;
+	}stu1,stu2; 
+
+name of stu1=>stu1.name;
+rollnumber of stu1=>stu1.rollno;
+marks of stu1=>stu1.marks;
+
+---------------------------------------------------------------
+
+struct student
+	{
+		char name[10];
+		int rollno;
+		float marks;
+	}stu1={"roy",1,65},stu2={"joy",2,67}; 
+struct student stu3;
+of student 1
+++++++++++++
+
+%s stu1.name
+%d stu1.rollno
+%f stu1.marks
+
+of student 2
+++++++++++++
+
+%s stu2.name
+%d stu2.rollno
+%f stu2.marks
+
+
+asssigning value using scanf
+++++++++++++++++++++++++++++
+
+scanf("%s%d%f",stu3.name,&stu3.rollno,&stu3.marks);
+
+Assgning value to structure variable
+++++++++++++++++++++++++++++++++++++
+stu2.name="david"; //invalid
+strcpy(stu2.name,"david");//valid
+stu2.rollno=2;
+stu2.marks=68;
+
+the dot operator has the one of the highest priority,associvity will b from left to right..
+
+dot operator has highest priority of all unary ,binary,relational ,logical,arithematic and assignment operator
+
+ ++stud1.marks;
+
+here dot has highest priority than ++ operator to it binds first and it get incremented
+
+ ++(stud1.marks);
+
+-----------------------------------------------------------------------
+
+Assignment of structure variable
+=================================
+	
+struct student
+	{
+		char name[10];
+		int rollno;
+		float marks;
+	}stu1={"roy",1,65},stu2={"joy",2,67}; 
+struct student stu3;
+
+stu3=stu1;
+
+we can assign value of one structure variable to another structure variable if both both variable is of same structure type
+
+unary ,binary,relational ,logical,arithematic and bitwise  operator cannot be or not allowed for structure variable .. but you can do with there structure members unless it is a another structure
+--------------------------------------------------------------------
+
+Arrays of structure
+====================
+
+	we can declare a array of structure where in these array elements is of type (structure type).
+
+Syntax for declaration
+======================
+	struct tagname structure_variablename[size];
+
+example
+========
+	
+	struct student
+	{
+		char name[10];
+		int rollno;
+		float marks;
+	}; 
+
+struct student stu[10];
+
+so here we can able to store 10 students records,stu is a structure variable (array of structure each element is a structure variable of type struct student )
+which can have all 3 members available which is of size 10,10 structure variables,of type struct student.
+
+To access individual elemnets
+==============================
+
+first student => stu[0].name -->  name | stu[0].rollno --> roll no | stu[0].marks --> marks
+second student => stu[1].name
+third student => stu[2].name
+fourth student => stu[3].name
+:
+:
+:
+tenth student => stu[9].name
+
+for(i=0;i<10;i++)
+	scanf("%s%d%f",stu[i].name,&stu[i].rollno,&stu[i].marks);
+
+for(i=0;i<10;i++)
+	printf("name :%s rollno :%d marks: %f",stu[i].name,stu[i].rollno,stu[i].marks);
+
+-------------------------------------------------------------------------------------------
+
+Array of structures can be initialized as
+==========================================
+
+struct student
+	{
+		char name[10];
+		int rollno;
+		float marks;
+	}; 
+
+struct student stu[3]={{"roy",1,65},
+			{"joy",2,67},
+			{"david",3,66}
+			};
+
+---------------------------------------------------------------------------------------------
+Arrays within a structure
+==========================
+
+-->	array as a memeber of the structure
+Initialization
+===============
+struct student
+	{
+		int id;
+		char name[20];
+		int submarks[3];
+		int total;
+		float avg;
+	}s1={"roy",{20,23,24},67,87.9};
+--------------------------------------------------------------------------------
+struct student
+	{
+		int id;
+		char name[20];
+		int submarks[3];
+		int total;
+		float avg;
+	}s1;
+	int main()
+	{
+		int i;
+		printf("Enter the stu id\n");
+		scanf("%d",&s1.id);
+
+		printf("Enter the stu name\n");
+		scanf("%s",s1.name);
+
+		for(i=0;i<3;i++)
+		{
+			printf("Enter the stu mark1\n");
+			scanf("%d",&s1.submarks[i]);
+		}
+		s1.total=s1.submarks[0]+s1.submarks[1]+s1.submarks[2];	//10 5 5
+		s1.avg=s1.total/3.0;
+
+		
+		printf(“id=%d name=%s tot=%d avg=%f\n”,s1.id,s1.name,s1.tot,s1.avg);
+	
+	
+	}
+
+---------------------------------------------------------------------------------------------
+Array of struct variables and array within a structure:
+=======================================================   
+
+struct student
+	{
+		int id;
+		char name[20];
+		int marks[3];
+		int total;
+		float avg;
+	}s1[3];
+	int main()
+	{
+		
+		int i,j;
+		for(j=0;j<3;j++)
+		{
+		printf("Enter the stu id\n");
+		scanf("%d",&s1[j].id);
+
+		printf("Enter the stu name\n");
+		scanf("%s",s1[j].name);
+
+		for(i=0;i<3;i++)
+		{
+			printf("Enter the stu mark1\n");
+			scanf("%d",&s1[j].marks[i]);
+		}
+		s1[j].total=s1[j].marks[0]+s1.marks[1]+s1.marks[2];	//10 5 5
+		s1[j].avg=s1[j].total/3.0;
+
+		
+		printf(“id=%d name=%s tot=%d avg=%f\n”,s1[j].id,s1[j].name,s1[j].tot,s1[j].avg);
+	}
+	
+	}
+
+-------------------------------------------------------------------------------
+
+---> diff structures can have same mem names.
+ 
+struct stu
+{
+	int id;
+	char name[20];
+}stu;		//invalid
+struct staff
+{
+	int id;
+	char name[20];
+}id;
+int main()
+{
+	int id;
+	char name[20];
+	struct stu s1={10,”name1”};
+	struct staff s2={20,”name2”};
+	s1.id=20;
+	s2.id=30;
+	id=25;
+}
+--------------------------------------------------------------------------------------------
+		Scope of structure 
+		===================	
+		
+	>>>	struct tagname
+		{
+			int a;//data members
+			char ch;
+			float f;
+		};
+
+		struct tagname s1;
+
+		int main()
+		{
+			struct tagname obj1;
+		}
+		void fun()
+		{
+			struct tagname obj1;
+		}
+---------------------------------------------------------------------
+	>>  
+		int main()
+		{
+			struct tagname
+		{
+			int a;//data members
+			char ch;
+			float f;
+		};
+			struct tagname obj1;
+		}
+		void fun()
+		{
+			struct tagname obj1;//invalid
+		}
+
+
+	Conclusion : -->if structue template is given globally,it can be used 
+		throughout the program
+
+---------------------------------------------------------------------------------------
+		
+		Nested Structure(structure within the other structure)
+		=======================================================
+		struct outer
+		{
+			int a;
+			struct inner
+			{
+				int a;
+				char ch;
+			}i;
+		}o={23,56,'h'};
+		int main()
+		{
+			printf("%d  %d  %c",o.a,o.i.a,o.i.ch);//23  56  h
+		}
+-------------------------------------------------------------------
+	struct student
+	{
+		char name[10];
+		int rollno;
+		float marks;
+		struct date
+		{
+			int day;
+			int month;
+			int year
+		}birthdate;
+	}stu1,stu2;
+
+-->stu1.birthdate.day
+-->stu1.birthdate.month
+-->stu1.birthdate.year
+-----------------------
+OR 
+-----------------------
+	struct date
+	{
+		int day;
+		int month;
+		int year
+	};
+	struct student
+	{
+		char name[10];
+		int rollno;
+		float marks;
+		struct date birthdate;
+	}stu1,stu2; 
+-------------------------------
+	struct date
+	{
+		int day;
+		int month;
+		int year
+	};
+	struct student
+	{
+		char name[10];
+		int rollno;
+		float marks;
+		struct date birthdate,joindate;
+	}stu1,stu2; 
+----------------------------------------------------------------------
+NOT valid nesting of structure within itself is not valid
+==========================================================
+struct student
+	{
+		char name[10];
+		int rollno;
+		float marks;
+		struct student stud3; //invalid
+	}stu1,stu2; 
+--------------------------------------------------------------------------------
+Nesting of structure can be at anylevel
+=========================================
+example of level 3
+===================
+	struct time
+	{
+		int hour;
+		int min;
+		int sec;
+	};
+	struct date
+	{
+		int day;
+		int month;
+		int year
+		struct time t;
+	};
+	struct student
+	{
+		char name[10];
+		int rollno;
+		float marks;
+		struct date birthdate;
+	}stu1,stu2;
+to access of hour of student
+============================
+stud1.birthdate.t.hour
+example
+==========
+#include<stdio.h>
+/*struct outer
+{
+	int a;
+	struct inner
+	{
+		int a;
+		char b;
+	}i;
+}o={1,2,'a'};nesting structure */
+/*struct inner
+{
+	int a;
+	char b;
+};
+struct outer
+{
+	int a;
+	struct inner i;
+}o={1,2,'a'}; before having as amember it has to defined first*/
+/*struct outer
+{
+	int a;
+	struct inner i;
+}o={1,2,'a'};
+struct inner
+{
+	int a;
+	char b;
+}; invalid */
+/*struct outer
+{
+	int a;
+	struct outer i;
+}o={1,2,'a'}; nesting of structure within itself*/
+int main()
+{
+	printf("%d %d %c\n",o.a,o.i.a,o.i.b);
+	struct outer o1;
+	o1.a=11;
+	o1.i.a=12;
+	o1.i.b='s';
+	printf("%d %d %c\n",o1.a,o1.i.a,o1.i.b);
+return 0;
+}
+
+----------------------------------------------------------- 
+		struct emp
+		{
+			int arr[5];
+			int a;
+		}s1={{10,20,30},40};
+------------------------------------------------------------------
+
+		Size of structure
+		==================
+
+		struct emp
+		{
+			char ch[2];
+		}s1;
+		int main()
+		{
+			printf("%d\n",sizeof(s1));//2
+		}
+---------------------------------------------------------------
+		Structure Padding
+		===============
+ramya>>cat sizeofstruct.c 
+#include<stdio.h>
+/*struct datatype
+{
+	int a;
+}s; size=4 bytes*/
+/*struct datatype
+{
+	int a;
+	char b;
+}s; size=8 bytes*/
+/*struct datatype
+{
+	int a;
+	char b;
+	char c;
+}s; size=8 bytes*/
+/*struct datatype
+{
+	int a;
+	char b;
+	int c;
+}s; size=12 */
+
+/*struct datatype
+{
+	char b;
+	int a;
+}s; size=8 bytes*/
+ 
+/*struct datatype
+{
+	char b[2];
+}s; size=2 bytes*/
+/*struct datatype
+{
+	int a;
+	char b[4];
+}s; size=8 bytes*/
+struct datatype
+{
+	char b[3];
+	int a;
+	char c[3];
+}s;
+int main()
+{
+	printf("sizeof(s):%lu\n",sizeof(s));
+	printf("sizeof(struct datatype):%lu\n",sizeof(struct datatype));
+//	printf("sizeof(struct datatype s):%lu\n",sizeof(struct datatype s));
+return 0;
+}
+		struct emp
+		{
+			char ch[2];
+			int a;
+		}s1;
+		int main()
+		{
+			printf("%d\n",sizeof(s1));//8
+		}
+-------------------------------------------------------------------
+		struct emp
+		{
+			char ch[3];
+			int a;
+			char str[2];
+		}s1;
+		int main()
+		{
+			printf("%d\n",sizeof(s1));//12
+		}
+--------------------------------------------------------------------------
+	
+		How to avoid structure padding??
+		
+			-->
+			#pragma pack (1)
+			struct emp
+			{
+				char ch[2];
+				int a;
+			}s1;
+			int main()
+			{
+				printf("%d\n",sizeof(s1));//6
+			}
+-		-->#pragma is not a part of C language
+		-->only some compilers support this feature
+ramya>>cat sizeofstructpragma.c
+#include<stdio.h>
+#pragma pack (1)
+/*struct datatype
+{
+	int a;
+}s; size=4 bytes*/
+/*struct datatype
+{
+	int a;
+	char b;
+}s; size=5 bytes*/
+/*struct datatype
+{
+	int a;
+	char b;
+	char c;
+}s; size=6 bytes*/
+/*struct datatype
+{
+	int a;
+	char b;
+	int c;
+}s; size=9 */
+
+/*struct datatype
+{
+	char b;
+	int a;
+}s; size=5 bytes*/
+ 
+/*struct datatype
+{
+	char b[2];
+}s; size=2 bytes*/
+/*struct datatype
+{
+	int a;
+	char b[4];
+}s; size=8 bytes*/
+/*struct datatype
+{
+	char b[3];
+	int a;
+	char c[3];
+}s; size=10 bytes*/
+int main()
+{
+	printf("sizeof(s):%lu\n",sizeof(s));
+	printf("sizeof(struct datatype):%lu\n",sizeof(struct datatype));
+//	printf("sizeof(struct datatype s):%lu\n",sizeof(struct datatype s));
+return 0;
+}
+-------------------------------------------------------------------------------------------
+pragma 2
+========
+	--> 2 bytes of allocation
+amya>>cat sizeofstructpragma2.c
+#include<stdio.h>
+#pragma pack (2)
+/*struct datatype
+{
+	int a;
+}s;// size=4 bytes*/
+/*struct datatype
+{
+	int a;
+	char b;
+}s; //size=6 bytes*/
+/*struct datatype
+{
+	int a;
+	char b;
+	char c;
+}s; //size=6 bytes*/
+/*struct datatype
+{
+	int a;
+	char b;
+	int c;
+}s; //size=10 */
+
+/*struct datatype
+{
+	char b;
+	int a;
+}s;// size=5 bytes*/
+ 
+/*struct datatype
+{
+	char b[2];
+}s; size=2 bytes*/
+/*struct datatype
+{
+	int a;
+	char b[4];
+}s; //size=8 bytes*/
+/*struct datatype
+{
+	char b[3];
+	int a;
+	char c[3];
+}s; //size=12 bytes*/
+int main()
+{
+	printf("sizeof(s):%lu\n",sizeof(s));
+	printf("sizeof(struct datatype):%lu\n",sizeof(struct datatype));
+//	printf("sizeof(struct datatype s):%lu\n",sizeof(struct datatype s));
+return 0;
+}
+-------------------------------------------------------------------
+------> Assignment can be done either member by member or directly also;
+------>we cannot perform arithmetic,relational or bitwise operators directly.
+
+struct time
+{
+	int min;
+	int sec;
+}s1={45,30},s2={10,20};
+int main()
+{
+	struct time new,s3;
+	new.min=s1.min;
+	new.sec=s1.sec;
+	new=s1;		//valid
+	if(s1>s2)	//invalid
+		printf("s1 is greater");
+	else
+		printf("s2 is greater");
+//	s3=s1+s2;	//invalid
+//	printf("%d %d",s3.min,s3.sec);
+
+
+}
+
+---------------------------------
+#include<stdio.h>
+struct new
+{
+        char ch;
+}s1;                    //1
+struct new1
+{
+        char ch;
+        int i;
+}s2;                    //8
+struct new2
+{
+        char ch;
+        char ch2;
+        int i;
+//      char ch2;
+}s3;                    //12
+struct new3
+{
+        char ch[4];
+        double d;
+        char i;
+}s4;                    //20 24 16 
+     
+struct new4
+{
+        char ch[2];
+        int i;
+}s5;            //6 8 30
+
+int main()
+{
+        printf("%d\n ",sizeof(s1));
+
+        printf("%d\n ",sizeof(s2));
+
+        printf("%d\n ",sizeof(s3));
+
+        printf("%d\n ",sizeof(s4));
+        printf("%d\n ",sizeof(s5));
+}
+
+-----------------------------------------------------
+
+	----> padding bits will be added in order to allign the structure data members
+	----> pragma pack can be used to avoid structure padding.
+--------------------------------------------------------
+-----------------------------------------------------------------------------
+Pointers to structure
+======================
+	pointer to structure -->	
+			pointer points to the starting address of the structure variable
+
+declaration
+===========
+	struct student
+	{
+		char name[10];
+		int rollno;
+		float marks;
+	}; 
+
+struct student stu,*ptr;
+
+ptr is a pointer variable that can points to a variable of type struct student,we use & address operator to access the address of a struct variable
+
+ptr=&stu;
+
+How to access structure member using a pointer
+==============================================
+	2 ways to access
+1) by derefrencing operator
+
+(*ptr).name
+(*ptr).rollno
+(*ptr).marks
+
+(*&stu).name
+(*&stu).rollno
+(*&stu).marks
+
+here parentheses are necessary because dot operator has a higher precedence than *(dereference) operator 
+
+this is so confusing to remember so you have arrow operator -> which helps you to a structure members through a pointer
+as shown below
+
+ptr->name
+ptr->rollno
+ptr->marks
+
+struct student
+	{
+		char name[10];
+		int rollno;
+		float marks;
+	}; 
+
+struct student stu={"roy",1,67.1};
+struct student *ptr;
+ptr=&stu;
+
+ptr->name
+ptr->rollno
+ptr->marks
+example
+========
+#include<stdio.h>
+struct student
+{
+	char name[10];
+	int rollno;
+	float marks;
+};
+int main()
+{
+	struct student stu={"roy",1,65.67},*ptr;
+	ptr=&stu;
+	printf("name :%s rollno :%d marks :%f \n",ptr->name,ptr->rollno,ptr->marks);
+	printf("name :%s rollno :%d marks :%f \n",(*ptr).name,(*ptr).rollno,(*ptr).marks);
+	printf("name :%s rollno :%d marks :%f \n",(*&stu).name,(*&stu).rollno,(*&stu).marks);
+return 0;
+}
+------------------------------------------------------------------------------
+Pointers within the structure
+=============================
+	struct datatype
+	{
+		int a;
+		int *ptr;
+	}; 
+
+struct datatype stu,*stuptr;
+
+stuptr=&stu;
+
+To access the ptr
+=================
+stu.ptr;	
+stuptr->ptr;
+
+To access the value at ptr
+===========================
+*stu.ptr;	<=>	*(stu.ptr);
+*stuptr->ptr;	<=>	*(stuptr->ptr);
+
+example
++++++++
+	#include<stdio.h>
+struct datatype
+{
+	int a;
+	int *ptr;
+};
+int main()
+{
+	struct datatype s;
+	struct datatype *sptr;
+	s.a=1;
+	s.ptr=&s.a;
+	printf("a:%d\n",s.a);
+	printf("*ptr:%d\n",*s.ptr);
+	sptr=&s;
+	sptr->a=1;
+	sptr->ptr=&sptr->a;
+	printf("sptr a:%d\n",sptr->a);
+	printf("sptr *ptr:%d\n",*sptr->ptr);
+return 0;
+}
+
+structures and pointers:
+================    
+struct stu
+{
+	int roll;
+	char name[20];
+	char  *ptr;
+}s1={10,”new”};
+int main()
+{
+	s1.ptr=s1.name;
+	printf(“%s”,s1.ptr);
+	scanf(“%s”,s1.ptr);
+	s1.ptr=100;
+	s1.ptr++;
+}
+------------------------------------------------------------------------------
+Structures and functions
+========================
+
+	Passing structure members as argument to function
+	Passing structure variable as argument to function
+	Passing pointers to structure as argument to function
+	Passing array of structure as argument to function
+	Returning structure variable from function
+	Returning pointers to structure  from function
+
+
+
+
+Passing structure members as argument to function
+==================================================
+
+for a display function we are passing only structure members
+	
+#include<stdio.h>
+struct student 
+{
+	char name[10];
+	int rollno;
+	float marks;
+}s;
+void display(char name[],int a,float b);
+int main()
+{
+	struct student s={"joy",3,67.7};
+	display(s.name,s.rollno,s.marks);	
+return 0;
+}
+void display(char name[],int a,float b)
+{
+	printf("name %s\n",name);
+	printf("roll no %d\n",a);
+	printf("marks %f\n",b);
+}
+
+--------------------------------------------------------------------------
+Passing structure variable as argument to function(pass by value)
+===================================================-===============
+ here your passing structure variable as a argument to function so its like pass by value ,hence what ever the changes you make in fynction will not b reflected to main or the original,bcoz function is going to create a another one structure a structure declaration...
+
+#include<stdio.h>
+#include<string.h>
+struct student
+{
+        char name[10];
+        int rollno;
+        float marks;
+}s;
+void display(struct student a);
+void change(struct student a);
+int main()
+{
+        struct student s={"joy",3,67.7};
+        display(s);
+        change(s);
+        display(s);
+return 0;
+}
+void display(struct student a)
+{
+        printf("name: %s\n",a.name);
+        printf("roll no: %d\n",a.rollno);
+        printf("marks: %f\n",a.marks);
+}
+void change(struct student a)
+{
+        strcpy(a.name,"reya");
+        a.rollno=2;
+        a.marks=65.12;
+}
+ramya>>./a.out 
+name: joy
+roll no: 3
+marks: 67.699997
+name: joy
+roll no: 3
+marks: 67.699997
+
+
+--------------------------------------------------------------------------
+Passing pointers to structure as argument to function(pass by address)
+======================================================================
+
+#include<stdio.h>
+#include<string.h>
+struct student 
+{
+	char name[10];
+	int rollno;
+	float marks;
+}s;
+void display(struct student *a);
+void change(struct student *a);
+int main()
+{
+	struct student s={"joy",3,67.7};
+	display(&s);
+	change(&s);	
+	display(&s);	
+return 0;
+}
+void display(struct student *a)
+{
+	printf("name: %s\n",a->name);
+	printf("roll no: %d\n",a->rollno);
+	printf("marks: %f\n",a->marks);
+}
+void change(struct student *a)
+{
+	strcpy(a->name,"reya");
+	a->rollno=2;
+	a->marks=65.12;
+}
+
+ramya>>./a.out 
+name: joy
+roll no: 3
+marks: 67.699997
+name: reya
+roll no: 2
+marks: 65.120003
+
+--------------------------------------------------------------------------
+Passing array of structure as argument to function
+==================================================
+
+ramya>>cat arrrayofstructtofunc.c 
+#include<stdio.h>
+#include<string.h>
+struct student 
+{
+	char name[10];
+	int rollno;
+	float marks;
+}s[3];
+int i;
+void display(struct student a[]);
+void change(struct student a[]);
+int main()
+{
+	struct student s[3]={{"joy",3,67.7},
+				{"arjith",4,65.17},
+				{"adhi",8,64.67}};
+	printf("bfore changing\n");
+	display(s);
+	change(s);	
+	printf("after changing\n");
+	display(s);	
+return 0;
+}
+void display(struct student a[])
+{
+	for(i=0;i<3;i++)
+	{
+		printf("name: %s\n",a[i].name);
+		printf("roll no: %d\n",a[i].rollno);
+		printf("marks: %f\n",a[i].marks);
+	}
+}
+void change(struct student *a)
+{
+	for(i=0;i<3;i++)
+	{
+		a[i].rollno+=1;
+		a[i].marks+=30;
+	}
+}
+ramya>>./a.out 
+bfore changing
+name: joy
+roll no: 3
+marks: 67.699997
+name: arjith
+roll no: 4
+marks: 65.169998
+name: adhi
+roll no: 8
+marks: 64.669998
+after changing
+name: joy
+roll no: 4
+marks: 97.699997
+name: arjith
+roll no: 5
+marks: 95.169998
+name: adhi
+roll no: 9
+marks: 94.669998
+
+---------------------------------------------------------------------------
+Returning structure variable from function
+===========================================
+#include<stdio.h>
+#include<string.h>
+struct student
+{
+        char name[10];
+        int rollno;
+        float marks;
+}s;
+void display(struct student a);
+struct student change(struct student a);
+int main()
+{
+        struct student s={"joy",3,67.7};
+        display(s);
+        s=change(s);
+        display(s);
+return 0;
+}
+void display(struct student a)
+{
+        printf("name: %s\n",a.name);
+        printf("roll no: %d\n",a.rollno);
+        printf("marks: %f\n",a.marks);
+}
+struct student change(struct student a)
+{
+        strcpy(a.name,"reya");
+        a.rollno=2;
+        a.marks=65.12;
+        return a;
+}
+
+ramya>>./a.out 
+name: joy
+roll no: 3
+marks: 67.699997
+name: reya
+roll no: 2
+marks: 65.120003
+
+------------------------------------------------------------------------------
+Returning pointers to structure  from function
+================================================
+
+#include<stdio.h>
+#include<string.h>
+#include<stdlib.h>
+struct student
+{
+        char name[10];
+        int rollno;
+        float marks;
+}s;
+void display(struct student *a);
+struct student *func();
+int main()
+{
+        struct student s={"joy",3,67.7};
+        display(&s);
+        struct student *ptr;
+        ptr=func();
+        display(ptr);
+return 0;
+}
+void display(struct student *a)
+{
+        printf("name: %s\n",a->name);
+        printf("roll no: %d\n",a->rollno);
+        printf("marks: %f\n",a->marks);
+}
+struct student *func()
+{
+        struct student *a=(struct student *)malloc(sizeof(struct student));
+        strcpy(a->name,"reya");
+        a->rollno=2;
+        a->marks=65.12;
+        return a;
+}
+
+ramya>>./a.out 
+name: joy
+roll no: 3
+marks: 67.699997
+name: reya
+roll no: 2
+marks: 65.120003
+--------------------------------------------------------------------------------
+self referential structure
+==========================
+is a structure having a pointer which points to the structure of its own type
+
+example
+=======
+	struct tagname
+	{
+		member 1;
+		member 2;
+		struct tagname *ptr1;
+		struct tagname *ptr2;
+	};
+------
+--------------------------------------------------------------------
+	DMA on Structures:
+	==================
+
+	struct new
+	{
+		int a;
+		char c;
+		float f;
+	};
+	int main()
+	{
+		int *ptr=(int *)malloc(20);
+	
+		struct new *sptr=(struct new *)malloc(sizeof(struct new));
+
+
+		struct new *sptr1=(struct new *)calloc(sizeof(struct new),1);
+
+
+	}
+
+
+----------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

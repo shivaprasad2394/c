@@ -1,0 +1,312 @@
+Qualifiers
+			scanf
+
+			Escape Sequences
+---------------------------------------------------------------------
+
+
+
+
+		OPERATORS
+		========
+	expression:a+b
+		a,b -->operands
+		+ -->operator
+
+---------------------------------------------
+	Classify OPerators based on 
+	number of operands
+	
+		unary
+			sizeof,&,++,--,+,-,*,!,~....
+		binary
+			+,-,*,/,<,>=,==....
+		ternary
+			?:-->Conditional
+---------------------------------------------------
+	Classify OPerators based on operation
+		
+	1)sizeof Operator	
+	2)assiognment Operator	
+	3)arithmetic Operator	
+	4)relational Operator	
+	5)Incremnet & decrement Operator	
+	6)Logical Operator	
+	7)Bitwise  Operator	
+	8)Conditional Operator	
+	9)Shorthand Operatotr
+	10)Comma Operator	
+---------------------------------------------------
+		sizeof Operator	
+		=============
+		unary 
+		sizeof(argument)
+		-->size of argumnet in bytes
+		-->return unsigned int
+
+		int main()
+		{
+			int a;
+			char ch;
+			float f;
+			printf("%d\n",sizeof(a));//4
+			printf("%d\n",sizeof(ch));//1
+			printf("%d\n",sizeof(f));//4
+			printf("%d\n",sizeof(100));//4
+			printf("%d\n",sizeof('a'));//4
+			printf("%d\n",sizeof(3.4));//8
+			printf("%d\n",sizeof(3.4f));//4
+		}
+
+------------------------------------------------
+		assignment Operator
+		==================
+
+			lvalue=rvalue
+		lvalue should be a variable
+		rvalue canvariable,constnat,expression...............
+
+			5=a;//invalid
+			a+b=c//invalid
+			
+		Implicit conversion
+		==================
+			int a=3.14;
+			pritnf("%d\n",a);//3
+
+			float f=3;
+			printf("%f\n",f);//3.00000
+------------------------------------------------------------------------------	
+			arithmetic Operator	
+			==================
+			+
+			-
+			*
+			/   quotient
+			%  modulus   reminder
+
+			
+			3/7  -->0
+			3%7  -->3
+			2%7  -->2
+			6%7  -->6
+			6/7-->0
+			7%7  -->0
+---------------------------------------------------------------
+			int main()
+			{
+				int a=5;
+				int b=2;
+				float f=a/b;
+				pritnf("%f\n",f);//2.0000
+			}
+-------------------------------------------------------------
+			int main()
+			{
+				int a=5;
+				float b=2;
+				float f=a/b;//implicit conversion
+				pritnf("%f\n",f);//2.500
+			}
+				int/float
+-------------------------------------------------------------------------------
+			Explicit type castimng
+			int main()
+			{
+				int a=5;
+				int b=2;
+				float f=(float)a/b;
+				pritnf("%f\n",f);//2.5000
+			}
+-------------------------------------------------------
+			int main()
+			{
+				int a=5;
+				int b=2;
+				float f=(float)(a/b);
+				pritnf("%f\n",f);//2.0000
+			}
+----------------------------------------------------------------------
+			How to solve an expression
+			=========================
+				precedence will help in binding only
+
+			* / %    left to right
+			+ -      left to right
+
+				int res=5*2+3*2/3-2/2*10+8;
+				printf("%d\n",res);//10
+
+				//((((5*2)+((3*2)/3))-((2/2)*10))+8)
+-------------------------------------------------------------------------------
+			relational Operator	
+			==================
+			-->output will be either 1 or 0
+			
+			>
+			>=
+			<
+			<=
+			==  equality operators
+			!=
+
+			int a=5>3;
+			printf("%d\n",a);//1
+			a=5>4>3;
+			printf("%d\n",a);//0
+			a=a==1;
+			printf("%d\n",a);//0
+			int res=a==15>14>3+2;
+			pritnf("%d\n",res);//1
+---------------------------------------------------------------------------
+			Incremnet & decrement Operator	
+			=============================
+			++
+			--
+			operand should be avraible
+			5++;//invalid
+			a+b++;//valid
+			(a+b)++;//inavlid
+
+			a++;
+			a=a+1;
+			c=(a+b)++;//invalid
+
+			post increment & pre increment
+			============================
+				a++  //post incremnt
+				++a  //pre incremnt
+
+				post incremmt-->value is assigned then incremnt
+				pre incremnt  -->first incremnt then value is asssigned
+				
+				int main()
+				{
+					int a,b=10;
+					a=b++;
+					printf("%d  %d\n",a,b);//10  11
+				}
+
+				int main()
+				{
+					int a,b=10;
+					a=++b;
+					printf("%d  %d\n",a,b);//11  11
+				}
+
+				
+				a--  //post decremnet
+				--a  //pre decremnt
+
+				post decremnet-->value is assigned then decremnet
+				pre decremnet  -->first decremnet then value is asssigned
+				
+-------------------------------------------------------------------------------------
+			Logical Operator
+			===============
+			-->output will be either 1 or 0
+			-->combine any condition
+				ch>='a' && ch<='z'  -->lowercase
+
+			&&
+			||
+			!
+
+			Truth Table
+			===========
+				&&
+
+			op1    op2    res
+			0       0     0
+			0       1     0
+			1       0     0
+			1      1      1
+
+
+				||
+
+			op1    op2    res
+			0       0     0
+			0       1     1
+			1       0     1
+			1      1      1
+
+				
+				!
+
+				op   res
+				0     1
+				1     0
+--------------------------------------------------------------------------
+				int a=5&&3;
+				printf("%d\n",a);//1
+				a=-5&&8;
+				printf("%d\n",a);//1
+				a=!-7;
+				printf("%d\n",a);//0
+
+	---------------------------------------------------------------------
+				int a=0,b=0;
+				int res=a++ && ++b;
+				printf("%d  %d  %d\n",a,b,res);//1  0   0
+				
+
+			in Logical AND if left operand is 0,compiler will
+			not evaluate right operand
+
+
+			-------------------------------------------------------
+				int a=-1,b=-1;
+				int res=++a && ++b;
+				printf("%d  %d  %d\n",a,b,res);
+------------------------------------------------------------------------------
+				int a=-1,b=-1;
+				int res=a++ && ++b;   //-1 && 0
+				printf("%d  %d  %d\n",a,b,res);//0   0   0
+--------------------------------------------------------------------------
+				int a=-1,b=-1;
+				int res=a++ || ++b;   //-1 ||
+				printf("%d  %d  %d\n",a,b,res);//0  -1  1
+				
+
+			in Logical OR if left operand is 1,compiler will
+			not evaluate right operand
+
+------------------------------------------------------------------------
+		
+	int a=1,b=0,c=5	
+	
+	res=a++&&++b||--c; 
+
+i	printf("%d   %d   %d   %d  \n",a,b,c,res);//2  1  5  1
+---------------------------------------------------------------------------
+			Conditional Operator	
+			====================
+			ternary operator
+			
+			exp1 ? exp2 :exp3
+
+			exp1 is true ,then it will evaluate exp2
+			exp1 is false ,then it will evaluate exp3
+
+------------------------------------------------------------------------------
+			num%2==0?printf("the number is even\n"):printf("odd\n");
+			
+					or
+			num%2?printf("odd\n"):printf("even\n");
+------------------------------------------------------------------------------------
+				int num1,num2;
+				num1>num2?printf("%d is graeter",num1):printf("%d is graeter",num2);
+
+			
+				int num1,num2,max;
+				num1>num2?(max=num1):(max=num2);
+				printf("%d\n",max);
+
+					or
+				int num1,num2,max;
+				max=num1>num2?num1:num2;
+				printf("%d\n",max);
+------------------------------------------------------------------------------------------------
+
+

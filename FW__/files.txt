@@ -1,0 +1,318 @@
+		FILES
+		======
+File ops : opening, closing, creating, seeking, rewind, 
+File io  : Character IO, string IO, Block IO
+
+	
+ File Creation/Writing to a file
+=================================
+
+		FILE *pointer=fopen("file_name","mode");
+		
+			modes
+			=====
+			r  -->read
+			w  -->write
+			a  -->append
+			r+  -->read & write
+			w+  -->write & read
+			a+  -->append & read
+
+------------------------------------------------------------
+		int main()
+		{
+			FILE *fp=fopen("file.c","r");
+			if(fp==NULL)
+			{
+				printf("file doesnt exist\n");
+				exit(1);
+			}
+			fclose(fp);
+		}
+------------------------------------------
+		int main()
+		{
+			FILE *fp=fopen("file.c","w");
+			if(fp==NULL)
+			{
+				printf("file doesnt exist\n");
+				exit(1);
+			}
+		}
+--------------------------
+		int main()
+		{
+			FILE *fp=fopen("file.c","a");
+			if(fp==NULL)
+			{
+				printf("file doesnt exist\n");
+				exit(1);
+			}
+		}
+********************************************************************
+
+Chrachter io : Reading/Writing  charachters to the file
+=======================================================
+		fputc
+		=====
+		int main()
+		{
+			FILE *fp=fopen("file2.txt","w");
+			if(fp==NULL)
+			{
+				printf("file cant be opened\n");
+				exit(1);
+			}
+			fputc('a',fp);
+					
+			fclose(fp);
+		}
+		-->fgetc
+		======
+		int main()
+		{
+			FILE *fp=fopen("file.txt","r");
+			if(fp==NULL)
+			{
+				printf("file doesnt exist\n");
+				exit(2);
+			}
+			char ch;
+			while((ch=fgetc(fp))!=EOF)
+			{
+				printf("%c",ch);
+			}
+			fclose(fp);
+		}
+-----------------------------------------------------------
+		vi rec.c
+		=========
+		stdin
+		stdout
+		stderr
+		int main()
+		{
+			FILE *fp=fopen("file.txt","w");
+			if(fp==NULL)
+			{
+				printf("file doesnt exist\n");
+				exit(2);
+			}
+			char ch;
+			while((ch=fgetc(stdin))!=EOF)
+			{
+				fputc(ch,fp);
+			}
+			fclose(fp);
+		}
+-----------------------------------------------------------
+ftell(fp)
+=========
+		#include<stdio.h>
+		int main()
+		{
+			FILE *fp=fopen("file.txt","a");
+			if(fp==NULL)
+			{
+				printf("file doesnt exist\n");
+				exit(2);
+			}
+			printf("%d\n",ftell(fp));
+			char ch;
+			while((ch=fgetc(stdin))!=EOF)
+			{
+				fputc(ch,fp);
+			}
+			printf("%d\n",ftell(fp));
+			fclose(fp);
+		}
+*****************************************************************
+String IO 
+==========
+		fgets
+		fputs
+	-------------------------------
+		int main()
+		{
+			FILE *fp=fopen("file.txt","r");
+			if(fp==NULL)
+			{
+				printf("file doesnt exist\n");
+				exit(2);
+			}
+			char str[20];
+			fgets(str,20,fp);
+			printf("%s",str);//
+	}
+-----------------------------------------------------------------
+		int main()
+		{
+			FILE *fp=fopen("file.txt","r");
+			if(fp==NULL)
+			{
+				printf("file doesnt exist\n");
+				exit(2);
+			}
+			char str[20];
+			while(fgets(str,20,fp)!=NULL)
+			{
+				//printf("%s",str);
+				fputs(str,stdout);
+			}
+		}
+-----------------------------------------------------------------------
+			w+
+			===
+		#include<stdio.h>
+		int main()
+		{
+			FILE *fp=fopen("file3.txt","w+");
+			if(fp==NULL)
+			{
+				printf("file doesnt exist\n");
+				exit(2);
+			}
+			char str[20]="hi hello\n";
+			fputs(str,fp);
+			char str2[20];
+			fgets(str2,20,fp);
+			printf("%s",str2);//
+	}
+-----------------------------------------------------
+rewind
+======
+	#include<stdio.h>
+                int main()
+                {
+                        FILE *fp=fopen("file4.txt","w+");
+                        if(fp==NULL)
+                        {
+                                printf("file doesnt exist\n");
+                                exit(2);
+                        }
+                	printf("%d\n",ftell(fp));
+                        char str[20]="hi hello\n";
+                        fputs(str,fp);
+                	printf("%d\n",ftell(fp));
+                        rewind(fp);
+                	printf("%d\n",ftell(fp));
+                        char str2[20];
+                        fgets(str2,20,fp);
+                        printf("%s",str2);//hi hello
+        }
+--------------------------------------------------------------------
+fseek
+=====
+		fseek(file_pointer,displacement,whence);
+		whence
+	          ====
+		0   -->SEEK_SET
+		1   -->SEEK_CUR
+		2   -->SEEK_END
+
+		fseek(fp,-2,SEEK_SET)
+
+		#include<stdio.h>
+                int main()
+                {
+                        FILE *fp=fopen("file5.txt","w+");
+                        if(fp==NULL)
+                        {
+                                printf("file doesnt exist\n");
+                                exit(2);
+                        }
+                	printf("%d\n",ftell(fp));
+			char str2[20];
+                        char str[20]="hi hello\n";
+                        fputs(str,fp);
+                	printf("%d\n",ftell(fp));
+               
+                	fseek(fp,-3,SEEK_CUR);
+                	printf("%d\n",ftell(fp));
+                        
+                        fgets(str2,20,fp);
+                        printf("%s",str2);//
+        }
+o/p:
+0
+9
+6
+lo
+-------------------------------
+		-->to count number of charcter in file without iterartion
+		fseek(fp,0,2)
+		printf("%d",ftell(fp));
+
+
+***************************************************************************
+
+		fprintf  & fscanf
+		============
+
+		int main()
+		{
+			
+                        FILE *fp=fopen("file6.txt","w");
+                        if(fp==NULL)
+                        {
+                                printf("file cant be opend\n");
+                                exit(2);
+                        }
+			int a=45;
+			char ch='d';
+			char str[]="dfdfd";
+			float f=9.7;
+			fprintf(fp,"%d\n%c\n%s\n%f\n",a,ch,srt,f);
+			fclose(fp);
+		}
+-----------------------------------------------------------------
+	               int main()
+                {
+
+                        FILE *fp=fopen("file6.txt","r");
+                        if(fp==NULL)
+                        {
+                                printf("file cant be opend\n");
+                                exit(2);
+                        }
+                        int a;
+                        char ch;
+                        char srt[8];
+                        float f;
+                        fscanf(fp,"%d %c %s %f\n",&a,&ch,srt,&f);
+                        printf("\na= %d, ch = %c, str = %s, f=%f\n",a,ch,srt,f);
+                        fclose(fp);
+                }
+***************************************************************************
+BLOCK IO
+========	
+
+size_t fwrite(const void *ptr, size_t size, size_t nmemb, FILE *stream);
+
+size_t fread(void *ptr, size_t size, size_t nmemb, FILE *stream);
+               
+---------------------------------------
+	struct employee
+		{
+			char name[20];
+			int id;
+			float marks;
+		}emp1={"jack",56,6.7},emp2;
+		int main()
+		{
+			FILE *fp=fopen("file3.c","w+");
+			if(fp==NULL)
+			{
+				printf("file cant be opened\n");
+				exit(2);
+			}
+			fwrite(&emp1,sizeof(emp1),1,fp);
+			rewind(fp);
+			fread(&emp2,sizeof(emp2),1,fp);
+			printf("%s  %d  %f",emp2.name,emp2.id,emp2.marks);
+			
+			
+		}
+------------------------------------------
+See program on Pg 59.
+

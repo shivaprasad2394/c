@@ -1,0 +1,306 @@
+typedef 
+=======
+	typedefination it defines a new name for a existing data type
+
+----> to give a alias or another name to an existing data type.
+		----> we can use both old name as well as new name to declare variables.
+
+syntax:
+=======
+	typedef datatype new_name;
+
+typedef ->keyword 
+ datatype -> any datatype (standard datatype or userdatatype)
+new_name -> identifier
+
+we are not creating any new datatype (we are only creating new name to existing datatype)
+
+example 1
+========
+	new name for int
+	
+typedef int marks;
+	
+	marks a,b; <=> int a,b;
+
+			typedef int num;
+			typedef char ch;
+			typedef float f;
+int main()
+	{
+		num b,c;
+		int a,b;
+		ch A,B;
+		f fl,fr;
+
+	}
+
+
+example 2
+=========
+	
+	typedef unsigned long int ulint;
+	
+	typedef float real;
+
+	typedef unsigned int num;	
+	typedef short int si;
+	typedef long int li;
+	typedef unsigned int size_t;
+
+	num a; <=> unsigned int a;
+
+		typedef unsigned int uint;
+		uint var1,var2;
+		size_t  -->typedef of unsigned int ,which is defined in
+		stdio.h
+---------------------------------------------------------------
+-->typedef declaration can be written wherever other declaration are allowed
+
+-->we can give more than one name to single datatype using only one typedef statement
+
+example
+=======
+	typedef int age,marks,units;
+
+age,marks,units all 3 name for int (datatype)
+
+typedef syntactically considered as storage class so
+ we cannot include a storage class in typedef statement 
+
+example 
+=======
+	typedef static char schar;
+	typedef extern int marks;
+
+these two statements are invalid..
+
+----------------------------------------------------------------------
+
+typedef for  pointers ,arrays,fuunctions & structures
+=======================================================
+
+typedef for pointers
+====================
+		typedef float * fptr;
+		
+fptr is synonym for float * OR pointer to float
+
+example 
+=======
+	fptr p,q,*r;
+
+p and q are pointer to float
+r ->pointer to pointer to float
+
+--------------------------------------------------------------------
+	typedef int * ptr;
+	int main()
+	{
+		ptr ptr1;	//ptr1 is a pointer to a int;
+		ptr *ptr2;	//ptr2 is a pointer to a pointer;
+
+	}
+---------------------------------------------------------------------
+
+	#define Ptr int *
+	int main()
+	{
+
+		Ptr ptr1;
+
+	}
+--------------------------------------------------------------------
+typedef with array
+===================
+		
+		typedef int intarr[10];
+		
+		intarr -> integer array of size 10
+
+example
+=======
+		intarr a,b,c[5];
+		
+int a[10],b[10],c[5][10];
+
+a and b are 1-D array;
+c -2-d array (5x10)
+---------------------------------------------------------------
+		typedef int arr[10];
+		arr a,b;  //int a[10],b[10]
+		printf("%d",sizeof(a));//40
+		arr c[5];  //int c[5][10]
+		pritnf("%d",sizeof(c));//200
+-------------------------------------------------------------------
+	typedef int num[10];
+	int main()
+	{
+		num a[10];
+		int b[10];
+		printf("%d %d ",sizeof(a),sizeof(b));	//400 40
+
+	}
+
+
+	typedef int num[10];
+	int main()
+	{
+		num a,c,d,e;		//int a[10]
+		int b;
+		printf("%d %d ",sizeof(a),sizeof(b));	//40 40
+
+	}
+-------------------------------------------------------------------
+typedef with functions:
+======================
+
+	typedef float funct(float,int);
+
+funct is any function that takes value one float and other one as int and returns float
+
+funct add,sub,mul,div;
+
+float add(float , int );
+float sub(float , int );
+float mul(float , int );
+float div(float , int );
+
+
+where add sub mul and div are of the function that takes value one float and other one as int and returns float..
+
+--------------------------------------------------------
+
+typedef int fun(int ,int);
+	fun add,mul,div;
+	fun sub;
+	
+	int add(int ,int);
+	int sub(int ,int);
+	int mul(int,int);
+	int div(int ,int)
+--------------------------------------------------------
+typedf with structures:
+======================
+
+		struct new
+	{
+
+		int a,b;
+
+	};
+
+
+
+	typedef struct new NEW;
+
+	struct new a;
+	NEW b; <=> struct new b
+	NEW *ptr; <=> struct new *ptr
+
+	typedef struct new * PTR;
+	PTR ptr1; <=> struct new * ptr1;
+
+b)combine typedef and structure definition
+
+	 typedef struct new
+	{
+		int a;
+		int b;
+		
+
+	}s;		//s is the new name 
+
+	s a;
+	s *ptr;
+
+1)tagname can be same as newname
+2)you can omit tagname if struct is not self referencial structure
+
+ typedef struct new
+	{
+		int a;
+		int b;
+		
+
+	}s;		//s is the new name 
+
+s var,integer,bar;
+
+s is the newname for the structure
+ 
+----------------------------------
+linked list
+===========
+	struct node
+	{
+		int data;
+		struct node *link;	
+	};
+	typedef struct node NODE; 
+OR
+
+	typedef struct node
+	{
+		int data;
+		struct node *link;	
+	}NODE;
+	NODE *ptr,*head; <=> struct node *ptr,*head; 
+	int main()
+	{
+		sturct node *ptr=(struct node *)malloc(sizeof(struct node));
+		NODE *ptr1=(NODE *)malloc(sizeof(NODE));
+
+	}
+Typedef will follow scope rules
+#define will have the global effect
+------------------------------------------------------------------------------------------
+Diff between #define & typedef:
+	================================
+		----> #define is the blind replacement for the text by the preprocessor
+		----> typedef is applied to each and every variable seperately by the compiler
+
+	typedef char * num
+	#define Num char *
+	int main	
+	{
+		num n1,n3;	// char *n1,*n3;
+		Num n2,n4;	// char *n2,n4;
+		printf("%d %d",sizeof(n1),sizeof(n2));		//4 4
+
+		printf("%d %d",sizeof(n3),sizeof(n4));		//4 1
+
+	}
+
+-------------------------------------------------------------
+
+	typedef double * dptr
+	#define DPTR double *
+	int main	
+	{
+		dptr n1,n3;	// double *n1,*n3;
+		DPTR n2,n4;	// double *n2,n4;
+		printf("%d %d",sizeof(n1),sizeof(n2));		//4 4
+
+		printf("%d %d",sizeof(n3),sizeof(n4));		//4 8
+
+	}
+--------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,649 @@
+-compilation stages:
+------------------
+	gcc filename.c
+
+1)preprocessor
+2)compiler
+3)assembler
+4)linker
+5)loader
+
+f1.c
+
+	#include<stdio.h>
+	int main()
+	{
+		/*program to print hello world*/
+		printf("hello world\n");
+		return 0;
+	}
+
+gcc f1.c
+
+
+	1.Preprocessor:
+	===============
+		---->First stage of compilation stage
+		---->it is program which process the source code before passing to compiler step
+			while processing it operates under the control of the preprocessor directive. 
+		---->Anything that starts with # is called as preprocessor directive.
+		---->these preprocessor directive are divided into three catogories
+			file inclusion directive
+			Macro substitution directive
+			conditional compilation directive
+		FUntions of the preprocessor
+		---->remove comments.
+		---->File inclusion.
+		---->Macro Substitution
+		---->Conditional compilation.
+
+		gcc -E fil.c
+
+
+
+
+		--->to convert source code to intermediate code
+-------------------------------------------------------------------------
+removal of comments
+===================
+f1.c
+
+	int main()
+	{
+		/*program to print hello world*/
+		printf("hello world\n");//it prints hello world
+		return 0;
+	}
+
+
+it removes the comments 
+	//
+	/*-------------------------------------*/
+-----------------------------------------------------------------------------
+File inclusion
+==============
+	it includes a file using file inclusion directive #include
+	
+#include"file.c"
+int main()
+{
+        /*program to ADD two numbers*/
+        int c=add(2,1);
+        printf("result:%d\n",c);//to print result
+return 0;
+}
+
+vi file.c
+int add(int a,int b)
+{
+        return a+b;
+}
+
+Difference between " " and < > while including a file
+
+#include"file.c"
+		#include this directive finds for a file based on  " " or < > here it is double quote it finds for a file to include whether it is present in current directory first if its present it include a file in source file or else it search for a file in standard directory of c library.
+
+#include<file.c>
+		here your including a file using < > so its only checks for in a standard directory of a c library
+		since file.c in not present in the  standard directory of a c library it will give you an error
+
+p.c:1:17: fatal error: file.c: No such file or directory
+ #include<file.c>
+                 ^
+compilation terminated.
+-------------------------------------------------------------------------------------------
+so you can include a file a stdio.h which is a standard library file
+as #include"stdio.h"
+OR
+#include<stdio.h>
+
+both are possible
+File inclusion:
+---------------
+
+
+	#include<stdio.h>	--->/usr/include/
+
+	#include"stdio.h"	----> current path then standard path if the file is not present in current path
+
+------------------------------------------------------------------------------------------
+MACRO substitution
+==================
+	Macro substitution directive #define
+
+
+	----->Name constants can be called as MACROS
+	----->its a process where an identifier in a program is replaced by a predefined string 
+	
+		--->easy substution of texts.
+		---> it will take place before compilation itself
+Declaration
+============
+	
+	#define identifier string
+		OR
+	#define MACROname MACROexpansion
+
+#define TRUE 1
+#define FALSE 0
+#define PI 3.14
+#define sun 5
+#define MSG "hello world"
+
+There are different form of MACRO substitutions
+
+Simple MACRO substitutions
+Agrumented MACRO substitutions
+
+Simple MACRO substitutions
+===========================
+
+#define TRUE 1
+#define FALSE 0
+#define PI 3.14
+#define sun 5
+#define MSG "hello world"
+----------------------------------------
+		#define MSG "hello world\n"
+		int main()
+		{
+			/*program to demonstrate macro*/
+			printf(MSG);//prints hello world
+		return 0;
+		}
+------------------------------------------
+		#define PI 3.14
+		int main()
+		{
+			int rad=7;
+			float area=rad*rad*3.14;
+			printf("%f",area);
+		}
+-----------------------------------------------------
+---> macro name can be anything but it is advisable to name using capital letters
+----> macro doesnt consume any memory at all.
+
+can we have semicolons in macros?
+--->yes, we can have it provided the preprocessed code will not have two semicolons.
+
+
+		#define PI 3.142;
+		int main()
+		{
+			float a=PI
+
+		}
+------------------------------------------------------
+		#define sun 5;
+		int main()
+		{
+			int a=sun;		//valid
+			int b=sun*sun*sun;	//invalid
+			printf("a=%d \n",a);
+			printf("b=%d\n",b);
+
+		}
+
+
+
+	int a=5;;
+	int b=5;*5;*5;;
+
+	----->Macro will consider the replacement text fully so even ; will be added which may end in syntax errors.
+------------------------------------------------------------
+MACROS as functions:
+====================
+
+
+	#define sum a+b
+
+	int main()
+	{
+		int a=6;
+		int b=10;
+		int c=sum;
+		printf("sum=%d\n",c);
+
+
+	}
+
+sum=16
+---------------------------------------------
+
+	#define sum a+b
+
+	int main()
+	{
+		int d=6;
+		int e=10;
+		int c=sum;
+		printf("sum=%d\n",c);
+
+
+	}
+
+----> error
+
+-------------------------------------------------
+Agrumented MACRO substitutions
+===============================
+
+Declaration
+===========
+	#define MACROname(arg1,arg2,......) MACROexpansion
+
+#define ADD(x,y) x+y
+#define SUB(x,y) x-y
+#define PROD(x,y) x*y
+
+#define ADD(x,y) x + y
+int main()
+{
+/*      int c=ADD(3,4);
+        printf("%d\n",c); */
+        float c=ADD(3.2,4.1);
+        printf("%f\n",c);
+return 0;
+}
+---------------------------------------------
+#define PROD(x,y) x * y
+int main()
+{
+        int c=PROD(3,4);
+        printf("%d\n",c);
+return 0;
+}
+------------------------------------
+define PROD(x,y) x * y
+int main()
+{
+        int c=PROD(3+2,4+1);
+        printf("%d\n",c);
+return 0;
+}
+------------------------------------
+define PROD(x,y) (x) * (y)
+int main()
+{
+        int c=5/PROD(3+2,4+1);
+        printf("%d\n",c);
+return 0;
+}
+-------------------------------------
+define PROD(x,y) ((x) * (y))
+int main()
+{
+        int c=5/PROD(3+2,4+1);
+        printf("%d\n",c);
+return 0;
+}
+
+---------------------------------------------
+		Parameterized Macro
+		=================
+		#define sum(a,b)   a+b
+		int main()
+		{
+			int res=sum(4,5); //4+5
+			printf("%d",res);//9
+
+			float f=sum(7.8,6.8);//7.8+6.8
+			printf("%f",f);
+			
+		}
+----------------------------------------------------
+		#define prod(a,b)  a*b
+		int main()
+		{
+			int s=prod(4,5);//4*5
+			s=prod(3+4,2+10);//3+(4*2)+10
+		}
+		#define prod(a,b)  (a)*(b)
+		int main()
+		{
+			int s=prod(4,5);//4*5
+			s=prod(3+4,2+10);//(3+4)*(2+10)
+		}
+		-------------------------------------------------------------
+		#define prod(a,b)  ((a)*(b))
+		int main()
+		{
+			int s=prod(4,5);//4*5
+			s=4/prod(3+2,2+10);//4/((3+2)*(2+10))
+		}
+----------------------------------------------------------------------------
+		#define SUN 5
+		int main()
+		{
+			printf("hi SUN");
+		}
+		-->hi SUN
+-------------------------------------------------------------------------------
+	#define MAC 6
+	int main()
+	{
+		printf("MAC hello hai\n");
+	}
+
+	MAC hello hai 
+
+
+	-----> macros will not be replaced inside string constant or char constant or comments.
+
+-----------------------------------------------------------------
+	Q)  #define A 4
+        int main()
+        {
+                printf("%d\n", 'A');
+        }
+
+		-->Macro will not be expanded if it is inside string 
+		constant,char constant or inside comments
+----------------------------------------------------------------
+can we have macros inside function??
+
+	int main()
+	{
+
+		int a,b;
+		#define PI 3.142
+		float c=PI;				//
+		fun();
+	}
+	void fun()
+	{
+		int i,a;
+		#define PI 5
+		i=PI;
+		a=i+PI;
+
+
+	}
+
+
+------------------------------------------------------------------------------------------------------------------------------
+	yes we can use macros within the function.
+
+	void fun1()
+	{
+		float b=PI;
+	}
+
+	int main()
+	{
+		int radius=7;
+		float area;
+		
+		area=PI*radius*radius;
+		#define PI 3.14567
+		fun();
+		fun1();
+	}
+	
+	void fun()
+	{
+		float r=PI;
+	}
+
+
+	----> macros doesnt have any scope
+	----> macro can be defined anywhere but if we use it before it is defined preprocessor wil not replace it and we will get error.
+
+	int main()
+	{
+
+		int a,b;
+		float d=PI;		// invalid macros should be defined only after they are defined
+		#define PI 3.142
+		float c=PI;
+
+	}
+int main()
+{
+        #define PI 3.14578
+        printf("PI:%d\n",PI);
+return 0;
+}
+void fun()
+{
+        printf("PI:%d\n",PI);
+}
+
+------------------------------------------------------------------------
+
+	#define sum(a,b) a+b
+
+	int main()
+	{
+		int d=6;
+		int e=10;
+		int c=sum(d,e);
+		printf("sum=%d\n",c);
+
+		c=sum(20,10);
+		printf("sum=%d\n",c);
+
+	}
+-------------------------------------------------
+MAcros vs Functions:
+======================
+
+	#define sum(a,b) a+b
+	#define Pro(a,b) a*b	
+	int add(int a,int b)
+	{
+		return a+b;
+	}
+	int mul(int a,int b)
+	{
+		return a*b;
+	}
+	int main()
+	{
+		int d=6;
+		int e=10;
+		int c;
+		c=mul(2+3,3+2);
+		printf("mul=%d\n",c);	//25
+
+		c=Pro(2+3,3+2);
+		printf("Pro=%d\n",c);	//13
+
+	}
+
+------------------------------------------------------------
+
+#define SQR(a) a*a
+int sqr(int a)
+{
+	return a*a;
+}
+int main()
+{
+	int a=SQR(5);
+	printf("SQR a =%d\n",a);	//25
+
+	int b=sqr(5);
+	printf("sqr b =%d\n",b);	//25
+
+	a=SQR(2+3);
+	printf("SQR a =%d\n",a);
+
+	b=sqr(2+3);
+	printf("sqr b =%d\n",b);
+
+	#define SQR(a) (a)*(a) 
+	a=SQR(2+3);
+	printf("SQR a =%d\n",a);	//	(2+3)*(2+3)===>5*5
+
+	b=sqr(2+3);
+	printf("sqr b =%d\n",b);
+
+
+	a=SQR(10)/SQR(5);	//[[[(10)*(10)]/(5)]*(5)]	==>(100/5)*5==>20*5==100
+
+	printf("a=%d\n",a);	//100
+
+	#define SQR(a) ((a)*(a)) 
+
+	a=SQR(10)/SQR(5);
+
+	printf("a=%d\n",a);	//(10*10)/(5*5)	==>100/25 ==>4
+
+
+}
+#define prod(a,b) (a) * (b)
+int mul(int a,int b)
+{
+        return a * b;
+}
+int main()
+{
+        float c=prod(2.3,3.2);
+        printf("m add:%f\n",c);
+        float d=mul(2.3,3.2);
+        printf("f add:%f\n",d);
+return 0;
+}
+
+Function have overheads so for smaller functions we can use macros.
+
+---> in functions arguments are evaluated before passing but in macros arguments are not evaluated
+
+----> it is recommended to use braces for arguments in macros
+
+-----> macros doesnt occupy any memory but while replacing entire text will be replaced so
+ code size will be increased but over head is reduced , which means it is faster.
+
+----------------------------------------------------------
+1. wap by using MACROS to swap two numbers
+
+#define SWAP(a,b) int temp; temp=a; a=b; b=temp;
+int main()
+{
+        int x=10;
+        int y=20;
+        SWAP(x,y);
+        printf("x:%d\n",x);
+        printf("y:%d\n",y);
+}
+------------------------------------------------------------
+2.Wap to use a macro that prints 5 lines of printf statements.
+#define print printf("hello\n");\
+                printf("hii\n");\
+                printf("bye\n");
+int main()
+{
+        print
+}
+-----------------------------------------------------------------
+3) WAP to print hello with out using main function
+
+#define START int main(){
+#define END }
+START
+        printf("hello\n");
+END
+----------------------------------------------------
+	#define START {
+	#define END }
+	#define PRINT printf("hi how r u");
+	int main
+	START
+		PRINT
+	END
+
+
+------------------------------------------------------------------------
+Maximum of two numbers:
+-----------------------
+	#define MAX a>b?a:b
+	int main()
+	{
+
+		int c=10,d=20;			
+		printf(" maximum = %d",MAX);	// 20		a>b ?a:b  error a and b undeclared
+							  
+	}
+------------------------------------------
+
+	#define MAX(a,b) a>b?a:b
+	int main()
+	{
+
+		int c=10,d=20;			
+		printf(" maximum = %d",MAX(c,d));	// 		c>d ?c:d  
+							  
+	}
+---------------------------------------------------------------------------------------------
+
+	#define MAX a>b?printf("a is bigger\n"):printf("b is bigger")
+	int main()
+	{
+
+		int a=10,b=20;
+		MAX;
+
+
+	}
+---------------------------------------------------------------------------------------------
+	#define MAX(a,b) (a>b)?printf("a:%d isgreather\n",a):printf("b:%d is greather\n",b);
+	int main()
+	{
+		MAX(10,20)
+	return 0;
+	}
+-----------------------------------------------------------------------------------------------
+	if(printf("hi"))
+	{
+	}
+
+-----------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

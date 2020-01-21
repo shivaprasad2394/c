@@ -1,0 +1,137 @@
+#include<stdio.h>
+		int main()
+		{
+			printf("Welcome To Cranes");
+			return 0;
+		}
+
+			
+--------------------------------------------------------
+			C Tokens
+			========
+		keywords,identifiers,constants,
+		variables,opeartors,special chaarcters........
+
+		keywords
+		=====
+		-->reserwed words
+		-->predefined meaning which is known
+		to compiler
+		-->keywords are written in small letters
+		-->ex:int,do,while,for,if,break,else....
+
+		Identifiers
+		==========
+		-->name given by user to variable,function,
+		structure,array,macro.........
+		Rules for giving identifier
+		=========================
+		-->No keywords can be used as identifier
+		-->Identifier can consist of only
+			alphabets(a..z)(A ..Z),digits(0..9)
+			_(underscore)
+		-->Any identifier should start from 
+			alphabet or _
+		-->No special characetrs are alowed except _
+
+
+		ex:qwer123  //valid
+		123qwr //invalid
+		sum of //invalid
+		sum_of //valid
+		sum#of  //invalid
+		______  //valid
+		var1 //valid
+------------------------------------------------------------
+		Constants
+		=========
+		Numerical Constants
+			Integral Constants
+				Decimal
+					ex:23
+				Octal
+					ex:023	
+					000010011  //19
+				Hexadecimal
+					0x23;
+					00100011
+			Real Constants
+			--------------
+
+			2.3
+			2.3f
+			2.3e2
+
+		Character Constants
+		==================
+			Single Charcter Constants
+				'a'    -->97
+				'0'     ->48
+			//ascii
+			man ascii
+			String Constant
+			===============
+			"abc"
+-------------------------------------------------------
+			datatypes
+			========
+			
+			char    -->1 byte
+			int     -->nonportable datatype
+				-->size of int depende on 
+				size of the compiler 
+			float   -->4 bytes
+			double  -->8 bytes
+
+-----------------------------------------------------------
+			format specifiers
+			===============
+				%c  -->char
+				%d   -->int
+				%f  -->float
+				%lf   -->double
+				%x   ->hexadecimal
+				%o   -->octal
+
+
+
+			variable
+			=======
+			datatype variable_name;
+			/*program to understand int & char*/
+		
+			int main()
+			{
+				char ch;
+				int a=78;//Initialization
+				a=0x97;//assignment
+				printf("decimal =%d\n",a);//151
+				printf("hex=%x\n",a);//97
+				printf("oct=%o\n",a);// 227
+				ch='a';
+				printf("ch =%c\n",ch);//ch =a
+			}
+			
+--------------------------------------------------------------
+			
+		#include<stdio.h>
+		int main()
+		{
+			printf("Welcome To Cranes\n");
+			return 0;
+		}
+-----------------------------------------------------------------------
+		vim editor
+		:wq  ->save q-->quit
+		or
+		:x
+		gcc first.c
+		./a.out
+-------------------------------------------------------------
+		mkdir dir_c
+		cd dir_c
+		dir_c$ls
+		vi file.c
+----------------------------------------------------------------------
+
+
