@@ -16,9 +16,10 @@ there are 4 types of storage class specifier:-
 ----------------------------------------------------------------------------------------------------------------------------
 scope difference
     ----------------
-    Global variable-->Extenal linkage
-    Global static  -->Internal linkage
-    Local static   -->no linkage
+    
+    1)Global variable-->Extenal linkage
+    2)Global static  -->Internal linkage
+    3)Local static   -->no linkage
 
 ----------------------------------------------------------------------------------------------------------------------------
     static default value-->0
