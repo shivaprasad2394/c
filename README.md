@@ -25,3 +25,13 @@ scope difference
 
     static default value-->0
 ============================================================================================================================
+Macro                                                                      functions
+=====
+    No TypeChecking                           |                             exist
+    preprocessed                              |                             compiled
+    codelength increases on Macro call        |                             remains same
+    Speed of Execution faster                 |                             Speed of execution Slower
+    useful in small code                      |                             usefull in large code
+    difficult to debug                        |                             Easy
+    
+    ====================================================================================================================
