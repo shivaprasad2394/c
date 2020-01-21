@@ -26,8 +26,8 @@ scope difference
     static default value-->0 
     ============================================================================================
 
-Macro                                        vs                              functions
-=====                                        
+Macro                                        v/s                              functions
+================================================================================================                                        
     No TypeChecking                           |                             exist
     preprocessed                              |                             compiled
     codelength increases on Macro call        |                             remains same
