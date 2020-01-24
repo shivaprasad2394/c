@@ -1,0 +1,7 @@
+In general, an array of pointers can be used to point to an array of data items with each element of the pointer array pointing to an element of the data array. Data items can be accessed either directly in the data array, or indirectly by dereferencing the elements of the pointer array. The advantage of a pointer array is that the pointers can be reordered in any manner without moving the data items. For example, the pointer array can be reordered so that the successive elements of the pointer array point to data items in sorted order without moving the data items. Reordering pointers is relatively fast compared to reordering large data items such as data records or strings. This approach saves a lot of time, with the additional advantage that the data items remain available in the original order.
+
+
+so basically is an array of pointers example :int *arr[3] means its an array of 4 integer pointers *arr[0] to *arr[3].
+which in turn is same as normal integer pointers .so same arthematic operations and size of pointer.
+can reperesent bunch of values or bunch of strings or 1d arrays in memory.
+great tool for sorting/reordering values  without messing the memory.

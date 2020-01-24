@@ -1,0 +1,76 @@
+
+3 Answers
+active
+oldest
+votes
+up vote
+9
+down vote
+accepted
+
+First of all INT means interrupt and has nothing to do with int data type.
+
+Each INT represents a functions family, where usually AH represents the function number.
+
+For example :
+
+    INT 0x10 is used for screen manipulation
+        AH=0x00 -> set video mode
+        AX=0x1003 -> Set Blinking mode
+        AH=0x13 -> write string
+        AH=0x03 -> get cursor position
+
+    INT 0x13 is for storage (HDD and FDD)
+        AH=0x42 -> DISK READ
+        AH=0x43 -> DISK WRITE
+    INT 0x16 is for Keyboard control and read:
+        AH=0x00 -> GetKey
+        AH=0x03 -> Set typematic rate and delay
+
+You can find all these functions here: Interrupt Jump Table
+
+But these are just BIOS INT, which can be rewritten by OS during startup. For example, Windows uses INT 0x21 for communication between user space and kernel space; Linux-based use INT 0x80. See also Linux System Call Table
+
+In your code:
+
+    INT 0x10 with AH = 0x00 and AL = 3 (mov ax, 3) means: set video mode to TextMode 80x25 chars and 16 colors.
+    INT 0x10 with AX = 0x1003 means: TOGGLE INTENSITY/BLINKING BIT to background intensity enabled
+
+shareimprove this answer
+edited May 20 '15 at 12:30
+answered May 12 '15 at 10:26
+Gabriel Ciubotaru
+878517
+add a comment
+up vote
+4
+down vote
+
+With regard to this piece of your question:
+
+    When should we use any of them and for what?
+
+Probably never.
+
+These BIOS interrupts were primarily used by MS-DOS applications, and are essentially obsolete today. They are not available at runtime to applications running on any modern operating system, so you will likely never use them. (Exceptions might include if you are developing certain pieces of software which run very early in the boot process, such as a bootloader, firmware for a hardware device, or if you are developing the BIOS itself.)
+shareimprove this answer
+answered Dec 17 '15 at 0:23
+duskwuff
+144k19174225
+add a comment
+up vote
+0
+down vote
+
+INT here stands for INTERRUPT and it has Function Mode such as 00,01,02 and so on, INT 10h is used for graphic and video mode initialization, and INT 16h is used to set the keyboard stroke.
+shareimprove this answer
+edited Dec 16 '15 at 23:56
+Michael Petch
+24.6k55599
+answered Dec 2 '15 at 19:39
+M Mustafa
+11
+add a comment
+Your Answer
+
+

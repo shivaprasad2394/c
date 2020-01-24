@@ -1,0 +1,4 @@
+wsudo apt install emacs25      
+hisudo aptinstall emacs25      
+ install emacs25      
+ install
