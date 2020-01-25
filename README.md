@@ -26,7 +26,7 @@ scope difference
     static default value-->0 
     ============================================================================================
 
-Macro                                        v/s                              functions
+Macro-------------------------------------->>v/s<<--------------------------functions
 ================================================================================================                                        
     No TypeChecking                           |                             exist
     preprocessed                              |                             compiled
@@ -37,24 +37,44 @@ Macro                                        v/s                              fu
     
     =============================================================================================
 
+typedef :-defining new names to existing types.
+-------  
+    Pros:-
+        • to reduce complexity
+        • to increase code readability and portability.
+=======================================================================================
 
-typedef:-defining new names to existing types.
-Pros:-
-    • to reduce complexity
-    • to increase code readability and portability.
-
-
-
-
-Macro :- A preprocessor directive.
-    • It replaces the value before compiling.
-Cons:-
-    • no typecasting.
-    • Usually used to create alias in c
-    • used has file guard in c.
+Macro:-    A preprocessor directive.
+-----
+          • It replaces the value before compiling.
+      Cons:-
+          • no typecasting.
+          • Usually used to create alias in c
+          • used has file guard in c.
+========================================================================================
 
 Enum:- A userdefined data type  and it consist of a set of named constant integers.
-Pro:-
-    • increases code readability.
-    • Easy to debug symbolic constant.
+----
+      Pro:-
+          • increases code readability.
+          • Easy to debug symbolic constant.
 
+=========================================================================================
+
+const:- a qualifier ,gives direction to the compiler that the value of declaring object could not be changed.[not modifiable]
+-----
+    •const int a------------>a constant integer.
+    •int const a------------>a constant integer.
+  -------------------------------------------
+  
+    •const int *a ==========>a pointer to constant integer-->[value constant]
+    •int const *a ==========>a constant pointer to integer-->[address constant]
+  ---------------------------------------
+    
+    •const int* const a \==>
+                          =========>constant pointer to a constant int.
+    •int const* a const /==>
+  
+  --------------------------------------------
+=============================================================================================
+  
