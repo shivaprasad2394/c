@@ -1,4 +1,4 @@
-C
+﻿C
 =============================================================================================================================
 storage classes :- 
 ---------------
@@ -36,3 +36,25 @@ Macro                                        v/s                              fu
     difficult to debug                        |                             Easy
     
     =============================================================================================
+
+
+typedef:-defining new names to existing types.
+Pros:-
+    • to reduce complexity
+    • to increase code readability and portability.
+
+
+
+
+Macro :- A preprocessor directive.
+    • It replaces the value before compiling.
+Cons:-
+    • no typecasting.
+    • Usually used to create alias in c
+    • used has file guard in c.
+
+Enum:- A userdefined data type  and it consist of a set of named constant integers.
+Pro:-
+    • increases code readability.
+    • Easy to debug symbolic constant.
+
