@@ -26,7 +26,7 @@ scope difference
     static default value-->0 
     ============================================================================================
 
-Macro-------------------->>v/s<<--------------------functions
+Macro-------------------->>v/s<<-----------------functions
 ================================================================================================                                        
     No TypeChecking                           |                             exist
     preprocessed                              |                             compiled
@@ -80,10 +80,18 @@ const:- a qualifier ,gives direction to the compiler that the value of declaring
   
 pre increment 
 ==========
---->increament is done *immediatly.
+    --->increament is done *immediatly.
 post increment
 ===========
---->increment effect is done in *next statement.
-ex:-
-char ac[5]={'A','B','C','D','E'};
-char *pcdata = ac;
+    --->increment effect is done in *next statement.
+    ex:-
+    char ac[5]={'A','B','C','D','E'};
+    char *pcdata = ac;
+------------------------+
+    *++pcdata =====>'B' +
+    <--------           +
+    ++*pcdata =====>'A' +
+    <--------           +
+    *p++  =========>'A' +
+    <---                +
+------------------------+    
