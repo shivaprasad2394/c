@@ -2,16 +2,19 @@
 =============================================================================================================================
 storage classes :- 
 ---------------
-                   1)decide the extent(lifetime)
-                   2)scope (visibility)
+                   1)decide the extent(lifetime) of variable.
+                   2)scope (visibility) of the variable
                    3)storage location in memory.
 there are 4 types of storage class specifier:-
 --------------------------------------------
 
-    1)auto    -->Local variables,Garbage value(default).
-    2)static  -->internal or no linkage,memory persistant,initialized once.
-    3)register-->no storage allocation for variable,indicates/informs compiler about offload declaration/definition of variable.
-    4)extern  -->Local to Function,informs compiler to store the variable in cpu registers.
+    1)auto------->a default specifier,if variable not specifeid any storage class.
+                 • Local variables are auto by default,Garbage value(default).
+    2)static----->varible with static specifier,have internal or no linkage,memory persistant,initialized once.
+    3)extern----->varibles with extern class have no storage allocation for variable.
+                 •indicates/informs compiler about offload declaration/definition of variable.
+    4)register--->variable with register class have visibility Local to Function.
+                 •informs compiler to store the variable in cpu registers.
 
 ----------------------------------------------------------------------------------------------------------------------------
 scope difference
@@ -24,11 +27,12 @@ scope difference
 ----------------------------------------------------------------------------------------------------------------------------
 
     static default value-->0 
+    note:-the start up code initializes the the data segment to 0.
     ============================================================================================
 
 Macro-------------------->>v/s<<-----------------functions
 ================================================================================================                                        
-    No TypeChecking                           |                             exist
+    No TypeChecking (ex:- func parameter)     |                             exist
     preprocessed                              |                             compiled
     codelength increases on Macro call        |                             remains same
     Speed of Execution faster                 |                             Speed of execution Slower
