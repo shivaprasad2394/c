@@ -416,6 +416,155 @@ Method 2:
 --------------------------------------------------------------------------------------------------------
 # pointers
 [todo from here]
+when pointers come into picture there are two things one is the address and second is the value.
+addresses store value ,addresses also store other addresses as value.
+map the difference, addresses cannot store address but they can store address as if their values.
+now pointers is a very important concept so what is a pointer so here you see I have written star p it
+is an int pointer what it means is P
+will be some address and that address
+will actually contain an integer the
+address will be of one individual bite
+but when you will dereference that is
+you will try to get star p then you will
+get the value of value contained at that
+address which is actually contained at p
+okay so it is little bit infusing yes
+yes I know now there are two operators
+involved one is star know there is
+ampersand star is called indirection &
+ampersand is called address of operator
+now this over here note that star p is
+equal to null when we write then it does
+not mean that star p is equal to null
+but what it means is p is equal to none
+star p is the notation for p being a
+pointer we could have equivalently
+written inch star Q and Q is equal to none
+now consider a plane variable I which we
+have declared now if i right ampersand I
+that means the address of that variable
+I and if i right star of ampersand I
+then that means value at that address
+think that I have a ball and I have a
+bag and the ball is inside the bag then
+I ask myself a question hey which bag
+contains this ball for example I is the
+ball an ampersand is the back so you
+will say okay this bag contains the ball
+so you get ampersand I then I say okay
+now tell me this bag contains which ball
+so that is like getting the
+dereferencing so you'll get that ball
+again so you get the original ball that
+is I now here p is initially nil that is
+mala now I say okay here p now you can
+store the address of I ok p is basically
+storing the address of I that means you
+keep a copy now here you see p
+percentage p so p is a pointer because
+it is keeping a copy of that and then
+star p is nothing but e when we
+dereference that address then we get
+nothing but i but since he is keeping in
+a copy of address itself is not an
+address so we can take its address again
+and then i have just used q so that it
+does not give me the unused variable
+warning but now if i want to take
+address of P then it's not possible
+because it's not an lvalue its address
+cannot be taken okay we'll see in a
+second how
+so let us compile this i think i'll
+compile this program already okay so
+let's from this okay so we see this
+output home right now as I said you
+cannot take a dress off an address
+samples and paste address so let's try
+to compile this now lvalue required now
+what is an lvalue i think i have told
+this in one or two tutorials that L
+value is something whose address can be
+taken an expression is not an lvalue
+similarly an address is not an lvalue
+strings like this are not an lvalue
+these are format strings something which
+is stored in a variable yes a string
+stored in the variable is an lvalue
+these will be created at runtime and
+will be destroyed actually these are
+embedded into the cold in the assembly
+code the entire string will be murdered
+and then the variable substitution
+happens but this will be received by
+printf function so that's how it will
+work so make sure you understand what is
+a star and what is ampersand that is
+critical as far as syntax is concerned
+if you get messed up with ampersand and
+stuff no hope and also remember you can
+take address of P that is address off
+the pointer pointers have an address
+remember and they contain address also
+but then the address of the first
+address cannot be taken that if
+ampersand ampersand I is not allowed you
+say p of ampersand I so I said that okay
+ampersand p we can do so that means i am
+percent numbers and i should be allowed
+know even that is not allowed no even
+that is not allowed so you can even
+though he is nothing but ampersand I but
+then this is not actually like a link it
+is making a copy of that that is why it
+is making a copy so P itself will occupy
+space and that will be its address that
+memory address four bytes and then on
+that memory ampersand I will be written
+and then amples and I is something else
+that is the address which will contain
+the value of eyes it's like you have two
+cells think like this 0x a this is the
+memory and it contains ampersand I and
+then you have some memory as 0 X B and
+it contains ok small I then it contains
+I now what is ampersand is nothing but 0
+X B now you can modify this part 0 X B
+but you cannot take address of 0 X a and
+0 X B now if you do ampersand ampersand
+I it is like you are trying to get a
+dress of 0 X B and if we do ampersand
+ampersand of T you are trying to get a
+dress of a but if you do ampersand
+ampersand of a sorry if you do ampersand
+of P that is like you are trying to get
+the address of 0 X B which is nothing
+but 0 XA i hope this much makes things
+rather clear so now we will proceed in
+our next example along with the we'll
+start with swap function rather i should
+avoid swap will leave its up when we hit
+functions we will proceed with malach
+car lock and
+remember related functions which involve
+pointers and you see how the allocate
+memory on heap and how do we deal Oh
+Kate those thanks for watching the video
+and for reading more about it hop on to
+limit programming dot o RG in the
+process of rewriting the book using c11
+specification and I hope to complete
+that in let's say six to eight months
+given that time and health permits make
+am suffering from cold so all the videos
+recorded today having this problem and
+make sure you read the spec and you can
+read the dentistry itself for getting
+the concept on this or you can read many
+other books which I have shown in my
+first or second video the list of books
+thanks for watching the video happy
+programming
 
 -------------------------------------------------------------------------------------------------------
 # memory
