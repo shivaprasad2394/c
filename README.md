@@ -43,6 +43,18 @@ Macro-------------------->>v/s<<-----------------functions
     
     =============================================================================================
 
+     • In macros, no type checking(incompatible operand, etc.) is done and thus use of micros can lead to errors/side-effects in some cases.
+     •However, this is not the case with functions. Also, macros do not check for compilation error (if any). 
+     Consider the following two codes:
+      #include<stdio.h> 
+      #define CUBE(b) b*b*b 
+      int main() 
+      { 
+        printf("%d", CUBE(1+2)); 
+        return 0; 
+      } 
+------------------------------------------------------------------------------------------
+
 typedef :-defining new names to existing types.
 -------  
     Pros:-
