@@ -12,7 +12,7 @@
     Straightforward answer: You don't really need to worry about the usage of characters with null termination, this work independent of any platform.
 
 
-
+extras:-In any embedded work it is important to establish and maintain an Interface Control Document, (IDC), that defines all of your communications structures including string formats, endianness, integer sizes, etc., as soon as possible, (ideally before starting), and it should be your, and all the teams, holy book when writing the system - if someone wishes to introduce a new structure or format it must be documented there first and everybody that might be impacted informed, possibly with an option to veto the change
 
 
 https://softwareengineering.stackexchange.com/questions/344603/are-c-strings-always-null-terminated-or-does-it-depend-on-the-platform
