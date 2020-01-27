@@ -1,7 +1,28 @@
 # strings
 [todo here help yourself with more]
 
+
 https://softwareengineering.stackexchange.com/questions/344603/are-c-strings-always-null-terminated-or-does-it-depend-on-the-platform
+
+--------------------------------------------------------------------------------------------------------------
+Others have addressed the issue that in C, strings are largely what you make of them. But there seems to be some confusion in your question w.r.t. the terminator itself, and from one perspective, this could be what someone in your position is worried about.
+
+# C strings are null-terminated. That is, they are terminated by the null character, NUL. They are not terminated by the null pointer NULL, which is a completely different kind of value with a completely different purpose.
+
+NUL is guaranteed to have the integer value zero. Within the string, it will also have the size of the underlying character type, which will usually be 1.
+
+NULL is not guaranteed to have an integer type at all. NULL is intended for use in a pointer context, and is generally expected to have a pointer type, which shouldn't convert to a character or integer if your compiler is any good. While the definition of NULL involves the glyph 0, it is not guaranteed to actually have that value[1], and unless your compiler implements the constant as a one-character #define (many don't, because NULL really shouldn't be meaningful in a non-pointer context), the expanded code is therefore not guaranteed to actually involve a zero value (even though it confusingly does involve a zero glyph).
+
+If NULL is typed, it will also be unlikely to have a size of 1 (or another character size). This may conceivably cause additional problems, although actual character constants don't have character size either for the most part.
+
+Now most people will see this and think, "null pointer as anything other than all-zero-bits? what nonsense" - but assumptions like that are only safe on common platforms like x86. Since you've explicitly mentioned an interest in targeting other platforms, you need to take this issue into account, as you have explicitly separated your code from assumptions about the nature of the relationship between pointers and integers.
+
+# Therefore, while C strings are null-terminated, they aren't terminated by NULL, but by NUL (usually written '\0'). Code which explicitly uses NULL as a string terminator will work on platforms with a straightforward address structure, and will even compile with many compilers, but it's absolutely not correct C.
+
+[1] the actual null pointer value is inserted by the compiler when it reads a 0 token in a context where it would be converted to a pointer type. This is not a conversion from the integer value 0, and is not guaranteed to hold if anything other than the token 0 itself is used, such as a dynamic value from a variable; the conversion is also not reversible, and a null pointer doesn't have to yield the value 0 when converted to an integer.
+
+----------------------------------------------------------------------------------------------------
+
 I am working with embedded systems ... with no operating system...I am...using the idea of having NULL terminated character pointers and treating them as strings where the NULL signifies the end. I know that this is fairly common, but can you always count on this to be the case?
 
 There is no string data type in the C language, but there are string literals.
@@ -12,6 +33,7 @@ The only other sense in which the C language has strings is, it has some standar
 
 They're just code---no different from the code that you yourself write. If you don't break them when you port them, then they will do what they always do (e.g., stop on a NUL.)
 
+--------------------------------------------------------------------------------------------------------------
 1
 Re: "If you put a string literal in your program, it will always be NUL terminated": Are you sure about that? I'm pretty sure that (e.g.) char foo[4] = "abcd"; is a valid way to create a non-null-terminated array of four characters. – ruakh Mar 21 '17 at 20:32
 1
@@ -25,3 +47,5 @@ Re: "If you put a string literal in your program, it will always be NUL terminat
 @jameslarge my point is there aren't "string literals" in the data segment or at runtime. There are char[]s, of various lengths, most of which have a NUL terminator, which get pretty printed as "abcd/0" or "abcd" etc. – Caleth Mar 22 '17 at 13:49
 @Caleth, Sorry, I think I mixed up your comment with jamesdlin's comment when I responded. – Solomon Slow Mar 22 '17 at 14:05
 this is the right answer, but i would add that whether a compiler emits a nul-terminated array for the example char[4] is a matter of optimization, not lamguage definition. a compiler could emit just about anything, so long as it has the right semantics. – user223083 Mar 22 '17 at 20:03
+
+---------------------------------------------------------------------------------------------
