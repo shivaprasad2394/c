@@ -227,3 +227,136 @@ according to c standards:-
       value = *pcPortReg; // Read value from the port
       
 
+================================================================================================================
+bit manipulation
+----------------
+1)SET a Bit
+-----------
+
+    •Bitwise OR Operator used to set a int data type
+    •OR of two bit is always 1(SET) , if any one of them is 1.
+                          
+                          Number | = (1<< nth Position)    1010 1000
+                                                           0100 0000
+                                                            <-------nth bit
+                                                           -----------
+                                                           1100 1000
+                                                           -----------
+--------------------------------------------------------------------------------------------------------
+2)Clear a Bit
+-------------
+
+    •Bitwise AND oprator used to clear.
+    •AND of two bit is always 0(clear) if any of the bit is 0.
+                          
+                        Number &= ~ (1<< nth Position)    0100 1000
+                                                          1011 1111
+                                                          (~)<------nth bit
+                                                           -----------
+                                                           10001000
+                                                           -----------
+ -------------------------------------------------------------------------------------------------------
+ 3)Checking a Bit
+-----------------
+
+    •Bitwise AND oprator used to check wether ser or not.
+    •AND of two bit is always 1(SET) if any of the bit is 1.
+                          
+                  Bit = Number & (1 << nth)               0100 1000
+                                                          0100 0000
+                                                            <------nth bit
+                                                          ------------
+                                                          0100 0000
+                                                          ------------
+-------------------------------------------------------------------------------------------------------
+ 3)Toggle a Bit
+-----------------
+
+    •Bitwise XOR oprator used to Toggle .
+                                                      Number ^= (1<< nth Position)
+                          
+                                                           1010 1000
+                                                           0100 0000
+                                                            <-------nth bit
+                                                           -----------
+                                                           1110 1000
+                                                           ----------- 
+-----------------------------------------------------------------------------------------------------
+4)Detect if two Integers have opposite Signs.
+--------------------------------------------
+
+     •EX-OR of “a” and “b” will be negative,if “a” and “b” have the opposite signs.
+     •XOR less than 0.
+                       bRetValue = ((a ^ b) < 0); // true if a and b have opposite signs
+----------------------------------------------------------------------------------------------------
+5)Reverse Bits of a Number
+--------------------------
+
+Method 1:
+---------
+    • check the set bits of num and run the loop through all the bits of an integer.
+    • If we find the ith bits of num is set then just put 1 at the ((INT_BITS – 1) – ith ) position of tmp, where INT_BITS is the number of bits of an integer.
+
+                  #define CHAR_BITS  8  // size of character
+                  #define INT_BITS  ( sizeof(int) * CHAR_BITS)
+
+
+                  //bit reversal function
+                  unsigned int ReverseTheBits(unsigned int num)
+                  {
+                      unsigned int iLoop = 0;
+                      unsigned int tmp = 0;         //  Assign num to the tmp 
+                      int iNumberLopp = (INT_BITS - 1);     
+
+                      for(; iLoop < iNumberLopp; ++iLoop)
+                      {
+
+                        if((num & (1 << iLoop))) // check set bits of num
+                        {
+                         tmp |= 1 << ((INT_BITS - 1) - iLoop); //putting the set bits of num in tmp
+                        }    
+                      }
+
+                      return tmp;
+                  }
+
+Method 2:
+---------
+     • It is a simple algorithm to reverse bits of the 32-bit integer.
+     • This algorithm uses the eight constant value for the reversing the bits and takes five simple steps.
+     
+      • Steps 1:
+      num = (((num & 0xaaaaaaaa) >> 1) | ((num & 0x55555555) << 1));
+
+    This expression used to swap the bits.
+    Let an example, suppose num is 0100, after the above expression it will be 1000.
+
+     • Steps 2:
+      num = (((num & 0xcccccccc) >> 2) | ((num & 0x33333333) << 2));
+
+    Above expression uses to swap the 2 bits of a nibble.
+    Suppose num is 10 00, after the above expression, it will be 00 01.
+
+     • Steps 3:
+      num = (((num & 0xf0f0f0f0) >> 4) | ((num & 0x0f0f0f0f) << 4));
+
+    An expression used to swaps the nibbles.
+    like if num is 0011 0010 then after the above expression it will be 0010 0011.
+
+     • Steps 4:
+      num = (((num & 0xff00ff00) >> 8) | ((num & 0x00ff00ff) << 8));
+
+    This statement uses to swap the bytes of an integer. 
+    Let num is 00001000 00001100, after the above expression, it will be 00001100 00001000.
+
+     • Steps 5:
+      ((num >> 16) | (num << 16));
+      The above expression uses to swap the half-word of an integer.
+      Means that if the num is 0000000011001110 1000100100000110 
+      after the above result number will be 1000100100000110 0000000011001110.
+      
+--------------------------------------------------------------------------------------------------------
+
+
+
+
