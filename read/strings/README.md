@@ -12,6 +12,7 @@
     Straightforward answer: You don't really need to worry about the usage of characters with null termination, this work independent of any platform.
 
 [further help for strings follow the links!!!]
+[# the examples are buggy and outdated pls help yourself]
 extras:-In any embedded work it is important to establish and maintain an Interface Control Document, (IDC), that defines all of your communications structures including string formats, endianness, integer sizes, etc., as soon as possible, (ideally before starting), and it should be your, and all the teams, holy book when writing the system - if someone wishes to introduce a new structure or format it must be documented there first and everybody that might be impacted informed, possibly with an option to veto the change
 
 Determination of the terminating character is up to the compiler for literals and the implementation of the standard library for strings in general. It isn't determined by the operating system.
