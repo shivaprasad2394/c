@@ -1,6 +1,17 @@
 # strings
 [todo here help yourself with more]
-characters with null termination is called Strings.
+
+    characters with null termination is called Strings.
+    C-style strings, which are arrays, there are also string literals, such as "this". In reality, both of these string types are merely just collections of characters sitting next to each other in memory.
+
+    Whenever you write a string, enclosed in double quotes, C automatically creates an array of characters for us, containing that string, terminated by the \0 character.
+
+    For example, you can declare and define an array of characters, and initialize it with a string constant:
+
+    char string[] = "Hello cruel world!";
+    Straightforward answer: You don't really need to worry about the usage of characters with null termination, this work independent of any platform.
+
+
 
 
 
