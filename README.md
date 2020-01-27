@@ -110,7 +110,7 @@ Enum:- A userdefined data type  and it consist of a set of named constant intege
     To resolve this problem use “static” before inline. 
     Using static keyword forces the compiler to consider this inline function in the linker, 
     and hence the program compiles and run successfully.[for more refer the readme in inline subs]
-
+watch it really good :https://www.youtube.com/watch?v=MNxNlMQ5QJ4
 -----------------------------------------------------------------------------------------
 const:- a qualifier ,gives direction to the compiler that the value of declaring object could not be changed.[not modifiable]
 -----
