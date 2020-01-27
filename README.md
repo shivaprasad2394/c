@@ -8,10 +8,12 @@ storage classes :-
 there are 4 types of storage class specifier:-
 --------------------------------------------
 
-    1)auto------->a default specifier,if variable not specifeid any storage class.
+    1)auto------->a default specifier class for local variables,if variable not specifeid any storage class.
                  • Local variables are auto by default,Garbage value(default).
+                 •function with auto specifier cannot have reurn type.if trier will give compilation error.
     2)static----->varible with static specifier,have internal or no linkage,memory persistant,initialized once.
-    3)extern----->varibles with extern class have no storage allocation for variable.
+    3)extern----->default specifier class for global variables and function.
+                 •varibles with extern class have no storage allocation for variable.
                  •indicates/informs compiler about offload declaration/definition of variable.
     4)register--->variable with register class have visibility Local to Function.
                  •informs compiler to store the variable in cpu registers.
