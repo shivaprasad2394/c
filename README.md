@@ -20,9 +20,9 @@ there are 4 types of storage class specifier:-
 scope difference
 ----------------
     
-    1)Global variable-->Extenal linkage
-    2)Global static  -->Internal linkage
-    3)Local static   -->no linkage
+    1)Global variable-->Extenal linkage. [i.e visible outside the program]
+    2)Global static  -->Internal linkage. [i.e visibity is restricted to the program where it is defined]
+    3)Local static   -->no linkage.[i.e visibility is restricted to the local function where it is defined]
 
 ----------------------------------------------------------------------------------------------------------------------------
 
