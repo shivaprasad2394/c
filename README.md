@@ -79,6 +79,39 @@ Enum:- A userdefined data type  and it consist of a set of named constant intege
 
 =========================================================================================
 
+# Inline function in C
+    Inline Function are those function whose definitions are small and be substituted at the place where its function call is happened. 
+    Function substitution is totally compiler choice.
+
+    Let’s take below example:
+    #include <stdio.h> 
+
+    // Inline function in C 
+    static inline int foo() 
+    { 
+      return 2; 
+    } 
+
+    // Driver code 
+    int main() 
+    { 
+
+      int ret; 
+
+      // inline function call 
+      ret = foo(); 
+
+      printf("Output is: %d\n", ret); 
+      return 0; 
+    } 
+# note:if static is not used then it will give error.
+    In function `main':
+    undefined reference to `foo'
+    To resolve this problem use “static” before inline. 
+    Using static keyword forces the compiler to consider this inline function in the linker, 
+    and hence the program compiles and run successfully.[for more refer the readme in inline subs]
+
+-----------------------------------------------------------------------------------------
 const:- a qualifier ,gives direction to the compiler that the value of declaring object could not be changed.[not modifiable]
 -----
     •const int a------------>a constant integer.
