@@ -1,5 +1,7 @@
 # strings
 [todo here help yourself with more]
+characters with null termination is called Strings.
+
 
 
 https://softwareengineering.stackexchange.com/questions/344603/are-c-strings-always-null-terminated-or-does-it-depend-on-the-platform
