@@ -22,6 +22,7 @@ Section 6.4.5 sets the stage for NUL-terminated strings by requiring that a NUL 
 Section 7.1.1 brings that to the functions in the standard library by defining a string as "a contiguous sequence of characters terminated by and including the first null character."
 There's no reason why someone couldn't write functions that handle strings terminated by some other character, but there's also no reason to buck the established standard in most cases unless your goal is giving programmers fits. :-)
 http://www.open-std.org/jtc1/sc22/wg14/www/docs/n1256.pdf
+https://wiki.c2.com/?NonNullTerminatedString
 
 https://softwareengineering.stackexchange.com/questions/344603/are-c-strings-always-null-terminated-or-does-it-depend-on-the-platform
 
