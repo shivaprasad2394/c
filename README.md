@@ -595,3 +595,7 @@ programming
 [todo from here]
 https://www.youtube.com/watch?v=Tk-i7iSzCWY
 ------------------------------------------------------------------------------------------------------
+honor mention 
+https://www.youtube.com/channel/UCb9okJF6NGPDUGgAQxu3TcA/search?query=c
+https://www.youtube.com/watch?v=gGTad760ogM&list=PLTQzjZn0BgA7BHHWKiuhG59bLO7TbNS41&index=48
+https://www.youtube.com/user/EmbeddedSoftware/search?query=static
