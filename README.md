@@ -416,8 +416,11 @@ Method 2:
 --------------------------------------------------------------------------------------------------------
 # pointers
 [todo from here]
+
 •pointers deal with address and value.
+
 •memory address store value,address also strore other address has value.
+
 -->**pointers** are variables which store address.
 when we declare  int *p=&a;
 p stores '&a' has value. 
