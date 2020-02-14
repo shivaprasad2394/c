@@ -10,7 +10,7 @@ there are 4 types of storage class specifier:-
 
     1)auto------->a default specifier class for local variables,if variable not specifeid any storage class.
                  • Local variables are auto by default,Garbage value(default).
-                 •function with auto specifier cannot have reurn type.if trier will give compilation error.
+                 •function with auto specifier cannot have return type.if tried will give compilation error.
     2)static----->varible with static specifier,have internal or no linkage,memory persistant,initialized once.
     3)extern----->default specifier class for global variables and function.
                  •varibles with extern class have no storage allocation for variable.
@@ -32,7 +32,7 @@ scope difference
     note:-the start up code initializes the the data segment to 0.
     ============================================================================================
 
-Macro-------------------->>v/s<<-----------------functions
+Macro------------------->>v/s<<-----------------functions
 ================================================================================================                                        
     No TypeChecking (ex:- func parameter)     |                             exist
     preprocessed                              |                             compiled
@@ -43,7 +43,7 @@ Macro-------------------->>v/s<<-----------------functions
     
     =============================================================================================
 
-     • In macros, no type checking(incompatible operand, etc.) is done and thus use of micros can lead to errors/side-effects in some cases.
+     • In macros, no type checking(incompatible operand, etc.) is done and thus use of macros can lead to errors/side-effects in some cases.
      •However, this is not the case with functions. Also, macros do not check for compilation error (if any). 
      Consider the following two codes:
       #include<stdio.h> 
@@ -60,6 +60,51 @@ typedef :-defining new names to existing types.
     Pros:-
         • to reduce complexity
         • to increase code readability and portability.
+        // C program to demonstrate importance 
+        // of typedef over #define for data types 
+        #include <stdio.h> 
+        typedef char* ptr; 
+        #define PTR char* 
+        int main() 
+        { 
+          ptr a, b, c; 
+          PTR x, y, z; 
+          printf("sizeof a:%u\n" ,sizeof(a) ); 
+          printf("sizeof b:%u\n" ,sizeof(b) ); 
+          printf("sizeof c:%u\n" ,sizeof(c) ); 
+          printf("sizeof x:%u\n" ,sizeof(x) ); 
+          printf("sizeof y:%u\n" ,sizeof(y) ); 
+          printf("sizeof z:%u\n" ,sizeof(z) ); 
+          return 0; 
+        } 
+
+      Output:
+
+      sizeof a:8
+      sizeof b:8
+      sizeof c:8
+      sizeof x:8
+      sizeof y:1
+      sizeof z:1
+      From the output of the above program size of “a” which is a pointer is 8 (on a machine where pointers are stored using 8 bytes). In the above program, when the compiler comes to
+
+      typedef char* ptr;
+      ptr a, b, c;
+      the statement effectively becomes
+
+      char *a, *b, *c;
+      This declares a, b, c as char*.
+
+      In contrast, #define works like this:
+
+      #define PTR char*
+      PTR x, y, z;
+      the statement effectively becomes
+
+      char *x, y, z;
+
+This makes x, y and z different, as, x is pointer-to-a char, whereas, y and z are char variables. When we declare macros with pointers while defining if we declare more than one identifier then the actual definition is given to the first identifier and for the rest non-pointer definition is given. In the above case x will be declared as char*, so its size is the size of a pointer, whereas, y and z will be declared as char so, their size will be 1 byte.
+
 =======================================================================================
 
 Macro:-    A preprocessor directive.
