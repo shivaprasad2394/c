@@ -60,6 +60,8 @@ typedef :-defining new names to existing types.
     Pros:-
         • to reduce complexity
         • to increase code readability and portability.
+        
+        
         // C program to demonstrate importance 
         // of typedef over #define for data types 
         #include <stdio.h> 
