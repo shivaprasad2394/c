@@ -2,8 +2,10 @@
 =============================================================================================================================
 c practice perpose
 http://cse.unl.edu/~cbourke/searchingSorting.pdf
+
 https://github.com/rafi007akhtar/c-algorithms/blob/master/single_pointer_doublelinkedlist.c
 
+https://github.com/caisah/Sedgewick-algorithms-in-c-exercises-and-examples
 
 storage classes :- 
 ---------------
