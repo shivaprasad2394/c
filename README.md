@@ -1,5 +1,8 @@
 ﻿C
 =============================================================================================================================
+c practice perpose
+http://cse.unl.edu/~cbourke/searchingSorting.pdf
+
 storage classes :- 
 ---------------
                    1)decide the extent(lifetime) of variable.
