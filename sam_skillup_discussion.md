@@ -62,8 +62,10 @@ Linker knows where all these functions are implemented. Linker does some extra w
 For example, there is a code which is required for setting up the environment like passing command line arguments.
 **ask if you need extra info**
 
-4)Loading
+5)Loader.
+
 Loader is the program of the operating system which loads the executable from the disk into the primary memory(RAM) for execution.
+
 **ask if you need extra info**
 
 storage classes :-
