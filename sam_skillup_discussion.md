@@ -60,9 +60,33 @@ At this phase, only existing code is converted into machine language.system/func
 This is the 3rd phase in which all the linking of function calls with their definitions are done. 
 Linker knows where all these functions are implemented. Linker does some extra work also, it adds some extra code to our program which is required when the program starts and ends. 
 For example, there is a code which is required for setting up the environment like passing command line arguments.
-**ask if you need extra info
+**ask if you need extra info**
 
 4)Loading
+Loader is the program of the operating system which loads the executable from the disk into the primary memory(RAM) for execution.
+**ask if you need extra info**
+
+storage classes :-
+---------------
+they are Qualifiers which are used along the data types. storage class specifiers indicate/decide
+
+               1)the extent(lifetime) of variable.
+               2)scope (visibility) of the variable
+               3)storage location in memory.
+               4)default value
+
+there are 4 types of storage class specifier:-
+--------------------------------------------
+    1)auto------->a default specifier class for local variables,if variable not specifeid any storage class.
+                 • Local variables are auto by default,Garbage value(default).
+                 •function with auto specifier cannot have return type.if tried will give compilation error.
+    2)static----->varible with static specifier,have internal or no linkage,memory persistant,initialized once.
+    3)extern----->default specifier class for global variables and function.
+                 •varibles with extern class have no storage allocation for variable.
+                 •indicates/informs compiler about offload declaration/definition of variable.
+    4)register--->variable with register class have visibility Local to Function.
+                 •informs compiler to store the variable in cpu registers.
+
 
 
 
