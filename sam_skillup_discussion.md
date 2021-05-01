@@ -33,8 +33,11 @@ There are four phases for a C program to become an executable:
     - Loading
 
 1)Pre-processing is the first phase through which source code is passed.
-A preprocessor is a program that process any source program in c before compilation.
-the preprocessor first examines source code for any preprocessor directive. 
+
+A preprocessor is a program that process any source code in c before compilation.
+
+the preprocessor first examines source code for any preprocessor directive present . 
+
 This phase include:  
 
     - Removal of Comments
