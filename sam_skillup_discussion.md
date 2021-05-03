@@ -132,6 +132,49 @@ static extras:-
 
 Answer 582
 
+Incremnet & decrement Operator	
+=============================
+++
+--
+	operand should be a vraible
+	5++;//invalid
+	a+b++;//valid
+	(a+b)++;//inavlid
+
+	a++;
+	a=a+1;
+	c=(a+b)++;//invalid
+
+post increment & pre increment
+============================
+	a++  //post incremnt
+	++a  //pre incremnt
+
+	post incremmt-->value is assigned then incremnt
+	pre incremnt  -->first incremnt then value is asssigned
+				
+		int main()
+		{
+			int a,b=10;
+			a=b++;
+			printf("%d  %d\n",a,b);//10  11
+		}
+
+		int main()
+		{
+			int a,b=10;
+			a=++b;
+			printf("%d  %d\n",a,b);//11  11
+		}
+
+				
+		a--  //post decremnet
+		--a  //pre decremnt
+
+	post decremnet-->value is assigned then decremnet
+	pre decremnet  -->first decremnet then value is asssigned
+				
+
 Extra:-
 =======
 - **compiler** is a computer program that translates computer code written in one programming language (the source language) into another .
