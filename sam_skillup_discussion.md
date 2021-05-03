@@ -136,3 +136,32 @@ Extra:-
 =======
 - **compiler** is a computer program that translates computer code written in one programming language (the source language) into another .
 - **mid-level language**C is called middle-level language because it actually **binds the gap between a machine level language and high-level languages**. A user can use c language to do **System Programming** (for writing operating system) as well as **Application Programming** (menu driven customer billing system )
+
+Keywords
+========
+		-->reserwed words
+		-->predefined meaning which is known to compiler
+Identifiers
+==========
+		-->name given by user to variable,function,structure,array,macro
+-------------------------------------------------------
+datatypes
+========
+			
+			char    -->1 byte
+			int     -->nonportable datatype
+				-->size of int depende on 
+				size of the compiler 
+			float   -->4 bytes
+			double  -->8 bytes
+
+-----------------------------------------------------------
+format specifiers
+===============
+				%c  -->char
+				%d   -->int
+				%f  -->float
+				%lf   -->double
+				%x   ->hexadecimal
+				%o   -->octal
+                
