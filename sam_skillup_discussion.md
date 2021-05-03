@@ -96,7 +96,7 @@ there are 4 types of storage class specifier:-
                  •informs compiler to store the variable in cpu registers.
 
 
-static etxtras:-
+static extras:-
 
     void func (void)
     {
