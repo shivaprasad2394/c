@@ -112,7 +112,23 @@ static extras:-
 - So by the time func() is called for the first time, foo is already initialized. Any other changes to foo inside the function will happen in run-time, as with any other variable.
 
 
+**demo**:-
 
+    #include <stdio.h>
+    static int animals = 8;
+    const int i = 5;
+
+    static int call_me(void)
+    {
+        printf("%d %d", i, animals);
+    } 
+    int main()
+    {
+          int animals = 2;
+        call_me();
+        printf("%d", animals);
+        return 0;
+    }
 
 Extra:-
 =======
