@@ -85,13 +85,29 @@ there are 4 types of storage class specifier:-
     1)auto------->a default specifier class for local variables,if variable not specifeid any storage class.
                  • Local variables are auto by default,Garbage value(default).
                  •function with auto specifier cannot have return type.if tried will give compilation error.
-    2)static----->varible with static specifier,have internal or no linkage,memory persistant,initialized once.
-    3)extern----->default specifier class for global variables and function.
+    2)static----->varible with static specifier have internal or no linkage.it is not accessible outside the translation unit it is declared in.
+                  • memory persistant
+                  • initialized once.
+    4)extern----->default specifier class for global variables and function.
                  •varibles with extern class have no storage allocation for variable.
                  •indicates/informs compiler about offload declaration/definition of variable.
     4)register--->variable with register class have visibility Local to Function.
                  •informs compiler to store the variable in cpu registers.
 
+
+static etxtras:-
+void func (void)
+{
+  static int foo = 5;   // will get stored in .data
+  ...modify foo here...
+  
+- Before main() is even called, the "C run-time libraries"  run various start-up code. This includes copying down values into .data and .bss. So the above line is actually executed before your program even starts.
+
+- If you initialize a static storage duration variable with a value, then most systems store it in a segment called .data. If you don't initialize it, or explicitly initialize it to zero, it gets stored in another segment called .bss 
+ 
+- line containing the initialization is not executed the first time the function is entered (as often taught in beginner classes) - it is not executed inside the function at all and it is always ignored during function execution.
+  
+- So by the time func() is called for the first time, foo is already initialized. Any other changes to foo inside the function will happen in run-time, as with any other variable.
 
 
 
