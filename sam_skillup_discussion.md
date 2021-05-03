@@ -96,6 +96,7 @@ there are 4 types of storage class specifier:-
 
 
 static etxtras:-
+
 void func (void)
 {
   static int foo = 5;   // will get stored in .data
