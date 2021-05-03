@@ -97,10 +97,10 @@ there are 4 types of storage class specifier:-
 
 static etxtras:-
 
-void func (void)
-{
-  static int foo = 5;   // will get stored in .data
-  ...modify foo here...
+    void func (void)
+    {
+      static int foo = 5;   // will get stored in .data
+      ...modify foo here...
   
 - Before main() is even called, the "C run-time libraries"  run various start-up code. This includes copying down values into .data and .bss. So the above line is actually executed before your program even starts.
 
