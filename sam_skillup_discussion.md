@@ -19,7 +19,8 @@ Advantages of c
 - faster than high level languages
 - system programming (access to memory /pointers).
 
-compilation of C-code
+compilation of C-code:-
+
 gcc –Wall filename.c –o filename
 
 Compilation Process:-
