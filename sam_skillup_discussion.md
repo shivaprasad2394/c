@@ -246,6 +246,13 @@ datatypes
 			int     -->nonportable datatype
 				-->size of int depende on 
 				size of the compiler 
+UNSIGNED INTEGER
+
+In the case of an unsigned integer, only positive numbers can be stored. In this datatype, all the 32 bits will be reserved for the storage of data.
+
+SIGNED INTEGER
+An ‘int’ is actually 1 sign bit + 31 data bits, that is 31 bits are available for storing the number being assigned to a ‘int’ type variable and 1 bit is reserved for maintaining the sign of the number which is either + or – . 
+
 			float   -->4 bytes
 			double  -->8 bytes
 
