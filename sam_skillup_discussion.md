@@ -271,6 +271,7 @@ Logic:-dropping bit s are saved for masking and shift the num in any direction t
 The left-shift of 1 by i is equivalent to 2 raised to power i. 
 
 The right-shift of 1 by i is equivalent to 2 devided to power i ??please verify once 
+
 An expression used to swaps the nibbles.
 
 like if num is 0011 0010 then after the above expression it will be 0010 0011.
