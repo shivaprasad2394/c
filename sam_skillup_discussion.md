@@ -71,6 +71,7 @@ For example, there is a code which is required for setting up the environment li
 Loader is the program of the operating system which loads the executable from the disk into the primary memory(RAM) for execution.
 
 **ask if you need extra info**
+# Macros:-
 
 storage classes :-
 ---------------
