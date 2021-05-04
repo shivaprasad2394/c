@@ -271,3 +271,16 @@ Logic:-dropping bit s are saved for masking and shift the num in any direction t
 The left-shift of 1 by i is equivalent to 2 raised to power i. 
 
 The right-shift of 1 by i is equivalent to 2 devided to power i ??please verify once 
+An expression used to swaps the nibbles.
+
+like if num is 0011 0010 then after the above expression it will be 0010 0011.
+
+ • Steps 4:
+  num = (((num & 0xff00ff00) >> 8) | ((num & 0x00ff00ff) << 8));
+
+This statement uses to swap the bytes of an integer.
+
+Let num is 00001000 00001100, after the above expression, it will be 00001100 00001000.
+
+ • Steps 5:
+  ((num >> 16) | (num << 16));
