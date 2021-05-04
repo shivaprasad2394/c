@@ -207,4 +207,67 @@ format specifiers
 				%lf   -->double
 				%x   ->hexadecimal
 				%o   -->octal
-                
+  
+bits op info:-
+------------
+find number of bits required to represent an integer in memory-->bits = sizeof(int) * 8;//for performing ops in bit format
+
+msb/lsb -->msb = 1 << (bits - 1);//mask em at either ends.for msb left shift bits-1 times.
+
+if((num & msb) == 1)-->msb
+
+Rotating bits of a number to left, means shifting all bits to left and pushing the dropped MSB bit to LSB Bit.
+
+Rotating bits of a number to right, means shifting all bits to right and pushing the dropped LSB Bit to MSB Bit.  
+
+Logic:-dropping bit s are saved for masking and shift the num in any direction the required number of times.
+
+// C++ code to rotate bits of number
+
+	#include<iostream>
+
+	using namespace std;
+	#define INT_BITS 32
+	class gfg
+	{
+
+	/*Function to left rotate n by d bits*/
+	public:
+	int leftRotate(int n, unsigned int d)
+	{
+
+		/* In n<<d, last d bits are 0. To
+		put first 3 bits of n at
+		last, do bitwise or of n<<d
+		with n >>(INT_BITS - d) */
+		return (n << d)|(n >> (INT_BITS - d));
+	}
+
+	/*Function to right rotate n by d bits*/
+	int rightRotate(int n, unsigned int d)
+	{
+		/* In n>>d, first d bits are 0.
+		To put last 3 bits of at
+		first, do bitwise or of n>>d
+		with n <<(INT_BITS - d) */
+		return (n >> d)|(n << (INT_BITS - d));
+	}
+	};
+
+	int main()
+	{
+		gfg g;
+		int n = 16;
+		int d = 2;
+		cout << "Left Rotation of " << n <<
+				" by " << d << " is ";
+		cout << g.leftRotate(n, d);
+		cout << "\nRight Rotation of " << n <<
+				" by " << d << " is ";
+		cout << g.rightRotate(n, d);
+		getchar();
+	}
+
+The left-shift of 1 by i is equivalent to 2 raised to power i. 
+
+The right-shift of 1 by i is equivalent to 2 devided to power i ??please verify once 
