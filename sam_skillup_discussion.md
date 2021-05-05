@@ -256,6 +256,14 @@ Identifiers
 ==========
 		-->name given by user to variable,function,structure,array,macro
 -------------------------------------------------------
+A **variable** in simple terms is a storage place which has some memory allocated to it. Basically, a variable used to store some form of data. 
+Difference b/w variable declaration and definition .
+
+Variable declaration refers to the part where a variable is first declared or introduced before its first use. 
+
+Variable definition is the part where the variable is assigned a memory location and a value. 
+
+Most of the times, variable declaration and definition are done together.
 
 # Difference between “int main()” and “int main(void)” in C/C++?
 
