@@ -75,11 +75,13 @@ Loader is the program of the operating system which loads the executable from th
 **Macros**:-A macro is a segment of code which is replaced by the value of macro.
 A preprocessor directive.
 
-      • It replaces the value before compiling.
-  Cons:-
-      • no typecasting.
-      • Usually used to create alias in c
-      • used has file guard in c.
+	  pros:-
+	      • It replaces the value before compiling.
+	  Cons:-
+	      • no typecasting.
+	      • Usually used to create alias in c
+	      • used has file guard in c.
+
 Macro---------------------------------->>v/s<<-----------------functions
 
 No TypeChecking (ex:- func parameter)     |                             exist
