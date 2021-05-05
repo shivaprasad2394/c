@@ -73,6 +73,7 @@ Loader is the program of the operating system which loads the executable from th
 **ask if you need extra info**
 
 **Macros**:-A macro is a segment of code which is replaced by the value of macro.
+
 A preprocessor directive.
 
 	  pros:-
@@ -106,6 +107,30 @@ difficult to debug                        |                             Easy
 	    return 0; 
 	  } 
 
+Inline Function are those function whose definitions are small and be substituted at the place where its function call is happened. 
+Function substitution is totally compiler choice.
+
+	Let’s take below example:
+	#include <stdio.h> 
+
+	// Inline function in C 
+	static inline int foo() 
+	{ 
+	  return 2; 
+	} 
+
+	// Driver code 
+	int main() 
+	{ 
+
+	  int ret; 
+
+	  // inline function call 
+	  ret = foo(); 
+
+	  printf("Output is: %d\n", ret); 
+	  return 0; 
+	} 
 
 storage classes :-
 ---------------
