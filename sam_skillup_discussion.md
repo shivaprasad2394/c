@@ -16,7 +16,7 @@ C programming is just one of the Way to communicate with Electronic gadgets whic
 - C is a **mid-level language** and it needs a **compiler** to convert C-code into an executable code[0's And 1's] so that the program can be run on our machine. 
 
 Advantages of c
-- faster than high level languages
+- faster than high level languages.(macros/inline)
 - system programming (access to memory /pointers).
 
 compilation of C-code:-
