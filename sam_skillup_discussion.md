@@ -204,6 +204,7 @@ Answer 582
 Incremnet & decrement Operator	
 =============================
 ++ / --
+
 	operand should be a varible
 	5++;//invalid
 	a+b++;//valid
