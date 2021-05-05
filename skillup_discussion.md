@@ -1,4 +1,4 @@
-# Hello sam,
+# Hello ,
 Agenda
 ======
     1)C
