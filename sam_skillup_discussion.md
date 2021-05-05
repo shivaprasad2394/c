@@ -71,7 +71,39 @@ For example, there is a code which is required for setting up the environment li
 Loader is the program of the operating system which loads the executable from the disk into the primary memory(RAM) for execution.
 
 **ask if you need extra info**
-# Macros:-
+
+**Macros**:-A macro is a segment of code which is replaced by the value of macro.
+A preprocessor directive.
+
+      • It replaces the value before compiling.
+  Cons:-
+      • no typecasting.
+      • Usually used to create alias in c
+      • used has file guard in c.
+Macro---------------------------------->>v/s<<-----------------functions
+
+No TypeChecking (ex:- func parameter)     |                             exist
+preprocessed                              |                             compiled
+codelength increases on Macro call        |                             remains same
+Speed of Execution faster                 |                             Speed of execution Slower
+useful in small code                      |                             usefull in large code
+difficult to debug                        |                             Easy
+
+=============================================================================================
+
+ • In macros, no type checking(incompatible operand, etc.) is done and thus use of macros can lead to errors/side-effects in some cases.
+ •However, this is not the case with functions. Also, macros do not check for compilation error (if any). 
+ 
+ Consider the following two codes:
+
+	#include<stdio.h> 
+	  #define CUBE(b) b*b*b 
+	  int main() 
+	  { 
+	    printf("%d", CUBE(1+2)); 
+	    return 0; 
+	  } 
+
 
 storage classes :-
 ---------------
