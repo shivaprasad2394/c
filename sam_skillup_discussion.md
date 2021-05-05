@@ -131,6 +131,14 @@ Function substitution is totally compiler choice.
 	  printf("Output is: %d\n", ret); 
 	  return 0; 
 	} 
+note:if static is not used then it will give error.
+
+In function `main':
+undefined reference to `foo'
+To resolve this problem use “static” before inline. 
+Using static keyword forces the compiler to consider this inline function in the linker, 
+and hence the program compiles and run successfully.[for more refer the readme in inline subs]
+
 
 storage classes :-
 ---------------
