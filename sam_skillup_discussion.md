@@ -203,9 +203,8 @@ Answer 582
 
 Incremnet & decrement Operator	
 =============================
-++
---
-	operand should be a vraible
+++ / --
+	operand should be a varible
 	5++;//invalid
 	a+b++;//valid
 	(a+b)++;//inavlid
