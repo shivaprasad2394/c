@@ -8,6 +8,55 @@ Agenda
     5)Gps
 
 
+# C++
+order of discussion :-
+
+- Define C++?
+- What is a class in C++?
+- What is an object?
+- What is the difference between C and C++?
+- Why is the size of an empty class not zero in C++?
+- Why use access modifiers in C++?
+- What are C++ access modifiers?
+- What are the differences between a C++ struct and C++ class?
+- What are the various OOPs concepts in C++?
+- What is polymorphism in C++?
+- What are the different types of polymorphism in C++?
+- What is encapsulation?
+- What Is Inheritance?
+- What are the advantages of inheritance?
+- What is an abstraction in C++? 
+- What is a constructor?
+- Is the default constructor exists in C++?
+- Can a constructor throw an exception? How to handle the error when the constructor fails?
+- What is the initializer list in C++?
+- When do we use the Initializer List in C++?
+- What is a copy constructor?
+- When are copy constructors called in C++?
+- Why copy constructor takes the parameter as a reference in C++?
+- Why copy constructor argument should be const in C++?
+- Can one constructor of a class call another constructor of the same class to initialize this object?
+- Can a copy constructor accept an object of the same class as a parameter, in place of reference of the object? If No, why not possible?
+- Are Constructors and destructors can declare as const?
+- Can we make a copy constructor private?
+- Can you explain the order of execution in the constructor initialization list?
+- What is the difference between constructor and destructor?
+- What is the conversion constructor?
+- What is the difference between a copy constructor and an overloaded assignment operator?
+- What is the conversion operator in C++?
+- What is destructor in C++?
+- When is the destructor called?
+- Is it possible to overload the destructor of the class?
+- Can I call the destructor explicitly?
+- How destructors are different from a normal member function.
+- When do we need to write a user-defined destructor?
+- Why a class has only one destructor?
+- Can we have a virtual destructor in C++?
+- When to use virtual destructors?
+- Can we have a virtual constructor in C++?
+-  
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------
 Lets get Started With **C**
 
 Intro:-
