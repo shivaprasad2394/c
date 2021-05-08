@@ -16,7 +16,9 @@ order of discussion :-
 - What is an object?
 - What is the difference between C and C++?
 - Why is the size of an empty class not zero in C++?
-  this is because that would make it possible for two distinct objects to have the same memory location. This is the reason behind the concept that even an empty class must have a size at least 1.
+  
+  this is because that would make it possible for two distinct objects to have the same memory location. 
+  This is the reason behind the concept that even an empty class must have a size at least 1.
 - Why use access modifiers in C++?
 - What are C++ access modifiers?
 - What are the differences between a C++ struct and C++ class?
