@@ -34,6 +34,7 @@ order of discussion :-
 - Can a constructor throw an exception? How to handle the error when the constructor fails?
 - What is the initializer list in C++?
 - When do we use the Initializer List in C++?
+-if at all there scenarios where initialization are not possible wth constructors then we can use initializers. 
 - What is a copy constructor?
 - When are copy constructors called in C++?
 - Why copy constructor takes the parameter as a reference in C++?
