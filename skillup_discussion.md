@@ -473,3 +473,322 @@ Let num is 00001000 00001100, after the above expression, it will be 00001100 00
 
  • Steps 5:
   ((num >> 16) | (num << 16));
+
+=============================================================================================
+# Linux system programming
+
+# Shared memory
+- Two or more process can access the common memory. And communication is done via this shared memory where changes made by one process can be viewed by another process.
+
+SYSTEM CALLS USED ARE:
+
+
+
+- **ftok()**: is use to generate a unique key.
+
+- **shmget()**: int shmget(key_t,size_tsize,intshmflg); upon successful completion, shmget() returns an identifier for the shared memory segment.
+
+- **shmat()**: Before you can use a shared memory segment, you have to attach yourself to it, using shmat(). 
+
+       void *shmat(int shmid ,void *shmaddr ,int shmflg);
+      *shmid* is shared memory id. 
+      *shmaddr* specifies specific address to use but we should set it to zero and, OS will automatically choose the address.
+
+- **shmdt()**: When you’re done with the shared memory segment, your program should detach itself from it using shmdt(). 
+
+      int shmdt(void *shmaddr);
+
+- **shmctl()**: when you detach from shared memory,it is not destroyed. So, to destroy
+- **shmctl()** is used. 
+
+      shmctl(int shmid,IPC_RMID,NULL);
+
+
+
+The problem with pipes, fifo and message queue – is that for two process to exchange information. The information has to go through the kernel.
+
+- Server reads from the input file.
+- The server writes this data in a message using either a pipe, fifo or message queue.
+- The client reads the data from the IPC channel,again requiring the data to be copied from kernel’s IPC buffer to the client’s buffer.
+- Finally the data is copied from the client’s buffer.
+- A total of four copies of data are required (2 read and 2 write). So, shared memory provides a way by letting two or more processes share a memory segment. With Shared Memory the data is only copied twice – from input file into shared memory and from shared memory to the output file.
+
+# SHARED MEMORY FOR WRITER PROCESS
+
+       #include <iostream>
+       #include <sys/ipc.h>
+       #include <sys/shm.h>
+       #include <stdio.h>
+       using namespace std;
+
+       int main()
+       {
+        // ftok to generate unique key
+        key_t key = ftok("shmfile",65);
+
+        // shmget returns an identifier in shmid
+        int shmid = shmget(key,1024,0666|IPC_CREAT);
+
+        // shmat to attach to shared memory
+        char *str = (char*) shmat(shmid,(void*)0,0);
+
+        cout<<"Write Data : ";
+        gets(str);
+
+        printf("Data written in memory: %s\n",str);
+
+        //detach from shared memory
+        shmdt(str);
+
+        return 0;
+       }
+# SHARED MEMORY FOR READER PROCESS
+     #include <iostream>
+     #include <sys/ipc.h>
+     #include <sys/shm.h>
+     #include <stdio.h>
+     using namespace std;
+
+     int main()
+     {
+      // ftok to generate unique key
+      key_t key = ftok("shmfile",65);
+
+      // shmget returns an identifier in shmid
+      int shmid = shmget(key,1024,0666|IPC_CREAT);
+
+      // shmat to attach to shared memory
+      char *str = (char*) shmat(shmid,(void*)0,0);
+
+      printf("Data read from memory: %s\n",str);
+
+      //detach from shared memory
+      shmdt(str);
+
+      // destroy the shared memory
+      shmctl(shmid,IPC_RMID,NULL);
+
+      return 0;
+     }
+
+# Message Queues
+A message queue is a linked list of messages stored within the kernel and identified by a message queue identifier. 
+- A new queue is created or an existing queue opened by **msgget()**. 
+- New messages are added to the end of a queue by **msgsnd()**. 
+- when the message is added to a queue. Messages are fetched from a queue by **msgrcv()**.
+- we can fetch messages based on their type field.Each message is given an identification or type so that processes can select the appropriate message.
+
+System calls used for message queues: 
+ 
+
+- **ftok()**: is use to generate a unique key.
+- **msgget()**: either returns the message queue identifier for a newly created message queue or returns the identifiers for a queue which exists with the same key value.
+- **msgsnd()**: Data is placed on to a message queue by calling msgsnd().
+- **msgrcv()**: messages are retrieved from a queue.
+- **msgctl()**: It performs various operations on a queue. Generally it is use to destroy message queue.
+
+# MESSAGE QUEUE FOR WRITER PROCESS 
+         // C Program for Message Queue (Writer Process)
+         #include <stdio.h>
+         #include <sys/ipc.h>
+         #include <sys/msg.h>
+         #define MAX 10
+
+         // structure for message queue
+         struct mesg_buffer {
+          long mesg_type;
+          char mesg_text[100];
+         } message;
+
+         int main()
+         {
+          key_t key;
+          int msgid;
+
+          // ftok to generate unique key
+          key = ftok("progfile", 65);
+
+          // msgget creates a message queue
+          // and returns identifier
+          msgid = msgget(key, 0666 | IPC_CREAT);
+          message.mesg_type = 1;
+
+          printf("Write Data : ");
+          fgets(message.mesg_text,MAX,stdin);
+
+          // msgsnd to send message
+          msgsnd(msgid, &message, sizeof(message), 0);
+
+          // display the message
+          printf("Data send is : %s \n", message.mesg_text);
+
+          return 0;
+         }
+# MESSAGE QUEUE FOR READER PROCESS
+     // C Program for Message Queue (Reader Process)
+     #include <stdio.h>
+     #include <sys/ipc.h>
+     #include <sys/msg.h>
+
+     // structure for message queue
+     struct mesg_buffer {
+      long mesg_type;
+      char mesg_text[100];
+     } message;
+
+     int main()
+     {
+      key_t key;
+      int msgid;
+
+      // ftok to generate unique key
+      key = ftok("progfile", 65);
+
+      // msgget creates a message queue
+      // and returns identifier
+      msgid = msgget(key, 0666 | IPC_CREAT);
+
+      // msgrcv to receive message
+      msgrcv(msgid, &message, sizeof(message), 1, 0);
+
+      // display the message
+      printf("Data Received is : %s \n",
+          message.mesg_text);
+
+      // to destroy the message queue
+      msgctl(msgid, IPC_RMID, NULL);
+
+      return 0;
+     }
+# fork() and pipe()
+P1 takes a string and passes it to P2. P2 concatenates the received string with another string without using string function and sends it back to P1 for printing.
+Examples:
+
+Other string is: forgeeks.org
+
+Input  : www.geeks
+Output : www.geeksforgeeks.org
+        
+Input :  www.practice.geeks
+Output : practice.geeksforgeeks.org
+# Explanation:
+
+- To create child process we use fork(). 
+   - fork() returns :
+
+       - <0 fail to create child (new) process
+       - =0 for child process
+       - >0 i.e process ID of the child process to the parent process. When >0 parent process will execute.
+- **pipe()** is used for passing information from one process to another. pipe() is unidirectional therefore, for two-way communication between processes, two pipes can be set up, one for each direction.
+
+Example:
+
+     int fd[2];
+     pipe(fd);
+     fd[0]; //-> for using read end
+     fd[1]; //-> for using write end
+ 
+Inside Parent Process : 
+- We firstly close the reading end of first pipe (fd1[0]) then write the string though writing end of the pipe (fd1[1]).
+- Now parent will wait until child process is finished. 
+-  After the child process, parent will close the writing end of second pipe(fd2[1]) and read the string through reading end of pipe (fd2[0]).
+
+Inside Child Process : 
+- Child reads the first string sent by parent process by closing the writing end of pipe (fd1[1]) and 
+- after reading concatenate both string and passes the string to parent process via fd2 pipe and will exit.
+
+       // C program to demonstrate use of fork() and pipe()
+       #include<stdio.h>
+       #include<stdlib.h>
+       #include<unistd.h>
+       #include<sys/types.h>
+       #include<string.h>
+       #include<sys/wait.h>
+
+       int main()
+       {
+        // We use two pipes
+        // First pipe to send input string from parent
+        // Second pipe to send concatenated string from child
+
+        int fd1[2]; // Used to store two ends of first pipe
+        int fd2[2]; // Used to store two ends of second pipe
+
+        char fixed_str[] = "forgeeks.org";
+        char input_str[100];
+        pid_t p;
+
+        if (pipe(fd1)==-1)
+        {
+         fprintf(stderr, "Pipe Failed" );
+         return 1;
+        }
+        if (pipe(fd2)==-1)
+        {
+         fprintf(stderr, "Pipe Failed" );
+         return 1;
+        }
+
+        scanf("%s", input_str);
+        p = fork();
+
+        if (p < 0)
+        {
+         fprintf(stderr, "fork Failed" );
+         return 1;
+        }
+
+        // Parent process
+        else if (p > 0)
+        {
+         char concat_str[100];
+
+         close(fd1[0]); // Close reading end of first pipe
+
+         // Write input string and close writing end of first
+         // pipe.
+         write(fd1[1], input_str, strlen(input_str)+1);
+         close(fd1[1]);
+
+         // Wait for child to send a string
+         wait(NULL);
+
+         close(fd2[1]); // Close writing end of second pipe
+
+         // Read string from child, print it and close
+         // reading end.
+         read(fd2[0], concat_str, 100);
+         printf("Concatenated string %s\n", concat_str);
+         close(fd2[0]);
+        }
+
+        // child process
+        else
+        {
+         close(fd1[1]); // Close writing end of first pipe
+
+         // Read a string using first pipe
+         char concat_str[100];
+         read(fd1[0], concat_str, 100);
+
+         // Concatenate a fixed string with it
+         int k = strlen(concat_str);
+         int i;
+         for (i=0; i<strlen(fixed_str); i++)
+          concat_str[k++] = fixed_str[i];
+
+         concat_str[k] = '\0'; // string ends with '\0'
+
+         // Close both reading ends
+         close(fd1[0]);
+         close(fd2[0]);
+
+         // Write concatenated string and close writing end
+         write(fd2[1], concat_str, strlen(concat_str)+1);
+         close(fd2[1]);
+
+         exit(0);
+        }
+       }
+https://www.geeksforgeeks.org/input-output-system-calls-c-create-open-close-read-write/
+
