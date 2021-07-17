@@ -914,7 +914,7 @@ The functions defined in the pthreads library include:
 **pthread_create**: used to create a new thread
 Syntax:
 
-int pthread_create(pthread_t * thread, 
+int **pthread_create**(pthread_t * thread, 
                    const pthread_attr_t * attr, 
                    void * (*start_routine)(void *), 
                    void *arg);
@@ -929,7 +929,7 @@ Parameters:
 
 	- arg: pointer to void that contains the arguments to the function defined in the earlier argument
 
-- pthread_exit: used to terminate a thread
+- **pthread_exit**: used to terminate a thread
 
 Syntax:
 
@@ -959,7 +959,7 @@ pthread_t **pthread_self**(void);
 
 Syntax:
 
-int pthread_equal(pthread_t t1, pthread_t t2);
+int **pthread_equal**(pthread_t t1, pthread_t t2);
 
 Parameters: This method accepts following parameters:
 
@@ -1045,3 +1045,77 @@ Example: A simple implementation of threads may be as follows:
 https://www.geeksforgeeks.org/multiplication-of-matrix-using-threads/
 
 https://www.geeksforgeeks.org/binary-search-using-pthread/
+
+# Thread synchronization
+
+Thread Synchronization Problems Ex:-
+
+	#include <pthread.h>
+	#include <stdio.h>
+	#include <stdlib.h>
+	#include <string.h>
+	#include <unistd.h>
+
+	pthread_t tid[2];
+	int counter;
+
+	void* trythis(void* arg)
+	{
+		unsigned long i = 0;
+		counter += 1;
+		printf("\n Job %d has started\n", counter);
+
+		for (i = 0; i < (0xFFFFFFFF); i++)
+			;
+		printf("\n Job %d has finished\n", counter);
+
+		return NULL;
+	}
+
+	int main(void)
+	{
+		int i = 0;
+		int error;
+
+		while (i < 2) {
+			error = pthread_create(&(tid[i]), NULL, &trythis, NULL);
+			if (error != 0)
+				printf("\nThread can't be created : [%s]", strerror(error));
+			i++;
+		}
+
+		pthread_join(tid[0], NULL);
+		pthread_join(tid[1], NULL);
+
+		return 0;
+	}
+Output :
+
+	Job 1 has started
+	Job 2 has started
+	Job 2 has finished
+	Job 2 has finished
+- The log ‘Job 2 has started’ is printed just after ‘Job 1 has Started’ so it can easily be concluded that while thread 1 was processing the scheduler scheduled the thread 2.
+- we can say that lack of **synchronization** between the threads while using the shared resource ‘**counter**’ caused the problems.
+- A **Mutex** is a lock that we set before using a shared resource and release after using it.
+- even **if thread 2 is scheduled while thread 1 was not done accessing the shared resource and the code is locked by thread 1 using mutexes** ,then thread 2 cannot even access that region of code.
+- Now if **scheduler decides to do a context switch**, then all the other threads which are ready to execute the same region are unblocked.
+- Only one of all the threads would make it to the execution but **if this thread tries to execute the same region of code that is already locked then it will again go to sleep**.
+
+int **pthread_mutex_init**(pthread_mutex_t *restrict mutex, const pthread_mutexattr_t *restrict attr) 
+- Creates a mutex, referenced by mutex, with attributes specified by attr. 
+If attr is NULL, the default mutex attribute (NONRECURSIVE) is used.
+
+Returned value
+- pthread_mutex_init() returns 0 --> If successful ,and the state of the mutex becomes initialized and unlocked.
+- pthread_mutex_init() returns -1.--> If unsuccessful.
+
+int **pthread_mutex_lock**(pthread_mutex_t *mutex) : Locks a mutex object, which identifies a mutex. If the mutex is already locked by another thread, the thread waits for the mutex to become available. 
+
+Returned value
+- pthread_mutex_lock() returns 0-->If successful.
+- pthread_mutex_lock() returns -1.-->If unsuccessful. 
+
+- **When the mutex has the attribute of recursive**, the use of the lock may be different. When this kind of mutex is locked multiple times by the same thread, 
+
+then a count is incremented and no waiting thread is posted. **The owning thread must call pthread_mutex_unlock() the same number of times to decrement the count to zero.**
