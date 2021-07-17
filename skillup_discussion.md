@@ -296,6 +296,78 @@ post increment & pre increment
 	post decremnet-->value is assigned then decremnet
 	pre decremnet  -->first decremnet then value is asssigned
 				
+------------------------------------------------------------------------------------------
+
+typedef :-defining new names to existing types.
+-------  
+    Pros:-
+        • to reduce complexity
+        • to increase code readability and portability.
+        
+        
+        // C program to demonstrate importance 
+        // of typedef over #define for data types 
+        #include <stdio.h> 
+        typedef char* ptr; 
+        #define PTR char* 
+        int main() 
+        { 
+          ptr a, b, c; 
+          PTR x, y, z; 
+          printf("sizeof a:%u\n" ,sizeof(a) ); 
+          printf("sizeof b:%u\n" ,sizeof(b) ); 
+          printf("sizeof c:%u\n" ,sizeof(c) ); 
+          printf("sizeof x:%u\n" ,sizeof(x) ); 
+          printf("sizeof y:%u\n" ,sizeof(y) ); 
+          printf("sizeof z:%u\n" ,sizeof(z) ); 
+          return 0; 
+        } 
+
+      Output:
+
+      sizeof a:8
+      sizeof b:8
+      sizeof c:8
+      sizeof x:8
+      sizeof y:1
+      sizeof z:1
+      From the output of the above program size of “a” which is a pointer is 8 (on a machine where pointers are stored using 8 bytes). In the above program, when the compiler comes to
+
+      typedef char* ptr;
+      ptr a, b, c;
+      the statement effectively becomes
+
+      char *a, *b, *c;
+      This declares a, b, c as char*.
+
+      In contrast, #define works like this:
+
+      #define PTR char*
+      PTR x, y, z;
+      the statement effectively becomes
+
+      char *x, y, z;
+
+This makes x, y and z different, as, x is pointer-to-a char, whereas, y and z are char variables. When we declare macros with pointers while defining if we declare more than one identifier then the actual definition is given to the first identifier and for the rest non-pointer definition is given. In the above case x will be declared as char*, so its size is the size of a pointer, whereas, y and z will be declared as char so, their size will be 1 byte.
+
+=======================================================================================
+
+Macro:-    A preprocessor directive.
+-----
+          • It replaces the value before compiling.
+      Cons:-
+          • no typecasting.
+          • Usually used to create alias in c
+          • used has file guard in c.
+========================================================================================
+
+Enum:- A userdefined data type  and it consist of a set of named constant integers.
+----
+      Pro:-
+          • increases code readability.
+          • Easy to debug symbolic constant.
+
+=========================================================================================
 
 Extra:-
 =======
