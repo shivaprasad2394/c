@@ -908,9 +908,10 @@ To execute the c file, we have to use the -pthread or -lpthread in the command l
 
 cc -pthread file.c or
 cc -lpthread file.c
-he functions defined in the pthreads library include:
 
-pthread_create: used to create a new thread
+The functions defined in the pthreads library include:
+
+**pthread_create**: used to create a new thread
 Syntax:
 
 int pthread_create(pthread_t * thread, 
@@ -921,30 +922,37 @@ Parameters:
 
 
 
-thread: pointer to an unsigned integer value that returns the thread id of the thread created.
-attr: pointer to a structure that is used to define thread attributes like detached state, scheduling policy, stack address, etc. Set to NULL for default thread attributes.
-start_routine: pointer to a subroutine that is executed by the thread. The return type and parameter type of the subroutine must be of type void *. The function has a single attribute but if multiple values need to be passed to the function, a struct must be used.
-arg: pointer to void that contains the arguments to the function defined in the earlier argument
-pthread_exit: used to terminate a thread
+- thread: pointer to an unsigned integer value that returns the thread id of the thread created.
+
+- attr: pointer to a structure that is used to define thread attributes like detached state, scheduling policy, stack address, etc. Set to NULL for default thread attributes.
+
+- start_routine: pointer to a subroutine that is executed by the thread. The return type and parameter type of the subroutine must be of type void *. 
+The function has a single attribute but if multiple values need to be passed to the function, a struct must be used.
+
+- arg: pointer to void that contains the arguments to the function defined in the earlier argument
+
+- pthread_exit: used to terminate a thread
+
 Syntax:
 
-void pthread_exit(void *retval);
+**void pthread_exit(void *retval)**;
 Parameters: This method accepts a mandatory parameter retval which is the pointer to an integer that stores the return status of the thread terminated. The scope of this variable must be global so that any thread waiting to join this thread may read the return status.
 
-pthread_join: used to wait for the termination of a thread.
+**pthread_join**: used to wait for the termination of a thread.
 Syntax:
 
-int pthread_join(pthread_t th, 
-                 void **thread_return);
+**int pthread_join(pthread_t th, void **thread_return)**;
 Parameter: This method accepts following parameters:
 
-th: thread id of the thread for which the current thread waits.
-thread_return: pointer to the location where the exit status of the thread mentioned in th is stored.
-pthread_self: used to get the thread id of the current thread.
+- th: thread id of the thread for which the current thread waits.
+
+- thread_return: pointer to the location where the exit status of the thread mentioned in th is stored.
+
+- pthread_self: used to get the thread id of the current thread.
 Syntax:
 
-pthread_t pthread_self(void);
-pthread_equal: compares whether two threads are the same or not. If the two threads are equal, the function returns a non-zero value otherwise zero.
+**pthread_t pthread_self(void)**;
+- **pthread_equal**: compares whether two threads are the same or not. If the two threads are equal, the function returns a non-zero value otherwise zero.
 Syntax:
 
 int pthread_equal(pthread_t t1, 
@@ -953,16 +961,17 @@ Parameters: This method accepts following parameters:
 
 t1: the thread id of the first thread
 t2: the thread id of the second thread
-pthread_cancel: used to send a cancellation request to a thread
+
+- **pthread_cancel**: used to send a cancellation request to a thread
 Syntax:
 
-int pthread_cancel(pthread_t thread);
+int **pthread_cancel**(pthread_t thread);
 Parameter: This method accepts a mandatory parameter thread which is the thread id of the thread to which cancel request is sent.
 
-pthread_detach: used to detach a thread. A detached thread does not require a thread to join on terminating. The resources of the thread are automatically released after terminating if the thread is detached.
+- **pthread_detach**: used to detach a thread. A detached thread does not require a thread to join on terminating. The resources of the thread are automatically released after terminating if the thread is detached.
 Syntax:
 
-int pthread_detach(pthread_t thread);
+int **pthread_detach**(pthread_t thread);
 Parameter: This method accepts a mandatory parameter thread which is the thread id of the thread that must be detached.
 
 Example: A simple implementation of threads may be as follows:
