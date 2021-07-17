@@ -1119,3 +1119,7 @@ Returned value
 - **When the mutex has the attribute of recursive**, the use of the lock may be different. When this kind of mutex is locked multiple times by the same thread, 
 
 then a count is incremented and no waiting thread is posted. **The owning thread must call pthread_mutex_unlock() the same number of times to decrement the count to zero.**
+
+**The mutex can be unlocked and destroyed** by calling following two functions:-
+- int **pthread_mutex_unlock**(pthread_mutex_t *mutex) : Releases a mutex object
+- int **pthread_mutex_destroy**(pthread_mutex_t *mutex) : Deletes a mutex object
