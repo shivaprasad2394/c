@@ -369,6 +369,78 @@ Enum:- A userdefined data type  and it consist of a set of named constant intege
 
 =========================================================================================
 
+1)What is the volatile keyword?
+=================================
+A Type qualifier that prevents object from the compiler optimization.
+
+according to c standards:-
+      • A volatile object can be modified in ways unknown to the implementation.
+      • the value of the object can be changed at any time without any action being taken by the code.
+      • when a variable or object is declared volatile the compiler reloads the value from the memory each time it is accessed by the program.[i.e:-it prevents from cacheing a variable into registers]
+      •reading the value from memory is the only way to check the unpredictable change of the value.
+
+	/*--------------------------
+	volatile int Flag = 0;
+
+	ISR(void) 
+	{ 
+	  Flag = 1; 
+	} 
+
+	int main(void) 
+	{ 
+
+	  while (!Flag)
+	  {
+	      //do some work
+	  }
+
+	  return 0;
+	}-------------------------*/
+===========================================================================================================================================
+2)What is the **use of volatile keyword**?
+• Sharing the global variables or buffers between the multiple threads.
+• Accessing the global variables in an interrupt routine or signal handler.
+
+============================================================================================================================================
+3)What is the **difference between the const and volatile qualifiers in C**?
+Const:-
+-----
+• The const keyword is compiler-enforced and says that the program could not change the value of the object, that means it makes the object non-modifiable type.
+Volatile:-
+--------
+• volatile prevents any compiler optimization and says that the value of the object can be changed by something that is beyond the control of the program and so that compiler will not make any assumption about the object. 
+• When the compiler sees the above declaration then it avoids to make any assumption regarding the “a” and in every iteration read the value from the address which is assigned to the “a”.
+
+===========================================================================================================================================
+4)**Can a variable be both constant and volatile in C**?
+YES
+Example:-
+a switch or any output device is attached with GPIO[nput].
+•in that situation, volatile plays an important role and ensures that the compiler always read the value from the GPIO address and avoid to ma	ke any assumption.
+•if pointer is not of const type so it might be possible program change the pointing address of the pointer. So we have to create a constant p	ointer with a volatile keyword.
+
+int volatile * const PortRegister;
+ |     |     |   |    |
+ |     |     |   |    +------> PortRegister is a
+ |     |     |   +-----------> constant
+ |     |     +---------------> pointer to a
+ |     +---------------------> volatile
+ +---------------------------> integer
+
+	/*Define macro for address
+	#define PORTX 0x00020000  // Address of the GPIO 
+	main(){
+	//Create pointer to point the address
+	uint32_t volatile * const pcPortReg = (uint32_t *) PORTX;
+	// Write value to the port
+	*pcPortReg = value;
+	// Read value from the port
+	value = *pcPortReg;
+	}
+
+===========================================================================================================================================
+
 Extra:-
 =======
 - **compiler** is a computer program that translates computer code written in one programming language (the source language) into another .
