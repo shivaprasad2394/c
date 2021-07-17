@@ -679,6 +679,7 @@ Output : practice.geeksforgeeks.org
        - <0 fail to create child (new) process
        - =0 for child process
        - >0 i.e process ID of the child process to the parent process. When >0 parent process will execute.
+
 - **pipe()** is used for passing information from one process to another. pipe() is unidirectional therefore, for two-way communication between processes, two pipes can be set up, one for each direction.
 
 Example:
@@ -792,3 +793,181 @@ Inside Child Process :
        }
 https://www.geeksforgeeks.org/input-output-system-calls-c-create-open-close-read-write/
 
+# FIFO/Named Pipes
+
+a named pipe appears as a file and generally processes attach to it for inter-process communication. 
+A FIFO file is a special kind of file on the local storage which allows two or more processes to communicate with each other by reading/writing to/from this file.
+
+**mkfifo()** makes a FIFO special file with name **pathname**. Here **mode** specifies the FIFO’s permissions. 
+It is modified by the process’s umask in the usual way: the permissions of the created file are (mode & ~umask).
+
+	int mkfifo(const char *pathname, mode_t mode);
+
+Example Programs to illustrate the named pipe: -There are two programs that use the same FIFO. 
+
+Program 1 writes first, then reads. 
+
+program 2 reads first, then writes. They both keep doing it until terminated.
+
+Program 1-->writes
+
+	// C program to implement one side of FIFO
+	// This side writes first, then reads
+	#include <stdio.h>
+	#include <string.h>
+	#include <fcntl.h>
+	#include <sys/stat.h>
+	#include <sys/types.h>
+	#include <unistd.h>
+
+	int main()
+	{
+		int fd;
+
+		// FIFO file path
+		char * myfifo = "/tmp/myfifo";
+
+		// Creating the named file(FIFO)
+		// mkfifo(<pathname>, <permission>)
+		mkfifo(myfifo, 0666);
+
+		char arr1[80], arr2[80];
+		while (1)
+		{
+			// Open FIFO for write only
+			fd = open(myfifo, O_WRONLY);
+
+			// Take an input arr2ing from user.
+			// 80 is maximum length
+			fgets(arr2, 80, stdin);
+
+			// Write the input arr2ing on FIFO
+			// and close it
+			write(fd, arr2, strlen(arr2)+1);
+			close(fd);
+
+			// Open FIFO for Read only
+			fd = open(myfifo, O_RDONLY);
+
+			// Read from FIFO
+			read(fd, arr1, sizeof(arr1));
+
+			// Print the read message
+			printf("User2: %s\n", arr1);
+			close(fd);
+		}
+		return 0;
+	}
+
+Program2 -->reads
+
+	// C program to implement one side of FIFO
+	// This side reads first, then reads
+	#include <stdio.h>
+	#include <string.h>
+	#include <fcntl.h>
+	#include <sys/stat.h>
+	#include <sys/types.h>
+	#include <unistd.h>
+
+	int main()
+	{
+		int fd1;
+
+		// FIFO file path
+		char * myfifo = "/tmp/myfifo";
+
+		// Creating the named file(FIFO)
+		// mkfifo(<pathname>,<permission>)
+		mkfifo(myfifo, 0666);
+
+		char str1[80], str2[80];
+		while (1)
+		{
+			// First open in read only and read
+			fd1 = open(myfifo,O_RDONLY);
+			read(fd1, str1, 80);
+
+			// Print the read string and close
+			printf("User1: %s\n", str1);
+			close(fd1);
+
+			// Now open in write mode and write
+			// string taken from user.
+			fd1 = open(myfifo,O_WRONLY);
+			fgets(str2, 80, stdin);
+			write(fd1, str2, strlen(str2)+1);
+			close(fd1);
+		}
+		return 0;
+	}
+
+# Pthread
+
+To execute the c file, we have to use the -pthread or -lpthread in the command line while compiling the file.
+
+cc -pthread file.c or
+cc -lpthread file.c
+he functions defined in the pthreads library include:
+
+pthread_create: used to create a new thread
+Syntax:
+
+int pthread_create(pthread_t * thread, 
+                   const pthread_attr_t * attr, 
+                   void * (*start_routine)(void *), 
+                   void *arg);
+Parameters:
+
+
+
+thread: pointer to an unsigned integer value that returns the thread id of the thread created.
+attr: pointer to a structure that is used to define thread attributes like detached state, scheduling policy, stack address, etc. Set to NULL for default thread attributes.
+start_routine: pointer to a subroutine that is executed by the thread. The return type and parameter type of the subroutine must be of type void *. The function has a single attribute but if multiple values need to be passed to the function, a struct must be used.
+arg: pointer to void that contains the arguments to the function defined in the earlier argument
+pthread_exit: used to terminate a thread
+Syntax:
+
+void pthread_exit(void *retval);
+Parameters: This method accepts a mandatory parameter retval which is the pointer to an integer that stores the return status of the thread terminated. The scope of this variable must be global so that any thread waiting to join this thread may read the return status.
+
+pthread_join: used to wait for the termination of a thread.
+Syntax:
+
+int pthread_join(pthread_t th, 
+                 void **thread_return);
+Parameter: This method accepts following parameters:
+
+th: thread id of the thread for which the current thread waits.
+thread_return: pointer to the location where the exit status of the thread mentioned in th is stored.
+pthread_self: used to get the thread id of the current thread.
+Syntax:
+
+pthread_t pthread_self(void);
+pthread_equal: compares whether two threads are the same or not. If the two threads are equal, the function returns a non-zero value otherwise zero.
+Syntax:
+
+int pthread_equal(pthread_t t1, 
+                  pthread_t t2);
+Parameters: This method accepts following parameters:
+
+t1: the thread id of the first thread
+t2: the thread id of the second thread
+pthread_cancel: used to send a cancellation request to a thread
+Syntax:
+
+int pthread_cancel(pthread_t thread);
+Parameter: This method accepts a mandatory parameter thread which is the thread id of the thread to which cancel request is sent.
+
+pthread_detach: used to detach a thread. A detached thread does not require a thread to join on terminating. The resources of the thread are automatically released after terminating if the thread is detached.
+Syntax:
+
+int pthread_detach(pthread_t thread);
+Parameter: This method accepts a mandatory parameter thread which is the thread id of the thread that must be detached.
+
+Example: A simple implementation of threads may be as follows:
+
+
+
+https://www.geeksforgeeks.org/multiplication-of-matrix-using-threads/
+https://www.geeksforgeeks.org/binary-search-using-pthread/
