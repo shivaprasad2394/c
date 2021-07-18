@@ -419,8 +419,8 @@ Volatile:-
 
 4)**Can a variable be both constant and volatile in C**?
 YES
-Example:-
-a switch or any output device is attached with GPIO[nput].
+
+Example:- a switch or any output device is attached with GPIO[input].
 •in that situation, volatile plays an important role and ensures that the compiler always read the value from the GPIO address and avoid to ma	ke any assumption.
 •if pointer is not of const type so it might be possible program change the pointing address of the pointer. So we have to create a constant p	ointer with a volatile keyword.
 
@@ -442,6 +442,134 @@ a switch or any output device is attached with GPIO[nput].
 	// Read value from the port
 	value = *pcPortReg;
 	}
+
+**Void Pointer**:-A generic pointer whiich has no associated data type .Thats why it can store Address of any type of object and can be typecast to any other type.
+
+**Dangling pointer**:-When the reference object is deleted or Deallocated without Changing the value of the pointer.it creates a problem because the pointer is still pointing the memory that is no longer available.
+
+**Wild pointer**:-A pointer Not initialized properly proir to its First use is Know as wild pointer.
+
+# Big Endian V/S Little Endian
+
+**Endianess**:-Order of Bytes to store data in Memory and it Also describes the order of byte transmission.
+- Big Endian:-MSB byte is stored first
+- Little Endian:-LSB byte is stored first
+
+		Ex:- 0X11223344
+		00 --> 0x11		00 --> 0x44
+		01 --> 0x22		01 --> 0x33
+		02 --> 0x33		02 --> 0x22
+		03 --> 0x44		03 --> 0x11
+		-----------		------------
+		Big Endian		Little Endian
+		
+**Function pointer**:-Special Variable which holds the Adress of function .
+
+Foo is a pointer to a function that takes 3 ints and returns an int pointer.
+	**Syntax**:- int*(*foo)(int,int,int)
+Ex:-
+
+	Void Do_operation(int (*op)(int x,int y)){
+	return op(X,Y);
+	}
+	int Add(int a,int b){
+	//do something
+	}
+	int Multiply(int a,int b){
+	//do something
+	}
+	int main(){
+	int result = Do_operation(Add,2,3);
+	int result = Do_operation(Multiply,2,3);
+	}
+
+# Function pointers and type def
+
+	Syntax:- Typedef Void(*<AliasName>)(parameters)
+		and then 
+		in main--> AliasName <somename> = &Func
+				    <somename>->Func
+
+Ex:-
+
+	#include <stdio.h>
+	// The top-level class.
+	typedef struct sCommClass {
+	    int (*open)(struct sCommClass *self, char *fspec);
+	} tCommClass;
+
+	// Function for the TCP 'class'.
+
+	static int tcpOpen (tCommClass *tcp, char *fspec) {
+	    printf ("Opening TCP: %s\n", fspec);
+	    return 0;
+	}
+	static int tcpInit (tCommClass *tcp) {
+	    tcp->open = &tcpOpen;
+	    return 0;
+	}
+	// Function for the HTTP 'class'.
+
+	static int httpOpen (tCommClass *http, char *fspec) {
+	    printf ("Opening HTTP: %s\n", fspec);
+	    return 0;
+	}
+	static int httpInit (tCommClass *http) {
+	    http->open = &httpOpen;
+	    return 0;
+	}
+	// Test program.
+	int main (void) {
+	    int status;
+	    tCommClass commTcp, commHttp;
+
+	    // Same 'base' class but initialised to different sub-classes.
+
+	    tcpInit (&commTcp);
+	    httpInit (&commHttp);
+
+	    // Called in exactly the same manner.
+
+	    status = (commTcp.open)(&commTcp, "bigiron.box.com:5000");
+	    status = (commHttp.open)(&commHttp, "http://www.microsoft.com");
+
+	    return 0;
+	}
+# optput:-
+
+	Opening TCP: bigiron.box.com:5000
+	Opening HTTP: http://www.microsoft.com
+
+# For accessing Specific memory from user space
+run below code and try to make some sence
+
+	#include <stdio.h>
+	void addr(int *var){
+	    printf("Adress of var = %x, var=%d,\t return=%x\n", &var, var,(int*)&var);
+	    int *ptr=(int*)&var;
+	    printf(" ptr points to %x\n", ptr);
+	    *ptr = 123;
+	    printf("New value of var=%d\n", var);
+	}
+	int main() {
+	  int var = 7456;
+	  addr(&var);
+	  return 0;
+	}
+# to access a fixed memory address. So you need to follow the below steps, these are high-level steps.
+
+	//Memory address, you want to access
+	#define RW_FLAG 0x1FFF7800
+	//Pointer to access the Memory address
+	volatile uint32_t *flagAddress = NULL;
+	//variable to stored the read value
+	uint32_t readData = 0;
+	//Assign addres to the pointer
+	flagAddress = (volatile uint32_t *)RW_FLAG;
+	//Read value from memory
+	* flagAddress = 12; // Write
+	//Write value to the memory
+	readData = * flagAddress;
 
 ===========================================================================================================================================
 
