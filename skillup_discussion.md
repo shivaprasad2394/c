@@ -577,6 +577,118 @@ Access it like a normal array:-
 		  return 0;
 		}
 
+# dynamically allocate a 2D array in C
+- Using a single pointer: 
+
+		#include <stdio.h>
+		#include <stdlib.h>
+
+		void main()
+		{
+			int r = 3, c = 4; //Taking number of Rows and Columns
+			int *ptr, count = 0, i;
+			ptr = (int *)malloc((r * c) * sizeof(int)); //Dynamically Allocating Memory
+			for (i = 0; i < r * c; i++)
+			{
+				ptr[i] = i + 1; //Giving value to the pointer and simultaneously printing it.
+				printf("%d ", ptr[i]);
+				if ((i + 1) % c == 0)
+				{
+					printf("\n");
+				}
+			}
+			free(ptr);
+		}
+
+- Using an array of pointers 
+
+		#include <stdio.h>
+		#include <stdlib.h>
+
+		int main()
+		{
+			int r = 3, c = 4, i, j, count;
+
+			int *arr[r];
+			for (i=0; i<r; i++)
+				arr[i] = (int *)malloc(c * sizeof(int));
+
+			// Note that arr[i][j] is same as *(*(arr+i)+j)
+			count = 0;
+			for (i = 0; i < r; i++)
+			for (j = 0; j < c; j++)
+				arr[i][j] = ++count; // Or *(*(arr+i)+j) = ++count
+
+			for (i = 0; i < r; i++)
+			for (j = 0; j < c; j++)
+				printf("%d ", arr[i][j]);
+
+			/* Code for further processing and free the
+			dynamically allocated memory */
+
+		return 0;
+		}
+
+- Using pointer to a pointer 
+
+		#include <stdio.h>
+		#include <stdlib.h>
+
+		int main()
+		{
+			int r = 3, c = 4, i, j, count;
+
+			int **arr = (int **)malloc(r * sizeof(int *));
+			for (i=0; i<r; i++)
+				arr[i] = (int *)malloc(c * sizeof(int));
+
+			// Note that arr[i][j] is same as *(*(arr+i)+j)
+			count = 0;
+			for (i = 0; i < r; i++)
+			for (j = 0; j < c; j++)
+				arr[i][j] = ++count; // OR *(*(arr+i)+j) = ++count
+
+			for (i = 0; i < r; i++)
+			for (j = 0; j < c; j++)
+				printf("%d ", arr[i][j]);
+
+		/* Code for further processing and free the
+			dynamically allocated memory */
+
+		return 0;
+		}
+
+- Using double pointer and one malloc call 
+
+		#include<stdio.h>
+		#include<stdlib.h>
+
+		int main()
+		{
+			int r=3, c=4, len=0;
+			int *ptr, **arr;
+			int count = 0,i,j;
+
+			len = sizeof(int *) * r + sizeof(int) * c * r;
+			arr = (int **)malloc(len);
+
+			// ptr is now pointing to the first element in of 2D array
+			ptr = (int *)(arr + r);
+
+			// for loop to point rows pointer to appropriate location in 2D array
+			for(i = 0; i < r; i++)
+				arr[i] = (ptr + c * i);
+
+			for (i = 0; i < r; i++)
+				for (j = 0; j < c; j++)
+					arr[i][j] = ++count; // OR *(*(arr+i)+j) = ++count
+
+			for (i = 0; i < r; i++)
+				for (j = 0; j < c; j++)
+					printf("%d ", arr[i][j]);
+
+			return 0;
+		}
 
 ===========================================================================================================================================
 
