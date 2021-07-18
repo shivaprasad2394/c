@@ -344,13 +344,14 @@ according to c standards:-
 
 	  return 0;
 	}-------------------------*/
-===================================================================================================================
+=========================================================================================
 
 2)What is the **use of volatile keyword**?
 • Sharing the global variables or buffers between the multiple threads.
 • Accessing the global variables in an interrupt routine or signal handler.
 
-=========================================================================================================
+=======================================================================================
+
 3)What is the **difference between the const and volatile qualifiers in C**?
 Const:-
 -----
@@ -361,7 +362,7 @@ Volatile:-
 - • volatile prevents any compiler optimization and says that the value of the object can be changed by something that is beyond the control of the program and so that compiler will not make any assumption about the object. 
 - • When the compiler sees the above declaration then it avoids to make any assumption regarding the “a” and in every iteration read the value from the address which is assigned to the “a”.
 
-====================================================================================================================
+=======================================================================================
 
 4)**Can a variable be both constant and volatile in C**?
 YES
