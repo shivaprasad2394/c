@@ -714,7 +714,65 @@ Access it like a normal array:-
 			print(m, n);
 			return 0;
 		}
-		
+
+# char pointers V/S char Arrays
+
+	#include <stdio.h>
+	#include <string.h>
+
+	int main()
+	{
+	    char *p = "hello";// **string literal**,may be stored in read-only memory
+	    char q[] = "hello"; //So this is just a shortcut for:- char c[] = {'a', 'b', 'c', '\0'};
+	    
+	    printf("%zu\n", sizeof(p)); // => size of pointer to char -- 4 on x86, 8 on x86-64
+	    printf("%zu\n", sizeof(q)); // => size of char array in memory -- 6 on both
+
+	    // size_t strlen(const char *s) and we don't get any warnings here:
+	    printf("%zu\n", strlen(p)); // => 5
+	    printf("%zu\n", strlen(q)); // => 5
+
+	    return 0;
+	}
+	
+# ask extra:-
+
+	#include <stdio.h>
+
+	int main(void) {
+	    char *s = "abc";
+	    printf("%s\n", s);
+	    return 0;
+	}
+	Compile and decompile:
+
+	gcc -ggdb -std=c99 -c main.c
+	objdump -Sr main.o
+	Output contains:
+
+	 char *s = "abc";
+	8:  48 c7 45 f8 00 00 00    movq   $0x0,-0x8(%rbp)
+	f:  00 
+		c: R_X86_64_32S .rodata
+	Conclusion: GCC stores char* it in .rodata section, not in .text.
+
+	If we do the same for char[]:
+
+	 char s[] = "abc";
+	we obtain:
+
+	17:   c7 45 f0 61 62 63 00    movl   $0x636261,-0x10(%rbp)
+	so it gets stored in the stack (relative to %rbp).
+
+	Note however that the default linker script puts .rodata and .text in the same segment, which has execute but no write permission. This can be observed with:
+
+	readelf -l a.out
+	which contains:
+
+	 Section to Segment mapping:
+	  Segment Sections...
+	   02     .text .rodata
+   
 ================================================================================================
 
 Extra:-
