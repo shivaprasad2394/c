@@ -692,6 +692,7 @@ Access it like a normal array:-
 - using **pointer to array**
 
 		#include <stdio.h>
+		//void print(int *arr, int m, int n)
 		void print(int m, int n)
 		{
 		    int (*ptr)[n]=(int *)malloc((m * n) * sizeof(int)); //Dynamically Allocating Memory
@@ -714,7 +715,7 @@ Access it like a normal array:-
 			return 0;
 		}
 		
-===========================================================================================================================================
+================================================================================================
 
 Extra:-
 =======
