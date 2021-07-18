@@ -538,6 +538,46 @@ Access it like a normal array:-
 - ptr==>base address of array
 - (ptr+i)==>points to 'i'th block.
 - *(ptr+i)==>gives base address of 'i'th block od 2-d array.
+
+		# include<stdio.h>
+		int main()
+		{
+
+		    int i = 0, j=0, sum0=0, sum1=0;
+		    int data[4][3] = { {23,55,50},{45,38,55},{70,43,45},{34,46,60}};
+		    int bata[3][3] = { {9,8,7},{6,5,4},{3,2,1}};
+		    int (*ttr)[3]=bata;
+		    //int *ttr=bata;//this will give error
+		    for (i=0; i<3; i++) {
+			for (j = 0; j < 3; j++) {
+			    printf("printing in reverse pos=%d Address =%d and value=%d\n",(((9-j)-i)),(ttr+9-(i*j)),*(*(ttr+i)+j));
+			}
+		    }                               
+
+		i=0;
+		j=0;
+
+		    int *Ptr = *data;    //Why is the indirection operator used here? 
+				    // Does Ptr = 23 by this assignment?
+
+		    for (i=0; i<4; i++) {
+			sum1 = 0;
+			for (j = 0; j < 3; j++) {
+			    sum1 += data[i][j];
+			}
+			if (sum1 > sum0) {
+				 sum0 = sum1;
+				 Ptr = *(data + i);     // Seems like this statement makes Ptr
+			}                               // point one row below ... what syntax
+		    }                                   // can you use to access columns then?
+						       // Is it possible to use pointer arithmetic
+		    for (i=0; i<3; i++)                 // to access elements of data[i][j] that
+			printf("%d\n", Ptr[i]);          // are not at j = 0?
+
+		  return 0;
+		}
+
+
 ===========================================================================================================================================
 
 Extra:-
