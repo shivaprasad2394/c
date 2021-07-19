@@ -1658,6 +1658,360 @@ EX:-
 
 			return 0;
 		}
+======================================================================================================================
+# socket[Software equipment for network data transmission]
+int socket(int domain, int type, int protocol);
+type (socket type, data transmission method)
+
+
+
+name | Socket |
+--- | --- | 
+SOCK_STREAM |Stream format socket TCP| 
+SOCK_DGRAM   |	Datagram format socket UDP |
+
+- SOCK_STREAM (complete delivery of data, tcp sending data, with ack)
+Data will not disappear during transmission;
+Data is transmitted in order;
+The sending and receiving of data are not synchronized (some tutorials also say that "there is no data boundary"). It is mainly because the receiver does not know the boundary between the messages, and does not know how many bytes of data are extracted at one time; sending can be batched 30+50+20, receiving and putting 100 at a time to take away, or 10 10 A fetch, etc. it is like a conveyor belt , the http protocol used by the browser is based on this, to ensure the complete delivery of the data, there is a reply ack.
+
+- SOCK_DGRAM (efficiency and real-time)
+Emphasize fast transmission rather than transmission sequence;
+The transmitted data may be lost or damaged;
+Limit the size of data transmitted each time;
+The sending and receiving of data is synchronized (some tutorials also call "there is a data boundary").
+Just like express delivery, ensure fast delivery , such as QQ chat and voice
+
+protocol (protocol information used in communication between computers)
+Usually 0, the first two parameters can be determined;
+Unless there are multiple protocols with the same data transmission method in the same protocol family (? There is no example in the book~)
+
+sockaddr_in
+struct sockaddr_in   
+{
+   sa_family_t	  sin_family; //Address family
+   uint16_t	  sin_port; //16-bit TCP/UDP port number
+   struct in_addr sin_addr; //32-bit IP address
+   char 	  sin_zero[8];//Not applicable
+};
+
+
+sin_port
+
+A computer can provide multiple network services at the same time, and the port number is to distinguish different network services
+
+sin_addr
+
+At present, IPv4 addresses are widely used, and its resources are very limited. It is unrealistic for a computer to have an IP address. It is often a local area network that has an IP address.
+
+INADDR_ANY, used for the server, automatically obtains the IP address of the computer running the server (client side, unless it has some server-side functions, it will not be used)
+
+1.3, bind()
+
+The server is used to assign an IP address and port number to the socket. Only in this way, the data flowing through the IP address and port can be handed over to the socket for processing
+
+int bind(int sock, struct sockaddr *addr, socklen_t addrlen);  //Linux
+
+int bind(SOCKET sock, const struct sockaddr *addr, int addrlen);  //Windows
+
+sockfd (socket file descriptor, the return value of socket creation)
+myaddr (a structure containing the address information of the created socket)
+addrlen (length of myaddr)
+1.4, connect()
+Used to establish a connection, used for TCP
+
+int connect(int sock, struct sockaddr *serv_addr, socklen_t addrlen);  //Linux
+int connect(SOCKET sock, const struct sockaddr *serv_addr, int addrlen);  //Windows
+1
+2
+sockfd (socket file descriptor, the return value of socket creation)
+myaddr (a structure containing the address information of the created socket)
+addrlen (length of myaddr)
+The above is common to both, the following analysis is different
+
+2. TCP
+Create the server first and reach listen(), this is the client can connect to the connect() server; before the client calls connect(), the server may call accept() first. At this time, the server enters a blocking state;
+
+2.1, listen()
+Let the socket enter the passive monitoring state, then the client can enter the connection request that can be sent, that is, call the connect function
+
+int listen(int sock, int backlog);  //Linux
+int listen(SOCKET sock, int backlog);  //Windows
+1
+2
+sock (socket file descriptor)
+backlog (the length of the waiting queue for connection requests, such as 5, then up to 5 connection requests will enter the queue)
+2.2, accept()
+Respond to client requests
+
+int accept(int sock, struct sockaddr *addr, socklen_t *addrlen);  //Linux
+SOCKET accept(SOCKET sock, struct sockaddr *addr, int *addrlen);  //Windows
+1
+2
+sock (socket file descriptor)
+myaddr (a structure containing customer address information)
+addrlen (length of myaddr)
+2.3, read, write
+Because TCP needs to be connected to communicate , the address information of the other party is not needed when sending and receiving data
+
+To write data, just write the data into the buffer (similar to a queue). When will it be sent and how much data will be sent, there is a judgment rule, so the receiver does not know the beginning and the end~
+Read data is also read from the cache
+When the return value of the read() function is 0, it means that the opposite end has closed the socket. At this time, the socket must also be closed, otherwise it will cause the socket to leak. Under the netstat command, if there is a socket in the closewait state, the socket is leaked.
+ssize_t write(int fd, const void *buf, size_t nbytes);//Linux
+ssize_t read(int fd, void *buf, size_t nbytes);//Linux
+
+int send(SOCKET sock, const char *buf, int len, int flags);//Windows
+int recv(SOCKET sock, char *buf, int len, int flags);//Windows
+
+
+sock socket
+buf is the buffer address of the data to be sent
+len is the number of bytes of data to be sent
+flags are options when sending data, generally 0 or NULL
+How to solve the tcp sticky package problem
+We can make the information into json, the front is the basic information of the package (open, not encrypted), and the back is the content of the communication protocol to be sent, and the content of the protocol can be encrypted
+
+Server
+#define TCP_LISTEN_PORT  9190
+#define BUF_SIZE 30
+
+static struct sockaddr_in serv_addr;
+static struct sockaddr_in clnt_addr;
+int tcp_socket_fd = -1;
+void TCP_Server_Socket_Init(void)
+{
+	tcp_socket_fd  = socket(PF_INET, SOCK_STREAM, 0);
+    if(-1 == tcp_socket_fd )
+    {
+        printf("socket() error\n");
+        return;
+    }
+
+    memset(&serv_addr, 0, sizeof(serv_addr));
+    
+    serv_addr.sin_family = AF_INET;
+    serv_addr.sin_addr.s_addr = htonl(INADDR_ANY);
+    serv_addr.sin_port = htons(TCP_LISTEN_PORT); 
+
+	if(-1 == bind(tcp_socket_fd , (struct sockaddr*)&serv_addr, sizeof(serv_addr)))
+	{
+	    printf("bind() error\n");
+        return;
+	}  
+	
+	if(-1 == listen(tcp_socket_fd , 5)
+	{
+	    printf("listen() error\n");
+        return;
+	}  
+}
+
+
+int main()
+{
+    int fd_ret = 0;
+    struct timeval timeout;
+    fd_set fb_sockset;
+    
+	char message[BUF_SIZE];
+	int srt_len;
+	int clnt_socket_fb;
+	socklen_t clnt_adr_sz;
+	
+	TCP_Server_Socket_Init();
+	clnt_adr_sz = sizeof(clnt_adr);
+	while(1)
+	{
+		FD_ZERO(&fb_sockset);
+		FD_SET(tcp_socket_fd ,&fb_sockset);
+		timeout.tv_sec=2;
+		timeout.tv_usec=0;
+		
+		fd_ret = select(tcp_socket_fd +1, &fb_sockset, NULL, NULL, &timeout);
+		if(fd_ret > 0)
+		{
+			clnt_socket_fb= accept(tcp_socket_fd ,  (struct sockaddr*)&clnt_addr, &clnt_adr_sz );
+			if(-1 == clnt_socket_fb)
+			{
+				printf("accept() error\n");
+			}
+			else
+			{
+				while(srt_len=recv(clnt_socket_fb, message, BUF_SIZE, 0)!=0)
+				{
+					send(clnt_socket_fb, message, srt_len, 0);
+					printf("Message from clent: %s",message);
+					close(clnt_socket_fb);
+				}
+			}
+		}
+	}
+	close(tcp_socket_fd );
+	return 0;
+}
+
+
+Client
+#define TCP_LISTEN_PORT  9190
+#define BUF_SIZE 30
+
+static struct sockaddr_in serv_addr;
+static struct sockaddr_in clnt_addr;
+int tcp_socket_fd = -1;
+void TCP_Client_Socket_Init(void)
+{
+	tcp_socket_fd = socket(PF_INET, SOCK_STREAM, 0);
+    if(-1 == tcp_socket_fd )
+    {
+        printf("socket() error\n");
+        return;
+    }
+
+    memset(&clnt_addr, 0, sizeof(clnt_addr));
+    
+    clnt_addr.sin_family = AF_INET;
+    clnt_addr.sin_addr.s_addr = inet_addr("192.168.0.1");//方式1
+    clnt_addr.sin_addr.s_addr = htonl(0xC0A80001);//方式2
+    clnt_addr.sin_port = htons(TCP_LISTEN_PORT ); 
+
+	if(-1 == connect(tcp_socket_fd, (struct sockaddr*)&clnt_addr, sizeof(clnt_addr))))
+	{
+		printf("connect() error\n");
+	}
+	else
+	{
+		printf("connected...............\n");
+	}
+}
+
+
+int main()
+{
+	char message[]=“Nice.to.meet.you!”;
+	int srt_len;
+	socklen_t serv_adr_sz;
+	TCP_Client_Socket_Init();
+	serv_adr_sz = sizeof(serv_addr);
+	while(1)
+	{
+		send(tcp_socket_fd , message, strlen(message), 0, );
+		str_lent = recv(tcp_socket_fd , message, BUF_SIZE -1, 0);
+		printf("Message from server: %s",message);
+	}
+	close(tcp_socket_fd);
+	return 0;
+}
+
+
+3. UDP
+3.1, read, write
+Because UDP can communicate without a connection, the address information of the other party is needed to send and receive data.
+
+ssize_t sendto(int sock, const void *buf, size_t nbytes, int flags, struct sockaddr *to, socklen_t addrlen);//Linux
+ssize_t recvfrom(int sock, void *buf, size_t nbytes, int flags, struct sockaddr *to, socklen_t addrlen);//Linux
+
+int send(SOCKET sock, const char *buf, int len, int flags);//Windows
+int recv(SOCKET sock, char *buf, int len, int flags);//Windows
+
+
+sock socket
+buf is the buffer address of the data to be sent
+len is the number of bytes of data to be sent
+flags are options when sending data, generally 0 or NULL
+to the structure of the destination address information
+length of addrlen to
+Server
+#define UDP_LISTEN_PORT  9190
+#define BUF_SIZE 30
+
+static struct sockaddr_in serv_addr;
+static struct sockaddr_in clnt_addr;
+int udp_socket_fd = -1;
+void UDP_Server_Socket_Init(void)
+{
+	udp_socket_fd = socket(PF_INET, SOCK_DGRAM, 0);
+    if(-1 == udp_socket_fd )
+    {
+        printf("socket() error\n");
+        return;
+    }
+
+    memset(&serv_addr, 0, sizeof(serv_addr));
+    
+    serv_addr.sin_family = AF_INET;
+    serv_addr.sin_addr.s_addr = htonl(INADDR_ANY);
+    serv_addr.sin_port = htons(UDP_LISTEN_PORT ); 
+
+	if(-1 == bind(udp_socket_fd , (struct sockaddr*)&serv_addr, sizeof(serv_addr)))
+	{
+	    printf("bind() error\n");
+        return;
+	}  
+}
+
+
+int main()
+{
+	char message[BUF_SIZE];
+	int srt_len;
+	socklen_t clnt_adr_sz;
+	UDP_Server_Socket_Init();
+	clnt_adr_sz = sizeof(clnt_adr);
+	while(1)
+	{
+		str_lent = recvfrom(udp_socket_fd , message, BUF_SIZE, 0,  (struct sockaddr*)&clnt_addr, &clnt_adr_sz );
+		sendto(udp_socket_fd, message, BUF_SIZE, 0,  (struct sockaddr*)&clnt_addr, clnt_adr_sz );
+		
+		printf("Message from client: %s",message);
+	}
+	close(udp_socket_fd);
+	return 0;
+}
+
+Client
+#define UDP_LISTEN_PORT  9190
+#define BUF_SIZE 30
+
+static struct sockaddr_in serv_addr;
+static struct sockaddr_in clnt_addr;
+int udp_socket_fd = -1;
+void UDP_Client_Socket_Init(void)
+{
+	udp_socket_fd = socket(PF_INET, SOCK_DGRAM, 0);
+    if(-1 == udp_socket_fd )
+    {
+        printf("socket() error\n");
+        return;
+    }
+
+    memset(&clnt_addr, 0, sizeof(clnt_addr));
+    
+    clnt_addr.sin_family = AF_INET;
+    clnt_addr.sin_addr.s_addr = inet_addr("192.168.0.1");//方式1
+    clnt_addr.sin_addr.s_addr = htonl(0xC0A80001);//方式2
+    clnt_addr.sin_port = htons(UDP_LISTEN_PORT ); 
+}
+
+
+int main()
+{
+	char message[]=“Nice.to.meet.you!”;
+	int srt_len;
+	socklen_t serv_adr_sz;
+	
+	UDP_Client_Socket_Init();
+	serv_adr_sz = sizeof(serv_addr);
+	while(1)
+	{
+		sendto(udp_socket_fd, message, strlen(message), 0,  (struct sockaddr*)&clnt_addr, sizeof(clnt_addr) );
+		str_lent = recvfrom(udp_socket_fd , message, strlen(message), 0,  (struct sockaddr*)&clnt_addr, &serv_adr_sz);
+		printf("Message from server: %s",message);
+
+	}
+	close(udp_socket_fd);
+	return 0;
+}
+
 
 ======================================================================================================================
 # C++
