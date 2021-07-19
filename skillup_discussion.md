@@ -1713,3 +1713,983 @@ order of discussion :-
 -  
 
 --------------------------------------------------------------------------------------------------------------------------------------------------------------
+# WiFI
+
+so Wi-Fi is nothing but , it is just a market name of the standard IEEE 802.11 
+so nowadays we are heading to our wireless network so the idea here it is just a lan but without wires so we
+
+in wireless network we usually use unlicensed we use unlicensed frequency
+
+of the ism ban and low-power, it is because to provide services in cheap and to provide service to the more people .
+if we use unlicensed frequency if they are available free for free in the iSM band so it will be cheap to provide Wi-Fi services and low-power because
+then we will be able to provide services with more number of people there are
+various techniques and wireless network 802.11,Bluetooth and UWB and so on.
+802.11 is Wi-Fi is a standard which provides standard of wireless LAN which cover two
+layers physical layer and the data link layer fine .
+so in this standard we have two kinds of services one is BSS basic service set ,the second is ESS extended services
+
+what is BSS 
+BSS is just a unit or a building block so we have multiple stations which can communicate with each other without any wires .so this form a basic building block these these piers these have without wires they can communicate with each other fine so this station can be mobile or stationary so this form a basic building
+this station covers the range in this circle so this station can communicate wirelessly in this set so this form a basic building block or BSS in this we can have a optional centralized station also which we call as access point it is optional if we have an access point we call this architecture either Infrastructure architecture and the BSS without access point is called ad-hoc architecture 
+
+so why do we have access point is if we have a centralized base station it became easy for us to communicate if we have a centralized Authority which can communicate with this station so it make it make us it makes easy to communicate 
+
+so if you have access point we call it an infrastructure architecture otherwise it does up ad hoc architecture 
+as it is a wireless network the range of this device in which they can communicate is very less so the idea is to connect various BSS so that each station can communicate with a larger number of stations so what we do is we have the second type of services which we call an ESS extended services it is nothing but a connection of various BSS but we will be able to connect these BSS only if we have an access point in that fine so that why I was saying that if we have an access point it make us easy it make
+easier to communicate with a larger number of people so so what we do is we have multiple BSS and all of these BSS have an access point can there are
+various stations now my station can be a part of one or two BSS that is not a problem now so this circle this is not one BSS and these nodes can communicate
+with each other violently but what if this node want to communicate with this node since this node cannot communicate with this node because it is outside
+it's strange so what we can do is all these access point are connected to each other with a wired network which we call as distributed system now this
+distributed system can be any wired line 802 dot one doesn't specify the staff the while and which we have to use here it can be Ethernet also anything which
+you want to use here so if this node want to communicate with the station which you are in this rate which are in the range of this node it can
+communicate them with them directly otherwise if this node want to communicate with the other station which is outside stage it then it can communicate via access point so if this node want to communicate if this node it will communicate why it will communicate via this route and if this note want to communicate
+with the node inside the strain it can communicate directly now the advantagenof having a wired network here is that
+this wild land can be connected to any
+server or hub or router or anything so
+in this way this node can have access to
+the whole of the network fine okay so
+the based on the based on the mobility
+based on mobility we have the we have
+three types of station or no one is no
+transition nodes VSS transition stations
+and the ESS transition so if a station
+has the capability to move inside this
+BSS its BSS only then we called it that
+station as a no transition station if a
+node or a station has capability to move
+to the era other gases which are a part
+of the same ESS then that station will
+be called as BSS station BSS transition
+station means it can it can move within
+the BSS which are a part of the single
+ESS and if the station has capability to
+move outside its ESS also we call it an
+ESS transition station
+but while station move from one basis to
+the other or from one ESS through the
+other ESS iya a 22.1 one doesn't
+guarantee that the connections will
+remain continual during the move so
+during the move the
+the connection can be disconnected but
+out of the move you will be able you
+will be again connected so this standard
+is fine to layer physical layer and data
+link layer in physical layer this
+standard has various specification so
+based on the encryption and encryption
+scheme and coding scheme or the
+multiplexing scheme we have various
+version of a 2.1 one a 2.8 or 2.11 a a 2
+2.11 be a to do dot Vinci and datalink
+earlier we have two parts I'm a medium
+access control layer and the logic link
+layer control in the medium in the Mac
+layer we have two sub layers DCF
+distributed coordination function and
+the point coordination function so a two
+2.11 provide two kinds of services
+contention free services and the
+contention based services so contention
+free services are optional so
+distributed coordination function
+basically provide contention based
+services so this is compulsory but if we
+want to to have contention free services
+we can have a PCF running on top of DCM
+fine so we will learn about the DCF
+first and then we move hide ok
+so let's come to the collector let's
+consider a situation a station enter a
+network now this station can be in the
+range of various access point so to
+which access point this station can
+associate so so this station can
+associate itself with this access point
+as well as scan this access point so the
+process or the technique by which the
+station associate itself to one of the
+access point within its reach is called
+scanning
+whenever a station enter a network it
+has to it has to do scanning to
+associate itself with one with one of
+the access point or suppose this station
+is initially associate itself with this
+access point and after some time it
+became unhappy unhappy with this access
+point so then also it can associate
+itself with the other access point so
+this process called scanning by this
+station associate itself to one of the
+access point so what is some steps we
+have to follow to do scanning is first
+this station the sand of proof frame so
+this station will send up proof frame
+and all of the access point which are in
+the range of this station will get this
+Pro frame then all the access point
+which are in the reach of this station
+will send a response frame all access
+point after getting all the probe lessor
+all the probe response frame this
+station will associate itself with one
+of the with with one of the AP so this
+station will select one of the AP and it
+will send Association request to that X
+point station will send
+frame to that AP so let's say this
+station send proof frame to all this
+access point and then all these access
+point will send probe response frame
+after getting all the response probe
+response frame this station will choose
+one of the SS file he want to associate
+itself with so let's say it choose this
+access point then this station will send
+Association request frame to this access
+point and this access point will send
+Association response frame to this
+station and the connection is built ap
+will send Association response frame so
+this is called scanning basically this
+is called active scanning why actor
+because in this the station approaches
+the access points first and then access
+point apply but there is other kind of
+scanning which we call as passive
+scanning so time to time all the exist
+point will send a beacon frame becomes
+frame it is an advertisement by this
+access point which tells the capability
+its capability to each of this station
+so by that this access point will send a
+beacon frame which address a advertises
+its capability to say to this station
+and then if this this station want to
+associate itself with this access point
+it can send the associate respond a
+request request frame to this access
+point so this type of scanning is called
+passive scanning now we talk about the
+first sub layer of mac layer which is
+DCF distributed coordination function so
+this is a compulsory service and this
+DCF provide contention based service
+what do you mean by contention based
+service it means multiple station
+content it contained among each other to
+get access of the channel for that it
+uses csma/ca carrier sensing multiple
+axis collision avoidance not collision
+detection
+unlike in wire we use csma/cd carrier
+sensing multiple axis collision
+detection actually collision detection
+is a better technique because of if we
+can detect the collision we can do D
+transmission and other thing but in the
+violence Network we cannot do pollution
+detection and that's why we have to go
+with collision avoidance there are
+reason in that envious Network we cannot
+use collision detection okay so if you
+remember that in Ethernet when we used
+csma/cd how do we detect the collision
+in that we have a wired LAN when the
+station is connected to this while it is
+sending the data it is also listening to
+the channel while sending the data it is
+also listening to the channel and if I
+mean if it lessens some other frequency
+it detects that there is self collision
+so in order to detect collision my
+station has to be full duplex that means
+it is capable of sending and receiving
+signal at the same time but since as I
+said that Wi-Fi in Wi-Fi we want to
+provide services to the more customer
+and we want to be it to be cheap as
+cheap as possible
+so Wi-Fi operate sets half duplex in by
+five so the station so if we want a
+station to be full duplex it will be
+more costly and Wi-Fi there for Wi-Fi
+operate sells half duplex so if I
+station sending our data on a channel it
+cannot listen at the same time so it's
+not possible for a station to detect a
+collision second reason by which we
+cannot able to detect collision is that
+in Wi-Fi as you see that this node is in
+the okay this node range in this BSS so
+the range of this station is this circle
+only so then when we want to detect
+collision every station must be aware of
+other station where which is sending the
+signal but in Wi-Fi if a standing the
+data and see sending the data is unaware
+that see standing the data because the
+strength of the signal will see sending
+the data the signal strength is less at
+a so when east anglia a sending the data
+while it reaches to see the signal
+strength is very low to detect collision
+so C will not be able to know that is
+also sending a data so this is another
+reason why we cannot do collision
+detection in Wi-Fi and the third reason
+is that there are problem like hidden
+terminal problem
+which we'll discuss later and due to
+that also will not be able to do
+collision detection in five five so we
+have to go for collision avoidance so in
+DS here we use csma/ca carrier sensing
+multiple access collision avoidance so
+what is the process now we have a source
+and we have a receiver or sender or
+receiver so since this s Ethernet we
+have carrier sensing multiple axes so
+when this sender or this source want to
+send some data to this receiver it first
+XJ it first sends the carrier if the
+channel is idle then it will send the
+data so as we have in the Ethernet in
+the starting of the carrier sense
+multiple access technique is the same
+we use back of time with a persistence
+strategy so initially if the station
+will set a back of time to zero and
+according to its purchases strategy it
+may be it may be one persistent non
+persistent or anything according to its
+persistence strategy it will sells the
+channel if the channel is idle if the
+channel is idle then this station will
+wait for some time
+which we call as d ifs time D ifs will
+distributed interframe space then after
+waiting for a D RDFS of an amount of
+time it send a control frame to receiver
+which we call as RDS request to send it
+the sender is asking the permission to
+receiver whether it it can send the data
+to this receiver or not after receiving
+the RDS signal from sender
+this it will wait throne is FS amount of
+time which we called as short interframe
+space and then it will reply with cts
+signal clear to send that means receiver
+is saying to the sender that it is ready
+to receive the data after getting the
+cts signal the sender again we'll wait
+for is FS amount of time and then it
+will send up data after receiving the
+data that is z1 will wait for is a per
+amount of time and will send an
+acknowledgment so let's look at more
+detail what we are doing is first of all
+source will sense the carrier whether
+the sir the sir whether the carrier is
+idle or not and for that it uses the
+same backup algorithm and the
+persistence strategy well it's fine that
+the pulse it find that the channel idle
+it wait for di FS amount of time so as
+you see after getting the channel idle
+also we are waiting for small period of
+time di FS here si FS here
+si FS why we are waiting for this period
+of time because now we have to do
+collision avoidance we have to take care
+that after sensing the channel also
+there may be chances for the collision
+so we are not thetaba sending the data
+or any signal we are waiting for some
+period of time and after that we are
+sending this control signal so you see
+that for collision avoidance which we
+are straightaway not sending the data
+packet first we are there is a kind of
+handshaking between the source and the
+receiver
+it first request whether the receiver is
+ready to take the data packet or not
+when did this kind of handshaking is
+done then only the source will send data
+packet to the receiver so this is
+another way how we are doing the
+collision avoidance fine so now you will
+be able to understand the sacrament
+clearly in this third the source will
+turn the back of algorithm and according
+to its purchases strategy it will self
+whether the channel is idle or not after
+sensing the channel is idle it will wait
+for the IFS amount of time which is
+distributed interframe space after
+waiting for this period of time it sent
+a request to send signal to the receiver
+and it started timer see in this video
+we have it how do we know whether the
+idea signal is received by the receiver
+or not they could be a collision in
+between for that well it send an RTS
+signal to the receiver it starts a timer
+so if the cts signal is received before
+time out then if the cts signal is
+reached is received before time out then
+only will process afterward otherwise
+what it will what we will do will
+increase the if the cts signal is not
+received before time out we will
+increase the back of time algorithm back
+of time and after again wait for that
+back of time and the processor again
+start if the CTS is signal is received
+before time out it means that the
+receiver is ready to take the data frame
+then also after receiving the CTS signal
+we are waiting for is FS amount of time
+again for collision avoidance after
+waiting for I guess FS amount of time
+this send a data frame and now again
+because of the collision we start a
+timer so if we get an acknowledgment
+before time out then it's a success and
+the packet is received if they don't get
+the acknowledgment before time on a
+what we'll do we'll increase the back of
+time and the process will start again in
+the meantime if we reach after
+increasing the back of time if the limit
+is reached we can't do anything and we
+have to abort the process so this is the
+whole picture by two Khalifa collision
+avoidance we are waiting for short
+period of time and we are finally or we
+are doing of handshaking between the
+sender and receiver before sending the
+data packet
+apart from collision avoidance waiting
+for this period of time is important
+because as I said in the Wi-Fi is Wi-Fi
+station our station are half duplex so
+it may need to change its set from
+signing straight to the receiving state
+so for that some amount of time is
+needed so for that also the before
+signing of data packet or before
+listening we wait for some period of
+time and these these timings are
+important for priority suppose two
+station there are two station which
+sells the channel at the same time so
+they both will find the channel idle so
+if the packet which have two so we can
+give priority to the station fine
+so see this is one sender and this is
+one receiver it may be maybe this sender
+is not sending to this receiver so this
+is one sender and this is one receiver
+this receiver has to send
+acknowledgement packet or cts signal and
+this sender has to send RTS or data
+packet or so if they both station sells
+the channel at the same time they both
+find they both will find it idle then
+this station
+because this station suppose it want to
+say it want to send RT signal it will
+wait for the
+amount of time and since this receiver
+want to send an acknowledgment or CTS it
+will wait for is FS amount of time so
+now if they want that if both if these
+two stations sense the channel at the
+same time and we want that this receiver
+should send the packet first because it
+is sending an acknowledgment or the
+clear to send signal so we want to give
+priority do priority to the
+acknowledgement packet so what we can do
+we can make di FS bigger than as ifs
+which is generally the case
+so di FS is bigger than as ifs so if
+sender or another receiver is accessing
+the channel at the same is sensing the
+channel at the same time because it will
+wait for more more amount of time
+receiver will succeed and it will send
+the acknowledgement packet first before
+sender can send the RTS packet fine
+so these intervals are very important to
+give the priority to the packets for
+avoiding the collision and to switch
+between the receiving state and the
+sending state for collision avoidance we
+also want when this station is sending
+some data to this station we want that
+other station should not send data in
+between to avoid collision so when this
+station is sending some data to this
+station how do other station know that
+they they don't have to send any data so
+for - then for that also
+this handshaking helps when this station
+is an RTS packet to this station the all
+the station which are in the range of
+this sort will hear this RTS packet and
+the in this RDS packet we have a field
+called duration field in which it is
+given the time amount for which this
+these two stations want to occupy the
+channel so when so when the other
+station which are in the range of this
+source read this RTS signal they know
+that the this amount of time the channel
+is going to occupy so they start a
+vector called nav network a location
+vector so whenever the other station
+here RTS or CTS and in in these packets
+there is a field called duration field
+in which the amount of time this
+transmission is going to take place the
+time is there so when the other station
+here this ideas packet it starts it's an
+every time this is a timer or we call it
+a network or location vector so for this
+period of time other station they are
+not going to say even sense the channel
+they will sit idle to avoid collision so
+we can add one more thing here that
+before sensing the channel before
+sensing the channel the station circuits
+and every timer if nav timer is expired
+then only it sells the channel otherwise
+it wait for its I Navy to get expired
+this is also meant for collision
+avoidance so in Wi-Fi we have two
+problems one is called hidden terminal
+problem and that is called exposed
+station problem so what is hidden
+terminal problem
+let's say there are three station B a
+and C the range of P is this circle and
+the range of C
+if this certain fine so let's consider a
+case when be bound to send some data to
+a sc1 to send some data to a big beep on
+to transmit some data to a and C also
+bound to transmit some data to a but B
+and C are hidden from each other they
+don't know about each other
+so when B is transmitting some data to a
+C don't know that is receiving some data
+from B so it so the both can start
+sending data at the same time and there
+will be apparition so this is called
+hidden terminal problem because B and C
+are unaware of each other they can they
+can both send data at the same time
+which will lead to collision fine so how
+does our this handshaking Lam this
+handshaking signals help in avoiding
+this problem is suppose B and C sends
+the channel at the same time fine
+and they both will find it idle so B so
+B will first send RTS signal to a and C
+also send RTS signal to a fine after
+after listening to the audio signal from
+both the side a decide whichever data
+heave on the packet first so he will
+send them suppose this is called RTS B
+then this is our DSC it will send CTS
+signal to B so these two station since
+they want to communicate with a they
+first send an RTS signal to a and a will
+decide that the which which request it
+it's why it want to accept
+it's end and CTS signal for that but
+friends a sanded CTS signal-c is also in
+the range suppose Avon to send CTS
+signal to be but says see you can also
+listen to the CIT C can also listen to
+the CTS signal with a send a CTA signal
+to be C can also listen to that
+signal so C know that there there may be
+some hidden know which want to
+communicate with a so it will stop
+signing the data so this hidden terminal
+problem can be solved by RTS and CTS
+signals okay so the Expo second problem
+we have is exposed station problem this
+is a Revere reverse of the previous
+problem in this problem station is not
+able to shine data even when channel is
+idle so let's consider one example this
+is one receiver this is one sender this
+is another sender and this is another
+receiver okay
+so let's consider this case these are
+four station the range of this station
+is from this station to this station the
+range of s1 is from this to this range
+from s2 is this and likewise you know
+currently s1 is transmitting data to r1
+and now as to want to transmit some data
+to r2 but but huh
+since s2 is in the range of s1 when s1
+is sending data to are one has to assume
+that it cannot send the data to r2
+because someone in its range is san
+some data but if you see there is no
+problem as to can send data in to r2
+because the channel is there is no
+interference as to can easily send data
+to our - it will not interfere with the
+transition over here but actually s2
+will not send because it is hearing the
+transmission by s1 because as to is in
+the range of s1 s2 is in the range of s1
+so when s1 is transmitting data to R 1 s
+2 is listening to that so it assumed
+that it cannot send data to any station
+but it's not the case as - it can easily
+send data to r2 because there is no
+interference so this is called exposed
+station problem because of this
+transition this station is exposed to
+the entire network it is not able to
+transmit data to r2 so how to deal with
+this problem
+so the RTS and CTS signal which I told
+you about briefly can solve this problem
+Parshin only partially so when s1 want
+to communicate with r1 it first sell an
+RDS signal to r1 s1 first send an RTS
+signal to Arvin and since s within the
+range of s1 s2 will also listen to that
+RDS
+fine but when Arvind reply to ask fun
+with a serious signal then s2 will lost
+listen to it see tears because s2 is not
+in the range of r1 so for this
+transmission as to will receive the RTA
+signal but it will not receive the cts
+signal so by this as two cans as to can
+detect that this is an exposed station
+problem so it can send data to r2 there
+is no problem it can send data to r2 so
+RTS and CTS signal can solve this
+problem so with the help of ideal and
+CTS signal as to can detect the Expo
+station problem means that as to can
+detect that s1 is communicating with an
+OLE which is not interfering the node it
+he want to communicates with so what it
+will do it will send an RTS signal to
+our - but if s1 and s2 are not
+synchronized if s1 and s2 are not
+synchronized what do you mean by
+synchronized means if their data rate
+are different or their packet sizes are
+different so if s1 and s2 are not
+synchronized then when s to send an RTI
+a signal to r2 and r2 send a CTS signal
+to s2 this cts signal will not be able
+to listen s2 will not be able to listen
+this cts signal if s1 and s2 are not
+synchronized because this cts signal
+will be collide and if their data rate
+are different and packet size are
+different then as to will not be able to
+listen this cts signal and
+as to will not be able to communicate
+with our two so this is this problem is
+called expose station problem means even
+if the channel is idle s2 is not able to
+communicate with our two okay until now
+we talk about DSF sub layer of mac layer
+which provide contention based services
+and it is compulsory to provide but
+there are some circumstances in which I
+want to give priority priority to some
+station to get access to the channel
+suppose I am running only D a DCF
+protocol so in that all of these station
+are running csma/ca protocol so any of
+these station can get access to the
+channel but what if this station want to
+send some time-sensitive frames means it
+is important to get to get channel by
+this station first but if I am running
+only DS here there is no mean that time
+I can guarantee that this station will
+get the channel any of these station
+which are competing with with it can get
+access to the channel so for this this
+kind of scenario when I want to give
+priority to some station to get access
+of the channel
+what we do is centralized base station
+which is access point it run PCF PCF
+protocol which provides contention free
+services so this access point will pull
+among the station to which it want to
+give contention free services means it
+will pull this this station if if access
+point born that this station should
+deliver its pac at first without any
+contention it will pull this station and
+it will tell other station to keep quiet
+till that period of time so they will
+remain idle and only in that period only
+this station will send the frame so how
+access point run this algorithm is the
+same way so it will first sense a
+carrier if the channel is idle it will
+send it will wait for the IFS amount of
+time what is p NFS PCF interframe space
+it will fail for that period of time
+after that it will send up be conferring
+in the beacon frame there is an
+information that access point bond to
+both
+this station to provide contention free
+services so when access point sent the
+beacon frame in the whole VSS the
+station which is pulled it will be quiet
+but the other station we'll start there
+nav vector and every timer which is
+network allocation vector what that does
+mean well until the nav vector and every
+timer is there all the station will not
+even sell such an ax
+they even remain idle in that way this
+pole station will get chance to deliver
+its frame without any contention so when
+these others say these other station
+listen to the beacons frame they will
+start there lav vector after weakens
+frame the AP will wait for as ifs amount
+of time short interframe space after dad
+it recenter pool frame to make ready the
+pole station to send its frame after
+receiving the pooled polled frame pool
+frame by access point this pole station
+will wait for again wait for is s ifs
+amount of time short interframe space
+time and after that it will send an
+acknowledgment that it here it has
+successfully received the pole frame
+pole frame and it will send the data
+without any contention after receiving
+the data after receiving the data so
+this station will send data to the
+access point and which will be delivered
+to this wide land to the whole network
+after receiving the packet from this
+pole station the AP will wait for is s
+ifs amount of time and it will send an
+acknowledgment after this transmission
+is over it has to inform other station
+that the contention free services it
+want to provide it's over
+so access point this kind of contention
+free frame to all the station and when
+are these other station will receive the
+contention free contention free frame
+from the access point they will or they
+will end their nav vector and
+again the contention based services will
+start so this is that's why we use point
+coordination function just I said that
+we want to give priority to
+acknowledgement packet more than the
+data packet for that what we did is that
+s ifs timer is less than D ifs timer
+when a station want to send a data
+packet it has to wait for D ifs amount
+of time and when a station has to send a
+acknowledgement packet it has to wait
+for sa effects amount of time if s ifs
+amount of time is less than the ifs
+amount of time so if it happens that
+these both the station access the
+channel or sensor channel at the same
+time acknowledgement ACK the station
+which which is standing acknowledgment
+packet will get the channel first
+because s ifs is less than the offense
+and it will send the packet first so in
+this way we are giving priority to the
+acknowledgement packet more than the
+data packets in the same way
+what if access point want to start the
+contention free services and at the same
+time this station is also trying to send
+the packet so access point and these
+other station sends the channel at the
+same time and they both find channel
+idle but after sensing the channel ap
+will wait for P ifs amount of time and
+these other station will wait for D ifs
+amount of time if I want to give
+priority to the access point so that is
+the contention free services will start
+earlier P ifs has to be smaller than D
+ifs if in the saw okay so if other these
+are the other station and access point
+even if this as the channel at the same
+time access point will get access to the
+channel first because pif it is
+more than di FS in this way with time
+viselli uh we choose the timing of these
+this is space
+Sifl di fnn be ifs okay so this is all
+about the to sub layer of Mac in the
+Wi-Fi in Wi-Fi fragmentation is also
+allowed since the channel is noisy if my
+data packets are very long it is her
+then if the it is it got corrupted I
+have to Sri said II transmit the whole
+big bracket so it is better if I send
+the small packet so in Wi-Fi the
+fragmentation is allowed so we now talk
+about the frame format all these things
+which we are going to learn now you need
+not to mug up you just get the beep idea
+and if the gain question came on this
+you will be able to do fine so in the
+frame format these are the particular
+fields two bytes are given for frame
+control then we have a D means duration
+then we have address 1 address to
+address 3 sequence control which is a
+sequence number address for frame body
+and the F here which is a checksum so in
+the frame control which are thought to
+by they are part of a Assam fields the
+first field is protocol version then we
+have type so in I per in Wi-Fi we have
+various type of frame for example we
+have management frame so if you remember
+in the starting I told you about that if
+the station enter in the network it have
+to associate itself with a access point
+for that it sent the proof frame
+associated request ramp request frame
+proof frame associated request frame all
+these are management frame next type of
+frame which we have a control frame
+which are RTS CTS acknowledgement frame
+all these are control frame and then we
+have a data frame so in frame control we
+have protocol version then we have we
+have to specify which type of frame is
+this then in the particular type also we
+have various subtypes so for example if
+the
+typist control frame it could be an RTS
+frame CTS frame or acknowledgement so we
+have to specify it subtypes then we have
+these two particular bits which means to
+D s and from DS D s means distributed
+system distributed system is nothing but
+the via LAN which we have in our ESS so
+these two bit decide what are these four
+address going to be there in the body of
+this frame fine okay so I will define it
+then define them later so after frame
+control we have duration field which is
+of two bytes so in case of RTS signal
+RTS packet or cts packet we have to
+specify the duration of time we want to
+occupy the channel so for that we have
+the duration field we specify that the
+time interval we want to occupy the
+channel in this field based on these two
+field we have these four addresses then
+for synchronization we have sequence
+number and for error detection we have
+checksum okay so these two bit decide
+what are these four address going to be
+there so if the bit these to beta 0 0
+what do you mean by 0 0 if 2d as bit is
+0 means a packet is not going to
+distributed system so actually the
+complete picture is there so these are
+the station and this is the ESS fine so
+it could be the case there's this
+station want to communicate with this
+station so when this station want to
+communicate with this station it can
+communicate it right directly because it
+is in the range of its BSS fine so it
+the the frame need not to go to the
+distributed system so in this case both
+this bit going to be 0 it means the
+packet or the frame is not going to
+distributed system and is not coming
+from distributed system fine
+so based on that we have these 4 status
+so these are the 4 addresses in address
+1 we
+the address of the next destination so
+in data link layer the packet go
+hop-by-hop
+though we in address one in address one
+field we specify the address of the next
+destination or the next hop in address
+to we specify the address of previous
+hop or the previous destination in
+address three we provide the final
+destination address and in writers for
+we have original source address so in
+the first case when the packet is not
+going to distributed system and not
+coming from distributed system means the
+packet is communicating with the station
+directly this case in this case what is
+the address one means the address of
+next destination
+it is the final destination it want to
+communicate so in the address one we
+have the destination address in address
+to we have to write previous destination
+address which is the source itself in
+address three in this case we mentioned
+the bssid so if this station is
+communicating with this so it is in the
+this circle BSS so we have to specify is
+the bssid in this case and there is no
+need to specify the original source
+because destination address to the
+specifying the original soul so in this
+particular case I just for this nun in
+the second case we have to D as bit 0
+and from Dias bit 1 means the packet or
+the frame is not going to distributed
+system but it is coming from distributed
+system so so this is the case so this is
+a distributed system so the packet is
+coming from distributed system to this
+station so the packet is coming or the
+frame is coming from access point to
+this to this station
+so in address 1 we place the destination
+in address two will provide the standing
+API address sending AP address address 3
+we provide the source address and the
+address for is not here the third case
+is the packet or the frame is going to
+distributed system but it is not coming
+from distributed system means it is this
+case the
+frame is going from station to this
+access point fine
+so in address one will place the
+receiving access point address in
+address to we will place the source
+address in address three will place the
+destination address and address will be
+none here and the final case is the
+packet or the frame is going to
+distributed system and it is coming from
+distributed system so this is basically
+this case in the land the packet or the
+frame is going from one access point to
+the other access point so in this case
+the address one will have the receiving
+access point address address two will
+have sending a access point ideas at the
+three will have destination address and
+address for will have the original
+source address so this is what - these
+two bit decide what are the four
+addresses we are going to have and SC
+will be the sequence number and body
+will range from zero to two three one
+two byte and there will be Sander crc32
+checksum of the four byte this is what
+we have to do about the frame format
+please don't mug up this frame these
+fields and all these byte etcetera you
+just need to get the field key there are
+some types of types there are two days
+bed from dias bed and the address are
+placed accordingly you need to know that
+part only okay now we talk about the
+physical layer
+I don't think actually this part is not
+important for gate perspective gate
+perspective so I will just give the very
+brief idea to just give you an idea okay
+so in physical layer in I w8o 2.1 we
+have various it specification according
+to the multiplexing scheme we are using
+and coding scheme we are using and the
+security standard we are using we have
+various specification of 8 or 2.1 months
+so we have a two 2.11 a in which the
+bandwidth feared which we are using is
+five point seven to five gigahertz we
+are using orthogonal frequency-division
+multiplexing as an Wireless encoding
+scheme we are using phase shift key as a
+modulation scheme that speed varies
+from 6 to 54 megabit per second and the
+range is 25 to 75 feet in 802 dot burn
+1b specification the bandwidth is 2.4
+gigahertz and the virus encoding scheme
+a scheme is DSS the modulation scheme is
+phase shift key the speed range from 5.5
+to 11 Mbps and the range is from 100 to
+200 feet in the a to 2.1 1g
+specification the bandwidth is 2.4
+gigahertz and the speed is 54 Mbps and
+the encoding scheme which we are using
+is OFDM the important part here is just
+that we are using unlicensed Bandhan I
+am so I told why we are using a licen
+band so that it is available free of
+course to provide cheaper services
+cheaper so in physical layer we are
+using this encoding scheme FHSS
+frequency hopping spread spectrum and it
+is used in original WLAN standard ieee
+802 dot 1 1 we have also D Triple S
+direct sequence spread spectrum which is
+used as an encoding scheme in a 2 2.11 B
+we have OFDM orthogonal frequency
+division multiplexing which is used as
+an encoding scheme in a 2 2.11
+G in the wireless network security is
+main concern because you are using
+unlicensed band so it is open to all
+though your data is not secure so you
+have to go for security it's a main
+concern here so in turbulent security
+Center we have WEP which is by it
+equivalent privacy protocol and it is
+used as a security personal e it is used
+as security protocol in 802 dot 1 1 B
+and it uses rc4 as an encryption
+algorithm we have Wi-Fi protected access
+and WPA it is a tamper error a key
+integrity protocol and encryption the
+main idea here is that encryption
+encryption algorithm changes the key
+dynamically for each data transmission
+so the key will be changing dynamically
+for each data transmission this is the
+idea we are here and the encryption
+algorithm is same RT 4 we have the
+second
+wpa wpa2 in which we use instead of rc4
+encryption algorithm we use advanced
+encryption encryption standard AES which
+is stronger than our c4 so this is what
+about the physical physical layer it was
