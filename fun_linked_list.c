@@ -13,7 +13,7 @@ node * head=NULL;
  		*point to new address returned by malloc using head pointer as start reference.
 		*store "NULL" to the 'forwardlink' of new mem block and, store "value" to data memeber 'id'.
  	+if it is not the first node to be created/if alread n blocks with start reference exists then 
-		*store "head/start reference" to the 'forwardlink' of new mem block and, store "value" to data memeber 'id'.
+		*store "head/start reference" to the 'forwardlink' of new mem block[by this we have connected new node to beginning(Head)] and, store "value" to data memeber 'id'.
  		*now point to new address using head pointer has the start reference.
  *step3:return if necessary
  * */
