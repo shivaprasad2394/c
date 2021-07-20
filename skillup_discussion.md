@@ -398,7 +398,7 @@ Example:- a switch or any output device is attached with GPIO[input].
 
 # Big Endian V/S Little Endian
 
-**Endianess**:-Order of Bytes to store data in Memory and it Also describes the order of byte transmission.
+**Endianess**:-Order in which data Bytes are stored in Memory and it Also describes the order of byte transmission.
 - Big Endian:-MSB byte is stored first
 - Little Endian:-LSB byte is stored first
 
