@@ -396,6 +396,46 @@ Example:- a switch or any output device is attached with GPIO[input].
 **Dangling pointer**:-When the reference object is deleted or Deallocated without Changing the value of the pointer.it creates a problem because the pointer is still pointing the memory that is no longer available.
 
 **Wild pointer**:-A pointer Not initialized properly proir to its First use is Know as wild pointer.
+**malloc” or “memory allocation”** method in C is used to dynamically allocate a single large block of memory with the specified size. 
+
+- It returns a pointer of type void which can be cast into a pointer of any form. 
+- It doesn’t Iniatialize memory at execution time so that it has initializes each block with the default garbage value initially. 
+
+		Syntax:  
+		ptr = (cast-type*) malloc(byte-size)
+		For Example:
+		ptr = (int*) malloc(100 * sizeof(int));
+
+**calloc” or “contiguous allocation”** method in C is used to dynamically allocate the specified number of blocks of memory of the specified type. 
+
+- it is very much similar to malloc() but has two different points and these are:
+- It initializes each block with a default value ‘0’.
+- It has two parameters or arguments as compare to malloc().
+
+		Syntax: 
+
+		ptr = (cast-type*)calloc(n, element-size);
+		here, n is the no. of elements and element-size is the size of each element.
+		For Example: 
+		ptr = (float*) calloc(25, sizeof(float));
+		This statement allocates contiguous space in memory for 25 elements each with the size of the float.
+
+**realloc” or “re-allocation”** method in C is used to dynamically change the memory allocation of a previously allocated memory. 
+
+- In other words, if the memory previously allocated with the help of malloc or calloc is insufficient, realloc can be used to dynamically re-allocate memory. - - re-allocation of memory maintains the already present value and new blocks will be initialized with the default garbage value.
+
+		Syntax:  
+
+		ptr = realloc(ptr, newSize);
+
+		where ptr is reallocated with new size 'newSize'.
+
+		// Dynamically allocate memory using calloc()
+	    ptr = (int*)calloc(n, sizeof(int));
+
+        // Dynamically re-allocate memory using realloc()
+        ptr = realloc(ptr, n * sizeof(int));
+
 
 # Big Endian V/S Little Endian
 
