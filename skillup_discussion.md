@@ -321,9 +321,10 @@ Enum:- A userdefined data type  and it consist of a set of named constant intege
 A Type qualifier that prevents object from the compiler optimization.
 
 according to c standards:-
-      • A volatile object can be modified in ways unknown to the implementation.
-      • the value of the object can be changed at any time without any action being taken by the code.
-      • when a variable or object is declared volatile the compiler reloads the value from the memory each time it is accessed by the program.[i.e:-it prevents from cacheing a variable into registers]
+
+     - • A volatile object can be modified in ways unknown to the implementation.
+     - • the value of the object can be changed at any time without any action being taken by the code.
+     - • when a variable or object is declared volatile the compiler reloads the value from the memory each time it is accessed by the program.[i.e:-it prevents from cacheing a variable into registers]
       •reading the value from memory is the only way to check the unpredictable change of the value.
 
 	/*--------------------------
