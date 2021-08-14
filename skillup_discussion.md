@@ -457,6 +457,23 @@ Foo is a pointer to a function that takes 3 ints and returns an int pointer.
 	**Syntax**:- int*(*foo)(int,int,int)
 Ex:-
 
+	//Declaration of a pointer to a function that takes an integer 
+	//and returns an integer.
+	int (*f_ptr)(int);
+
+	//Assignment of a function foo to the function pointer f_ptr declared above.
+	f_ptr = foo;
+
+	//Calling foo indirectly via f_ptr, passing the return value of foo to r.
+	int r = f_ptr(v);
+
+	//Assigning an address of a function to the function pointer f_ptr,
+	//then calling foo by dereferencing the function pointer.  
+	f_ptr = &foo;
+	int r = (*f_ptr)(v);
+
+Ex:-
+
 	Void Do_operation(int (*op)(int x,int y)){
 	return op(X,Y);
 	}
