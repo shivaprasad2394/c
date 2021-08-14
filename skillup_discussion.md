@@ -953,6 +953,7 @@ return 0;
 }
 
 	O/P:-201
+	
 memcpy()  function is is used to copy a specified number of bytes from one memory to another.
 
 memset() just sets all pieces of memory to the same value.
@@ -993,6 +994,8 @@ The string: abcdef
 New string: abcdefabcdefabcd
 The string: abcdef
 New string: abcdefabcdef
+
+1)Set a bit:-num|=(1<<nth pos)	
 	
 Extra:-
 =======
