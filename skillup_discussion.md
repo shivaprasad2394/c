@@ -942,6 +942,46 @@ return 0;
 }
 
 	O/P:-201
+memcpy()  function is is used to copy a specified number of bytes from one memory to another.
+
+memset() just sets all pieces of memory to the same value.
+	
+memmove() function is used to copy a specified number of bytes from one memory to another or to overlap on same memory.
+
+Difference between memmove() and memcpy() is, overlap can happen on memmove(). Whereas, memory overlap won’t happen in memcpy() and it should be done in non-destructive way.
+	or
+The C standard specifies two functions for copying memory regions, memcpy and memmove. The important difference is that it is undefined behavior to call memcpy with overlapping regions. One must use memmove for that. As the names imply, memcpy copies data from one region to another, while memmove moves data within a region. (It’s also perfectly acceptable to memmove between different regions.)
+
+This subtle but important distinction allows memcpy to be optimized more aggressively. In the case of memmove between overlapping regions, care must be taken not to destroy the contents of the source before they are done copying. This is easiest to see with a naive implementation of a copy loop.
+
+	#include <memory.h>
+	#include <string.h>
+	#include <stdio.h>
+
+	char str1[7] = "abcdef";
+
+	int main()
+	{
+
+	   printf( "The string: %s\n", str1 );
+	   memcpy( (str1+6), str1, 10 );
+	   printf( "New string: %s\n", str1 );
+
+	   strcpy_s( str1, sizeof(str1), "aabbcc" );   // reset string
+
+
+	   printf("\nstr1: %s\n", str1);
+	   printf( "The string: %s\n", str1 );
+	   memmove( (str1+6), str1, 10 );
+	   printf( "New string: %s\n", str1 );
+
+	}	
+gives:
+
+The string: abcdef
+New string: abcdefabcdefabcd
+The string: abcdef
+New string: abcdefabcdef
 	
 Extra:-
 =======
