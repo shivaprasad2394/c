@@ -815,7 +815,117 @@ Access it like a normal array:-
 	   02     .text .rodata
    
 ================================================================================================
+Structures and union
 
+C structures and union - A structure is a user defined data type, which groups a set of data types. It is a collection of variables of different type under single name......
+
+Properties of Union
+
+Properties of Union - A union is utilized to use same memory space for all different members of union. Union offers a memory section to be treated for one variable type.....
+
+A)When we declare a structure or union, we actually declare a new data type suitable for our purpose. So we cannot initialize values as it is not a variable declaration but a data type declaration.
+
+#include‹stdio.h›
+int main()
+{
+	struct site
+	{
+		char name[] = "GeeksQuiz";
+		int no_of_pages = 200;
+	};
+	struct site *ptr;
+	printf("%d ", ptr->no_of_pages);
+	printf("%s", ptr->name);
+	getchar();
+	return 0;
+}
+
+B)In C, struct and union types cannot have static members. In C++, struct types are allowed to have static members, but union cannot have static members in C++ also.
+
+#include<stdio.h>
+struct st
+{
+	int x;
+	static int y;
+};
+
+int main()
+{
+	printf("%d", sizeof(struct st));
+	return 0;
+}
+
+C)Short array s[5] will take 10 bytes as size of short is 2 bytes.
+
+When we declare a union, memory allocated for the union is equal to memory needed for the largest member of it, and all members share this same memory space. Since u is a union, memory allocated to u will be max of float y(4 bytes) and long z(8 bytes). So, total size will be 18 bytes (10 + 8)
+
+struct {
+	short s[5];
+	union {
+		float y;
+		long z;
+	}u;
+} t;
+
+D)A structure variable can be assigned to other using =, but cannot be compared with other using ==
+
+E)hen we declare a union, memory allocated for a union variable of the type is equal to memory needed for the largest member of it, and all members share this same memory space. In above example, “char arr[8]” is the largest member. Therefore size of union test is 8 bytes.
+
+F)Since x and arr[4] share the same memory, when we set x = 0, all characters of arr are set as 0. O is ASCII value of ‘\0’. When we do “t.arr[1] = ‘G'”, arr[] becomes “\0G\0\0”. When we print a string using “%s”, the printf function starts from the first character and keeps printing till it finds a \0. Since the first character itself is \0, nothing is printed.
+
+union test
+{
+	int x;
+	char arr[4];
+	int y;
+};
+
+int main()
+{
+	union test t;
+	t.x = 0;
+	t.arr[1] = 'G';
+	printf("%s", t.arr);
+	return 0;
+}
+
+G)
+# include <iostream>
+# include <string.h>
+using namespace std;
+
+struct Test
+{
+char str[20];
+};
+
+int main()
+{
+struct Test st1, st2;
+strcpy(st1.str, "GeeksQuiz");
+st2 = st1;
+st1.str[0] = 'S';
+cout << st2.str;
+return 0;
+}
+
+	O/P:-GeeksQuiz
+
+	#include<stdio.h>
+struct Point
+{
+int x, y, z;
+};
+
+int main()
+{
+struct Point p1 = {.y = 0, .z = 1, .x = 2};
+printf("%d %d %d", p1.x, p1.y, p1.z);
+return 0;
+}
+
+	O/P:-201
+	
 Extra:-
 =======
 - **compiler** is a computer program that translates computer code written in one programming language (the source language) into another .
