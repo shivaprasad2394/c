@@ -2252,6 +2252,119 @@ Client
 
 https://blog.csdn.net/u013095415/article/details/81478806?utm_medium=distribute.pc_relevant.none-task-blog-2%7Edefault%7EBlogCommendFromMachineLearnPai2%7Edefault-2.control&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2%7Edefault%7EBlogCommendFromMachineLearnPai2%7Edefault-2.control
 
+	
+	/******************************************************************************
+
+                            Online C Compiler.
+                Code, Compile, Run and Debug C program online.
+Write your code in this editor and press "Run" button to compile and execute it.
+
+*******************************************************************************/
+
+#include <pthread.h>
+#include <stdio.h>
+#include <stdlib.h>
+/*
+Binary search using Pthread.
+Input :  list = 1, 5, 7, 10, 12, 14, 15, 18, 20, 22, 25, 27, 30, 64, 110, 220
+         key = 7
+Output : 7 found in list
+
+*/
+void *
+func (void *arg)
+{
+  // detach the current thread from the calling thread
+  pthread_detach (pthread_self ());	//pthread_self: used to get the thread id of the current thread.
+
+  printf ("Detached threadA detached thread does not require a thread to join on terminating.The resources of the thread are automatically released after terminating if the thread is detached.\n");
+
+  // exit the current thread
+  pthread_exit (NULL);
+}
+
+/*Mutex thread lock*/
+	void* trythis(void* arg)
+	{
+		pthread_mutex_lock(&lock);
+
+		unsigned long i = 0;
+		counter += 1;
+		printf("\n Job %d has started\n", counter);
+
+		for (i = 0; i < (0xFFFFFFFF); i++)
+			;
+
+		printf("\n Job %d has finished\n", counter);
+
+		pthread_mutex_unlock(&lock);
+
+		return NULL;
+	}
+int main ()
+{
+  int num = 0;
+  printf("enter choice\n1)pthread\n2)Message Quene\n3)Fork&pipe\n4)namedpipe\n5)Shared memory\n6)pthread syncronization");
+  scanf ("%d" & num);
+  switch (num)
+    {
+    case 1:
+      {
+	pthread_t ptid;
+	// Creating a new thread
+	pthread_create (&ptid, NULL, &func, NULL);
+	printf ("This line may be printed before thread terminates\n");
+	// The following line terminates the thread manually
+	// pthread_cancel(ptid);
+
+	// Compare the two threads created
+	if (pthread_equal (ptid, pthread_self ())
+	    printf("Threads are equal\n");
+	else
+	    printf ("Threads are not equal lets wait for child thread\n");
+
+	    // Waiting for the created thread to terminate
+	    pthread_join (ptid, NULL);
+	    printf ("This line will be printed after thread ends\n");
+	    pthread_exit (NULL);
+          
+      }
+    case 2:
+    {
+        /*
+A context switch is a procedure that a computer's CPU (central processing unit) follows to change from one task (or process) to another while ensuring that the tasks do not conflict. Effective context switching is critical if a computer is to provide user-friendly multitasking.*/
+    
+    	int i = 0;
+		int error;
+
+		if (pthread_mutex_init(&lock, NULL) != 0) {
+			printf("\n mutex init has failed\n");
+			return 1;
+		}
+
+		while (i < 2) {
+			error = pthread_create(&(tid[i]),
+								NULL,
+								&trythis, NULL);
+			if (error != 0)
+				printf("\nThread can't be created :[%s]",
+					strerror(error));
+			i++;
+		}
+
+		pthread_join(tid[0], NULL);
+		pthread_join(tid[1], NULL);
+		pthread_mutex_destroy(&lock);    
+    } 
+    case 3:
+    printf ("Case1: Value is: %d", num); 
+    default:
+	printf ("Default: Value is: %d", num);}
+	    
+return 0;
+    
+}
+
 ======================================================================================================================
 # C++
 order of discussion :-
