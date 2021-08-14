@@ -201,6 +201,17 @@ static extras:-
 
 Answer 582
 
+const:- a qualifier ,gives direction to the compiler that the value of declaring object could not be changed.[not modifiable]
+
+	•const int a------------>a constant integer.
+	•int const a------------>a constant integer.
+	•const int *a ==========>a pointer to constant integer-->[value constant]
+	•int const *a ==========>a constant pointer to integer-->[address constant]
+	•const int* const a \==>
+			      =========>constant pointer to a constant int.
+	•int const* a const /==>
+
+
 Incremnet & decrement Operator	
 =============================
 ++ / --
