@@ -954,7 +954,28 @@ G)
 	}
 
 	O/P:-201
-	
+
+usecase for union:-
+E.g.
+
+		Connection
+	     /       |       \
+	  Network   USB     VirtualConnection
+If you want the Connection "class" to be either one of the above, you could write something like:
+
+	struct Connection
+	{
+	    int type;
+	    union
+	    {
+		struct Network network;
+		struct USB usb;
+		struct Virtual virtual;
+	    }
+	};
+Example use in libinfinity: http://git.0x539.de/?p=infinote.git;a=blob;f=libinfinity/common/inf-session.c;h=3e887f0d63bd754c6b5ec232948027cbbf4d61fc;hb=HEAD#l74
+
+
 memcpy()  function is is used to copy a specified number of bytes from one memory to another.
 
 memset() just sets all pieces of memory to the same value.
