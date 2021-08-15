@@ -2444,7 +2444,121 @@ Client
 
 https://blog.csdn.net/u013095415/article/details/81478806?utm_medium=distribute.pc_relevant.none-task-blog-2%7Edefault%7EBlogCommendFromMachineLearnPai2%7Edefault-2.control&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2%7Edefault%7EBlogCommendFromMachineLearnPai2%7Edefault-2.control
 
-	
+
+A process is a program in execution.
+
+Each process contains everything required to run (or restart) the program:
+
+Address space — an abstraction for all memory available to that process. Address space contains program’s code and data required to run the program (static data, heap, and stack).
+One or more threads of execution (I’ll explain that term in detail later)
+Set of OS resources, for example opened files or network connections
+
+Each process contains a single or multiple threads of execution. If a process has a single thread, only one action can be performed at a time. If a process has multiple threads, it can perform multiple actions at the same time.
+
+A thread is a sequence of instructions that can be executed independently from other code/single cpu core
+
+Each thread contains all information necessary to execute it’s code. We need to keep track of 1) which part of the program is currently being executed and 2) what is currently stored in memory.
+
+That’s why each thread has its own program counter (a pointer that indicates which instruction will be executed next), CPU registers, and a stack.
+
+Threads within the same process share all other memory segments:
+
+heap — containing dynamically allocated variables
+text segment — containing program’s code
+data segment — containing global or static variables
+
+The most significant, practical difference is in how processes and threads communicate.
+
+In a multithreaded process, threads share memory. Thus, many threads can access and modify the same memory, which may lead to bugs that are very difficult to find.
+
+Processes don’t share memory in this way, they have to use inter-process communication instead.
+
+Creating a process is fairly resource-intensive. It is generally more efficient to use a single multi-threaded process than to spawn multiple single-threaded processes.
+
+
+What is a Deadlock?
+Junior 
+Top 21 Concurrency Interview Questions  Concurrency  21  
+Answer
+A lock occurs when multiple processes try to access the same resource at the same time. One process loses out and must wait for the other to finish.
+
+A deadlock occurs when the waiting process is still holding on to another resource that the first needs before it can finish.
+
+
+So, an example:
+
+Resource A and resource B are used by process X and process Y
+
+X starts to use A.
+X and Y try to start using B
+Y 'wins' and gets B first
+now Y needs to use A
+A is locked by X, which is waiting for Y
+Thread 1               Thread 2
+
+Lock1->Lock();         Lock2->Lock();
+WaitForLock2();        WaitForLock1();   <-- Oops!
+
+Deadlock ex:-
+Jack and Jill share a sparse kitchen that has only one of everything. They both want to make a sandwich at the same time. Each needs a slice of bread and each needs a knife, so they both go to get the loaf of bread and the knife from the kitchen.
+
+Jack gets the knife first, while Jill gets the loaf of bread first. Now Jack tries to find the loaf of bread and Jill tries to find the knife, but both find that what they need to finish the task is already in use. If they both decide to wait until what they need is no longer in use, they will wait for each other forever. Deadlock.
+
+
+Is there any difference between a Binary Semaphore and Mutex?
+Mid 
+Top 21 Concurrency Interview Questions  Concurrency  21  
+Answer
+A mutex (or Mutual Exclusion Semaphores) is a locking mechanism used to synchronize access to a resource. Only one task (can be a thread or process based on OS abstraction) can acquire the mutex. It means there will be ownership associated with mutex, and only the owner can release the lock (mutex).
+
+Semaphore (or Binary Semaphore) is signaling mechanism (“I am done, you can carry on” kind of signal). For example, if you are listening songs (assume it as one task) on your mobile and at the same time your friend called you, an interrupt will be triggered upon which an interrupt service routine (ISR) will signal the call processing task to wakeup. A binary semaphore is NOT protecting a resource from access. Semaphores are more suitable for some synchronization problems like producer-consumer.
+
+Short version:
+
+A mutex can be released only by the thread that had acquired it.
+A binary semaphore can be signaled by any thread (or process).
+
+
+What is a Race Condition?
+Mid 
+Top 21 Concurrency Interview Questions  Concurrency  21  
+Answer
+A race condition is a situation on concurrent programming where two concurrent threads or processes compete for a resource and the resulting final state depends on who gets the resource first.
+
+Because the thread scheduling algorithm can swap between threads at any time, you don't know the order in which the threads will attempt to access the shared data. Therefore, the result of the change in data is dependent on the thread scheduling algorithm, i.e. both threads are "racing" to access/change the data.
+
+Problems often occur when one thread does a "check-then-act" (e.g. "check" if the value is X, then "act" to do something that depends on the value being X) and another thread does something to the value in between the "check" and the "act". E.g:
+
+if (x == 5) // The "Check"
+{
+   y = x * 2; // The "Act"
+
+   // If another thread changed x in between "if (x == 5)" and "y = x * 2" above,
+   // y will not be equal to 10.
+}
+The point being, y could be 10, or it could be anything, depending on whether another thread changed x in between the check and act. You have no real way of knowing.
+
+In order to prevent race conditions from occurring, you would typically put a lock (Mutex or Semaphores) around the shared data to ensure only one thread can access the data at a time. This would mean something like this:
+
+// Obtain lock for x
+if (x == 5)
+{
+   y = x * 2; // Now, nothing can change x until the lock is released. 
+              // Therefore y = 10
+}
+// release lock for x
+
+
+ What is the meaning of the term “Thread-Safe”?
+Mid 
+Top 21 Concurrency Interview Questions  Concurrency  21  
+Problem
+Does it mean that two threads can't change the underlying data simultaneously? Or does it mean that the given code segment will run with predictable results when multiple threads are executing that code segment?
+
+Answer
+Thread-safe code is code that will work even if many Threads are executing it simultaneously within the same process. This often means, that internal data-structures or operations that should run uninterrupted are protected against different modifications at the same time.
+Another definition may be like - a class is thread-safe if it behaves correctly when accessed from multiple threads, regardless of the scheduling or interleaving of the execution of those threads by the runtime environment, and with no additional synchronisation or other coordination on the part of the calling code.
+
 	/******************************************************************************
 
                             Online C Compiler.
