@@ -853,47 +853,47 @@ Properties of Union - A union is utilized to use same memory space for all diffe
 
 A)When we declare a structure or union, we actually declare a new data type suitable for our purpose. So we cannot initialize values as it is not a variable declaration but a data type declaration.
 
-#include‹stdio.h›
-int main()
-{
-	struct site
+	#include‹stdio.h›
+	int main()
 	{
-		char name[] = "GeeksQuiz";
-		int no_of_pages = 200;
-	};
-	struct site *ptr;
-	printf("%d ", ptr->no_of_pages);
-	printf("%s", ptr->name);
-	getchar();
-	return 0;
-}
+		struct site
+		{
+			char name[] = "GeeksQuiz";
+			int no_of_pages = 200;
+		};
+		struct site *ptr;
+		printf("%d ", ptr->no_of_pages);
+		printf("%s", ptr->name);
+		getchar();
+		return 0;
+	}
 
 B)In C, struct and union types cannot have static members. In C++, struct types are allowed to have static members, but union cannot have static members in C++ also.
 
-#include<stdio.h>
-struct st
-{
-	int x;
-	static int y;
-};
+	#include<stdio.h>
+	struct st
+	{
+		int x;
+		static int y;
+	};
 
-int main()
-{
-	printf("%d", sizeof(struct st));
-	return 0;
-}
+	int main()
+	{
+		printf("%d", sizeof(struct st));
+		return 0;
+	}
 
 C)Short array s[5] will take 10 bytes as size of short is 2 bytes.
 
 When we declare a union, memory allocated for the union is equal to memory needed for the largest member of it, and all members share this same memory space. Since u is a union, memory allocated to u will be max of float y(4 bytes) and long z(8 bytes). So, total size will be 18 bytes (10 + 8)
 
-struct {
-	short s[5];
-	union {
-		float y;
-		long z;
-	}u;
-} t;
+	struct {
+		short s[5];
+		union {
+			float y;
+			long z;
+		}u;
+	} t;
 
 D)A structure variable can be assigned to other using =, but cannot be compared with other using ==
 
@@ -901,56 +901,57 @@ E)hen we declare a union, memory allocated for a union variable of the type is e
 
 F)Since x and arr[4] share the same memory, when we set x = 0, all characters of arr are set as 0. O is ASCII value of ‘\0’. When we do “t.arr[1] = ‘G'”, arr[] becomes “\0G\0\0”. When we print a string using “%s”, the printf function starts from the first character and keeps printing till it finds a \0. Since the first character itself is \0, nothing is printed.
 
-union test
-{
-	int x;
-	char arr[4];
-	int y;
-};
+	union test
+	{
+		int x;
+		char arr[4];
+		int y;
+	};
 
-int main()
-{
-	union test t;
-	t.x = 0;
-	t.arr[1] = 'G';
-	printf("%s", t.arr);
-	return 0;
-}
+	int main()
+	{
+		union test t;
+		t.x = 0;
+		t.arr[1] = 'G';
+		printf("%s", t.arr);
+		return 0;
+	}
 
 G)
-# include <iostream>
-# include <string.h>
-using namespace std;
 
-struct Test
-{
-char str[20];
-};
+	#include <iostream>
+	#include <string.h>
+	using namespace std;
 
-int main()
-{
-struct Test st1, st2;
-strcpy(st1.str, "GeeksQuiz");
-st2 = st1;
-st1.str[0] = 'S';
-cout << st2.str;
-return 0;
-}
+	struct Test
+	{
+	char str[20];
+	};
+
+	int main()
+	{
+	struct Test st1, st2;
+	strcpy(st1.str, "GeeksQuiz");
+	st2 = st1;
+	st1.str[0] = 'S';
+	cout << st2.str;
+	return 0;
+	}
 
 	O/P:-GeeksQuiz
 
 	#include<stdio.h>
-struct Point
-{
-int x, y, z;
-};
+	struct Point
+	{
+	int x, y, z;
+	};
 
-int main()
-{
-struct Point p1 = {.y = 0, .z = 1, .x = 2};
-printf("%d %d %d", p1.x, p1.y, p1.z);
-return 0;
-}
+	int main()
+	{
+	struct Point p1 = {.y = 0, .z = 1, .x = 2};
+	printf("%d %d %d", p1.x, p1.y, p1.z);
+	return 0;
+	}
 
 	O/P:-201
 	
@@ -990,10 +991,10 @@ This subtle but important distinction allows memcpy to be optimized more aggress
 	}	
 gives:
 
-The string: abcdef
-New string: abcdefabcdefabcd
-The string: abcdef
-New string: abcdefabcdef
+	The string: abcdef
+	New string: abcdefabcdefabcd
+	The string: abcdef
+	New string: abcdefabcdef
 
 1)Set a bit:-num|=(1<<nth pos)	
 	
@@ -1182,146 +1183,146 @@ Write your code in this editor and press "Run" button to compile and execute it.
 
 *******************************************************************************/
 
-#include<stdio.h> //word reverse code
-void swap (char * str,int first ,int last);
+	#include<stdio.h> //word reverse code
+	void swap (char * str,int first ,int last);
 
-int pattern_search(char *str,char *buf){
-int a=0,b=0,c=0;
-while(str[a]!='\0'){
-if((buf[b]==str[c]) && (buf[b]!='\0')){
-	c++;
-	b++;
-}
-else{
-	if(buf[b]=='\0')
-		return 1;
-a++;
-c=a;
-b=0;
-}
-}
-return -1;
-}
-
-void reverse_string(char *str){
-int first=0;
-int len=strlen(str);
-len--;
-while(first<len){
-//a=a+b-(b=a);
-str[first]=str[first]+str[len]-(str[len]=str[first]);
-first++;
-len--;
-}
-printf("after=%s\n",str);
-}
-void swap(char * str,int first ,int last){
-	while(first<last){
-		str[first]=str[first]+str[last]-(str[last]=str[first]);
-		first++;
-		last--;
-		printf("\nafter swap=%s",str);
+	int pattern_search(char *str,char *buf){
+	int a=0,b=0,c=0;
+	while(str[a]!='\0'){
+	if((buf[b]==str[c]) && (buf[b]!='\0')){
+		c++;
+		b++;
 	}
-}
-void reverse_word(char *str){
-	int f=0;	//first position
-	int l=0;	//last position
-	int flag=0;	//indicates to swap word characters within word range/length
-	int j=0;	//f+1 position or next position of head
-	
-	l=printf("%s",str);//dont change it will affect
-	l--;
-	printf("\nstr len=%d\n",l);
-	swap(str,f,l);
-	
-	l=f=0;					//reset and start with individual word
-	
-	while(str[l]!='\0'){	//keep swaping until end
-		if(str[l]==' '){	//if last is pointing to space dont swap skip
-			if(flag>0){		//probably an indication skip and move on
-				f=j+1;		//skip and move to next char in word
+	else{
+		if(buf[b]=='\0')
+			return 1;
+	a++;
+	c=a;
+	b=0;
+	}
+	}
+	return -1;
+	}
+
+	void reverse_string(char *str){
+	int first=0;
+	int len=strlen(str);
+	len--;
+	while(first<len){
+	//a=a+b-(b=a);
+	str[first]=str[first]+str[len]-(str[len]=str[first]);
+	first++;
+	len--;
+	}
+	printf("after=%s\n",str);
+	}
+	void swap(char * str,int first ,int last){
+		while(first<last){
+			str[first]=str[first]+str[last]-(str[last]=str[first]);
+			first++;
+			last--;
+			printf("\nafter swap=%s",str);
+		}
+	}
+	void reverse_word(char *str){
+		int f=0;	//first position
+		int l=0;	//last position
+		int flag=0;	//indicates to swap word characters within word range/length
+		int j=0;	//f+1 position or next position of head
+
+		l=printf("%s",str);//dont change it will affect
+		l--;
+		printf("\nstr len=%d\n",l);
+		swap(str,f,l);
+
+		l=f=0;					//reset and start with individual word
+
+		while(str[l]!='\0'){	//keep swaping until end
+			if(str[l]==' '){	//if last is pointing to space dont swap skip
+				if(flag>0){		//probably an indication skip and move on
+					f=j+1;		//skip and move to next char in word
+				}
+				swap(str,f,(l-1));
+				flag=1;
+				j=l;
 			}
-			swap(str,f,(l-1));
-			flag=1;
-			j=l;
+			l++;//update last position to end of each word
 		}
-		l++;//update last position to end of each word
+		if(str[l]=='\0'){//probably i am swaping internal char of word 
+		f=j+1;
+		swap(str,f,(l-1));//k=l-1;
+		}
+		printf("after each rev=%s\n",str);
 	}
-	if(str[l]=='\0'){//probably i am swaping internal char of word 
-	f=j+1;
-	swap(str,f,(l-1));//k=l-1;
-	}
-	printf("after each rev=%s\n",str);
-}
 
-void main(){
-	char str[25];//character array
-	char str1[25];
-	printf("enter:\n");
-	gets(str);
-    printf("enter:\n");
-	gets(str1);
-	//reverse_string(str);
-	//each_word_swapper();
-	int a=pattern_search(str,str1);
-	if(a==1)
-	printf("pattern");
-	printf("not pat");
-}
-/*void remove_duplicate(char *str){ //remove duplicate
-	char dup[25];
-	char new[25];
-	printf("\ndupped begin");
-	int l=printf("%s",str);
-	l--;
-	char table[255]={0};
-	int i=0,j=0,k=0;
-	while(str[i]!='\0'){
-		dup[i++]=str[l--];
-		printf("\n%d%d",i,l);
+	void main(){
+		char str[25];//character array
+		char str1[25];
+		printf("enter:\n");
+		gets(str);
+	    printf("enter:\n");
+		gets(str1);
+		//reverse_string(str);
+		//each_word_swapper();
+		int a=pattern_search(str,str1);
+		if(a==1)
+		printf("pattern");
+		printf("not pat");
 	}
-	dup[i]='\0';
-	printf("ops=%s",dup);
-	i=0;
-	while(dup[i]!='\0'){
-		if(table[(dup[i])]==0){
-			table[(dup[i])]=1;
-			new[k]=dup[i];
-			k++;
-		}else{
-			printf("\n skipped %c",dup[i]);
+	/*void remove_duplicate(char *str){ //remove duplicate
+		char dup[25];
+		char new[25];
+		printf("\ndupped begin");
+		int l=printf("%s",str);
+		l--;
+		char table[255]={0};
+		int i=0,j=0,k=0;
+		while(str[i]!='\0'){
+			dup[i++]=str[l--];
+			printf("\n%d%d",i,l);
 		}
-		i++;
-	}
-	printf("\ndupped str=%s",new);
-}*/
+		dup[i]='\0';
+		printf("ops=%s",dup);
+		i=0;
+		while(dup[i]!='\0'){
+			if(table[(dup[i])]==0){
+				table[(dup[i])]=1;
+				new[k]=dup[i];
+				k++;
+			}else{
+				printf("\n skipped %c",dup[i]);
+			}
+			i++;
+		}
+		printf("\ndupped str=%s",new);
+	}*/
 
-/*int myatoi(char *str){
-	int num=48,total=0,i=0,j=1,n=0,res[25]={0};
-	n=printf("%s",str);
-	while(str[i]!='\0'){
-		if(str[i]=='\0'){
-			res[i]='\0';
-			printf("\n null breaker");
-			break;
+	/*int myatoi(char *str){
+		int num=48,total=0,i=0,j=1,n=0,res[25]={0};
+		n=printf("%s",str);
+		while(str[i]!='\0'){
+			if(str[i]=='\0'){
+				res[i]='\0';
+				printf("\n null breaker");
+				break;
+			}
+			else if(str[i]>=num && str[i] <=(num+10)){
+				res[i]=str[i]-num;
+				printf("\nr%d i%d",res[i],i);
+			}else{
+			//here handle non numerics
+			}
+			i++;
 		}
-		else if(str[i]>=num && str[i] <=(num+10)){
-			res[i]=str[i]-num;
-			printf("\nr%d i%d",res[i],i);
-		}else{
-		//here handle non numerics
+		for(i=0;res[i]!='\0';i++){
+			//total += res[i]*(j<<(n-i));
+			total*=10;
+			total+=res[i];
+			printf("\n t%d",total);
 		}
-		i++;
-	}
-	for(i=0;res[i]!='\0';i++){
-		//total += res[i]*(j<<(n-i));
-		total*=10;
-		total+=res[i];
-		printf("\n t%d",total);
-	}
-	printf("\nanswer=%d",total);
-	return total;
-}*/	
+		printf("\nanswer=%d",total);
+		return total;
+	}*/	
 					     
 					     
 =============================================================================================
@@ -2030,6 +2031,12 @@ EX:-
 
 			return 0;
 		}
+
+What is Semaphore?
+Semaphore is simply a variable that is non-negative and shared between threads. A semaphore is a signaling mechanism, and a thread that is waiting on a semaphore can be signaled by another thread. It uses two atomic operations, 1)wait, and 2) signal for the process synchronization.
+
+A semaphore either allows or disallows access to the resource, which depends on how it is set up.
+
 ======================================================================================================================
 # socket[Software equipment for network data transmission]
 int socket(int domain, int type, int protocol);
