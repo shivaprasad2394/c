@@ -2907,6 +2907,81 @@ IEEE 802. 11g:-2.4 G hz , ofdm, 54 Mbps
 
 Wi-Fi use unlicensed band in I s m.
 
+Beacon frame:- Beacon frame contains layer 2 information including
+
+1.ssid
+2. Channel info
+3. Data rates( supported & required)
+4. Security
+5. Qos parameters.
+
+
+A normal no encryption connection process
+
+1. AP send a  Beacon broadcast management frame.( basically a broadcast address is sent)
+
+2. The client sends a probe request frame  to the AP  carrying the  specified ssid. (I.e  when clicked  connect)
+
+3. The AP responds to the client ssid  connection request (i.e  it states. It does not except any form of frame payload encryption) or ( does not give any challenge)
+
+4.  the client  attempts a low level authentication request to the Target AP
+
+5. The AP response to the client  authentication request(i.e  it indicates acceptance of identity)
+
+6. The client  sends  and Association request to the AP 
+
+7. The AP response to the Association request
+
+8.  the client  request disconnection from the AP.(i.e  when clicked disconnect, the  nic  card sends  a disconnect management frame to the AP. Requesting disconnect)
+
+Power saving mode
+
+During power saving mode the client station
+Sends  null data  with PS poll  bit set.
+
+The station will be Beacon  interval active
+
+The data buffering and Tim flag notification will be done by access point
+
+Once the station wakes up it is notified by Tim flag notification and sends  PS  poll  to get the buffered data.
+
+Four-way handshake
+
+If four-way handshake is   successful, then the client and AP are ready for encrypted data traffic.
+
+During a four-way handshake  following frames Exchange
+
+1.  AP generates announce  and transmit to  station.
+
+2. The station generates pmk  using password +ssid hash, and  receive announce . Utilizing both announce and pmk  along with the help of snonce randomly generated at its end will generate PTK( Pairwise transcient key)
+
+The station transmit  s Nounce to the AP.
+
+3. AP generates PTK from the  s nounce. Meanwhile it generates group temporal key  and   share it with station.
+
+4.  the station after receiving gtk sends acknowledgement to  AP.
+
+A normal WPA2 encryption method
+
+1.Mobile station transmit probe request to  AP. Probe request consist of supported data rates,  802. 11 capabilities.
+
+2. AP checks if capabilities are matching  and sends  probe response consisting of ssid+ supported data rates+ encryption types+  capability
+
+3. The station  select the compatible probe response and  attempt low level Authentication request
+
+4. The AP respond by  low level Authentication response
+
+5. At this point station is  said to be  Authenticated  but not yet associated.
+Station can be authenticated to multiple AP, but associate to only one AP.
+So once it chooses the right ap  for Association  it sends  Association request consisting of selected encryption type+ 802. 11 features
+
+6. At AP  if the capability match, it create Association ID and sends  Association response consisting of status code Plus Id.
+
+7. Now  Mobile station can transmit data  unless the encryption type selected was wpa2/wpa/wep.
+
+8. If WPA2/ 802.1X was the selected encryption type, then four way handshake is required for  encrypted data transport.
+
+
 
 so Wi-Fi is nothing but , it is just a market name of the standard IEEE 802.11 
 so nowadays we are heading to our wireless network so the idea here it is just a lan but without wires so we
