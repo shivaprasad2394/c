@@ -2727,6 +2727,91 @@ order of discussion :-
 --------------------------------------------------------------------------------------------------------------------------------------------------------------
 # WiFI
 
+Wireless LAN is a network where devices are using Wireless protocol / technology to communicate with each other in a defined area.
+
+
+IEEE 802.11  provides standard for wireless LAN which covers 2 layers
+
+1. Physical layer.
+
+2. Data link layer.
+
+in this standard we have two kinds of services:-
+
+1.bss(  basic service set)
+
+2.Ess( extended service)
+
+BSS:- it is a group/unit of wireless Network devices that are communicating with same AP.
+
+BSSID:- is a AP's  physical / Mac address. 
+
+It is 48 bit long hex-decimal number
+
+AP:- these are devices which accept Wireless signals from multiple devices and retransmit them to  the rest of the network.
+
+AP also known as base station
+AP is a layer 2 device
+
+SSID:- it is a unique character string used to identify an AP.
+
+When a service is extended by adding more AP, this is called e s s.
+
+It's shared network name is called essid.
+
+ADHOC( without ap in bss) :- it is a decentralized type of network,  Wireless devices communicates directly to each other  rather than using a Bridge(ex:-AP).
+
+It is peer-to-peer
+
+ESS:- ESS  is a collection of multiple AP's  and their Associated client stations, all United by a single DSM
+
+The Logical network name of the ESS  is often called  extended service set  identifier.
+
+The terminology of essid  and ssid  are synonyms.
+
+Promiscius mode:- also known as Wi-Fi monitor mode. Basically used for listening to the Wi-Fi   packets  over-the-air.
+
+IEEE 802.11 standards  specify 2 layers
+
+1. Data link layer
+
+2. Physical layer
+
+Data link layer is divided into two layers
+1. Logical link control layer
+
+2. Medium Access Control layer
+
+In Mac we have two more layers
+1.   DCF
+
+2.   PCF
+
+The first sub layer of Mac  is DCF it provides contention Based Services that is csma/ca(  carrier sensing multiple access/ Collision avoidance)
+
+Csma/ CA  is Wireless
+
+Csma / CD is   for  wired
+
+Wi-Fi operate at half duplex. So it can either send or receive  at  a time. Hence csma / CD is not possible.
+
+csma / c a  timers are maintained the check Collision
+
+The process or a technique  by  which  a station  can associate itself with an AP it's called scanning
+
+Whenever a Station  enters a  network it has to do scanning in order to associate with a p by doing scanning.
+
+Steps for scanning
+
+1. Send a  probe  Frame.
+
+2. All AP  Within reach send   probe response frame
+
+3. Station will send associate request frame to AP
+
+4. AP will send  Association response frame
+
+
 so Wi-Fi is nothing but , it is just a market name of the standard IEEE 802.11 
 so nowadays we are heading to our wireless network so the idea here it is just a lan but without wires so we
 
