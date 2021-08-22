@@ -1,0 +1,396 @@
+Wireless LAN is a network where devices are using Wireless protocol / technology 
+to communicate with each other in a defined area.()
+
+
+IEEE 802.11  provides standard for wireless LAN which covers 2 layers()
+
+1. Physical layer.()
+
+2. Data link layer.()
+
+in this standard we have two kinds of services:-
+
+1.bss(  basic service set)
+
+2.Ess( extended service)
+
+BSS:- it is a group/unit of wireless Network devices that are communicating with same AP.()
+
+BSSID:- is a AP's  physical / Mac address. ()
+
+It is 48 bit long hex-decimal number
+
+AP:- these are devices which accept Wireless signals from multiple devices and 
+retransmit them to  the rest of the network.
+
+AP also known as base station
+AP is a layer 2 device()
+
+SSID:- it is a unique character string used to identify an AP.
+()
+When a service is extended by adding more AP, this is called e s s.
+()
+It's shared network name is called essid.
+()
+ADHOC( without ap in bss) :- it is a decentralized type of network,  
+Wireless devices communicates directly to each other  rather than using a Bridge(ex:-AP).
+()
+It is peer-to-peer
+()
+ESS:- ESS  is a collection of multiple AP's  and their Associated client stations, 
+all United by a single DSM
+()
+The Logical network name of the ESS  is often called  extended service set  identifier.
+()
+The terminology of essid  and ssid  are synonyms.
+()
+Promiscius mode:- also known as Wi-Fi monitor mode. Basically used for listening to the Wi-Fi   packets  over-the-air.
+()
+IEEE 802.11 standards  specify 2 layers()
+
+1. Data link layer()
+2. Physical layer()
+
+Data link layer is divided into two layers()
+1. Logical link control layer()
+2. Medium Access Control layer()
+
+In Mac we have two more layers()
+1.   DCF()
+2.   PCF()
+
+The first sub layer of Mac  is DCF ()
+it provides contention Based Services that is csma/ca(  carrier sensing multiple access/ Collision avoidance)
+
+Csma/ CA  is Wireless()
+Csma / CD is   for  wired()
+
+Wi-Fi operate at half duplex. So it can either send or receive  at  a time. 
+Hence csma / CD is not possible.
+
+csma / c a  timers are maintained the check Collision
+()
+
+scanning
+
+The process or a technique  by  which  a station  can associate itself with an AP it's called scanning
+()
+Whenever a Station  enters a  network it has to do scanning in order to associate with a p by doing scanning.
+()
+Steps for scanning()
+1. Send a  probe  Frame.()
+2. All AP  Within reach send   probe response frame()
+3. Station will send associate request frame to AP()
+4. AP will send  Association response frame()
+
+
+Active scanning
+
+In active scanning station approach AP, then AP replies the station.
+
+Passive scanning
+
+In passive scanning all the AP sends Timely Beacon frame( advertising packets illustrating its capability to all stations)
+
+There are two kinds of problems  in csma / CA()
+1.  hidden terminal problem()
+2. Exposed station problem( interference probleml)
+
+Hidden Terminal problem can be  solved  by rts and cts()
+
+By this we are making  claient stations   aware  another  claint station across the AP()
+
+In exposed station problem station will not be able to send data even when the channel is  idle()
+
+This is because the station thinks some other station it's trying to send data to   the AP()
+
+This problem is also solved by rts and cts.()
+Provided Station 1 and Station 2  are synchronized()
+
+PCF ( Point coordination function)
+PCF is poll based/ priority based.()
+
+Fragmentation:- since the channel is noisy, if  data is corrupted we need to retransmit the whole Packet so in wi-fi, fragmentation is  encouraged.
+
+Frame format()
+FC d  add1   add2   add3  SC  add4  body  fcs 
+
+FC( frame control)  it consists of various bits
+Namely()
+1. Protocol version()
+2. Frame type()
+3. Sub type()
+4. To destination()
+5. From destination()
+
+Frame type is subdivided into()
+1. Management frame()
+2. Control frame()
+3. Data frame()
+
+Sub type  helps  specify  the exact  frametype().
+
+Management frame is farther sub  divided in to 
+()
+1. Probe frame()
+2.  Association frame()
+3. Authentication frame()
+4. Beacon frame()
+
+Control  frame is further subdivided into()
+1. R t s()
+2. CTS()
+3. Acknowledgement()
+
+The duration bit specify  time interval we want to occupy the channel.()
+
+Sequence control SC  used for synchronization()
+
+Fsc ( frame sequence checking)  is used for are checking probably crc32()
+
+To DS(  a packet going to distributed system) & from DS  ( a packet coming from distributed system)
+ are Wired lan address 1 to address 4()
+
+For a direct communication between station one and Station 2 there is no need of destination address so  2DS &  from DS  is 0.
+
+Address 1  specifies the address of next destination()
+Address 2 specifies the address of previous destination()
+Address 3 specifies the address of Final Destination()
+Address 4 specifies the address of original  source()
+
+Physical layer:- based on the encryption/ multiplexing scheme we have various versions of 802.11 Such has  a,b,g,n in physical layer.()
+
+IEEE 802. 11 versions is differentiated based on  encoding, speed, range e t c()
+
+IEEE 802. 11a:- 5. 75 G hz , ofdm, psk,6- 54 Mbps()
+IEEE 802. 11b:- 2. 44G hz, dsss, psk,   5.5 to  11 Mbps()
+IEEE 802. 11g:-2.4 G hz , ofdm, 54 Mbps()
+
+Wi-Fi use unlicensed band in I s m.()
+
+Beacon frame:- Beacon frame contains layer 2 information including()
+
+1. ssid()
+2. Channel info()
+3. Data rates( supported & required)()
+4. Security()
+5. Qos parameters().
+
+
+A normal no encryption connection process()
+
+1. AP send a  Beacon broadcast management frame.( basically a broadcast address is sent)()
+
+2. The client sends a probe request frame  to the AP  carrying the  specified ssid. (I.e  when clicked  connect)
+
+3. The AP responds to the client ssid  connection request (i.e  it states. It does not except any form of frame payload encryption) or ( does not give any challenge)
+
+4.  the client  attempts a low level authentication request to the Target AP()
+
+5. The AP response to the client  authentication request(i.e  it indicates acceptance of identity)
+
+6. The client  sends  and Association request to the AP 
+
+7. The AP response to the Association request
+
+8.  the client  request disconnection from the AP.(i.e  when clicked disconnect, the  nic  card sends  a disconnect management frame to the AP. Requesting disconnect)
+
+Power saving mode
+
+During power saving mode the client station
+Sends  null data  with PS poll  bit set.
+
+The station will be Beacon  interval active
+
+The data buffering and Tim flag notification will be done by access point
+
+Once the station wakes up it is notified by Tim flag notification and sends  PS  poll  to get the buffered data.
+
+Four-way handshake
+
+If four-way handshake is   successful, then the client and AP are ready for encrypted data traffic.
+
+During a four-way handshake  following frames Exchange
+
+1.  AP generates announce  and transmit to  station.
+
+2. The station generates pmk  using password +ssid hash, and  receive announce . Utilizing both announce and pmk  along with the help of snonce randomly generated at its end will generate PTK( Pairwise transcient key)
+
+The station transmit  s Nounce to the AP.
+
+3. AP generates PTK from the  s nounce. Meanwhile it generates group temporal key  and   share it with station.
+
+4.  the station after receiving gtk sends acknowledgement to  AP.
+
+A normal WPA2 encryption method
+
+1.Mobile station transmit probe request to  AP. Probe request consist of supported data rates,  802. 11 capabilities.
+
+2. AP checks if capabilities are matching  and sends  probe response consisting of ssid+ supported data rates+ encryption types+  capability
+
+3. The station  select the compatible probe response and  attempt low level Authentication request
+
+4. The AP respond by  low level Authentication response
+
+5. At this point station is  said to be  Authenticated  but not yet associated.
+Station can be authenticated to multiple AP, but associate to only one AP.
+So once it chooses the right ap  for Association  it sends  Association request consisting of selected encryption type+ 802. 11 features
+
+6. At AP  if the capability match, it create Association ID and sends  Association response consisting of status code Plus Id.
+
+7. Now  Mobile station can transmit data  unless the encryption type selected was wpa2/wpa/wep.
+
+8. If WPA2/ 802.1X was the selected encryption type, then four way handshake is required for  encrypted data transport.
+
+How to enable a wifi connection with wpa_supplicant?
+Step by step：
+1> run the wpa_supplicant program;
+path：/system/bin/wpa_supplicant -d -Dwext -iwlan0 -c/data/misc/wifi/wpa_supplicant.conf
+among them:
+-d : increase debugging information
+-Dwext :wext, the driver name
+-iwlan0 :wlan0, network interface name
+/system/bin/wpa_supplicant :wpa_supplicant executable path
+/data/misc/wifi/wpa_supplicant.conf :wpa_supplicant configuration file path
+2, run the command line tool wpa_cli;
+执行 ：wpa_cli -iwlan0 -p/data/system/wpa_supplicant
+Note that wpa_supplicant in -p/data/system/wpa_supplicant is not an executable, but a control socket.
+This will enter interactive mode.
+
+g.3, AP connected to WPA-PSK/WPA2-PSK encryption
+>add_network  (assume return 2)
+>set_network 2 ssid "666"
+>set_network 2 psk "your pre-shared key"
+>enable_network 2
+At this point, the wifi module can connect to the AP.
+
+1.scan 		Scan nearby hotspots
+scan
+OK
+2.scan_results	Get the result of the scan
+scan_results
+bssid / frequency / signal level / flags / ssid
+20:f4:1b:83:40:e4 2462 -63 [WPA-PSK-CCMP+TKIP][WPA2-PSK-CCMP+TKIP][ ESS] ROC
+80:89:17:a1:a8:ee 2437 -64 [WPA-PSK-CCMP][WPA2-PSK-CCMP][ESS] samuel
+80:89:17:a1:a8:e4 2437 -67 [ WPA-PSK-CCMP][WPA2-PSK-CCMP][ESS] TV-WIFI
+80:89:17:9f:d3:ba 2412 -73 [WPA-PSK-CCMP][WPA2-PSK-CCMP][ESS] Xrr
+f4:ec:38:7b:2c:96 2437 -75 [WPA-PSK-CCMP][WPA2-PSK-CCMP][WPS][ESS] TP-LINK_7B2C96
+1c:fa:68:50:8a:76 2462 -71 [WPA-PSK-CCMP+TKIP][WPA2-PSK-CCMP+TKIP][WPS][ESS] RDSPEED100M
+D0:c7:c0:fd:86:64 2437 -73 [WPA-PSK-CCMP][WPA2-PSK-CCMP][ESS] yingyunguanli-huiyishi
+4e:e0:10:c2:44:57 2462 -59 [WPA2 -PSK-CCMP][ESS] hellowifi
+4e:e0:10:c2:48:5d 2462 -70 [WPA2-PSK-CCMP][ESS] ADESKTOP-93DNJ6F
+ac:e0:10:c2:63:bc 2412 -66 [WPA-PSK-CCMP+TKIP][WPA2-PSK-CCMP+TKIP][WPS][ESS] wifi
+cc:34:29:2c:7f:e8 2412 -76 [WPA-PSK-TKIP][WPA2-PSK -TKIP][ESS] dlink
+3.add_network		Add a network
+by viewing the scan results, we chose to be a wifi connection, such as hellowifi
+this time, we must first add a network.
+/> add_network
+2
+This 2 is a value returned by wpa_supplicant to us. It represents this network. We need to use this value in future operations.
+4. Set ssid and password	Ssid is the name of the hotspot, here is hellowifi.
+/> set_network 2 ssid “hellowifi”
+OK
+/> set_network 2 psk “11223344”
+OK
+psk is the name of the wifi password in WPA2-PSK mode.If there is no encryption:
+/>set_network 2 key_mgmt NONE
+if it is WEP security mode:
+/>set_network 2 wep_key0 “your ap passwork”
+5.enable_network		Enable wifi
+/> select_network 2
+OK
+Selecting the network is optional. If you have already connected a wifi, you should reselect a network.
+/> enable_network 2
+OK
+
+
+The ViperIII system includes Vehicle Processor and Graphics Processor. 
+The Vehicle Processor will manage all real-time functions, manage communications with the vehicle system, and monitor the onboard functionality. 
+The Graphics Processor will house all the user interface functions and includes a touch screen for interaction with the Human Machine Interface (HMI).
+
+Wi-Fi: This module initializes and interfaces to the Wi-Fi H/W over SDIO to the OS. It must be able to manage a list of stored devices, 
+must facilitate the user’s discovery of new devices, and the connection and storage of the link information of connected devices.
+
+
+The so-called Netd is the abbreviation of Network Daemon, which means Network Daemon.
+
+Netd is responsible for the configuration, operation, management, and query related to the network. & Implementation of functions, such as 
+bandwidth control (Bandwidth), 
+traffic statistics, 
+bandwidth control, 
+network address translation (NAT), 
+personal area network (pan), 
+PPP link, 
+soft-ap, 
+shared Internet access (Tether), 
+configuration routing table, 
+interface Configuration management, etc...
+
+through netlink, virtual file system, user interface provided by linux kernel, communication kernel, or 
+direct execution of system modules to manage network related parts.
+
+Netd is the mostly deamon, which provides developers with an interface for management. It is ndc (nativedeamonconnector),
+and various commands defined in CommandListener can be used directly through adb. 
+
+NativeDeamonConnector of the similar framework layer is an interface provided for the upper layer. 
+The following is a collection of commands available for ndc in 4.2:
+
+hostapd is a software that sets the wireless network card to Master mode.
+Simulating AP ( usually thought of as a router ) function,
+The function of Hostapd is to act as an AP 's authentication server, responsible for controlling and managing the access and authentication of stations ( usually a PC with a wireless network card ) .
+
+The wireless network card can be switched to AP/Master mode through Hostapd , and an open ( unencrypted ) , WEP , WPA or WPA2 wireless network can be established by modifying the configuration file . 
+And by modifying the configuration file, you can set various parameters of the wireless network card, including frequency, signal, beacon packet time interval, whether to send beacon packets, and if responding to probe requests, etc.
+
+When using wifi, as a station, it works in managed mode, 
+and there is a background process wpa_supplicant to manage authentication.
+
+When working in sofap, as an AP, it works in master mode, 
+and the background process hostapd performs authentication processing.
+
+in wifi managed,
+As a station, the user starts the WIFI through the UI, loads the WIFI driver from the framework layer, 
+JNI, and hardware layer, and loads the firmware. After the driver is loaded successfully, 
+start wpa_supplicant, set the mad address, set it to managed mode, start scan through the ioctl command, 
+start DHCPD to obtain the IP address, link to the corresponding AP, and sock communication at the same time after the connection is established 
+
+In softap mode, 
+the process is similar to station mode, except that wpa_supplicant is not started, 
+and the background management process of hostapd is started.
+
+Load the driver of softap from the framework layer, JNI, and hardware layer, and load the firmware. 
+After the driver is loaded successfully, start hostap, set the mad address, set the master mode, set the BSSID, 
+and start DHCPD to obtain the IP address. Wait for the station to connect.
+
+
+softap (Soft Access Point)
+Softap can share the mobile network used by the mobile phone for wlan access devices.
+When the notebook is connected to softap, you can access the Internet through the 3g of the mobile phone.
+
+
+$ adb shell ndc interface list
+CommandListener.cpp & CommandListener.h
+\Monitor frameworek layer commands, through tcp.
+\ Register the cmd of the processing function command to the framework layer.
+\Realize the corresponding command processing function.
+
+NetlinkManager.cpp  & NetlinkManager.h
+\Monitor the event of the kernel, through the connectionless socket
+\Understand that udp is implemented in setsocketopt and kernel 
+\'S associated monitoring event type
+
+NetdCommand.cpp \ Directly call frameworkcommand
+NetdCommand.h
+NetlinkHandler.cpp 
+\ inherited from NetlinkListener
+\Implementation of \onEvent function
+\ According to the analysis of the onEvent function command, call different processing functions
+\And call nm->sendBroadcast broadcast ResponseCode
+NetlinkHandler.h
+NetdConstants.cpp \The global path provides
+NetdConstants.h for the function of operating iptable
+
+
+
+https://blog.csdn.net/andytian1991/article/details/80444195
+
