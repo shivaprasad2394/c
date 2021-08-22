@@ -1,0 +1,208 @@
+#include <pthread.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <iostream>
+#include <sys/ipc.h>
+#include <sys/shm.h>
+#include <arpa/inet.h>
+#include <stdio.h>
+using namespace std;
+
+#define TCP_LISTEN_PORT  9190
+#define BUF_SIZE 30
+
+static struct sockaddr_in serv_addr;
+static struct sockaddr_in clnt_addr;
+
+int tcp_socket_fd = -1;
+
+pthread_t tid[2];
+pthread_mutex_t lock;
+//Tcp-Server
+void* TCP_Server_Socket_Init(void*)
+{
+    int fd_ret = 0;
+    struct timeval timeout;
+    fd_set fb_sockset;
+    char message[BUF_SIZE];
+	int srt_len;
+	int clnt_socket_fb;
+	socklen_t clnt_adr_sz;
+	
+	tcp_socket_fd  = socket(PF_INET, SOCK_STREAM, 0);
+    if(-1 == tcp_socket_fd )
+    {
+	printf("socket() error\n");
+	return NULL;
+    }
+
+    memset(&serv_addr, 0, sizeof(serv_addr));
+
+    serv_addr.sin_family = AF_INET;
+    serv_addr.sin_addr.s_addr = htonl(INADDR_ANY);
+    serv_addr.sin_port = htons(TCP_LISTEN_PORT); 
+
+	if(-1 == bind(tcp_socket_fd , (struct sockaddr*)&serv_addr, sizeof(serv_addr)))
+	{
+	    printf("bind() error\n");
+	return NULL;
+	}  
+
+	if(-1 == listen(tcp_socket_fd , 5))
+	{
+	    printf("listen() error\n");
+	return NULL;
+	}  
+
+	clnt_adr_sz = sizeof(clnt_addr);
+	while(1)
+	{
+		FD_ZERO(&fb_sockset);
+		FD_SET(tcp_socket_fd ,&fb_sockset);
+		timeout.tv_sec=2;
+		timeout.tv_usec=0;
+
+		fd_ret = select(tcp_socket_fd +1, &fb_sockset, NULL, NULL, &timeout);
+		if(fd_ret > 0)
+		{
+			clnt_socket_fb= accept(tcp_socket_fd ,  (struct sockaddr*)&clnt_addr, &clnt_adr_sz );
+			if(-1 == clnt_socket_fb)
+			{
+				printf("accept() error\n");
+			}
+			else
+			{
+				while(srt_len=recv(clnt_socket_fb, message, BUF_SIZE, 0)!=0)
+				{
+					send(clnt_socket_fb, message, srt_len, 0);
+					printf("Message from clent: %s",message);
+					close(clnt_socket_fb);
+				}
+			}
+		}
+	}
+	close(tcp_socket_fd );
+	return NULL;
+}
+
+//client 
+void* TCP_Client_Socket_Init(void*)
+{
+    char message[]="Nice.to.meet.you!";
+	int str_lent;
+	socklen_t serv_adr_sz;
+	tcp_socket_fd = socket(PF_INET, SOCK_STREAM, 0);
+    if(-1 == tcp_socket_fd )
+    {
+	printf("socket() error\n");
+	return NULL;
+    }
+
+    memset(&clnt_addr, 0, sizeof(clnt_addr));
+
+    clnt_addr.sin_family = AF_INET;
+    clnt_addr.sin_addr.s_addr = inet_addr("192.168.0.1");
+    clnt_addr.sin_addr.s_addr = htonl(0xC0A80001);
+    clnt_addr.sin_port = htons(TCP_LISTEN_PORT ); 
+
+	if(-1 == connect(tcp_socket_fd, (struct sockaddr*)&clnt_addr, sizeof(clnt_addr)))
+	{
+		printf("connect() error\n");
+	}
+	else
+	{
+		printf("connected...............\n");
+	}
+
+	serv_adr_sz = sizeof(serv_addr);
+	while(1)
+	{
+		send(tcp_socket_fd , message, strlen(message), 0);
+		str_lent = recv(tcp_socket_fd , message, BUF_SIZE -1, 0);
+		printf("Message from server: %s",message);
+	}
+	close(tcp_socket_fd);
+		return NULL;
+}
+
+//SHARED MEMORY FOR READER PROCESS
+void* Read(void* arg)
+{
+ // ftok to generate unique key
+  key_t key = ftok("shmfile",65);
+
+  // shmget returns an identifier in shmid
+  int shmid = shmget(key,1024,0666|IPC_CREAT);
+
+  // shmat to attach to shared memory
+  char *str = (char*) shmat(shmid,(void*)0,0);
+  pthread_mutex_lock(&lock);
+  
+  printf("Data read from memory: %s\n",str);
+
+  pthread_mutex_unlock(&lock);
+  //detach from shared memory
+  shmdt(str);
+
+  // destroy the shared memory
+  shmctl(shmid,IPC_RMID,NULL);
+
+	return NULL;
+}
+
+
+//SHARED MEMORY FOR WRITER PROCESS
+void* Write(void* arg)
+{
+   // ftok to generate unique key
+    key_t key = ftok("shmfile",65);
+
+    // shmget returns an identifier in shmid
+    int shmid = shmget(key,1024,0666|IPC_CREAT);
+
+    // shmat to attach to shared memory
+    char *str = (char*) shmat(shmid,(void*)0,0);
+ pthread_mutex_lock(&lock);
+    cout<<"Write Data : ";
+    gets(str);
+
+    printf("Data written in memory: %s\n",str);
+pthread_mutex_unlock(&lock);
+    //detach from shared memory
+    shmdt(str);
+	return NULL;
+}
+int main(void)
+{
+	int i = 0;
+	int error;
+	/*for shm
+    void* (*ope[2])(void*);
+    ope[1] = Read;
+    ope[0] = Write;
+    */
+    void* (*ope[2])(void*);
+    ope[1] = TCP_Client_Socket_Init;
+    ope[0] = TCP_Server_Socket_Init;
+    
+		if (pthread_mutex_init(&lock, NULL) != 0) {
+			printf("\n mutex init has failed\n");
+			return 1;
+		}
+		
+	while (i < 2) {
+		error = pthread_create(&(tid[i]), NULL, ope[i], NULL);
+		if (error != 0)
+			printf("\nThread can't be created : [%s]", strerror(error));
+		i++;
+	}
+
+	pthread_join(tid[0], NULL);
+	pthread_join(tid[1], NULL);
+    pthread_mutex_destroy(&lock);
+	return 0;
+}
