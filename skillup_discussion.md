@@ -2982,4 +2982,68 @@ So once it chooses the right ap  for Association  it sends  Association request 
 8. If WPA2/ 802.1X was the selected encryption type, then four way handshake is required for  encrypted data transport.
 
 
+The ViperIII system includes Vehicle Processor and Graphics Processor. 
+The Vehicle Processor will manage all real-time functions, manage communications with the vehicle system, and monitor the onboard functionality. 
+The Graphics Processor will house all the user interface functions and includes a touch screen for interaction with the Human Machine Interface (HMI).
+
+Wi-Fi: This module initializes and interfaces to the Wi-Fi H/W over SDIO to the OS. It must be able to manage a list of stored devices, 
+must facilitate the user’s discovery of new devices, and the connection and storage of the link information of connected devices.
+
+
+The so-called Netd is the abbreviation of Network Daemon, which means Network Daemon.
+
+Netd is responsible for the configuration, operation, management, and query related to the network. & Implementation of functions, such as 
+bandwidth control (Bandwidth), 
+traffic statistics, 
+bandwidth control, 
+network address translation (NAT), 
+personal area network (pan), 
+PPP link, 
+soft-ap, 
+shared Internet access (Tether), 
+configuration routing table, 
+interface Configuration management, etc...
+
+through netlink, virtual file system, user interface provided by linux kernel, communication kernel, or 
+direct execution of system modules to manage network related parts.
+
+Netd is the mostly deamon, which provides developers with an interface for management. It is ndc (nativedeamonconnector),
+and various commands defined in CommandListener can be used directly through adb. 
+
+NativeDeamonConnector of the similar framework layer is an interface provided for the upper layer. 
+The following is a collection of commands available for ndc in 4.2:
+
+hostapd is a software that sets the wireless network card to Master mode.
+Simulating AP ( usually thought of as a router ) function,
+The function of Hostapd is to act as an AP 's authentication server, responsible for controlling and managing the access and authentication of stations ( usually a PC with a wireless network card ) .
+
+The wireless network card can be switched to AP/Master mode through Hostapd , and an open ( unencrypted ) , WEP , WPA or WPA2 wireless network can be established by modifying the configuration file . 
+And by modifying the configuration file, you can set various parameters of the wireless network card, including frequency, signal, beacon packet time interval, whether to send beacon packets, and if responding to probe requests, etc.
+
+When using wifi, as a station, it works in managed mode, 
+and there is a background process wpa_supplicant to manage authentication.
+
+When working in sofap, as an AP, it works in master mode, 
+and the background process hostapd performs authentication processing.
+
+in wifi managed,
+As a station, the user starts the WIFI through the UI, loads the WIFI driver from the framework layer, 
+JNI, and hardware layer, and loads the firmware. After the driver is loaded successfully, 
+start wpa_supplicant, set the mad address, set it to managed mode, start scan through the ioctl command, 
+start DHCPD to obtain the IP address, link to the corresponding AP, and sock communication at the same time after the connection is established 
+
+In softap mode, 
+the process is similar to station mode, except that wpa_supplicant is not started, 
+and the background management process of hostapd is started.
+
+Load the driver of softap from the framework layer, JNI, and hardware layer, and load the firmware. 
+After the driver is loaded successfully, start hostap, set the mad address, set the master mode, set the BSSID, 
+and start DHCPD to obtain the IP address. Wait for the station to connect.
+
+
+softap (Soft Access Point)
+Softap can share the mobile network used by the mobile phone for wlan access devices.
+When the notebook is connected to softap, you can access the Internet through the 3g of the mobile phone.
+
+
 
