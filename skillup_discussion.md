@@ -2811,6 +2811,102 @@ Steps for scanning
 
 4. AP will send  Association response frame
 
+Active scanning
+In active scanning station approach AP, then AP replies the station.
+Passive scanning
+In passive scanning all the AP sends Timely Beacon frame( advertising packets illustrating its capability to all stations)
+
+There are two kinds of problems  in csma / CA
+1.  hidden terminal problem
+2. Exposed station problem( interference probleml)
+
+Hidden Terminal problem can be  solved  by rts and cts
+
+By this we are making  claient stations   aware  another  claint station across the AP
+
+In exposed station problem station will not be able to send data even when the channel is  idle
+
+This is because the station thinks some other station it's trying to send data to   the AP
+
+This problem is also solved by rts and cts.
+Provided Station 1 and Station 2  are synchronized
+
+PCF ( Point coordination function)
+PCF is poll based/ priority based.
+
+Fragmentation:- since the channel is noisy, if  data is corrupted we need to retransmit the whole Packet so in wi-fi, fragmentation is  encouraged.
+
+Frame format
+FC d  add1   add2   add3  SC  add4  body  fcs 
+
+FC( frame control)  it consists of various bits
+Namely
+
+1. Protocol version
+
+2. Frame type
+
+3. Sub type
+
+
+4. To destination
+
+5. From destination
+
+Frame type is subdivided into
+
+1. Management frame
+
+2. Control frame
+
+3. Data frame
+
+Sub type  helps  specify  the exact type of frame.
+
+Management frame is farther sub  divided in to 
+
+1. Probe frame
+
+2.  Association frame
+
+3. Authentication frame
+
+4. Beacon frame
+
+Control  frame is further subdivided into
+
+1. R t s
+
+2. CTS
+
+3. Acknowledgement
+
+The duration bit specify  time interval we want to occupy the channel.
+
+Sequence control SC  used for synchronization
+
+Fsc ( frame sequence checking)  is used for are checking probably crc32
+
+To DS(  a packet going to distributed system) & from DS  ( a packet coming from distributed system)
+ are Wired lan address 1 to address 4
+
+For a direct communication between station one and Station 2 there is no need of destination address so  2DS &  from DS  is 0.
+
+	Address 1  specifies the address of next destination
+	Address 2 specifies the address of previous destination
+	Address 3 specifies the address of Final Destination
+	Address 4 specifies the address of original  source
+
+Physical layer:- based on the encryption/ multiplexing scheme we have various versions of 802.11 Such has  a,b,g,n in physical layer.
+
+IEEE 802. 11 versions is differentiated based on  encoding, speed, range e t c
+
+IEEE 802. 11a:- 5. 75 G hz , ofdm, psk,6- 54 Mbps
+IEEE 802. 11b:- 2. 44G hz, dsss, psk,   5.5 to  11 Mbps
+IEEE 802. 11g:-2.4 G hz , ofdm, 54 Mbps
+
+Wi-Fi use unlicensed band in I s m.
+
 
 so Wi-Fi is nothing but , it is just a market name of the standard IEEE 802.11 
 so nowadays we are heading to our wireless network so the idea here it is just a lan but without wires so we
