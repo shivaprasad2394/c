@@ -2732,9 +2732,9 @@ Wireless LAN is a network where devices are using Wireless protocol / technology
 
 IEEE 802.11  provides standard for wireless LAN which covers 2 layers
 
-1. Physical layer.
+1. **Physical layer**.
 
-2. Data link layer.
+2. **Data link layer**.
 
 in this standard we have two kinds of services:-
 
@@ -2742,28 +2742,28 @@ in this standard we have two kinds of services:-
 
 2.Ess( extended service)
 
-BSS:- it is a group/unit of wireless Network devices that are communicating with same AP.
+**BSS**:- it is a group/unit of wireless Network devices that are communicating with same AP.
 
-BSSID:- is a AP's  physical / Mac address. 
+**BSSID**:- is a AP's  physical / Mac address. 
 
 It is 48 bit long hex-decimal number
 
-AP:- these are devices which accept Wireless signals from multiple devices and retransmit them to  the rest of the network.
+**AP**:- these are devices which accept Wireless signals from multiple devices and retransmit them to  the rest of the network.
 
 AP also known as base station
 AP is a layer 2 device
 
-SSID:- it is a unique character string used to identify an AP.
+**SSID**:- it is a unique character string used to identify an AP.
 
 When a service is extended by adding more AP, this is called e s s.
 
 It's shared network name is called essid.
 
-ADHOC( without ap in bss) :- it is a decentralized type of network,  Wireless devices communicates directly to each other  rather than using a Bridge(ex:-AP).
+**ADHOC**( without ap in bss) :- it is a decentralized type of network,  Wireless devices communicates directly to each other  rather than using a Bridge(ex:-AP).
 
 It is peer-to-peer
 
-ESS:- ESS  is a collection of multiple AP's  and their Associated client stations, all United by a single DSM
+**ESS**:- ESS  is a collection of multiple AP's  and their Associated client stations, all United by a single DSM
 
 The Logical network name of the ESS  is often called  extended service set  identifier.
 
@@ -2783,9 +2783,9 @@ Data link layer is divided into two layers
 2. Medium Access Control layer
 
 In Mac we have two more layers
-1.   DCF
+1.   **DCF**
 
-2.   PCF
+2.   **PCF**
 
 The first sub layer of Mac  is DCF it provides contention Based Services that is csma/ca(  carrier sensing multiple access/ Collision avoidance)
 
@@ -2811,20 +2811,20 @@ Steps for scanning
 
 4. AP will send  Association response frame
 
-Active scanning
+**Active scanning**
 In active scanning station approach AP, then AP replies the station.
-Passive scanning
+**Passive scanning**
 In passive scanning all the AP sends Timely Beacon frame( advertising packets illustrating its capability to all stations)
 
 There are two kinds of problems  in csma / CA
-1.  hidden terminal problem
-2. Exposed station problem( interference probleml)
+1.  **hidden terminal problem**
+2. **Exposed station problem**( interference probleml)
 
-Hidden Terminal problem can be  solved  by rts and cts
+**Hidden Terminal problem** can be  solved  by rts and cts
 
 By this we are making  claient stations   aware  another  claint station across the AP
 
-In exposed station problem station will not be able to send data even when the channel is  idle
+In **exposed station problem** station will not be able to send data even when the channel is  idle
 
 This is because the station thinks some other station it's trying to send data to   the AP
 
@@ -2834,12 +2834,12 @@ Provided Station 1 and Station 2  are synchronized
 PCF ( Point coordination function)
 PCF is poll based/ priority based.
 
-Fragmentation:- since the channel is noisy, if  data is corrupted we need to retransmit the whole Packet so in wi-fi, fragmentation is  encouraged.
+**Fragmentation**:- since the channel is noisy, if  data is corrupted we need to retransmit the whole Packet so in wi-fi, fragmentation is  encouraged.
 
 Frame format
 FC d  add1   add2   add3  SC  add4  body  fcs 
 
-FC( frame control)  it consists of various bits
+FC( **frame control**)  it consists of various bits
 Namely
 
 1. Protocol version
@@ -2848,12 +2848,11 @@ Namely
 
 3. Sub type
 
-
 4. To destination
 
 5. From destination
 
-Frame type is subdivided into
+**Frame type** is subdivided into
 
 1. Management frame
 
@@ -2863,7 +2862,7 @@ Frame type is subdivided into
 
 Sub type  helps  specify  the exact type of frame.
 
-Management frame is farther sub  divided in to 
+**Management frame** is farther sub  divided in to 
 
 1. Probe frame
 
@@ -2873,7 +2872,7 @@ Management frame is farther sub  divided in to
 
 4. Beacon frame
 
-Control  frame is further subdivided into
+**Control  frame** is further subdivided into
 
 1. R t s
 
@@ -2883,9 +2882,9 @@ Control  frame is further subdivided into
 
 The duration bit specify  time interval we want to occupy the channel.
 
-Sequence control SC  used for synchronization
+**Sequence control** SC  used for synchronization
 
-Fsc ( frame sequence checking)  is used for are checking probably crc32
+Fsc ( **frame sequence checking**)  is used for are checking probably crc32
 
 To DS(  a packet going to distributed system) & from DS  ( a packet coming from distributed system)
  are Wired lan address 1 to address 4
@@ -2897,7 +2896,7 @@ For a direct communication between station one and Station 2 there is no need of
 	Address 3 specifies the address of Final Destination
 	Address 4 specifies the address of original  source
 
-Physical layer:- based on the encryption/ multiplexing scheme we have various versions of 802.11 Such has  a,b,g,n in physical layer.
+**Physical layer**:- based on the encryption/ multiplexing scheme we have various versions of 802.11 Such has  a,b,g,n in physical layer.
 
 IEEE 802. 11 versions is differentiated based on  encoding, speed, range e t c
 
@@ -2907,16 +2906,16 @@ IEEE 802. 11g:-2.4 G hz , ofdm, 54 Mbps
 
 Wi-Fi use unlicensed band in I s m.
 
-Beacon frame:- Beacon frame contains layer 2 information including
+**Beacon frame**:- Beacon frame contains layer 2 information including
 
-1.ssid
+1. ssid
 2. Channel info
 3. Data rates( supported & required)
 4. Security
 5. Qos parameters.
 
 
-A normal no encryption connection process
+A **normal no encryption** connection process
 
 1. AP send a  Beacon broadcast management frame.( basically a broadcast address is sent)
 
@@ -2934,7 +2933,7 @@ A normal no encryption connection process
 
 8.  the client  request disconnection from the AP.(i.e  when clicked disconnect, the  nic  card sends  a disconnect management frame to the AP. Requesting disconnect)
 
-Power saving mode
+**Power saving mode**
 
 During power saving mode the client station
 Sends  null data  with PS poll  bit set.
@@ -2945,7 +2944,7 @@ The data buffering and Tim flag notification will be done by access point
 
 Once the station wakes up it is notified by Tim flag notification and sends  PS  poll  to get the buffered data.
 
-Four-way handshake
+**Four-way handshake**
 
 If four-way handshake is   successful, then the client and AP are ready for encrypted data traffic.
 
@@ -2961,7 +2960,7 @@ The station transmit  s Nounce to the AP.
 
 4.  the station after receiving gtk sends acknowledgement to  AP.
 
-A normal WPA2 encryption method
+A **normal WPA2 encryption** method
 
 1.Mobile station transmit probe request to  AP. Probe request consist of supported data rates,  802. 11 capabilities.
 
@@ -2981,28 +2980,32 @@ So once it chooses the right ap  for Association  it sends  Association request 
 
 8. If WPA2/ 802.1X was the selected encryption type, then four way handshake is required for  encrypted data transport.
 
+------------------------------------------------------------------------------------------------------------------------------------------------
 
 The ViperIII system includes Vehicle Processor and Graphics Processor. 
 The Vehicle Processor will manage all real-time functions, manage communications with the vehicle system, and monitor the onboard functionality. 
 The Graphics Processor will house all the user interface functions and includes a touch screen for interaction with the Human Machine Interface (HMI).
 
-Wi-Fi: This module initializes and interfaces to the Wi-Fi H/W over SDIO to the OS. It must be able to manage a list of stored devices, 
+**Wi-Fi**: This module initializes and interfaces to the Wi-Fi H/W over SDIO to the OS. It must be able to manage a list of stored devices, 
 must facilitate the user’s discovery of new devices, and the connection and storage of the link information of connected devices.
 
 
 The so-called Netd is the abbreviation of Network Daemon, which means Network Daemon.
 
-Netd is responsible for the configuration, operation, management, and query related to the network. & Implementation of functions, such as 
-bandwidth control (Bandwidth), 
-traffic statistics, 
-bandwidth control, 
-network address translation (NAT), 
-personal area network (pan), 
-PPP link, 
-soft-ap, 
-shared Internet access (Tether), 
-configuration routing table, 
-interface Configuration management, etc...
+**Netd** is responsible for the configuration, operation, management, and query related to the network. & 
+
+Implementation of functions, such as 
+
+		bandwidth control (Bandwidth), 
+		traffic statistics, 
+		bandwidth control, 
+		network address translation (NAT), 
+		personal area network (pan), 
+		PPP link, 
+		soft-ap, 
+		shared Internet access (Tether), 
+		configuration routing table, 
+		interface Configuration management, etc...
 
 through netlink, virtual file system, user interface provided by linux kernel, communication kernel, or 
 direct execution of system modules to manage network related parts.
@@ -3013,7 +3016,7 @@ and various commands defined in CommandListener can be used directly through adb
 NativeDeamonConnector of the similar framework layer is an interface provided for the upper layer. 
 The following is a collection of commands available for ndc in 4.2:
 
-hostapd is a software that sets the wireless network card to Master mode.
+**hostapd** is a software that sets the wireless network card to Master mode.
 Simulating AP ( usually thought of as a router ) function,
 The function of Hostapd is to act as an AP 's authentication server, responsible for controlling and managing the access and authentication of stations ( usually a PC with a wireless network card ) .
 
@@ -3026,13 +3029,13 @@ and there is a background process wpa_supplicant to manage authentication.
 When working in sofap, as an AP, it works in master mode, 
 and the background process hostapd performs authentication processing.
 
-in wifi managed,
+in **wifi managed**,
 As a station, the user starts the WIFI through the UI, loads the WIFI driver from the framework layer, 
 JNI, and hardware layer, and loads the firmware. After the driver is loaded successfully, 
 start wpa_supplicant, set the mad address, set it to managed mode, start scan through the ioctl command, 
 start DHCPD to obtain the IP address, link to the corresponding AP, and sock communication at the same time after the connection is established 
 
-In softap mode, 
+In **softap mode**, 
 the process is similar to station mode, except that wpa_supplicant is not started, 
 and the background management process of hostapd is started.
 
@@ -3041,7 +3044,7 @@ After the driver is loaded successfully, start hostap, set the mad address, set 
 and start DHCPD to obtain the IP address. Wait for the station to connect.
 
 
-softap (Soft Access Point)
+**softap** (Soft Access Point)
 Softap can share the mobile network used by the mobile phone for wlan access devices.
 When the notebook is connected to softap, you can access the Internet through the 3g of the mobile phone.
 
