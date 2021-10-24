@@ -2980,6 +2980,12 @@ So once it chooses the right ap  for Association  it sends  Association request 
 
 8. If WPA2/ 802.1X was the selected encryption type, then four way handshake is required for  encrypted data transport.
 
+After the STA completes the four-way handshake with the AP, the data link layer successfully establishes a connection, but in the network OSI seven-layer model, the application layer must have an IP address to access the network. DHCP is the process of obtaining IP from the AP's DHCP service. .
+
+What is **DHCP**?
+
+DHCP (Dynamic Host Configuration Protocol) is a network protocol for local area networks. It refers to a range of IP addresses controlled by the server, and the client can automatically obtain the IP address and subnet mask assigned by the server when logging in to the server. By default, DHCP, as a service component of Windows Server, will not be automatically installed by the system, and administrators need to install it manually and perform necessary configuration.
+
 ------------------------------------------------------------------------------------------------------------------------------------------------
 
 The ViperIII system includes Vehicle Processor and Graphics Processor. 
