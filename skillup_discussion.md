@@ -2986,6 +2986,139 @@ What is **DHCP**?
 
 DHCP (Dynamic Host Configuration Protocol) is a network protocol for local area networks. It refers to a range of IP addresses controlled by the server, and the client can automatically obtain the IP address and subnet mask assigned by the server when logging in to the server. By default, DHCP, as a service component of Windows Server, will not be automatically installed by the system, and administrators need to install it manually and perform necessary configuration.
 
+1. DHCP normal process
+
+
+		ClientModeImpl$ObtainingIpState:
+		 enter()
+		  startIpClient()
+		   sendNetworkChangeBroadcast(DetailedState.OBTAINING_IPADDR)
+		   stopDhcpSetup()
+		   mIpClient.startProvisioning(prov.build()) <= IpClientManager
+
+		NetworkStack:
+		IpClient:
+		 // CHECKSTYLE:OFF IndentationCheck
+			addState(mStoppedState);
+			addState(mStartedState);
+			    addState(mPreconnectingState, mStartedState);
+			    addState(mClearingIpAddressesState, mStartedState);
+			    addState(mRunningState, mStartedState);
+			addState(mStoppingState);
+			// CHECKSTYLE:ON IndentationCheck
+
+			setInitialState(mStoppedState);
+
+		IpClient.startProvisioning()
+		 sendMessage(CMD_START, new android.net.shared.ProvisioningConfiguration(req))
+
+		IpClient$StoppedState:
+		 enter()
+		  stopAllIP()
+		  resetLinkProperties()
+		 CMD_START
+		  transitionTo(mClearingIpAddressesState)
+
+		IpClient$ClearingIpAddressesState:
+		 enter()
+		   deferMessage(obtainMessage(CMD_ADDRESSES_CLEARED))
+		   CMD_ADDRESSES_CLEARED
+		    transitionTo(mRunningState)
+
+		IpClient$RunningState:
+		 enter()
+		  mPacketTracker = createPacketTracker()
+		  mPacketTracker.start(mConfiguration.mDisplayName)
+		  startIPv6()
+		  startIPv4()
+		  applyInitialConfig(config)
+		  startIpReachabilityMonitor()
+
+		IpClient.startIPv4():
+		 startDhcpClient() // Start DHCPv4
+		  mDhcpClient = mDependencies.makeDhcpClient(mContext, IpClient.this, mInterfaceParams,mDependencies.getDhcpClientDependencies(mIpMemoryStore, mIpProvisioningMetrics))
+		  mDhcpClient.registerForPreDhcpNotification()
+		  mDhcpClient.sendMessage(DhcpClient.CMD_START_DHCP, new DhcpClient.Configuration(mL2Key, isUsingPreconnection()))
+
+		DhcpClient:
+			// CHECKSTYLE:OFF IndentationCheck
+			addState(mStoppedState);
+			addState(mDhcpState);
+			    addState(mDhcpInitState, mDhcpState);
+			    addState(mWaitBeforeStartState, mDhcpState);
+			    addState(mWaitBeforeObtainingConfigurationState, mDhcpState);
+			    addState(mDhcpPreconnectingState, mDhcpState);
+			    addState(mObtainingConfigurationState, mDhcpState);
+			    addState(mDhcpSelectingState, mDhcpState);
+			    addState(mDhcpRequestingState, mDhcpState);
+			    addState(mIpAddressConflictDetectingState, mDhcpState);
+			    addState(mDhcpHaveLeaseState, mDhcpState);
+				addState(mConfiguringInterfaceState, mDhcpHaveLeaseState);
+				addState(mDhcpBoundState, mDhcpHaveLeaseState);
+				addState(mWaitBeforeRenewalState, mDhcpHaveLeaseState);
+				addState(mDhcpRenewingState, mDhcpHaveLeaseState);
+				addState(mDhcpRebindingState, mDhcpHaveLeaseState);
+				addState(mDhcpDecliningState, mDhcpHaveLeaseState);
+			    addState(mDhcpInitRebootState, mDhcpState);
+			    addState(mDhcpRebootingState, mDhcpState);
+			// CHECKSTYLE:ON IndentationCheck
+
+		DhcpClient$StoppedState:
+		 CMD_START_DHCP
+		  startInitRebootOrInit()
+		   preDhcpTransitionTo(mWaitBeforeStartState, mDhcpInitState)
+		    transitionTo(mWaitBeforeStartState)
+		     DhcpState.enter()
+		      clearDhcpState()
+		      initInterface() && initUdpSocket()
+		      mDhcpPacketHandler = new DhcpPacketHandler(getHandler())
+		      mDhcpPacketHandler.start()
+		       WaitBeforeOtherState.enter()
+			mController.sendMessage(CMD_PRE_DHCP_ACTION)  => IpClient => ClientModeImpl$IpClientCallbacksImpl
+			 transitionTo(mDhcpInitState)
+			  DhcpInitState.enter()
+			   PacketRetransmittingState.enter()
+			    sendMessage(CMD_KICK)
+			     CMD_KICK
+			      DhcpInitState.sendPacket()
+			       sendDiscoverPacket()
+				transmitPacket(packet, "DHCPDISCOVER", DhcpPacket.ENCAP_L2, INADDR_BROADCAST)
+			      scheduleKick()
+			   startNewTransaction()
+
+		mDhcpPacketHandler.transmitPacket(buf, mInterfaceBroadcastAddr)
+		DhcpPacketHandler.handlePacket() <= receive packet
+		 sendMessage(CMD_RECEIVED_PACKET, packet)
+		  PacketRetransmittingState.CMD_RECEIVED_PACKET
+		   DhcpInitState.receivePacket(packet)
+		    receiveOfferOrAckPacket(packet, isDhcpRapidCommitEnabled())
+		     packet instanceof DhcpOfferPacket
+		      transitionTo(mDhcpRequestingState)
+		       PacketRetransmittingState.enter()
+			sendMessage(CMD_KICK)
+			 CMD_KICK
+			  DhcpRequestingState.sendPacket()
+			   sendRequestPacket()
+		     packet instanceof DhcpAckPacket
+		      confirmDhcpLease(packet, results)
+		      transitionTo(isDhcpIpConflictDetectEnabled() ? mIpAddressConflictDetectingState : mConfiguringInterfaceState)
+		transitionTo(mConfiguringInterfaceState)
+		 ConfiguringInterfaceState.enter()
+		   notifySuccess()
+		  mController.sendMessage(CMD_CONFIGURE_LINKADDRESS, mDhcpLease.ipAddress) => IpClient$RunningState
+		   mInterfaceCtrl.setIPv4Address(ipAddress)
+		    mDhcpClient.sendMessage(DhcpClient.EVENT_LINKADDRESS_CONFIGURED)
+		     ConfiguringInterfaceState.EVENT_LINKADDRESS_CONFIGURED
+		      transitionTo(mDhcpBoundState)
+		       DhcpBoundState.enter()
+			connectUdpSock(mDhcpLease.serverAddress)
+			scheduleLeaseTimers()
+			logTimeToBoundState()
+
+		InterfaceController.setIPv4Address(ipAddress)
+		 setInterfaceConfiguration(address, null)
+		   mNetd.interfaceSetCfg(ifConfig)
+
 ------------------------------------------------------------------------------------------------------------------------------------------------
 
 The ViperIII system includes Vehicle Processor and Graphics Processor. 
