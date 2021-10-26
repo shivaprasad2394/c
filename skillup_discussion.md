@@ -3043,6 +3043,21 @@ OK
 OK
 wifi in network 0 will be connected
 
+  How to enable a wifi connection with wpa_supplicant?
+Step by step：
+1> run the wpa_supplicant program;
+path：/system/bin/wpa_supplicant -d -Dwext -iwlan0 -c/data/misc/wifi/wpa_supplicant.conf
+among them:
+-d : increase debugging information
+-Dwext :wext, the driver name
+-iwlan0 :wlan0, network interface name
+
+/system/bin/wpa_supplicant :wpa_supplicant executable path
+/data/misc/wifi/wpa_supplicant.conf :wpa_supplicant configuration file path
+2, run the command line tool wpa_cli;
+执行 ：wpa_cli -iwlan0 -p/data/system/wpa_supplicant
+
+
 What is **DHCP**?
 
 DHCP (Dynamic Host Configuration Protocol) is a network protocol for local area networks. It refers to a range of IP addresses controlled by the server, and the client can automatically obtain the IP address and subnet mask assigned by the server when logging in to the server. By default, DHCP, as a service component of Windows Server, will not be automatically installed by the system, and administrators need to install it manually and perform necessary configuration.
