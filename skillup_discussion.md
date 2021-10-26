@@ -2982,6 +2982,60 @@ So once it chooses the right ap  for Association  it sends  Association request 
 
 After the STA completes the four-way handshake with the AP, the data link layer successfully establishes a connection, but in the network OSI seven-layer model, the application layer must have an IP address to access the network. DHCP is the process of obtaining IP from the AP's DHCP service. .
 
+
+1.**scan** 		Scan nearby hotspots
+
+		scan
+		OK
+
+2.**scan_results**	Get the result of the scan
+
+		scan_results
+		bssid / frequency / signal level / flags / ssid
+		20:f4:1b:83:40:e4 2462 -63 [WPA-PSK-CCMP+TKIP][WPA2-PSK-CCMP+TKIP][ ESS] ROC
+		80:89:17:a1:a8:ee 2437 -64 [WPA-PSK-CCMP][WPA2-PSK-CCMP][ESS] samuel
+		80:89:17:a1:a8:e4 2437 -67 [ WPA-PSK-CCMP][WPA2-PSK-CCMP][ESS] TV-WIFI
+		80:89:17:9f:d3:ba 2412 -73 [WPA-PSK-CCMP][WPA2-PSK-CCMP][ESS] Xrr
+		f4:ec:38:7b:2c:96 2437 -75 [WPA-PSK-CCMP][WPA2-PSK-CCMP][WPS][ESS] TP-LINK_7B2C96
+		1c:fa:68:50:8a:76 2462 -71 [WPA-PSK-CCMP+TKIP][WPA2-PSK-CCMP+TKIP][WPS][ESS] RDSPEED100M
+		D0:c7:c0:fd:86:64 2437 -73 [WPA-PSK-CCMP][WPA2-PSK-CCMP][ESS] yingyunguanli-huiyishi
+		4e:e0:10:c2:44:57 2462 -59 [WPA2 -PSK-CCMP][ESS] hellowifi
+		4e:e0:10:c2:48:5d 2462 -70 [WPA2-PSK-CCMP][ESS] ADESKTOP-93DNJ6F
+		ac:e0:10:c2:63:bc 2412 -66 [WPA-PSK-CCMP+TKIP][WPA2-PSK-CCMP+TKIP][WPS][ESS] wifi
+		cc:34:29:2c:7f:e8 2412 -76 [WPA-PSK-TKIP][WPA2-PSK -TKIP][ESS] dlink
+
+
+3.**add_network**		Add a network
+
+by viewing the scan results, we chose to be a wifi connection, such as hellowifi
+this time, we must first add a network.
+
+		/> add_network
+		2
+This 2 is a value returned by wpa_supplicant to us. It represents this network. We need to use this value in future operations.
+
+4. Set ssid and password	Ssid is the name of the hotspot, here is hellowifi.
+
+		/> set_network 2 ssid “hellowifi”
+		OK
+		/> set_network 2 psk “11223344”
+		OK
+		psk is the name of the wifi password in WPA2-PSK mode.If there is no encryption:
+		/>set_network 2 key_mgmt NONE
+
+if it is WEP security mode:
+/>**set_network** 2 wep_key0 “your ap passwork”
+
+5.**enable_network**		Enable wifi
+
+		/> select_network 2
+		OK
+
+Selecting the network is optional. If you have already connected a wifi, you should reselect a network.
+
+		/> enable_network 2
+		OK
+
 What is **DHCP**?
 
 DHCP (Dynamic Host Configuration Protocol) is a network protocol for local area networks. It refers to a range of IP addresses controlled by the server, and the client can automatically obtain the IP address and subnet mask assigned by the server when logging in to the server. By default, DHCP, as a service component of Windows Server, will not be automatically installed by the system, and administrators need to install it manually and perform necessary configuration.
