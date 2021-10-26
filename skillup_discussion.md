@@ -3036,6 +3036,13 @@ Selecting the network is optional. If you have already connected a wifi, you sho
 		/> enable_network 2
 		OK
 
+6. Switch wifi	If we currently have multiple networks, we can switch:
+/> select_network 0
+OK
+/> enable_network 0
+OK
+wifi in network 0 will be connected
+
 What is **DHCP**?
 
 DHCP (Dynamic Host Configuration Protocol) is a network protocol for local area networks. It refers to a range of IP addresses controlled by the server, and the client can automatically obtain the IP address and subnet mask assigned by the server when logging in to the server. By default, DHCP, as a service component of Windows Server, will not be automatically installed by the system, and administrators need to install it manually and perform necessary configuration.
