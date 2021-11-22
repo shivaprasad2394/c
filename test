@@ -1,4 +1,5 @@
 
+
 /*
 #define BADKEY -1
 #define strcmp 1
@@ -43,7 +44,7 @@ int compare(const char *X, const char *Y)
 }
 
 char * string_ops(int choice,char *str1,char *str2){
-    int i=0;int j=0;  
+    int i=0;int j=0;int k=0;
     const char *str= str2;
     char *tmp = NULL;    
     switch(choice)
@@ -98,9 +99,18 @@ char * string_ops(int choice,char *str1,char *str2){
                 	printf("\nstring is :%s\n", tmp);
 				break;
 			case 5:
-			printf("	- linkled list insert(before/after),delete,sort.\n	- Trees inorder,delete.\n	- To-Do\n ");
-			//scanf("%s", word);
-			//execute(word);
+			  for(i=0;i<strlen(str1);i++){
+                for(j=i+1;j<strlen(str1);){
+                    
+			        if(str1[i]==str1[j]){
+			            for(k=j;k<11;k++)
+			                str1[k]=str1[k+1];
+			         }else{
+			            j++;
+			         }			      
+			  }
+			  }
+			  printf("Result=%s\n",str1);
 			break;
 			case 6: //exit_fun();// code to be executed if n is 7
 			
@@ -167,5 +177,7 @@ int main()
 
     return 0;
 }
+
+
 
 
