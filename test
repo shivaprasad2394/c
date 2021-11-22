@@ -1,0 +1,171 @@
+
+/*
+#define BADKEY -1
+#define strcmp 1
+#define strstr 2
+#define string_reverse 3
+#define string_pattern 4
+
+typedef struct { char *key; int val; } t_symstruct;
+
+static t_symstruct lookuptable[] = {
+    { "strcmp", A1 }, { "strstr", A2 }, { "string_reverse" , B1 }, { "string_pattern" , B2 }
+};
+
+#define NKEYS (sizeof(lookuptable)/sizeof(t_symstruct))
+
+int keyfromstring(char *key)
+{
+    int i;
+    for (i=0; i < NKEYS; i++) {
+        t_symstruct *sym = lookuptable[i];
+        if (strcmp(sym->key, key) == 0)
+            return sym->val;
+    }
+    return BADKEY;
+}
+*/
+#include <stdio.h>
+// returns true if `X` and `Y` are the same
+int compare(const char *X, const char *Y)
+{
+    while (*X && *Y)
+    {
+        if (*X != *Y) {
+            return 0;
+        }
+ 
+        X++;
+        Y++;
+    }
+ 
+    return (*Y == '\0');
+}
+
+char * string_ops(int choice,char *str1,char *str2){
+    int i=0;int j=0;  
+    const char *str= str2;
+    char *tmp = NULL;    
+    switch(choice)
+		{
+			case 1: 
+			printf("Func:-string_ops = string cmp\n");
+			//String_ops(Cmp);
+			while(*str1){
+            if(*str2!= *str1)break;
+            str2++;str1++;
+            }
+            return *(const unsigned char*)str1 - *(const unsigned char*)str2;
+            break;
+			case 2: // Function to implement `strstr()` function 
+			    while (*str1 != '\0')
+                {
+                    if ((*str1 == *str2) && compare(str1, str2)) {
+                        return str1;   //---------->return  updated X address if matching.
+                    }
+                str1++;
+                }
+                return NULL;
+				break;
+			case 3: 
+                  //j = strlen(str1) - 1; ---------->inbuilt func
+                  for(; str1[j]!=0; ++j);
+                  j--;
+                  //j=printf("%s", str1);----------->???
+                   while (i < j) {
+                      str1[i]=str1[i]+str1[j]-(str1[j]=str1[i]);
+                      i++;
+                      j--;
+                   }
+                   printf("\nReverse string is :%s\n", str1);
+				break;
+			case 4: 
+                	while (*str1)
+                	{
+                		while (*str1 == *str)
+                		{
+                			str1++;
+                			str++;
+                		}
+                		if (*str == '\0')
+                		{
+                			tmp = (char*)str1;
+                			str = str2;
+                			str1--;
+                		}
+                		str1++;
+                	}
+                	printf("\nstring is :%s\n", tmp);
+				break;
+			case 5:
+			printf("	- linkled list insert(before/after),delete,sort.\n	- Trees inorder,delete.\n	- To-Do\n ");
+			//scanf("%s", word);
+			//execute(word);
+			break;
+			case 6: //exit_fun();// code to be executed if n is 7
+			
+				break;
+			default: printf("kindly enter a valid option\n"); 
+		}
+
+}
+
+
+int main()
+{
+
+   char word[15];
+   char word1[15];
+   int value,choice=0;
+   int quit = 0; 
+	while(!quit){
+	
+		printf("enter the choice\n1)string ops\n2)bit ops\n3)Array ops\n4)memory ops\n5)structure ops\n6)exit\nEnter your choice:-");
+		scanf("%d",&choice);
+		switch(choice)
+		{
+			case 1: printf("- 1)strcmp\n	- 2)strstr\n	- 3)string_reverse\n	- 4)string_pattern\n	- 5)string_duplicate\n	- 6)Anagram/plaindrome\n	- 7)string_frequency\n	- 8)Str_to_int\n	- 9)str_pointers_ops\n");
+    		printf("Enter the Topic to Learn in file: ");
+			scanf("%d", &value);
+			printf("string1: ");
+			scanf("%s", word);
+			printf("string2: ");
+			scanf("%s", word1);
+			if(value==1){
+			value=string_ops(value,word,word1);
+			(value==0)?printf("Equal\n"):printf("not Equal\n");
+			}
+			string_ops(value,word,word1);
+			break;
+			case 2: printf("	- Bit set\n	- Bit reset\n	- Bit Toggle\n	- Bit clear\n	- Bit shift\n	- Bit multiply\n	- Bit division\n	- Bit swap\n	- nibble swap\n	- bit representation of int \n");
+				//scanf("%d",&value); 
+				//create_after(value);// code to be executed if n = 2;
+				//print_list();        
+				break;
+			case 3: printf("	- Bit set\n	- Bit reset\n	- Bit Toggle\n	- Bit clear\n	- Bit shift\n	- Bit multiply\n	- Bit division\n	- Bit swap\n	- nibble swap\n	- bit representation of int \n");
+    		printf("Enter the Topic to Learn in file: ");
+			scanf("%s", word);
+				break;
+			case 4: // code to be executed if n = 6
+		printf("	- Memcpy\n	- memmove\n	- memset\n your choice here:-");
+			printf("Enter the Topic to Learn in file: ");
+			scanf("%s", word);
+
+				break;
+			case 5:
+			printf("	- linkled list insert(before/after),delete,sort.\n	- Trees inorder,delete.\n	- To-Do\n ");
+			//scanf("%s", word);
+			//execute(word);
+			break;
+			case 6: //exit_fun();// code to be executed if n is 7
+				quit=1;
+				break;
+			default: printf("kindly enter a valid option\n"); 
+		}
+
+	}
+
+    return 0;
+}
+
+
