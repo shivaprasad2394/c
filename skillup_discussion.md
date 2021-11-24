@@ -72,7 +72,7 @@ Loader is the program of the operating system which loads the executable from th
 
 **ask if you need extra info**
 
-**Macros**:-A macro is a segment of code which is replaced by the value of macro.
+**Macros**:-A macro is a preprocessor directive ,where a segment of code  is replaced by the value of macro.
 
 A preprocessor directive.
 
@@ -289,7 +289,8 @@ typedef :-defining new names to existing types.
       sizeof x:8
       sizeof y:1
       sizeof z:1
-      From the output of the above program size of “a” which is a pointer is 8 (on a machine where pointers are stored using 8 bytes). In the above program, when the compiler comes to
+      From the output of the above program size of “a” which is a pointer is 8 (on a machine where pointers are stored using 8 bytes). 
+      In the above program, when the compiler comes to
 
       typedef char* ptr;
       ptr a, b, c;
@@ -339,11 +340,11 @@ according to c standards:-
       •reading the value from memory is the only way to check the unpredictable change of the value.
 
 	/*--------------------------
-	volatile int Flag = 0;
+	volatile int Flag = 1;
 
 	ISR(void) 
 	{ 
-	  Flag = 1; 
+	  Flag = 0; 
 	} 
 
 	int main(void) 
@@ -407,6 +408,7 @@ Example:- a switch or any output device is attached with GPIO[input].
 **Dangling pointer**:-When the reference object is deleted or Deallocated without Changing the value of the pointer.it creates a problem because the pointer is still pointing the memory that is no longer available.
 
 **Wild pointer**:-A pointer Not initialized properly proir to its First use is Know as wild pointer.
+
 **malloc” or “memory allocation”** method in C is used to dynamically allocate a single large block of memory with the specified size. 
 
 - It returns a pointer of type void which can be cast into a pointer of any form. 
@@ -431,7 +433,7 @@ Example:- a switch or any output device is attached with GPIO[input].
 		ptr = (float*) calloc(25, sizeof(float));
 		This statement allocates contiguous space in memory for 25 elements each with the size of the float.
 
-**realloc” or “re-allocation”** method in C is used to dynamically change the memory allocation of a previously allocated memory. 
+**realloc” or “re-allocation”** method in C is used to **dynamically change** the memory allocation of a previously allocated memory. 
 
 - In other words, if the memory previously allocated with the help of malloc or calloc is insufficient, realloc can be used to dynamically re-allocate memory. - - re-allocation of memory maintains the already present value and new blocks will be initialized with the default garbage value.
 
