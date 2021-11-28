@@ -1,13 +1,14 @@
 
 
-/*
+/*****************************************************************************/
+
 #define BADKEY -1
-#define strcmp 1
-#define strstr 2
+#define STRCMP 1
+#define STRSTR 2
 #define string_reverse 3
 #define string_pattern 4
 
-typedef struct { char *key; int val; } t_symstruct;
+/*typedef struct { char *key; int val; } t_symstruct;
 
 static t_symstruct lookuptable[] = {
     { "strcmp", A1 }, { "strstr", A2 }, { "string_reverse" , B1 }, { "string_pattern" , B2 }
@@ -27,6 +28,19 @@ int keyfromstring(char *key)
 }
 */
 #include <stdio.h>
+#include <string.h>
+#include <sys/ipc.h>
+#include <sys/msg.h>
+#include <pthread.h>
+#define MAX 15
+
+ // structure for message queue
+ struct mesg_buffer {
+    long mesg_type;
+    char mesg_text[100];
+} message;
+pthread_t tid[2];
+pthread_mutex_t lock;
 // returns true if `X` and `Y` are the same
 int compare(const char *X, const char *Y)
 {
@@ -44,7 +58,8 @@ int compare(const char *X, const char *Y)
 }
 
 char * string_ops(int choice,char *str1,char *str2){
-    int i=0;int j=0;int k=0;
+    int i=0;int j=0;int k=0;int length=0;int flag=0;int c=0;int x=0;int res = 0;
+    int count[26]={0};
     const char *str= str2;
     char *tmp = NULL;    
     switch(choice)
@@ -104,7 +119,7 @@ char * string_ops(int choice,char *str1,char *str2){
                     
 			        if(str1[i]==str1[j]){
 			            for(k=j;k<11;k++)
-			                str1[k]=str1[k+1];
+			                str1[k]=str1[k+1];//shift if eual
 			         }else{
 			            j++;
 			         }			      
@@ -112,29 +127,186 @@ char * string_ops(int choice,char *str1,char *str2){
 			  }
 			  printf("Result=%s\n",str1);
 			break;
-			case 6: //exit_fun();// code to be executed if n is 7
-			
-				break;
+			case 6:
+                length = strlen(str1);
+                for(i=0;i < length ;i++){
+                    if(str1[i] != str1[length-i-1]){
+                        flag = 1;
+                        break;
+                    }
+                }
+                (flag==0)?printf("%s is a palindrome\n", str1):printf("%s is not a palindrome\n", str1);
+            break;
+			case 7: /*Explanation of "count[string[c]-'a']++", 
+			suppose input string begins with 'a' so c is 0 initially and string[0] = 'a' and string[0] - 'a' = 0 and 
+			we increment count[0], i.e., 'a' has occurred one time and repeat this until the complete string is scanned.*/
+            while (str1[c] != '\0') {
+               /** Considering characters from 'a' to 'z' only and ignoring others. */
+                  if (str1[c] >= 'a' && str1[c] <= 'z') {
+                     x = str1[c] - 'a';
+                     count[x]++;
+                  }
+                  c++;
+               }
+               for (c = 0; c < 26; c++)
+                     printf("%c occurs %d times in the string.\n", c + 'a', count[c]);
+			break;
+			case 8:
+                for (int i = 0; str1[i] != '\0'; ++i)
+                    res = res * 10 + str1[i] - '0';
+                printf("AtoI result:-%d\n",res);
+			break;
 			default: printf("kindly enter a valid option\n"); 
 		}
 
 }
 
+void bit_ops(int value,int num,int pos){
+     switch(value)
+		{
+			case 1: 
+			printf("bit ops=bit set\n");
+            printf("setting bit=%d",(num | (1 << (pos - 1))));
+			break;
+			case 2: 
+			printf("bit ops=bit clear\n");
+            printf("clearing bit=%d",(num & (~(1 << (pos - 1)))));
+			break;
+			case 3: 
+			printf("bit ops=bit toggle\n");
+            printf("toggling bit=%d",(num ^ (1 << (pos - 1))));
+			break;
+			case 4: 
+			printf("bit ops=bit check\n");
+			if ((num >> (pos - 1)) & 1)
+            printf("bit is Set\n");
+            else
+            printf("bit is not Set\n");
+			break;
+			case 5: 
+			printf("bit ops=toggle all except kth bit\n");
+            printf("toggling All except kth bit=%d",~(num ^ (1 << pos)));
+			break;
+			case 6: 
+			printf("bit ops=bit representation of num\n");
+            unsigned i;
+            for (i = 1 << 31; i > 0; i = i / 2)
+            (num & i) ? printf("1") : printf("0");
+            printf("\n");
+			break;
+			default: printf("kindly enter a valid option\n"); 
+		}   
+}
 
+//SHARED MEMORY FOR READER PROCESS
+void* Read(void* arg)
+{
+ // ftok to generate unique key
+  key_t key = ftok("shmfile",65);
+
+  // shmget returns an identifier in shmid
+  int shmid = shmget(key,1024,0666|IPC_CREAT);
+
+  // shmat to attach to shared memory
+  char *str = (char*) shmat(shmid,(void*)0,0);
+  pthread_mutex_lock(&lock);
+  
+  printf("Data read from memory: %s\n",str);
+
+  pthread_mutex_unlock(&lock);
+  //detach from shared memory
+  shmdt(str);
+
+  // destroy the shared memory
+  shmctl(shmid,IPC_RMID,NULL);
+
+	return NULL;
+}
+
+
+//SHARED MEMORY FOR WRITER PROCESS
+void* Write(void* arg)
+{
+   // ftok to generate unique key
+    key_t key = ftok("shmfile",65);
+
+    // shmget returns an identifier in shmid
+    int shmid = shmget(key,1024,0666|IPC_CREAT);
+
+    // shmat to attach to shared memory
+    char *str = (char*) shmat(shmid,(void*)0,0);
+    pthread_mutex_lock(&lock);
+    printf("Write Data:\n");//cout<<"Write Data : ";
+    gets(str);
+
+    printf("Data written in memory: %s\n",str);
+pthread_mutex_unlock(&lock);
+    //detach from shared memory
+    shmdt(str);
+	return NULL;
+}
+//MESSAGE QUEUE FOR WRITER PROCESS
+void * send(void* arg){
+    key_t key;
+    int msgid;
+    char word[15];
+// ftok to generate unique key
+      key = ftok("progfile", 65);
+
+      // msgget creates a message queue
+      // and returns identifier
+      msgid = msgget(key, 0666 | IPC_CREAT);
+      message.mesg_type = 1;
+      pthread_mutex_lock(&lock);
+      printf("Write Data : ");
+      scanf("%s",word);
+      //fgets(message.mesg_text,MAX,stdin);
+      strncpy(message.mesg_text, word, MAX);     
+      pthread_mutex_unlock(&lock);
+      // msgsnd to send message
+      msgsnd(msgid, &message, sizeof(message), 0);
+
+      // display the message
+      printf("Data send is : %s \n", message.mesg_text);
+
+}
+//MESSAGE QUEUE FOR READER PROCESS
+void*  recv(void * arg){
+    key_t key;
+    int msgid;
+    char word[15];
+// ftok to generate unique key
+  key = ftok("progfile", 65);
+
+  // msgget creates a message queue
+  // and returns identifier
+  msgid = msgget(key, 0666 | IPC_CREAT);
+
+  // msgrcv to receive message
+  msgrcv(msgid, &message, sizeof(message), 1, 0);
+
+  // display the message
+  printf("Data Received is : %s \n",message.mesg_text);
+
+  // to destroy the message queue
+  msgctl(msgid, IPC_RMID, NULL);
+}
 int main()
 {
 
    char word[15];
    char word1[15];
    int value,choice=0;
+   int num,pos=0;
    int quit = 0; 
 	while(!quit){
 	
-		printf("enter the choice\n1)string ops\n2)bit ops\n3)Array ops\n4)memory ops\n5)structure ops\n6)exit\nEnter your choice:-");
+		printf("enter the choice\n1)string ops\n2)bit ops\n3)Array ops\n4)memory ops\n5)structure ops\n6)systemprogramming ops\n7)exit\nEnter your choice:-\n");
 		scanf("%d",&choice);
 		switch(choice)
 		{
-			case 1: printf("- 1)strcmp\n	- 2)strstr\n	- 3)string_reverse\n	- 4)string_pattern\n	- 5)string_duplicate\n	- 6)Anagram/plaindrome\n	- 7)string_frequency\n	- 8)Str_to_int\n	- 9)str_pointers_ops\n");
+			case 1: {
+			printf("- 1)strcmp\n	- 2)strstr\n	- 3)string_reverse\n	- 4)string_pattern\n	- 5)string_duplicate\n	- 6)Anagram/plaindrome\n	- 7)string_frequency\n	- 8)Str_to_int\n	- 9)str_pointers_ops\n");
     		printf("Enter the Topic to Learn in file: ");
 			scanf("%d", &value);
 			printf("string1: ");
@@ -146,30 +318,73 @@ int main()
 			(value==0)?printf("Equal\n"):printf("not Equal\n");
 			}
 			string_ops(value,word,word1);
+			}
 			break;
-			case 2: printf("	- Bit set\n	- Bit reset\n	- Bit Toggle\n	- Bit clear\n	- Bit shift\n	- Bit multiply\n	- Bit division\n	- Bit swap\n	- nibble swap\n	- bit representation of int \n");
-				//scanf("%d",&value); 
-				//create_after(value);// code to be executed if n = 2;
-				//print_list();        
-				break;
-			case 3: printf("	- Bit set\n	- Bit reset\n	- Bit Toggle\n	- Bit clear\n	- Bit shift\n	- Bit multiply\n	- Bit division\n	- Bit swap\n	- nibble swap\n	- bit representation of int \n");
+			case 2: {
+			printf("- 1)Bit set\n-2) Bit clear\n- 3)Bit Toggle\n- 4)Bit check\n	-5)bit toggle all except kth\n- 6)bit representation\n- 7)Bit rotate right/left (shift)\n- 8)Bit multiply\n- 9)Bit division\n- 10)Bit swap\n	- 11)nibble swap\n	");
+			printf("Enter the Topic to Learn in file: ");
+			scanf("%d", &value);
+    		printf("Enter the value: ");
+			scanf("%d", &num);
+    		printf("Enter the position: ");
+			scanf("%d", &pos);
+			bit_ops(value,num,pos);
+			}
+			break;
+			case 3: printf("	- 1)Array sort Asending/desending\n- 2)Array Bubble sort\n- 3)Array Linear sort\n- 4)smallest/largest element in Array\n- 5)duplicate element in Array\n- 6)frequency of element in Array\n- 7)subset of an array\n- 8)Delete element in Array\n- 9)matrix rotation\n- 10)2d/3d matrix sorting\n	");
     		printf("Enter the Topic to Learn in file: ");
 			scanf("%s", word);
-				break;
-			case 4: // code to be executed if n = 6
-		printf("	- Memcpy\n	- memmove\n	- memset\n your choice here:-");
-			printf("Enter the Topic to Learn in file: ");
-			scanf("%s", word);
-
-				break;
-			case 5:
-			printf("	- linkled list insert(before/after),delete,sort.\n	- Trees inorder,delete.\n	- To-Do\n ");
-			//scanf("%s", word);
-			//execute(word);
 			break;
-			case 6: //exit_fun();// code to be executed if n is 7
-				quit=1;
-				break;
+			case 4: // code to be executed if n = 6
+		    printf("	- Memcpy\n	- memmove\n	- memset\n your choice here:-");
+			printf("Enter the Topic to Learn in file: ");
+			scanf("%d", &value);
+			break;
+			case 5:
+			printf("-1) linkled list insert(before/after),delete,sort.\n-2) Trees inorder,delete.\n	-3) To-Do\n ");
+			printf("Enter the Topic to Learn in file: ");
+			scanf("%d", &value);
+			break;
+			case 6:{
+			printf("currently set for message quene: ");
+        	int i = 0;
+        	int error;
+        	/*for shm
+            void* (*ope[2])(void*);
+            ope[1] = Read;
+            ope[0] = Write;
+            */
+        	/*for msg quene*/
+            void* (*ope[2])(void*);
+            ope[1] = recv;
+            ope[0] = send;
+            
+        	/* for Tcp 
+            void* (*ope[2])(void*);
+            ope[1] = TCP_Client_Socket_Init;
+            ope[0] = TCP_Server_Socket_Init;
+            */
+        	if(pthread_mutex_init(&lock, NULL) != 0) {
+        		printf("\n mutex init has failed\n");
+        		return 1;
+        	}
+        		
+        	while (i < 2) {
+        		error = pthread_create(&(tid[i]), NULL, ope[i], NULL);
+        		if (error != 0)
+        			printf("\nThread can't be created : [%s]", strerror(error));
+        		i++;
+        		//for (unsigned long ii = 0; ii < (0xFFFFFFFF); ii++);
+        	}
+        
+        	pthread_join(tid[0], NULL);
+        	pthread_join(tid[1], NULL);
+            pthread_mutex_destroy(&lock);			
+        	}
+        	break;
+			case 7: //exit_fun();// code to be executed if n is 7
+			quit=1;
+			break;
 			default: printf("kindly enter a valid option\n"); 
 		}
 
@@ -177,7 +392,4 @@ int main()
 
     return 0;
 }
-
-
-
 
