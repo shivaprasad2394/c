@@ -1,6 +1,4 @@
-
-
-/*****************************************************************************/
+/******************************************************************************/
 
 #define BADKEY -1
 #define STRCMP 1
@@ -35,7 +33,7 @@ int keyfromstring(char *key)
 #define MAX 15
 
  // structure for message queue
- struct mesg_buffer {
+struct mesg_buffer {
     long mesg_type;
     char mesg_text[100];
 } message;
@@ -44,14 +42,14 @@ pthread_mutex_t lock;
 // returns true if `X` and `Y` are the same
 int compare(const char *X, const char *Y)
 {
-    while (*X && *Y)
+    while (*X && *Y)//while both string not Null
     {
-        if (*X != *Y) {
+        if (*X != *Y) {//return if string not equal 
             return 0;
         }
  
         X++;
-        Y++;
+        Y++;// iterate/traverse to the end while equal.
     }
  
     return (*Y == '\0');
@@ -64,38 +62,39 @@ char * string_ops(int choice,char *str1,char *str2){
     char *tmp = NULL;    
     switch(choice)
 		{
-			case 1: 
+			case 1: //--------->string compare
 			printf("Func:-string_ops = string cmp\n");
 			//String_ops(Cmp);
-			while(*str1){
-            if(*str2!= *str1)break;
+			while(*str1){//while not string not equal to null
+            if(*str2!= *str1)break;//iterate string to end until not equal.
             str2++;str1++;
             }
             return *(const unsigned char*)str1 - *(const unsigned char*)str2;
             break;
-			case 2: // Function to implement `strstr()` function 
+			case 2: // ------->Function to implement `strstr()` function 
 			    while (*str1 != '\0')
                 {
                     if ((*str1 == *str2) && compare(str1, str2)) {
-                        return str1;   //---------->return  updated X address if matching.
+                        printf("test :-pattern found?=%s",str1);
+                        return str1;   //---------->return  updated X address if matching/pattern found.
                     }
-                str1++;
+                str1++;//if not matching increment to next position till null.
                 }
                 return NULL;
 				break;
-			case 3: 
+			case 3: //--------->string reverse
                   //j = strlen(str1) - 1; ---------->inbuilt func
                   for(; str1[j]!=0; ++j);
                   j--;
-                  //j=printf("%s", str1);----------->???
+                  //j=printf("%s", str1);----------->???should work
                    while (i < j) {
-                      str1[i]=str1[i]+str1[j]-(str1[j]=str1[i]);
+                      str1[i]=str1[i]+str1[j]-(str1[j]=str1[i]);//A=10,B=5;  A=10+5-(10) ,B=10
                       i++;
                       j--;
                    }
                    printf("\nReverse string is :%s\n", str1);
 				break;
-			case 4: 
+			case 4: //this works but return ending of matched pattern.instead of beginning.need to find better logic.
                 	while (*str1)
                 	{
                 		while (*str1 == *str)
@@ -105,7 +104,7 @@ char * string_ops(int choice,char *str1,char *str2){
                 		}
                 		if (*str == '\0')
                 		{
-                			tmp = (char*)str1;
+                			tmp = (char*)str1;//an attemp to save address?but end addrs?
                 			str = str2;
                 			str1--;
                 		}
@@ -113,21 +112,21 @@ char * string_ops(int choice,char *str1,char *str2){
                 	}
                 	printf("\nstring is :%s\n", tmp);
 				break;
-			case 5:
+			case 5://------------------->string duplicate elements removal
 			  for(i=0;i<strlen(str1);i++){
                 for(j=i+1;j<strlen(str1);){
                     
-			        if(str1[i]==str1[j]){
+			        if(str1[i]==str1[j]){//it can be consecutive euual or anywhere eual because of else condn 
 			            for(k=j;k<11;k++)
-			                str1[k]=str1[k+1];//shift if eual
+			                str1[k]=str1[k+1];//  shift the rest of arr/str to its pos if equal
 			         }else{
-			            j++;
+			            j++;//move to next if not equal
 			         }			      
 			  }
 			  }
 			  printf("Result=%s\n",str1);
 			break;
-			case 6:
+			case 6://--->check palindrome
                 length = strlen(str1);
                 for(i=0;i < length ;i++){
                     if(str1[i] != str1[length-i-1]){
@@ -154,7 +153,7 @@ char * string_ops(int choice,char *str1,char *str2){
 			case 8:
                 for (int i = 0; str1[i] != '\0'; ++i)
                     res = res * 10 + str1[i] - '0';
-                printf("AtoI result:-%d\n",res);
+                printf("AtoI result:-%d\n",res);//(res*10)+(str[i]-'0')
 			break;
 			default: printf("kindly enter a valid option\n"); 
 		}
@@ -190,7 +189,7 @@ void bit_ops(int value,int num,int pos){
 			case 6: 
 			printf("bit ops=bit representation of num\n");
             unsigned i;
-            for (i = 1 << 31; i > 0; i = i / 2)
+            for (i = 1 << 31; i > 0; i = i / 2)//here shift ==multiply by 2,and i/2 is decrement factor.
             (num & i) ? printf("1") : printf("0");
             printf("\n");
 			break;
@@ -198,7 +197,7 @@ void bit_ops(int value,int num,int pos){
 		}   
 }
 
-//SHARED MEMORY FOR READER PROCESS
+//----------------SHARED MEMORY FOR READER PROCESS---------------
 void* Read(void* arg)
 {
  // ftok to generate unique key
@@ -224,7 +223,7 @@ void* Read(void* arg)
 }
 
 
-//SHARED MEMORY FOR WRITER PROCESS
+//----------------------SHARED MEMORY FOR WRITER PROCESS-----------------
 void* Write(void* arg)
 {
    // ftok to generate unique key
@@ -245,7 +244,7 @@ pthread_mutex_unlock(&lock);
     shmdt(str);
 	return NULL;
 }
-//MESSAGE QUEUE FOR WRITER PROCESS
+//----------------MESSAGE QUEUE FOR WRITER PROCESS------------------
 void * send(void* arg){
     key_t key;
     int msgid;
@@ -270,7 +269,7 @@ void * send(void* arg){
       printf("Data send is : %s \n", message.mesg_text);
 
 }
-//MESSAGE QUEUE FOR READER PROCESS
+//---------------------MESSAGE QUEUE FOR READER PROCESS-----------------------
 void*  recv(void * arg){
     key_t key;
     int msgid;
@@ -291,6 +290,9 @@ void*  recv(void * arg){
   // to destroy the message queue
   msgctl(msgid, IPC_RMID, NULL);
 }
+void structure_ops(){
+    
+}
 int main()
 {
 
@@ -306,7 +308,7 @@ int main()
 		switch(choice)
 		{
 			case 1: {
-			printf("- 1)strcmp\n	- 2)strstr\n	- 3)string_reverse\n	- 4)string_pattern\n	- 5)string_duplicate\n	- 6)Anagram/plaindrome\n	- 7)string_frequency\n	- 8)Str_to_int\n	- 9)str_pointers_ops\n");
+			printf("        - 1)strcmp\n	- 2)strstr\n	- 3)string_reverse\n	- 4)string_pattern\n	- 5)string_duplicate_element_removal\n	- 6)Anagram/plaindrome\n	- 7)string_frequency\n	- 8)Str_to_int\n	- 9)str_pointers_ops\n");
     		printf("Enter the Topic to Learn in file: ");
 			scanf("%d", &value);
 			printf("string1: ");
@@ -392,4 +394,6 @@ int main()
 
     return 0;
 }
+
+
 
