@@ -487,19 +487,29 @@ Ex:-
 
 Ex:-
 
-	Void Do_operation(int (*op)(int x,int y)){
-	return op(X,Y);
-	}
-	int Add(int a,int b){
-	//do something
-	}
-	int Multiply(int a,int b){
-	//do something
-	}
-	int main(){
-	int result = Do_operation(Add,2,3);
-	int result = Do_operation(Multiply,2,3);
-	}
+#include <stdio.h>
+
+
+int Add(int a, int b) {
+  return a + b;
+}
+
+int Multiply(int a, int b) {
+  return a * b;
+}
+
+void Do_operation(int (*op)(int, int), int x, int y) {
+  int result = op(x, y);
+  printf("The result of %s is %d.\n", op == Add ? "addition" : "multiplication", result);
+}
+
+int main() {
+  Do_operation(Add, 2, 3);
+  Do_operation(Multiply, 2, 3);
+
+  return 0;
+}
+
 
 # Function pointers and type def
 
