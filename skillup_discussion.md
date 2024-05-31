@@ -3286,6 +3286,22 @@ This file is read by hostapd after starting during turning on hotspot as hotspot
  
 if Hostapd service/process is success it will return the control to softap manager.
 
+**note/tips**:- (https://blog.csdn.net/IT_xiao_bai0516/article/details/124414261)
+
+1)(wifi ap status & config)
+ 
+ - when modifying config of ap it involves turning on/off .
+
+ - when turning on/off you need to pass the config.if the passed config is null ,then last used config  will be used.
+
+ - If last config doesnot exist default config will be used.
+
+- when turning ap first determine the status of wifi if it is on  turn off wifi status and then turn on wifi ap
+
+2)List of devices connected:-read the specific file (proc/net/arp ) to obtain the connected device information or by listening to broadcast info
+
+- we can send a broadcast the device cnnection is success & the upper layer can update the connection list
+
 =====================================
 
 The ViperIII system includes Vehicle Processor and Graphics Processor. 
