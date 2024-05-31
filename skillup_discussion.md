@@ -3260,24 +3260,24 @@ connectivityManager.startTethering() internally calls enabletetheringinternal --
 
 in the framework ,inorder to start soft ap 1st softap config is setup
 
--->wifimanager get the saved ap config  from wifiapconfigstore and pass it to below layer 
+- wifimanager get the saved ap config  from wifiapconfigstore and pass it to below layer 
 
--->wifi statemachine state(activemodemanager) it updated and will start to swicth wifi mode management to AP mode
+- wifi statemachine state(activemodemanager) it updated and will start to swicth wifi mode management to AP mode
 
- -->softap callback are registered  and softap object is created
+- softap callback are registered  and softap object is created
 
- -->once softap obj is started	it determine 5g ch support avialblr or not and config accordingly for ch selection
+- once softap obj is started	it determine 5g ch support avialblr or not and config accordingly for ch selection
 
- -->finally wifi native will pass the softapstart request to vendor through HAL ,for setting up wifi interface and wifi mode.
+- finally wifi native will pass the softapstart request to vendor through HAL ,for setting up wifi interface and wifi mode.
 
- -->the HAL layer will recieve the request from Wifinative and will intilize the vendor function(qcom) wrt to softap mode and interface.
+- the HAL layer will recieve the request from Wifinative and will intilize the vendor function(qcom) wrt to softap mode and interface.
 
- -->the HAL layer will also establish socket communication with vendor driver & wifi chip instance is created.
+- the HAL layer will also establish socket communication with vendor driver & wifi chip instance is created.
 	With this soft ap mode and inteface is completed.
 
- -->Meanwhile wifinative would also request for starthostapd “a deamon resposnible for controlling softap”
+- Meanwhile wifinative would also request for starthostapd “a deamon resposnible for controlling softap”
  
-the request is passed to vendor where the qcom function add or update hostapd function performs two main task through qualcom sdk
+- the request is passed to vendor where the qcom function add or update hostapd function performs two main task through qualcom sdk:-
 
 1)write Ap configuration such as ssid,channel,encryption method to configuration file data/vendor/wifi/hostapd/hostapd.conf.
 This file is read by hostapd after starting during turning on hotspot as hotspot setting info.
