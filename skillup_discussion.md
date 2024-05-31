@@ -3213,6 +3213,44 @@ DHCP (Dynamic Host Configuration Protocol) is a network protocol for local area 
 2)wifi p2p service and so
 (https://blog.csdn.net/lilian0118/article/details/22732747?)
 
+-------------------------------
+1)Set Softap mode static ip address
+- ifconfig wlan1 172.25.0.1
+
+2)set up dhcp range of dnsmasq based on static ip set in softap mode
+- dnsmasq –dhcp -range=172.25.0.2,  172.25.0.255, 12h –interface=wlan1 –no resolve
+
+3)modify the security mode and other settings you want in hostapd.conf
+- location of hostapd.conf :-/etc/hostapd.conf
+
+- wpa-psk,wpa-psk2 : setting for security of softap to wpa/wpa2
+
+  		interface=wlan1
+		ctrl_interface=/var/run/hostapd
+		ssid=SoftAP_shiva
+		hw_mode=g
+		channel=11
+		max_num_sta=3
+		auth_algs=3
+		wpa=2
+		wpa_passphase=1234567890
+		wpa_key_mgmt=wpa-psk
+		wpa_pairwise=tkip
+		rsn_pairwise=ccmp
+
+- run softap mode
+hostapd -iwlan1 etchostapd.conf -B
+
+- cmd for setting/changing channel when softap is disabled
+hostapd_cli set channel 10
+
+- cmd for setting/changing ssid when softap is disabled
+hostapd_cli set ssid changessid
+
+- cmd to enable softap
+hostapd_cli enable
+
+-----------------------------------
 
 **Hotspot in netshell** 
 (https://blog.csdn.net/qq_17470165/article/details/131480252)
