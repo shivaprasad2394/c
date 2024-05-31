@@ -3203,7 +3203,58 @@ DHCP (Dynamic Host Configuration Protocol) is a network protocol for local area 
 		 setInterfaceConfiguration(address, null)
 		   mNetd.interfaceSetCfg(ifConfig)
 
-------------------------------------------------------------------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------------------------------
+-------------------------
+=====================================
+1)p2p theory link 
+https://blog.csdn.net/wushakun/article/details/137592882?
+2)wifi p2p service and so
+https://blog.csdn.net/lilian0118/article/details/22732747?
+
+
+Hotspot in netshell (https://blog.csdn.net/qq_17470165/article/details/131480252)
+1)toggle hotspot button -->determine hotspot status-->if not enabled proceed to enable wrt to specific platform design
+2)select the frequency(2.4/5),encryption method,ssid,password
+3) Create hotspot config with above config
+4)save the ap hotspot config and enable hotspot
+
+Soft framework basic (https://blog.csdn.net/IT_xiao_bai0516/article/details/122109294?)
+Soft ap is a software implementaion for turning mobile phone into wirelss AP.
+The andoid wireless/soft Ap implemenation provides two main function 
+1)Ap related function like turn on ,Turn off & authentication etc)
+2)Internet sharing function including routing (Dns,dhcp configuration)
+
+Local userspace deamons
+1)netd :-a theard which manages network device interface,
+2)hostapd :-child process of netd manges softap operation
+3)dnsmasq :-Dnsmasq is a DNS forwarder and DHCP server for  networks. Dnsmasq's DHCP server supports static and dynamic DHCP leases, multiple networks and IP address ranges. The DHCP server integrates with the DNS server and allows local machines with DHCP-allocated addresses to appear in the DNS.
+4)iptables:-routing table management,implement nat 
+
+Android Qualcmm soft ap startup process
+(https://blog.csdn.net/zhangdaxia2/article/details/109046679 ) part1
+(https://blog.csdn.net/zhangdaxia2/article/details/109046750?) part2
+
+part1:- the entry point or starting point fpr soft ap is in connectivityManager.java.
+the wifimanager calls  connectivityManager.startTethering(),When app or setting starts hotspot
+connectivityManager.startTethering() internally calls enabletetheringinternal -->setwifitethering-->to framework service
+in the framework ,inorder to start soft ap 1st softap config is setup
+-->wifimanager get the saved ap config  from wifiapconfigstore and pass it to below layer 
+-->wifi statemachine state(activemodemanager) it updated and will start to swicth wifi mode management to AP mode
+-->softap callback are registered  and softap object is created
+-->once softap obj is started	it determine 5g ch support avialblr or not and config accordingly for ch selection
+-->finally wifi native will pass the softapstart request to vendor through HAL ,for setting up wifi interface and wifi mode.
+-->the HAL layer will recieve the request from Wifinative and will intilize the vendor function(qcom) wrt to softap mode and interface.
+-->the HAL layer will also establish socket communication with vendor driver & wifi chip instance is created.
+With this soft ap mode and inteface is completed.
+-->Meanwhile wifinative would also request for starthostapd “a deamon resposnible for controlling softap”
+ 
+the request is passed to vendor where the qcom function add or update hostapd function performs two main task through qualcom sdk
+1)write Ap configuration such as ssid,channel,encryption method to configuration file data/vendor/wifi/hostapd/hostapd.conf.
+This file is read by hostapd after starting during turning on hotspot as hotspot setting info.
+2)some operation instruction will be sent to driver through the io to directly guide the driver to execute like disconnecting sta operation code
+ 
+if Hostapd service/process is success it will return the control to softap manager.
+=====================================
 
 The ViperIII system includes Vehicle Processor and Graphics Processor. 
 The Vehicle Processor will manage all real-time functions, manage communications with the vehicle system, and monitor the onboard functionality. 
