@@ -528,3 +528,52 @@ honor mention
 https://www.youtube.com/channel/UCb9okJF6NGPDUGgAQxu3TcA/search?query=c
 https://www.youtube.com/watch?v=gGTad760ogM&list=PLTQzjZn0BgA7BHHWKiuhG59bLO7TbNS41&index=48
 https://www.youtube.com/user/EmbeddedSoftware/search?query=static
+
+
+to-do 
+-----
+wifi p2p service implementaion ref wit praneeth bog
+Overview of WifiP2pService Impl in androidT Source
+WifiP2pService Impl is the core imp lementati
+of WiFi P2P (Peer-to-Peer) services in Android.
+It manages Wi-Fi P2P connections, group formation, and device discovery.
+This class implements the IWifiP2pManager interface, which defines the methods that can be called by applications to use Wi-Fi P2P feature.
+
+Key Components
+1. State Management
+The class maintains various state variables to keep track of P2P operations, such as:
+mP2pStateMachine: Handles the Wi Fi P2P state machine
+mDiscoveryStarted:
+Indicates if device di
+ai scOvery 13 active
+mNetworkInfo: Stores current network information
+2. P2P State Machine
+The P2P state machine (implemented in a separate class) handles different states of Wi-Fi P2P operations, such as:
+Inactive
+Enabled
+Discovering
+Connected
+3. Device Discovery
+Methods like discoverPeers () initiate the discovery of nearby Wi Fi P2P devices.
+4. Connection Handling
+Functions like connect () and cancelConnect () manage P2P connections with other devices.
+5. Group Operations
+Methods for creating, removing, and managing P2P groups, such as createGroup () and removeGroup ()) .
+Key Methods
+Here are some important methods in WifiP2pServiceImpl:
+H
+initialize () : Sets up the P2P servi ce, including initializing the state machine.
+discoverPeers (0: Starts peer discovery.
+connect () : Initiates a connection to another P2P device
+cancelConnect () : Cancels an ongoing connection attempt.
+CreateGroup (): Creates a P2P group with the device as the group owner.
+removeGroup (): Removes the current P2P group
+getDeviceList (): Retrieves the list of d1scoveredP2 device3
+Ior P2P
+setDeviceName () : Sets the device name
+setWfdInfo () : Sets.Wi-Fi Display information.
+Implementation Details
+The class uses a lot of asynchronous operations, often returning immediately and using callbacks to notify results.
+It extensively uses the WifiP2pStateMachine to managel different states and transitions.
+Many operations involve checking permissions and validating parameters before execution.
+The class interacts with lower-level Wi-Fi services and hardware through the WifiNative interface.
