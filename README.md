@@ -577,3 +577,55 @@ The class uses a lot of asynchronous operations, often returning immediately and
 It extensively uses the WifiP2pStateMachine to managel different states and transitions.
 Many operations involve checking permissions and validating parameters before execution.
 The class interacts with lower-level Wi-Fi services and hardware through the WifiNative interface.
+
+1-1
+Based on the WifiP2pServiceImpl.java code and the specific example you mentioned,
+1'1 create a state machine di agram description for the Wi-Fi P2P process, including main states, substates, and a sequence diagram for the enable
+Here's a detailed breakdown:
+State Machine Diagram
+Main States and Substates
+DefaultState
+Substate: MessageHandling
+Substate: ErrorLogging
+P2pDisabledState
+Substate: WaitingForEnable
+P2pEnablingState
+Substate: InitializingP2p
+Substate: StartingSupplicant
+Substate: SettingDeviceName
+Substate: DiscoveryPeer
+InactiveState
+Substate: IdleListening
+Substate: HandleConnectRequest
+GroupCreatingState
+Substate: NegotiatingGroupParameters
+Substate: FormingGroup
+UserAuthorizingInvitationState
+Substate: DisplayingInvitation
+Substate: WaitingForUserResponse
+ProviionDiscoveryState
+Substate: ExchangingProvisionInfo
+Substate: PreparingGroupFormation
+GroupNegotiationState
+Substate: DeterminingGroup0wner
+Substate: ConfiguringConnection
+FrequencyConfliċtState
+Substate: DetectingConflicts
+Substate: ResolvingConflicts
+GroupCreatedState
+Substate: ManagingConnections
+Substate: MaintainingGroup
+P2pDisablingState
+Substate: StoppingP2p
+Substate: ReleasingResources
+Key Transitions
+P2pDisabledstate P2pEnablingState (on enable request)
+P2pEnablingState → InactiveState (when P2P enabled success fully)
+InactiveState → GroupCreatingState (on group creation request)
+GroupCreatingState GroupNegotiationState (when negotiation starts)
+GroupNegotiationState GroupCreatedState (when group formed)
+InactiveState UserAuthorizingInvitationState (on invitation received)
+UserAuthorizingInvitationState ProvisionDiscoveryState (on user acceptance)
+ProvisionDiscoveryState GroupNegotiationState (when provision complete)
+Any State → FrequencyConflictState (on frequency conflict detected)
+Any State → P2pDisablingState (on disable request)
