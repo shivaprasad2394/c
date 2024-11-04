@@ -736,24 +736,25 @@ detailed sequence diagrams and trigger information for the transitions from P2pE
 Sequence Diagram:
 
   text
-    User->WifiP2pServiceImpl: enable ()
-    WifiP2pService Impl->P2pEnablingState: CMD P2P ENABLE
-    P2pEnablingState->WifiNative: setup Interface ()
-    WifiNative->P2pEnablingState: Success
-    P2pEnablingState->WifiNative: registerCallback ()
-    WifiNative->P2pEnablingState: Success
-    P2pEnablingState->WifiNative: p2pGet DeviceAddress ()
-    WifiNative->P2pEnablingState: Device Address
-    P2pEnablingState->WifiNative: p2pSetDeviceName ()
-    WifiNative->P2pEnablingState : Success
-    P2pEnablingState->WifiNative : p2pFlush ()
-    WifiNative->P2pEnablingState: Success
-    P2pEnablingState->WifiNative: p2pServiceFlush ()
-    WifíNative->P2pEnablingState: Success
-    P2pEnablingState->WifiP2pServiceImpl: ENABLE P2P_ SUCCEEDED
-    WifiP2pServiceImpl->InactiveState: Transition
-    InactiveState->WifiP2pService Impl: Update internal state
-    WifiP2pServiceImpl->User: onP2pEnabled callback
+ 
+      User->WifiP2pServiceImpl: enable ()
+      WifiP2pService Impl->P2pEnablingState: CMD P2P ENABLE
+      P2pEnablingState->WifiNative: setup Interface ()
+      WifiNative->P2pEnablingState: Success
+      P2pEnablingState->WifiNative: registerCallback ()
+      WifiNative->P2pEnablingState: Success
+      P2pEnablingState->WifiNative: p2pGet DeviceAddress ()
+      WifiNative->P2pEnablingState: Device Address
+      P2pEnablingState->WifiNative: p2pSetDeviceName ()
+      WifiNative->P2pEnablingState : Success
+      P2pEnablingState->WifiNative : p2pFlush ()
+      WifiNative->P2pEnablingState: Success
+      P2pEnablingState->WifiNative: p2pServiceFlush ()
+      WifíNative->P2pEnablingState: Success
+      P2pEnablingState->WifiP2pServiceImpl: ENABLE P2P_ SUCCEEDED
+      WifiP2pServiceImpl->InactiveState: Transition
+      InactiveState->WifiP2pService Impl: Update internal state
+      WifiP2pServiceImpl->User: onP2pEnabled callback
 
 P2pEnablingState → P2pDisabledState
 -----------------------------------
