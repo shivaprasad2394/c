@@ -705,111 +705,121 @@ P2pDisabledState
 
 P2pEnablingState
 ----------------
-specific events or conditions that trigger transitions between states.
-P2PEnablingState → InactiveState
 
+    specific events or conditions that trigger transitions between states.
+    P2PEnablingState → InactiveState
+    Trigger: Wifi P2pManager. ENABLE P2P SUCCEEDED
 
-Trigger: Wifi P2pManager. ENABLE P2P SUCCEEDED
-new
 high level sequence
-P2pEnablingState -> InitializingP2p: Initialize P2P
-InitializingP2p -> StartingSupplicant: Start Supplicant
-StartingSupplicant -> SettingDeviceName: Set Device Name
-SettingDeviceName -> DisçoveryPeer: Start Peer Discovery
-DiscoveryPeer -> InactiveState: Transition
-**************** *t * *** ********t*** * **** ******* t **** *******
+    P2pEnablingState -> InitializingP2p: Initialize P2P
+    InitializingP2p -> StartingSupplicant: Start Supplicant
+    StartingSupplicant -> SettingDeviceName: Set Device Name
+    SettingDeviceName -> DisçoveryPeer: Start Peer Discovery
+    DiscoveryPeer -> InactiveState: Transition
+
+******************************************************
+
 detailed sequence diagrams and trigger information for the transitions from P2pEnablingState to InactiveState.
-P2pEnablingState InactiveState
-Trigger: WifiP2pManager. ENABLE P2P SUCCEEDED
-Trigger Details:
-The ENABLE P2P SUCCEEDED event is generated internally by the P2pEnablingState after successfully completing all the steps to enable P2P.
-This includes setting up the interface, registering callbacks, qetting the device address, setting the device name, and flushing any existing P2 P and service configurat
-If all these steps complete successfully, the state machine transitions to the InactiveState, indicating that P2P is now enabled and ready for further operations.
+
+    P2pEnablingState → InactiveState
+    Trigger: WifiP2pManager. ENABLE P2P SUCCEEDED
+    Trigger Details:
+    The **ENABLE P2P SUCCEEDED** event is generated internally by the P2pEnablingState after successfully completing 
+    all the steps to enable P2P.
+
+    This includes setting up the interface, registering callbacks, qetting the device address, setting the device 
+    name, and flushing any existing P2 P and service configurat
+
+    If all these steps complete successfully, the state machine transitions to the InactiveState, indicating that 
+    P2P is now enabled and ready for further operations.
+
 Sequence Diagram:
-text
-User->WifiP2pServiceImpl: enable ()
-WifiP2pService Impl->P2pEnablingState: CMD P2P ENABLE
-P2pEnablingState->WifiNative: setup Interface ()
-WifiNative->P2pEnablingState: Success
-P2pEnablingState->WifiNative: registerCallback ()
-WifiNative->P2pEnablingState: Success
-P2pEnablingState->WifiNative: p2pGet DeviceAddress ()
-WifiNative->P2pEnablingState: Device Address
-P2pEnablingState->WifiNative: p2pSetDeviceName ()
-WifiNative->P2pEnablingState : Success
-P2pEnablingState->WifiNative : p2pFlush ()
-WifiNative->P2pEnablingState: Success
-P2pEnablingState->WifiNative: p2pServiceFlush (0
-WifíNative->P2pEnablingState: Success
-P2pEnablingState->WifiP2pServiceImpl: ENABLE P2P_ SUCCEEDED
-WifiP2pServiceImpl->InactiveState: Transition
-InactiveState->WifiP2pService Impl: Update internal state
-5
-WifiP2pServiceImpl->User: onP2pEnabled callback
+
+  text
+    User->WifiP2pServiceImpl: enable ()
+    WifiP2pService Impl->P2pEnablingState: CMD P2P ENABLE
+    P2pEnablingState->WifiNative: setup Interface ()
+    WifiNative->P2pEnablingState: Success
+    P2pEnablingState->WifiNative: registerCallback ()
+    WifiNative->P2pEnablingState: Success
+    P2pEnablingState->WifiNative: p2pGet DeviceAddress ()
+    WifiNative->P2pEnablingState: Device Address
+    P2pEnablingState->WifiNative: p2pSetDeviceName ()
+    WifiNative->P2pEnablingState : Success
+    P2pEnablingState->WifiNative : p2pFlush ()
+    WifiNative->P2pEnablingState: Success
+    P2pEnablingState->WifiNative: p2pServiceFlush ()
+    WifíNative->P2pEnablingState: Success
+    P2pEnablingState->WifiP2pServiceImpl: ENABLE P2P_ SUCCEEDED
+    WifiP2pServiceImpl->InactiveState: Transition
+    InactiveState->WifiP2pService Impl: Update internal state
+    WifiP2pServiceImpl->User: onP2pEnabled callback
+
 P2pEnablingState → P2pDisabledState
-1
+-----------------------------------
 detailed sequence diagrams and trigger information for the transitions from P2pEnablingState to
 P2pDisabledState.
-3
-4 Trigger: WifiP2pManager.ENABLE P2P FAILED
-Trigger Details:
-The ENABLE P2P FAILED event is generated if any of the steps in the enabling process fail.
-This could happen due to various reasons such as:
-Failure to set up the P2P interface
-Unable to register callbacks with WifiNative
-Failure to get the device address
-1
-Unable to set the device name
-Faílure ín flushing existing configurations
-If any of these steps fail, the state machine immediately transitions back to the P2pDisabledState.
-The failure ig reported back to the user through an onFailure callback.
-1-4
 
-
-
+    Trigger: WifiP2pManager.ENABLE P2P FAILED
+      Trigger Details:
+      The **ENABLE P2P FAILED** event is generated if any of the steps in the enabling process fail.
+      This could happen due to various reasons such as:
+      Failure to set up the P2P interface
+      Unable to register callbacks with WifiNative
+      Failure to get the device address
+      Unable to set the device name
+      Faílure ín flushing existing configurations
+      If any of these steps fail, the state machine immediately transitions back to the P2pDisabledState.
+      The failure ig reported back to the user through an onFailure callback.
+  
 Sequence Diagram:
+----------------
+    text
+      User->WifiP2pService Impl: enable ()
+      WifiP2pService Tmpl->P2pEnablingState: CMD P2P ENABLE
+      P2pEnablingState->WifiNative: setup Tnterface ()
+      WifiNative->P2pEnablingState: Failure
+      P2pEnablingState->WifiP2pServiceImpl: NABLE P2P FAILED
+      WifiP2pService Impl-SP2pDisabledState: Transition
+      P2pDis abledState->WifiP2pServiceImpl: Update internal state
+      WifiP2pService Impl->User:i onFailure callback
+      Note: Failure coulld occur at any step (setupInterface, registerCallback, etc.)
 
-User->WifiP2pService Impl: enable ()
-WifiP2pService Tmpl->P2pEnablingState: CMD P2P ENABLE
-P2pEnablingState->WifiNative: setup Tnterface ()
-WifiNative->P2pEnablingState: Failure
-P2pEnablingState->WifiP2pServiceImpl: NABLE P2P FAILED
-WifiP2pService Impl-SP2pDisabledState: Transition
-P2pDis abledState->WifiP2pServiceImpl: Update internal state
-WifiP2pService Impl->User:i onFailure callback
-Note: Failure coulld occur at any step (setupInterface, registerCallback, etc.)
 Additional Notes:
-The P2pEnablingState is a transitional state. It's not meant for long-term residence.
-If the enabling process succeeds, it moves to InactiveState, making the P2P functionality available.
-If the process fails at any point, it reverts to P2pDisabledstate, ensuring the system rema ins in a consistent state.
-The detailed steps in the enabling process ensure that the P2P subsystem is properly initialized before allowing any P2P operations.
-***tt******t******* **** ***t******* ***t****** t ***********
-InactiveState
-specific events or conditions that trigger transitions between states
-InactiveState GroupCreatingState
-Trigger: CMD P2P CREATE GROUP or CMD P2P CONNECT
-InactiveState -> IdleListening: Listen for Events
-IdleListening -> HandleConnectRequest: Connection Request Received
-HandleConnectRequest -> GroupCreatingState: Initiate Group Creation
-InactiveState
+    The P2pEnablingState is a transitional state. It's not meant for long-term residence.
+    If the enabling process succeeds, it moves to InactiveState, making the P2P functionality available.
+    If the process fails at any point, it reverts to P2pDisabledstate, ensuring the system rema ins in a consistent state.
+    The detailed steps in the enabling process ensure that the P2P subsystem is properly initialized before allowing any P2P operations.
+    
+**************************************************
+**InactiveState**
+
+    specific events or conditions that trigger transitions between states
+    InactiveState GroupCreatingState
+    Trigger: CMD P2P CREATE GROUP or CMD P2P CONNECT
+    InactiveState -> IdleListening: Listen for Events
+    IdleListening -> HandleConnectRequest: Connection Request Received
+    HandleConnectRequest -> GroupCreatingState: Initiate Group Creation
+
 specific events or conditions that trigger transitions between states.
-InactiveState GroupCreatingState
-Trigger: CMD P2P CREATE GROUP or CMD P2P CONNECT
-Trigger details:-
-CMD P2P CREATE GROUP:
-Initiated when a user or application requests to Create a P2P group
-Can be triggered by calling WìfiP2pManager.createGroup () method
-Starts the process. of becoming a Group Owner (GO)
-CMD P2P CONNECT:
-Initiated when a user or application requests to Connect to another P2P device
-Can be triggered by calling WìfiP2pManager. connect () method
-Starts the process of either joining an existing group or negotiating to form a new group
-sequence
-User->WifiP2pService Impl: createGroup () or connect ()
-WifiP2pService Impl->InactiveState: CMD P2P CREATE GROUP or CMD P2P CONNECT
-InactiveState->WifiNative: p2pGroupAdd () or p2pConnect ()
-WifiNative->InactiveState: Success
-InactiveState->GroupCreatingState: Transition
-GroupCreatingState->WifiP2pService Impl: Update internal state
-WifiP2pService Impl->User: onSuccess callback
+
+    InactiveState GroupCreatingState
+    Trigger: CMD P2P CREATE GROUP or CMD P2P CONNECT
+    Trigger details:-
+    CMD P2P CREATE GROUP:
+    Initiated when a user or application requests to Create a P2P group
+    Can be triggered by calling WìfiP2pManager.createGroup () method
+    Starts the process. of becoming a Group Owner (GO)
+    CMD P2P CONNECT:
+    Initiated when a user or application requests to Connect to another P2P device
+    Can be triggered by calling WìfiP2pManager. connect () method
+    Starts the process of either joining an existing group or negotiating to form a new group
+    sequence
+    User->WifiP2pService Impl: createGroup () or connect ()
+    WifiP2pService Impl->InactiveState: CMD P2P CREATE GROUP or CMD P2P CONNECT
+    InactiveState->WifiNative: p2pGroupAdd () or p2pConnect ()
+    WifiNative->InactiveState: Success
+    InactiveState->GroupCreatingState: Transition
+    GroupCreatingState->WifiP2pService Impl: Update internal state
+    WifiP2pService Impl->User: onSuccess callback
 1-5
