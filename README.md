@@ -707,3 +707,59 @@ P2pEnablingState
 ----------------
 specific events or conditions that trigger transitions between states.
 P2PEnablingState → InactiveState
+
+
+Trigger: Wifi P2pManager. ENABLE P2P SUCCEEDED
+new
+high level sequence
+P2pEnablingState -> InitializingP2p: Initialize P2P
+InitializingP2p -> StartingSupplicant: Start Supplicant
+StartingSupplicant -> SettingDeviceName: Set Device Name
+SettingDeviceName -> DisçoveryPeer: Start Peer Discovery
+DiscoveryPeer -> InactiveState: Transition
+**************** *t * *** ********t*** * **** ******* t **** *******
+detailed sequence diagrams and trigger information for the transitions from P2pEnablingState to InactiveState.
+P2pEnablingState InactiveState
+Trigger: WifiP2pManager. ENABLE P2P SUCCEEDED
+Trigger Details:
+The ENABLE P2P SUCCEEDED event is generated internally by the P2pEnablingState after successfully completing all the steps to enable P2P.
+This includes setting up the interface, registering callbacks, qetting the device address, setting the device name, and flushing any existing P2 P and service configurat
+If all these steps complete successfully, the state machine transitions to the InactiveState, indicating that P2P is now enabled and ready for further operations.
+Sequence Diagram:
+text
+User->WifiP2pServiceImpl: enable ()
+WifiP2pService Impl->P2pEnablingState: CMD P2P ENABLE
+P2pEnablingState->WifiNative: setup Interface ()
+WifiNative->P2pEnablingState: Success
+P2pEnablingState->WifiNative: registerCallback ()
+WifiNative->P2pEnablingState: Success
+P2pEnablingState->WifiNative: p2pGet DeviceAddress ()
+WifiNative->P2pEnablingState: Device Address
+P2pEnablingState->WifiNative: p2pSetDeviceName ()
+WifiNative->P2pEnablingState : Success
+P2pEnablingState->WifiNative : p2pFlush ()
+WifiNative->P2pEnablingState: Success
+P2pEnablingState->WifiNative: p2pServiceFlush (0
+WifíNative->P2pEnablingState: Success
+P2pEnablingState->WifiP2pServiceImpl: ENABLE P2P_ SUCCEEDED
+WifiP2pServiceImpl->InactiveState: Transition
+InactiveState->WifiP2pService Impl: Update internal state
+5
+WifiP2pServiceImpl->User: onP2pEnabled callback
+P2pEnablingState → P2pDisabledState
+1
+detailed sequence diagrams and trigger information for the transitions from P2pEnablingState to
+P2pDisabledState.
+3
+4 Trigger: WifiP2pManager.ENABLE P2P FAILED
+Trigger Details:
+The ENABLE P2P FAILED event is generated if any of the steps in the enabling process fail.
+This could happen due to various reasons such as:
+Failure to set up the P2P interface
+Unable to register callbacks with WifiNative
+Failure to get the device address
+1
+Unable to set the device name
+Faílure ín flushing existing configurations
+If any of these steps fail, the state machine immediately transitions back to the P2pDisabledState.
+The failure ig reported back to the user through an onFailure callback.
