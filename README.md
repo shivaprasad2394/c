@@ -672,34 +672,36 @@ This sequence diagram shows the flow of actions when enabling P2P:
     System transitions to Inactivestate
     User is notified that P2P is enabled
 
-  The DiscoveryPeer substate in the P2pEnablingState, is represented by the "discover Peers" step in this sequence.
-  This action initiates the peer discovery process, which is a crucial part of enabling P2P functionality.
-  This state machine and sequence diagram capture the complex behavior of the Wi-Fi P2P service,
-  showing how it transitions between different states and substates based on user actions, system event9, and P2P protocol requirements,
+    The DiscoveryPeer substate in the P2pEnablingState, is represented by the "discover Peers" step in this sequence.
+    This action initiates the peer discovery process, which is a crucial part of enabling P2P functionality.
+    This state machine and sequence diagram capture the complex behavior of the Wi-Fi P2P service,
+    showing how it transitions between different states and substates based on user actions, system event9, and P2P protocol requirements,
 
 HIGH LEVEL TRANSISTION SEQUENCE
 -------------------------------
 
 DefaultState
 ------------
-  specific events or conditions that trigger transitions between states.
-  Detailed State Transitions
-  Defaultstate → P2pDisabledstate
-  Trigger: System startup, P2P support detected
-  External    Defaultstate: Message
-  DefaultState → MessageHandling: Process Message
-  MessageHandling → DefaultState: Message Handled
-  Defaultstate → ErrorLogging: Log Error (if any)
-  ErrorLogging → DefaultState: Error Logged
+
+    specific events or conditions that trigger transitions between states.
+    Detailed State Transitions
+    Defaultstate → P2pDisabledstate
+    Trigger: System startup, P2P support detected
+    External    Defaultstate: Message
+    DefaultState → MessageHandling: Process Message
+    MessageHandling → DefaultState: Message Handled
+    Defaultstate → ErrorLogging: Log Error (if any)
+    ErrorLogging → DefaultState: Error Logged
 
 P2pDisabledState
 ----------------
-  specific events or conditions that trigger transitions between states.
-  P2pDisabledState P2pEnablingState
-  Trigger: CMD P2P ENABLE
-  User → P2pDisabledState: Enable P2P
-  P2pDisabledState → WaitingForEnable: Wait for Enable
-  WaitingForEnable → P2pEnablingState: Transition
+
+    specific events or conditions that trigger transitions between states.
+    P2pDisabledState P2pEnablingState
+    Trigger: CMD P2P ENABLE
+    User → P2pDisabledState: Enable P2P
+    P2pDisabledState → WaitingForEnable: Wait for Enable
+    WaitingForEnable → P2pEnablingState: Transition
 
 P2pEnablingState
 ----------------
