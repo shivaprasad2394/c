@@ -625,63 +625,77 @@ State Machine Diagram
         Substate: ReleasingResources
 
 Key Transitions
-P2pDisabledstate P2pEnablingState (on enable request)
-P2pEnablingState → InactiveState (when P2P enabled success fully)
-InactiveState → GroupCreatingState (on group creation request)
-GroupCreatingState GroupNegotiationState (when negotiation starts)
-GroupNegotiationState GroupCreatedState (when group formed)
-InactiveState UserAuthorizingInvitationState (on invitation received)
-UserAuthorizingInvitationState ProvisionDiscoveryState (on user acceptance)
-ProvisionDiscoveryState GroupNegotiationState (when provision complete)
-Any State → FrequencyConflictState (on frequency conflict detected)
-Any State → P2pDisablingState (on disable request)
+---------------
+
+    P2pDisabledstate P2pEnablingState (on enable request)
+    P2pEnablingState → InactiveState (when P2P enabled success fully)
+    InactiveState → GroupCreatingState (on group creation request)
+    GroupCreatingState GroupNegotiationState (when negotiation starts)
+    GroupNegotiationState GroupCreatedState (when group formed)
+    InactiveState UserAuthorizingInvitationState (on invitation received)
+    UserAuthorizingInvitationState ProvisionDiscoveryState (on user acceptance)
+    ProvisionDiscoveryState GroupNegotiationState (when provision complete)
+    Any State → FrequencyConflictState (on frequency conflict detected)
+    Any State → P2pDisablingState (on disable request)
 
 
 1-2
-Sequence Diagram for Enable State
-User -> WifiP2pServiceImpl: Enable P2P
-WifiP2pService Impl> P2pEnablingState: Transition
-P2pEnablingState -> WifiNative: Initialize P2P
-WifiNative -> P2pEnablingState: P2P Initialized
-P2pEnablingState -> WifiNative: Start Supplicant
-WifiNative -> P2pEnablingState: Supplicant Started
-P2pEnablingState -> WifiNative: Set Device Name
-WifiNative -> P2pEnablingState: Device Name Set
-P2pEnablingState -> WifiNative: Discover Peers
-WifiNative -> P2pEnablingState: Discovery Started
-P2pEnablingState -> InactiveState: Transition
-InactiveState -> User: P2P Enabled
+Sequence Diagram for  **Enable State**
+
+    User -> WifiP2pServiceImpl: Enable P2P
+    WifiP2pService Impl> P2pEnablingState: Transition
+    P2pEnablingState -> WifiNative: Initialize P2P
+    WifiNative -> P2pEnablingState: P2P Initialized
+    P2pEnablingState -> WifiNative: Start Supplicant
+    WifiNative -> P2pEnablingState: Supplicant Started
+    P2pEnablingState -> WifiNative: Set Device Name
+    WifiNative -> P2pEnablingState: Device Name Set
+    P2pEnablingState -> WifiNative: Discover Peers
+    WifiNative -> P2pEnablingState: Discovery Started
+    P2pEnablingState -> InactiveState: Transition
+    InactiveState -> User: P2P Enabled
+
 This sequence diagram shows the flow of actions when enabling P2P:
-User requests to enable P2P
-System transitions to P2pEnablingState
-P2P is initialized
-Supplicant is started
-Device name is set
-Peer discovery is initiated
-System transitions to Inactivestate
-User is notified that P2P is enabled
-The DiscoveryPeer substate in the P2pEnablingState, as mentioned in your example, is represented by the "biscover Peers" step in this sequence.
-This action initiates the peer discovery process, which is a crucial part of enabling P2P functionality.
-This state machine and sequence diagram capture the complex behavior of the Wi-ri P2P service,
-showing how it transitions between different states and substates based on user actions, system event9, and P2P protocol requirements,
--HIGH LEVEL TRANSISTION SEQUENCE=
+
+    User requests to enable P2P
+    System transitions to P2pEnablingState
+    P2P is initialized
+    Supplicant is started
+    Device name is set
+    Peer discovery is initiated
+    System transitions to Inactivestate
+    User is notified that P2P is enabled
+
+  The DiscoveryPeer substate in the P2pEnablingState, is represented by the "discover Peers" step in this sequence.
+  This action initiates the peer discovery process, which is a crucial part of enabling P2P functionality.
+  This state machine and sequence diagram capture the complex behavior of the Wi-Fi P2P service,
+  showing how it transitions between different states and substates based on user actions, system event9, and P2P protocol requirements,
+
+HIGH LEVEL TRANSISTION SEQUENCE
+-------------------------------
+
 DefaultState
-specific events or conditions that trigger transitions between states.
-Detailed State Transitions
-Defaultstate → P2pDisabledstate
-Trigger: System startup, P2P support detected
-External -> Defaultstate: Message
-DefaultState -> MessageHandling: Process Message
-MessageHandling -> DefaultState: Message Handled
-Defaultstate -> ErrorLogging: Log Error (if any)
-ErrorLogging -> DefaultState: Error Logged
+------------
+  specific events or conditions that trigger transitions between states.
+  Detailed State Transitions
+  Defaultstate → P2pDisabledstate
+  Trigger: System startup, P2P support detected
+  External    Defaultstate: Message
+  DefaultState → MessageHandling: Process Message
+  MessageHandling → DefaultState: Message Handled
+  Defaultstate → ErrorLogging: Log Error (if any)
+  ErrorLogging → DefaultState: Error Logged
+
 P2pDisabledState
-specific events or conditions that trigger transitions between states.
-P2pDisabledState P2pEnablingState
-Trigger: CMD P2P ENABLE
-User -> P2pDisabledState: Enable P2P
-P2pDisabledState -> WaitingForEnable: Wait for Enable
-WaitingForEnable -> P2pEnablingState: Transition
+----------------
+  specific events or conditions that trigger transitions between states.
+  P2pDisabledState P2pEnablingState
+  Trigger: CMD P2P ENABLE
+  User → P2pDisabledState: Enable P2P
+  P2pDisabledState → WaitingForEnable: Wait for Enable
+  WaitingForEnable → P2pEnablingState: Transition
+
 P2pEnablingState
+----------------
 specific events or conditions that trigger transitions between states.
-P2DEnablingState InactiveState
+P2PEnablingState → InactiveState
