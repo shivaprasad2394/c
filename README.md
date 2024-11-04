@@ -711,6 +711,7 @@ P2pEnablingState
     Trigger: Wifi P2pManager. ENABLE P2P SUCCEEDED
 
 high level sequence
+
     P2pEnablingState -> InitializingP2p: Initialize P2P
     InitializingP2p -> StartingSupplicant: Start Supplicant
     StartingSupplicant -> SettingDeviceName: Set Device Name
