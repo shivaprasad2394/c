@@ -542,46 +542,52 @@ Overview of WifiP2pService Impl in androidT Source
 
 Key Components
 1. State Management
+
 The class maintains various state variables to keep track of P2P operations, such as:
-  mP2pStateMachine: Handles the Wi Fi P2P state machine
-  mDiscoveryStarted:Indicates if device discovery is active
-  mNetworkInfo: Stores current network information
+    mP2pStateMachine: Handles the Wi Fi P2P state machine
+    mDiscoveryStarted:Indicates if device discovery is active
+    mNetworkInfo: Stores current network information
 
 2. P2P State Machine
+
 The P2P state machine (implemented in a separate class) handles different states of Wi-Fi P2P operations, such as:
-  Inactive
-  Enabled
-  Discovering
-  Connected
+    Inactive
+    Enabled
+    Discovering
+    Connected
 
 3. Device Discovery
-  Methods like discoverPeers () initiate the discovery of nearby Wi Fi P2P devices.
+
+    Methods like discoverPeers () initiate the discovery of nearby Wi Fi P2P devices.
 4. Connection Handling
-  Functions like connect () and cancelConnect () manage P2P connections with other devices.
+
+    Functions like connect () and cancelConnect () manage P2P connections with other devices.
 5. Group Operations
-  Methods for creating, removing, and managing P2P groups, such as createGroup () and removeGroup ()) .
+
+    Methods for creating, removing, and managing P2P groups, such as createGroup () and removeGroup ()) .
 
 Key Methods
 Here are some important methods in WifiP2pServiceImpl:
 
-  initialize () : Sets up the P2P service, including initializing the state machine.
-  discoverPeers (): Starts peer discovery.
-  connect () : Initiates a connection to another P2P device
-  cancelConnect () : Cancels an ongoing connection attempt.
-  CreateGroup (): Creates a P2P group with the device as the group owner.
-  removeGroup (): Removes the current P2P group.
-  getDeviceList (): Retrieves the list of d1scovered P2P devices.
-  setDeviceName () : Sets the device name
-  setWfdInfo () : Sets.Wi-Fi Display information.
+    initialize () : Sets up the P2P service, including initializing the state machine.
+    discoverPeers (): Starts peer discovery.
+    connect () : Initiates a connection to another P2P device
+    cancelConnect () : Cancels an ongoing connection attempt.
+    CreateGroup (): Creates a P2P group with the device as the group owner.
+    removeGroup (): Removes the current P2P group.
+    getDeviceList (): Retrieves the list of d1scovered P2P devices.
+    setDeviceName () : Sets the device name
+    setWfdInfo () : Sets.Wi-Fi Display information.
 
 Implementation Details
 
-  The class uses a lot of asynchronous operations, often returning immediately and using callbacks to notify results.
-  It extensively uses the WifiP2pStateMachine to managel different states and transitions.
-  Many operations involve checking permissions and validating parameters before execution.
-  The class interacts with lower-level Wi-Fi services and hardware through the WifiNative interface.
+    The class uses a lot of asynchronous operations, often returning immediately and using callbacks to notify results.
+    It extensively uses the WifiP2pStateMachine to managel different states and transitions.
+    Many operations involve checking permissions and validating parameters before execution.
+    The class interacts with lower-level Wi-Fi services and hardware through the WifiNative interface.
 
 Based on the WifiP2pServiceImpl.java code ,
+
 state machine diagram description for the Wi-Fi P2P process, including main states, substates, and a sequence diagram for the enable
 Here's a detailed breakdown:
 
