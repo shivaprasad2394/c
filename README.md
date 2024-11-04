@@ -532,92 +532,98 @@ https://www.youtube.com/user/EmbeddedSoftware/search?query=static
 
 to-do 
 -----
-wifi p2p service implementaion ref wit praneeth bog
+wifi p2p service implementaion ref with praneeth bog
+
 Overview of WifiP2pService Impl in androidT Source
-WifiP2pService Impl is the core imp lementati
-of WiFi P2P (Peer-to-Peer) services in Android.
-It manages Wi-Fi P2P connections, group formation, and device discovery.
-This class implements the IWifiP2pManager interface, which defines the methods that can be called by applications to use Wi-Fi P2P feature.
+
+  WifiP2pServiceImpl is the core implementation of WiFi P2P (Peer-to-Peer) services in Android.
+  It manages Wi-Fi P2P connections, group formation, and device discovery.
+  This class implements the IWifiP2pManager interface, which defines the methods that can be called by applications to use Wi-Fi P2P feature.
 
 Key Components
 1. State Management
 The class maintains various state variables to keep track of P2P operations, such as:
-mP2pStateMachine: Handles the Wi Fi P2P state machine
-mDiscoveryStarted:
-Indicates if device di
-ai scOvery 13 active
-mNetworkInfo: Stores current network information
+  mP2pStateMachine: Handles the Wi Fi P2P state machine
+  mDiscoveryStarted:Indicates if device discovery is active
+  mNetworkInfo: Stores current network information
+
 2. P2P State Machine
 The P2P state machine (implemented in a separate class) handles different states of Wi-Fi P2P operations, such as:
-Inactive
-Enabled
-Discovering
-Connected
+  Inactive
+  Enabled
+  Discovering
+  Connected
+
 3. Device Discovery
-Methods like discoverPeers () initiate the discovery of nearby Wi Fi P2P devices.
+  Methods like discoverPeers () initiate the discovery of nearby Wi Fi P2P devices.
 4. Connection Handling
-Functions like connect () and cancelConnect () manage P2P connections with other devices.
+  Functions like connect () and cancelConnect () manage P2P connections with other devices.
 5. Group Operations
-Methods for creating, removing, and managing P2P groups, such as createGroup () and removeGroup ()) .
+  Methods for creating, removing, and managing P2P groups, such as createGroup () and removeGroup ()) .
+
 Key Methods
 Here are some important methods in WifiP2pServiceImpl:
-H
-initialize () : Sets up the P2P servi ce, including initializing the state machine.
-discoverPeers (0: Starts peer discovery.
-connect () : Initiates a connection to another P2P device
-cancelConnect () : Cancels an ongoing connection attempt.
-CreateGroup (): Creates a P2P group with the device as the group owner.
-removeGroup (): Removes the current P2P group
-getDeviceList (): Retrieves the list of d1scoveredP2 device3
-Ior P2P
-setDeviceName () : Sets the device name
-setWfdInfo () : Sets.Wi-Fi Display information.
-Implementation Details
-The class uses a lot of asynchronous operations, often returning immediately and using callbacks to notify results.
-It extensively uses the WifiP2pStateMachine to managel different states and transitions.
-Many operations involve checking permissions and validating parameters before execution.
-The class interacts with lower-level Wi-Fi services and hardware through the WifiNative interface.
 
-1-1
-Based on the WifiP2pServiceImpl.java code and the specific example you mentioned,
-1'1 create a state machine di agram description for the Wi-Fi P2P process, including main states, substates, and a sequence diagram for the enable
+  initialize () : Sets up the P2P service, including initializing the state machine.
+  discoverPeers (): Starts peer discovery.
+  connect () : Initiates a connection to another P2P device
+  cancelConnect () : Cancels an ongoing connection attempt.
+  CreateGroup (): Creates a P2P group with the device as the group owner.
+  removeGroup (): Removes the current P2P group.
+  getDeviceList (): Retrieves the list of d1scovered P2P devices.
+  setDeviceName () : Sets the device name
+  setWfdInfo () : Sets.Wi-Fi Display information.
+
+Implementation Details
+
+  The class uses a lot of asynchronous operations, often returning immediately and using callbacks to notify results.
+  It extensively uses the WifiP2pStateMachine to managel different states and transitions.
+  Many operations involve checking permissions and validating parameters before execution.
+  The class interacts with lower-level Wi-Fi services and hardware through the WifiNative interface.
+
+Based on the WifiP2pServiceImpl.java code ,
+state machine diagram description for the Wi-Fi P2P process, including main states, substates, and a sequence diagram for the enable
 Here's a detailed breakdown:
+
 State Machine Diagram
-Main States and Substates
-DefaultState
-Substate: MessageHandling
-Substate: ErrorLogging
-P2pDisabledState
-Substate: WaitingForEnable
-P2pEnablingState
-Substate: InitializingP2p
-Substate: StartingSupplicant
-Substate: SettingDeviceName
-Substate: DiscoveryPeer
-InactiveState
-Substate: IdleListening
-Substate: HandleConnectRequest
-GroupCreatingState
-Substate: NegotiatingGroupParameters
-Substate: FormingGroup
-UserAuthorizingInvitationState
-Substate: DisplayingInvitation
-Substate: WaitingForUserResponse
-ProviionDiscoveryState
-Substate: ExchangingProvisionInfo
-Substate: PreparingGroupFormation
-GroupNegotiationState
-Substate: DeterminingGroup0wner
-Substate: ConfiguringConnection
-FrequencyConfliċtState
-Substate: DetectingConflicts
-Substate: ResolvingConflicts
-GroupCreatedState
-Substate: ManagingConnections
-Substate: MaintainingGroup
-P2pDisablingState
-Substate: StoppingP2p
-Substate: ReleasingResources
+----------------------
+
+    Main States and Substates
+    DefaultState
+        Substate: MessageHandling
+        Substate: ErrorLogging
+    P2pDisabledState
+        Substate: WaitingForEnable
+    P2pEnablingState
+        Substate: InitializingP2p
+        Substate: StartingSupplicant
+        Substate: SettingDeviceName
+        Substate: DiscoveryPeer
+    InactiveState
+        Substate: IdleListening
+        Substate: HandleConnectRequest
+    GroupCreatingState
+        Substate: NegotiatingGroupParameters
+        Substate: FormingGroup
+    UserAuthorizingInvitationState
+        Substate: DisplayingInvitation
+        Substate: WaitingForUserResponse
+    ProviionDiscoveryState
+        Substate: ExchangingProvisionInfo
+        Substate: PreparingGroupFormation
+    GroupNegotiationState
+        Substate: DeterminingGroup0wner
+        Substate: ConfiguringConnection
+    FrequencyConfliċtState
+        Substate: DetectingConflicts
+        Substate: ResolvingConflicts
+    GroupCreatedState
+        Substate: ManagingConnections
+        Substate: MaintainingGroup
+    P2pDisablingState
+        Substate: StoppingP2p
+        Substate: ReleasingResources
+
 Key Transitions
 P2pDisabledstate P2pEnablingState (on enable request)
 P2pEnablingState → InactiveState (when P2P enabled success fully)
