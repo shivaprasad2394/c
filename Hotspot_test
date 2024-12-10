@@ -190,3 +190,23 @@ Sleep(100);
 Purpose: Pauses execution for 100 milliseconds. 
 This gives time for the network processor to fully initialize before proceeding with further configurations.
 
+
+Setting Up IP Parameters
+
+ipV4.ipV4 = SL_IPV4_VAL(192,168,1,1);
+Purpose: Sets the static IP address of the AP to 192.168.1.1 using a macro that formats it correctly.
+
+ipV4.ipV4Gateway = SL_IPV4_VAL(192,168,1,1);
+Purpose: Sets the gateway IP address (usually the same as the AP's IP address when it's a standalone AP).
+
+ipV4.ipV4DnsServer = SL_IPV4_VAL(192,168,1,1);
+Purpose: Sets the DNS server address to also be 192.168.1.1. 
+This is common in simple networks where the AP serves as both router and DNS server.
+
+ipV4.ipV4Mask = SL_IPV4_VAL(255,255,255,0);
+Purpose: Sets the subnet mask to 255.255.255.0, which allows for up to 254 hosts in this subnet.
+
+sl_NetCfgSet(SL_IPV4_AP_P2P_GO_STATIC_ENABLE, 1 ,sizeof(_NetCfgIpV4Args_t), (unsigned char *)&ipV4);
+Purpose: Configures the device with static IPv4 settings using previously defined parameters stored in ipV4. 
+The first parameter specifies that we are enabling static IP configuration for an Access Point in P2P mode
+
