@@ -122,3 +122,18 @@ Setting IP Parameters: By configuring the IP address, gateway, DNS server, and s
 Setting AP Mode: This switch in mode allows the device to accept incoming connections from clients rather than trying to connect to another network as a client.
 Configuring SSID and Security: These settings are essential for user identification and security. The SSID allows users to find and connect to your network, while security settings protect against unauthorized access.
 DHCP Setup: By configuring DHCP parameters, you automate IP address assignment for clients, simplifying network management. Clients will receive an IP address from the specified range when they connect.
+
+
+3. Explanation of Variables and Their Purposes
+The code contains various variables that serve distinct purposes:
+
+SockID: Typically used for socket communication; however, it doesn't seem to be utilized in this snippet.
+outLen: Holds the size of structures being passed around (e.g., DHCP parameters).
+channel: Represents the Wi-Fi channel on which the AP will broadcast. Channels help reduce interference from other networks.
+hidden: Indicates whether the SSID should be broadcasted (0 for visible, 1 for hidden).
+dtim: Stands for Delivery Traffic Indication Message; it determines how often clients should wake up to receive broadcast messages from the AP.
+sec_type: Defines the security type used by the AP (e.g., WPA).
+ssid and password: Arrays holding the SSID and password for client connections.
+country: Specifies the country code which may affect regulatory compliance regarding wireless communication settings.
+beacon_int: Sets how frequently beacon frames are sent by the AP; these frames announce the presence of the AP to clients.
+dhcpParams: A structure containing DHCP settings like lease time and starting/ending IP addresses for DHCP allocation.
