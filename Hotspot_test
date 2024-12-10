@@ -238,3 +238,31 @@ Purpose: Sets a variable for beacon interval to 100 milliseconds.
 sl_WlanSet(SL_WLAN_CFG_AP_ID, WLAN_AP_OPT_BEACON_INT, 2, (unsigned char *) &beacon_int);
 Purpose: Configures how often (every 100 ms) beacon frames are sent by this AP. 
 Beacon frames are crucial as they announce the presence of an AP and provide information about its capabilities.
+
+Configuring Channel
+
+channel = 8;
+Purpose: Sets a variable that specifies which Wi-Fi channel (channel 8) will be used by this AP.
+
+sl_WlanSet(SL_WLAN_CFG_AP_ID, WLAN_AP_OPT_CHANNEL, 1, (unsigned char *) &channel);
+Purpose: Configures the Wi-Fi channel on which this AP will operate. 
+Selecting a channel helps avoid interference with other nearby networks.
+
+Configuring Hidden SSID
+
+hidden = 0;
+Purpose: Sets a variable indicating that the SSID should be visible (0 means broadcasted).
+
+sl_WlanSet(SL_WLAN_CFG_AP_ID, WLAN_AP_OPT_HIDDEN_SSID, 1, (unsigned char *) &hidden);
+Purpose: Configures whether or not to broadcast the SSID. 
+A value of 0 means that devices can see this network when scanning for available networks.
+
+Configuring DTIM Period
+
+dtim = 2;
+Purpose: Sets a variable indicating that DTIM should be set to 2. 
+This value affects how often clients wake up from sleep mode to listen for broadcast messages from the AP.
+
+sl_WlanSet(SL_WLAN_CFG_AP_ID, WLAN_AP_OPT_DTIM_PERIOD, 1, (unsigned char *) &dtim);
+Purpose: Configures the DTIM period for this AP based on previously set value (dtim). 
+A lower DTIM value can lead to more frequent wake-ups and potentially higher power consumption on client devices.
