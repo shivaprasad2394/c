@@ -266,3 +266,16 @@ This value affects how often clients wake up from sleep mode to listen for broad
 sl_WlanSet(SL_WLAN_CFG_AP_ID, WLAN_AP_OPT_DTIM_PERIOD, 1, (unsigned char *) &dtim);
 Purpose: Configures the DTIM period for this AP based on previously set value (dtim). 
 A lower DTIM value can lead to more frequent wake-ups and potentially higher power consumption on client devices.
+
+Configuring Security Type
+
+sec_type = SL_SEC_TYPE_WPA;
+Purpose: Specifies that WPA security will be used for this AP. WPA is a widely used security protocol that provides encryption and authentication.
+
+sl_WlanSet(SL_WLAN_CFG_AP_ID, WLAN_AP_OPT_SECURITY_TYPE, 1, (unsigned char *) &sec_type);
+Purpose: Applies the specified security type setting (sec_type) to this Access Point configuration.
+
+Setting Password
+
+sl_WlanSet(SL_WLAN_CFG_AP_ID, WLAN_AP_OPT_PASSWORD, strlen("password123"), (unsigned char *)"password123");
+Purpose: Sets up a password ("password123") required for clients to connect securely to this AP. The length of the password is also specified here
