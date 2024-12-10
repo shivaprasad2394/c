@@ -210,3 +210,31 @@ sl_NetCfgSet(SL_IPV4_AP_P2P_GO_STATIC_ENABLE, 1 ,sizeof(_NetCfgIpV4Args_t), (uns
 Purpose: Configures the device with static IPv4 settings using previously defined parameters stored in ipV4. 
 The first parameter specifies that we are enabling static IP configuration for an Access Point in P2P mode
 
+
+Setting Up Access Point Mode
+
+sl_WlanSetMode(ROLE_AP);
+Purpose: Changes the device's operating mode to Access Point mode (ROLE_AP). 
+This allows it to accept connections from client devices.
+
+Configuring SSID
+
+sl_WlanSet(SL_WLAN_CFG_AP_ID, WLAN_AP_OPT_SSID, strlen("cc_ap_test1"), (unsigned char *)"cc_ap_test1");
+Purpose: Sets the SSID (network name) of the AP to "cc_ap_test1". 
+The function takes parameters including an identifier for AP configuration (SL_WLAN_CFG_AP_ID),
+an option identifier for SSID (WLAN_AP_OPT_SSID), and its length.
+
+Configuring Country Code
+
+sl_WlanSet(SL_WLAN_CFG_GENERAL_PARAM_ID, WLAN_GENERAL_PARAM_OPT_COUNTRY_CODE, 2,(unsigned char *)"US");
+Purpose: Sets the country code to "US". 
+This is important for regulatory compliance regarding wireless communication standards and frequencies used in different countries.
+
+Configuring Beacon Interval
+
+beacon_int = 100;
+Purpose: Sets a variable for beacon interval to 100 milliseconds.
+
+sl_WlanSet(SL_WLAN_CFG_AP_ID, WLAN_AP_OPT_BEACON_INT, 2, (unsigned char *) &beacon_int);
+Purpose: Configures how often (every 100 ms) beacon frames are sent by this AP. 
+Beacon frames are crucial as they announce the presence of an AP and provide information about its capabilities.
