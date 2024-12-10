@@ -1,1 +1,100 @@
 test1
+
+hi i want to understand below code 
+1)please explain in great detail the theory / logic for setting up and starting an AP 
+2)why we need to do all this step and actually happens in realtime after each step
+3)i am not aware of many variable and thier purpose so please explain me in great detail  
+
+ref code to ste up and start AP:-
+ rfe:- int main() {
+int SockID;
+unsigned char outLen = sizeof(SlNetAppDhcpServerBasicOpt_t); 
+unsigned char channel, hidden, dtim, sec_type, wps_state, ssid[32], password[65], country[3];
+unsigned short beacon_int, config_opt, config_len;
+SlNetAppDhcpServerBasicOpt_t dhcpParams;
+_NetCfgIpV4Args_t ipV4; 
+sl_Start(NULL, NULL, NULL); 
+Sleep(100); // Set AP IP params 
+ipV4.ipV4 = SL_IPV4_VAL(192,168,1,1); 
+ipV4.ipV4Gateway = SL_IPV4_VAL(192,168,1,1); 
+ipV4.ipV4DnsServer = SL_IPV4_VAL(192,168,1,1); 
+ipV4.ipV4Mask = SL_IPV4_VAL(255,255,255,0); 
+sl_NetCfgSet( SL_IPV4_AP_P2P_GO_STATIC_ENABLE, 1 ,sizeof(_NetCfgIpV4Args_t), (unsigned char *)&ipV4); //Set AP mode 
+sl_WlanSetMode(ROLE_AP); //Set AP SSID 
+sl_WlanSet(SL_WLAN_CFG_AP_ID, WLAN_AP_OPT_SSID, strlen("cc_ap_test1"), (unsigned char *)"cc_ap_test1"); //Set AP country code 
+sl_WlanSet(SL_WLAN_CFG_GENERAL_PARAM_ID, WLAN_GENERAL_PARAM_OPT_COUNTRY_CODE, 2,(unsigned char *)"US"); //Set AP Beacon interval 
+beacon_int = 100; 
+sl_WlanSet(SL_WLAN_CFG_AP_ID, WLAN_AP_OPT_BEACON_INT, 2, (unsigned char *) &beacon_int); 
+//Set AP channel 
+channel = 8;
+sl_WlanSet(SL_WLAN_CFG_AP_ID, WLAN_AP_OPT_CHANNEL, 1, (unsigned char *) &channel);
+//Set AP hidden/broadcast configuraion
+hidden = 0;
+sl_WlanSet(SL_WLAN_CFG_AP_ID, WLAN_AP_OPT_HIDDEN_SSID, 1, (unsigned char *) &hidden); 
+//Set AP DTIM period 
+dtim = 2;
+sl_WlanSet(SL_WLAN_CFG_AP_ID, WLAN_AP_OPT_DTIM_PERIOD, 1, (unsigned char *) &dtim); 
+//Set AP security to WPA and password 
+sec_type = SL_SEC_TYPE_WPA; 
+sl_WlanSet(SL_WLAN_CFG_AP_ID, WLAN_AP_OPT_SECURITY_TYPE, 1, (unsigned char *) &sec_type);
+sl_WlanSet(SL_WLAN_CFG_AP_ID, WLAN_AP_OPT_PASSWORD, strlen("password123"), (unsigned char *)"password123"); 
+sl_Stop(100); 
+sl_Start(NULL, NULL, NULL); 
+//Retrive all params to confirm setting 
+//Get AP SSID 
+sendLog("**********************AP parameters***********************\n");
+config_opt = WLAN_AP_OPT_SSID; 
+config_len = MAXIMAL_SSID_LENGTH; 
+sl_WlanGet(SL_WLAN_CFG_AP_ID, &config_opt , &config_len, (unsigned char*) ssid); 
+sendLog("SSID: %s\n",ssid); 
+//Get AP country code 
+config_opt = WLAN_GENERAL_PARAM_OPT_COUNTRY_CODE; 
+config_len = 3; 
+sl_WlanGet(SL_WLAN_CFG_GENERAL_PARAM_ID, &config_opt, &config_len,(unsigned char*) country);
+sendLog("Country code: %s\n",country); 
+//Get AP beacon interval 
+config_opt = WLAN_AP_OPT_BEACON_INT; 
+config_len = 2; 
+sl_WlanGet(SL_WLAN_CFG_AP_ID, &config_opt, &config_len, (unsigned char*) &beacon_int);
+sendLog("Beacon interval: %d\n",beacon_int); 
+//Get AP channel 
+config_opt = WLAN_AP_OPT_CHANNEL; 
+config_len = 1; 
+sl_WlanGet(SL_WLAN_CFG_AP_ID, &config_opt, &config_len, (unsigned char*) &channel); 
+sendLog("Channel: %d\n",channel); 
+//Get AP hidden configuraion
+config_opt = WLAN_AP_OPT_HIDDEN_SSID; 
+config_len = 1;
+sl_WlanGet(SL_WLAN_CFG_AP_ID, &config_opt, &config_len, (unsigned char*) &hidden);
+sendLog("Hidden: %d\n",hidden);
+//Get AP DTIM period 
+config_opt = WLAN_AP_OPT_DTIM_PERIOD; 
+config_len = 1; 
+sl_WlanGet(SL_WLAN_CFG_AP_ID, &config_opt, &config_len, (unsigned char*) &dtim);
+sendLog("DTIM period: %d\n",dtim);
+//Get AP security type 
+config_opt = WLAN_AP_OPT_SECURITY_TYPE; 
+config_len = 1; 
+sl_WlanGet(SL_WLAN_CFG_AP_ID, &config_opt, &config_len, (unsigned char*) &sec_type); 
+sendLog("Security type: %d\n",sec_type); 
+//Get AP password 
+config_opt = WLAN_AP_OPT_PASSWORD; 
+config_len = 64; 
+sl_WlanGet(SL_WLAN_CFG_AP_ID, &config_opt, &config_len, (unsigned char*) password);
+sendLog("Password: %s\n",password);
+//Get AP WPS state 
+config_opt = WLAN_AP_OPT_WPS_STATE;
+config_len = 1; 
+sl_WlanGet(SL_WLAN_CFG_AP_ID, &config_opt, &config_len, (unsigned char*) &wps_state);
+// Set AP DHCP params 
+//configure dhcp addresses to: 192.168.1.10 - 192.168.1.20, lease time 4096 seconds 
+dhcpParams.lease_time = 4096;
+dhcpParams.ipv4_addr_start = SL_IPV4_VAL(192,168,1,10); 
+dhcpParams.ipv4_addr_last = SL_IPV4_VAL(192,168,1,20); 
+outLen = sizeof(SlNetAppDhcpServerBasicOpt_t); 
+sl_NetAppStop(SL_NET_APP_DHCP_SERVER_ID); 
+sl_NetAppSet(SL_NET_APP_DHCP_SERVER_ID, NETAPP_SET_DHCP_SRV_BASIC_OPT, outLen, (unsigned char*)&dhcpParams); 
+sl_NetAppStart(SL_NET_APP_DHCP_SERVER_ID); 
+// Get AP DHCP params 
+sl_NetAppGet(SL_NET_APP_DHCP_SERVER_ID, NETAPP_SET_DHCP_SRV_BASIC_OPT, &outLen, (unsigned char*)&dhcpParams);
+}
