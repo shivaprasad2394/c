@@ -137,3 +137,56 @@ ssid and password: Arrays holding the SSID and password for client connections.
 country: Specifies the country code which may affect regulatory compliance regarding wireless communication settings.
 beacon_int: Sets how frequently beacon frames are sent by the AP; these frames announce the presence of the AP to clients.
 dhcpParams: A structure containing DHCP settings like lease time and starting/ending IP addresses for DHCP allocation.
+
+
+
+
+
+entry code explanation 
+
+
+int SockID;
+Purpose: this would be used for managing socket connections if needed.
+
+unsigned char outLen = sizeof(SlNetAppDhcpServerBasicOpt_t);
+Purpose: Initializes outLen to the size of the structure SlNetAppDhcpServerBasicOpt_t.
+This structure likely contains parameters for configuring the DHCP server. 
+outLen will be used later to specify how much data to read or write.
+
+unsigned char channel, hidden, dtim, sec_type, wps_state, ssid[32], password[65], country[3];
+
+Purpose:
+
+channel: To store the Wi-Fi channel number for the AP.
+hidden: To indicate whether the SSID is broadcasted (0 for visible, 1 for hidden).
+dtim: Delivery Traffic Indication Message interval; a value that affects how often clients wake up to receive data.
+sec_type: To store the security type (e.g., WPA).
+wps_state: To hold the state of Wi-Fi Protected Setup (WPS), though it isn't used in this snippet.
+ssid: An array to store the SSID (network name) of the AP.
+password: An array to store the password for connecting to the AP.
+country: An array to hold a country code (usually two characters plus a null terminator).
+
+unsigned short beacon_int, config_opt, config_len;
+
+Purpose: 
+beacon_int: To store the beacon interval (how often the AP sends out beacon frames).
+config_opt: Used to specify configuration options when getting or setting parameters.
+config_len: To hold the length of data being read or written.
+
+SlNetAppDhcpServerBasicOpt_t dhcpParams;
+Purpose: Declares a variable dhcpParams of type SlNetAppDhcpServerBasicOpt_t, 
+which will hold DHCP server configuration parameters such as IP address range and lease time.
+
+_NetCfgIpV4Args_t ipV4;
+Purpose: Declares a variable ipV4 of type _NetCfgIpV4Args_t, 
+which is likely used to configure IPv4 settings like IP address and subnet mask.
+
+sl_Start(NULL, NULL, NULL);
+Purpose: Initializes and starts the network processor. 
+This function prepares the device for network operations. 
+The three NULL parameters typically indicate default configurations.
+
+Sleep(100);
+Purpose: Pauses execution for 100 milliseconds. 
+This gives time for the network processor to fully initialize before proceeding with further configurations.
+
