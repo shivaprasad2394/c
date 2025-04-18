@@ -2682,8 +2682,26 @@ Another definition may be like - a class is thread-safe if it behaves correctly 
 ======================================================================================================================
 # C++
 order of discussion :-
+https://www.mycplus.com/tutorials/cplusplus-programming-tutorials/introduction-cplusplus-lecture-notes/
 
 - Define C++?
+  C++ is a high-level language: when you write a program in it, the shorthands are sufficiently
+expressive that you don’t need to worry about the details of processor instructions. C++ does
+give access to some lower-level functionality than other languages (e.g. memory addresses).
+1.2 The Compilation Process
+A program goes from text files (or source files) to processor instructions as follows:
+Source File Object File
+Compiler
+Source File Object File
+Compiler
+Executable
+Linker
+Libraries
+Program in Memory
+OS
+Object files are intermediate files that represent an incomplete copy of the program: each
+source file only expresses a piece of the program, so when it is compiled into an object file,
+the object file has some markers in
 - What is a class in C++?
 - What is an object?
 - What is the difference between C and C++?
