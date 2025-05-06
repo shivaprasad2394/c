@@ -238,3 +238,31 @@ continue: skips current iteration
               if (i == 5) break;
               cout << i << ' ';
           }  // Output: 1 2 4
+🧠 Interview Tip
+-----------------
+You’ll often use these in:
+          
+          - Pattern printing
+          - Searching/sorting
+          - State machines
+          - Menu-driven programs
+
+🧪 Mini Practice Task
+----------------------
+Write a menu-driven program that:
+
+          Asks user for 2 integers
+          
+          Shows a menu:
+          
+          markdown
+          Copy
+          Edit
+          1. Add
+          2. Subtract
+          3. Multiply
+          4. Divide
+          5. Exit
+          Executes the selected operation using switch
+
+Loops until user chooses Exit
