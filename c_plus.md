@@ -157,3 +157,84 @@ Write a program that:
           -Their sum, product, and quotient.
           - Which one is greater (using if or ternary).
           - Whether the first is divisible by the second.
+🔁 Control Flow Statements in C++
+---------------------------------
+These statements allow your program to make decisions and repeat tasks.
+
+✅ 1. Conditional Statements
+----------------------------
+These are used to execute different code blocks based on conditions.
+          
+          🔹 if / else if / else
+          int age = 20;
+          
+          if (age < 18) {
+              cout << "Minor";
+          } else if (age == 18) {
+              cout << "Exactly 18!";
+          } else {
+              cout << "Adult";
+          }
+✔️ Use else if when you have multiple conditions.
+✔️ Conditions must be inside (), and code blocks inside {}.
+
+          🔹 Nested if
+          if (x > 0) {
+              if (x < 10) {
+                  cout << "Single-digit positive number";
+              }
+          }
+🔸 Avoid deeply nested if statements when possible (use else if or switch).
+
+🔹 Ternary Operator (Shortcut)
+          string result = (score >= 50) ? "Pass" : "Fail";
+          
+✅ 2. switch Statement
+----------------------
+Useful for checking a variable against multiple constant values (integers or chars).
+
+          int day = 3;
+          
+          switch (day) {
+              case 1: cout << "Monday"; break;
+              case 2: cout << "Tuesday"; break;
+              case 3: cout << "Wednesday"; break;
+              default: cout << "Invalid day";
+          }
+⚠️ Always include break; to prevent "fall-through"
+✔️ default is optional but recommended as a fallback
+
+✅ 3. Looping Statements
+-------------------------
+Used to repeat a block of code.
+
+🔁 for Loop (when number of iterations is known)
+-----------------------------------------------
+          for (int i = 0; i < 5; i++) {
+              cout << "i = " << i << '\n';
+          }
+🔁 while Loop (when condition is checked before each iteration)
+--------------------------------------------------------------
+          int i = 0;
+          while (i < 5) {
+              cout << i << '\n';
+              i++;
+          }
+🔁 do-while Loop (runs at least once)
+-------------------------------------
+          int i = 0;
+          do {
+              cout << i << '\n';
+              i++;
+          } while (i < 5);
+🔁 Break and Continue
+---------------------
+break: exits the loop early
+
+continue: skips current iteration
+
+          for (int i = 1; i <= 5; i++) {
+              if (i == 3) continue;
+              if (i == 5) break;
+              cout << i << ' ';
+          }  // Output: 1 2 4
