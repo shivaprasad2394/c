@@ -48,7 +48,7 @@ int x = 3.5; // OK but will truncate to 3
 
 🧠 Interview Tip
 ----------------
-          - Understanding data types is foundational. Interviewers may ask:
+Understanding data types is foundational. Interviewers may ask:
           
           - Memory sizes and ranges (e.g. range of int)
           
