@@ -1,3 +1,12 @@
+Intro
+-----
+          - Origns:-Bell Labs(1979)
+          - Scope of languague:-compiler,OS & games
+          - c v/s c++
+          - C is Procedure/process oriented, structured
+          - C++ is Object oriented
+
+
 What Are Variables?
 -------------------
 
@@ -17,48 +26,51 @@ Basic Data Types in C++
           bool	1 byte	Boolean values (true/false)
           void	—	No value (used in functions)
 
-🛠 Example: Declaring Different Types
--------------------------------------
-          #include <iostream>
-          using namespace std;
-          
-          int main() {
-              int age = 25;
-              float height = 5.9f;
-              double weight = 70.55;
-              char grade = 'A';
-              bool isPassed = true;
-          
-              cout << "Age: " << age << endl;
-              cout << "Height: " << height << endl;
-              cout << "Weight: " << weight << endl;
-              cout << "Grade: " << grade << endl;
-              cout << "Passed: " << isPassed << endl;
-          
-              return 0;
-          }
+🛠 Namespace
+------------
+          Namespace:-C++  Namespace are used to group logically related functions,variables and other entities to avoid name conflicts.
 
-⚠️ Common Mistakes
+⚠️ Examples
 -----------------
-Uninitialized variables: using variables before assigning a value can lead to garbage output.
+          Namespace Graphics{
+                    class image{
+                              //Image processing code
+                    };
+          }
+          Namespace Audio{
+                    class image{//same name ,different namespace
+                              //Audio related code
+                    };
+          }
+          Graphics::Image img1;//No conflict
+          Audio::Image img2;
 
-Incorrect type assignments:
---------------------------
-int x = 3.5; // OK but will truncate to 3
+Namespace Alias:
+---------------
+          To simplify long namespace name ,you can use aliases.
+          Namespace LongNamespaceName{
+                    class Example{//same name ,different namespace
+                          //Audio related code
+                    };}
+                    namespace LNN=LongNamespaceName;//Alias
+                    LNN::Example  obj;//Easier to use.
 
-🧠 Interview Tip
-----------------
-Understanding data types is foundational. Interviewers may ask:
-          
-          - Memory sizes and ranges (e.g. range of int)
-          
-          - Type conversions (implicit and explicit)
+🧠 Const & Macros
+-----------------
+          #define directive can also be used to define symbolic constants that do not require a data type. 
+          They are called macros and are replaced by their values at compile time.
+          Syntax:
+          #define CONSTANT_NAME value
 
-🧪 Mini Practice Task
----------------------
-          Can you write a small program that:
-          Stores your name (string), age (int), height (float)
-          Prints them all nicely formatted?
+          constant variables in c are immutable after its definition, i.e., they can be initialized only once in the whole program. 
+          After that, we cannot modify the value stored inside that variable.
+
+🧪 Static
+---------
+          * Static Variables in a Function*
+          # Static Member Variable in a Class
+          *Static Member Functions in a Class
+          *Global Static Variable
 
 🔢 C++ Operators and Expressions (Subtopic 2)
 ---------------------------------------------
