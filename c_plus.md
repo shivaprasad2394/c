@@ -252,9 +252,8 @@ Arrays pointers & Arthematic
 ----------------------------
 - Arrays are Derived Data type that is used to store multiple values of similar data types in a contigous memory location.
 
-<img src="[https://example.com/image.png](https://media.geeksforgeeks.org/wp-content/uploads/20230302091959/Arrays-in-C.png)" alt="A sample image" width="200"/>
-<img src="[https://example.com/image.png](https://media.geeksforgeeks.org/wp-content/uploads/20230302092603/c-array-declaration.png)" alt="A sample image" width="100"/>
-
+<img src="https://media.geeksforgeeks.org/wp-content/uploads/20230302091959/Arrays-in-C.png" alt="A sample image" width="100"/>
+<img src="https://media.geeksforgeeks.org/wp-content/uploads/20230302092603/c-array-declaration.png" alt="A sample image" width="100"/>
 
 - When a pointers is incremented,it actually increments by the number equal to the size of the data type for which it is a pointer.
 ![A sample image](https://example.com/image.png "Sample Image")
