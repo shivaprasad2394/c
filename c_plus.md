@@ -241,8 +241,8 @@ Pointers & refernce
 - **Reference** are used to Create an Alias(Alternative name) for an already existing variable.
 - **Double pointers** are those pointers which store the Address of Another pointer.
 
-| Pointers | Reference | Column 3 |
-| -------- | -------- | -------- |
+| Pointers | Reference |
+| -------- | -------- |
 | a pointer can be declared as void | a reference can never be void |
 | a pointer can be made to point to another | Once a refrence is created,it cannot be later made to refernce another object |
 | a pointer are often made NULL | a refernce cannot be NULL |
