@@ -125,11 +125,35 @@ The static member functions have the following uses in C++:
 
 **Global Static Variable**
 
-🔢 C++ Operators and Expressions (Subtopic 2)
+- static variable declared outside of any class or function.
+- global static variable has internal linkage, meaning it is accessible only within the file where it is defined. 
+- This Also means you cant use extern to access the variable across folder.
+
+🔢 C++ Lambda Expressions
 ---------------------------------------------
 
-Operators are symbols that perform operations on variables and values.
-An expression is any valid combination of variables, operators, and literals that computes a value.
+C++ 11 introduced lambda expressions to allow inline functions which can be used for short snippets of code that are not going to be reused. Therefore, they do not require a name.
+
+**Syntax**
+
+[capture-clause] (parameters) -> return-type { 
+    // definition
+}
+
+**Example**
+#include <bits/stdc++.h>
+using namespace std;
+
+int main() {
+    
+    // Defining a lambda
+    auto **res** = [](int x) {
+        return x + x;
+    };
+    cout << res(5);
+    
+    return 0;
+}
 
 ✅ 1. Types of Operators in C++
 -------------------------------
