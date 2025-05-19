@@ -301,7 +301,7 @@ Arrays pointers & Arthematic
 | Strings define objects that can be represented as string streams. | The null character terminates a character array of characters. |
 | No Array decay occurs in strings as strings are represented as objects.  | The threat of array decay is present in the case of the character array.    |
 | A string class provides numerous functions for manipulating strings.  | Character arrays do not offer inbuilt functions to manipulate strings.    |
-| Memory is allocated dynamically.  | The size of the character array has to be allocated statically.     | 
+| Memory is allocated dynamically.  | The size of the character array has to be allocated statically.more memory cannot be allocated at run time if required. Unused allocated memory is also wasted     | 
 
 ✅ 1. Types of Operators in C++
 -------------------------------
