@@ -136,24 +136,104 @@ C++ 11 introduced lambda expressions to allow inline functions which can be used
 
 **Syntax**
 
-[capture-clause] (parameters) -> return-type { 
-    // definition
-}
+          [capture-clause] (parameters) -> return-type { 
+              // definition
+          }
 
 **Example**
-#include <bits/stdc++.h>
-using namespace std;
 
-int main() {
-    
-    // Defining a lambda
-    auto **res** = [](int x) {
-        return x + x;
-    };
-    cout << res(5);
-    
-    return 0;
-}
+          #include <bits/stdc++.h>
+          using namespace std;
+          
+          int main() {
+              
+              // Defining a lambda
+              auto res = [](int x) {
+                  return x + x;
+              };
+              cout << res(5);
+              
+              return 0;
+          }
+
+**Capture Clause**
+
+A lambda expression can have more power than an ordinary function by having access to variables from the enclosing scope. We can capture external variables from the enclosing scope in three ways using capture clause:
+
+- [&]: capture all external variables by reference.
+- [=]: capture all external variables by value.
+- [a, &b]: capture 'a' by value and 'b' by reference.
+
+A lambda with an empty capture clause [] can only access variables which are local to it.
+
+**Eaxmple2**
+
+          #include <bits/stdc++.h>
+          using namespace std;
+          
+          void print(vector<int> v) {
+              for (auto x : v) cout << x << " ";
+              cout << endl;
+          }
+          
+          int main() {
+              vector<int> v1, v2;
+          
+              // Capture v1 and v2 by reference
+              auto byRef = [&] (int m) {
+                  v1.push_back(m);
+                  v2.push_back(m);
+              };
+              
+              // Capture v1 and v2 by value
+              auto byVal = [=] (int m) mutable {
+                  v1.push_back(m);
+                  v2.push_back(m);
+              };
+              
+              // Capture v1 by reference and v2 by value
+              auto mixed = [=, &v1] (int m) mutable {
+                  v1.push_back(m);
+                  v2.push_back(m);
+              };
+          
+              // Push 20 in both v1 and v2
+              byRef(20);
+              
+              // Push 234 in both v1 and v2
+              byVal(234);
+              
+              // Push 10 in both v1 and v2
+              mixed(10);
+              
+              print(v1);
+              print(v2);
+              
+              return 0;
+          }
+
+**Examples**
+
+Lamda expressions are extensively used in STL in place of callback i.e. functions passed as arguments. The below examples demonstrate that:
+
+**Sort Vector in Descending Order**
+
+          #include <bits/stdc++.h>
+          using namespace std;
+          
+          int main() {
+          	vector<int> v = {5, 1, 8, 3, 9, 2};
+          
+          	// Sort in descending order
+                     //sort(v.begin,v,end,comparator)
+          	sort(v.begin(), v.end(), [] (const int& a, const int&b) {
+          		return a > b;
+          	});
+          
+          	for (int x : v)
+          		cout << x << " ";
+          	return 0;
+          }
 
 ✅ 1. Types of Operators in C++
 -------------------------------
