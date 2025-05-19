@@ -252,14 +252,15 @@ Arrays pointers & Arthematic
 ----------------------------
 - Arrays are Derived Data type that is used to store multiple values of similar data types in a contigous memory location.
 
-<img src="https://media.geeksforgeeks.org/wp-content/uploads/20230302091959/Arrays-in-C.png" alt="A sample image" width="100"/>
-<img src="https://media.geeksforgeeks.org/wp-content/uploads/20230302092603/c-array-declaration.png" alt="A sample image" width="100"/>
+<img src="https://media.geeksforgeeks.org/wp-content/uploads/20230302091959/Arrays-in-C.png" alt="A sample image" width="180"/><img src="https://media.geeksforgeeks.org/wp-content/uploads/20230302092603/c-array-declaration.png" alt="A sample image" width="170"/>
+<img src="https://media.geeksforgeeks.org/wp-content/uploads/20250510151101341950/access-array-element.webp" alt="A sample image" width="150"/>
+<img src="https://media.geeksforgeeks.org/wp-content/uploads/20230215172222/indexing_in_array.png" alt="A sample image" width="100"/>
 
 - When a pointers is incremented,it actually increments by the number equal to the size of the data type for which it is a pointer.
-![A sample image](https://example.com/image.png "Sample Image")
+<img src="https://example.com/image.png" alt="A sample image" width="100"/>
 
 - When a pointers is added/subtracted with an integer value,the value is first multiplied by the size of the data type and then added to the pointer.
-![A sample image](https://example.com/image.png "Sample Image")
+<img src="https://example.com/image.png" alt="A sample image" width="100"/>
   
 
 ✅ 1. Types of Operators in C++
