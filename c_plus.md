@@ -68,9 +68,11 @@ Namespace Alias:
 🧪 Static
 ---------
 **Static Variables in a Function**
+
           - Memory space is Aloocated only once in static storage.
           - The value of the variable is persistent.
           - Scope is Lifetime of the Program.
+
 **Static Member Variable in a Class**
 
 **Static Member Functions in a Class**
