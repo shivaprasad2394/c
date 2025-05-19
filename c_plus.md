@@ -234,6 +234,19 @@ Lamda expressions are extensively used in STL in place of callback i.e. function
           		cout << x << " ";
           	return 0;
           }
+Pointers & refernce
+-------------------
+- pointers and refrence both are mechanism used to deal with Memory.
+- **pointers** are used to Store the memory Address of the variable wheras,
+- **Reference** are used to Create an Alias(Alternative name) for an already existing variable.
+- **Double pointers** are those pointers which store the Address of Another pointer.
+
+| Pointers | Reference | Column 3 |
+| -------- | -------- | -------- |
+| a pointer can be declared as void | a reference can never be void |
+| a pointer can be made to point to another | Once a refrence is created,it cannot be later made to refernce another object |
+| a pointer are often made NULL | a refernce cannot be NULL |
+| No restriction with pointers for init | A refernce must be initialized when declared |
 
 ✅ 1. Types of Operators in C++
 -------------------------------
