@@ -252,12 +252,36 @@ Arrays pointers & Arthematic
 ----------------------------
 - Arrays are Derived Data type that is used to store multiple values of similar data types in a contigous memory location.
 
-<img src="https://media.geeksforgeeks.org/wp-content/uploads/20230302091959/Arrays-in-C.png" alt="A sample image" width="180"/><img src="https://media.geeksforgeeks.org/wp-content/uploads/20230302092603/c-array-declaration.png" alt="A sample image" width="170"/>
-<img src="https://media.geeksforgeeks.org/wp-content/uploads/20250510151101341950/access-array-element.webp" alt="A sample image" width="150"/>
-<img src="https://media.geeksforgeeks.org/wp-content/uploads/20230215172222/indexing_in_array.png" alt="A sample image" width="100"/>
+<img src="https://media.geeksforgeeks.org/wp-content/uploads/20230302091959/Arrays-in-C.png" alt="A sample image" width="280"/><img src="https://media.geeksforgeeks.org/wp-content/uploads/20230302092603/c-array-declaration.png" alt="A sample image" width="270"/>
+<img src="https://media.geeksforgeeks.org/wp-content/uploads/20250510151101341950/access-array-element.webp" alt="A sample image" width="250"/>
+<img src="https://media.geeksforgeeks.org/wp-content/uploads/20230215172222/indexing_in_array.png" alt="A sample image" width="200"/>
 
 - When a pointers is incremented,it actually increments by the number equal to the size of the data type for which it is a pointer.
-<img src="https://example.com/image.png" alt="A sample image" width="100"/>
+<img src="https://media.geeksforgeeks.org/wp-content/uploads/20230424100855/Pointer-Increment-Decrement.webp" alt="A sample image" width="280"/><img src="https://media.geeksforgeeks.org/wp-content/uploads/20230424100935/Pointer-Addition.webp" alt="A sample image" width="280"/>
+<img src="https://media.geeksforgeeks.org/wp-content/uploads/20230424101002/Pointer-Subtraction.webp" alt="A sample image" width="280"/>
+
+          // CPP program to demonstrate the addition of a constant to a pointer
+          #include <iostream>
+          using namespace std;
+          
+          int main()
+          {
+          
+              int n = 20;
+              int* ptr = &n;
+          
+              cout << "Address stored in ptr: " << ptr << endl;
+          
+              // Adding the integer value 1 to the pointer ptr
+              ptr = ptr + 1;
+              cout << "Adding 1 to ptr: " << ptr << endl;
+          
+              // Adding the integer value 2 to the pointer ptr
+              ptr = ptr + 2;
+              cout << "Adding 2 to ptr: " << ptr;
+          
+              return 0;
+          }
 
 - When a pointers is added/subtracted with an integer value,the value is first multiplied by the size of the data type and then added to the pointer.
 <img src="https://example.com/image.png" alt="A sample image" width="100"/>
