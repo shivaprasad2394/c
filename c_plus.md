@@ -75,6 +75,39 @@ Namespace Alias:
 
 **Static Member Variable in a Class**
 
+          - static member variables in a class are shared by the objects. 
+          * There cannot be multiple copies of the same static variables for different objects. 
+          + Also because of this reason static variables cannot be initialized using constructors.
+          + static variable inside a class should be initialized explicitly by the user using the class name and scope resolution operator outside the class
+
+**Example**
+
+          #include <iostream>
+          using namespace std;
+          
+          class GfG {
+          public:
+            
+              // Static data member
+              static int i;
+          
+              GfG(){
+                  // Do nothing
+              };
+          };
+          
+          // Static member inintialization
+          int GfG::i = 1;//OK
+          
+          int main() {
+            GfG obj1;
+            GfG obj2;
+            obj1.i=2;//❗ **Not possible**
+              // Prints value of i
+              cout << GfG::i;//OK
+          }
+
+
 **Static Member Functions in a Class**
 
 **Global Static Variable**
