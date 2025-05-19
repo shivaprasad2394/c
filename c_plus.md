@@ -110,6 +110,19 @@ Namespace Alias:
 
 **Static Member Functions in a Class**
 
+          - Static member functions are allowed to access only the static data members or other static member functions, 
+          - they cannot access the non-static data members or member functions of the class. 
+
+**Applications**
+
+The static member functions have the following uses in C++:
+
+- Accessing Static Member Variables
+- Implement helper functions that do not depend on specific instances.
+- Singleton Pattern Implementation
+- Factory Methods to create and return objects without requiring an instance of the class.
+- Logging and Debugging
+
 **Global Static Variable**
 
 🔢 C++ Operators and Expressions (Subtopic 2)
