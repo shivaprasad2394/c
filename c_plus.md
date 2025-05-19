@@ -288,6 +288,21 @@ Arrays pointers & Arthematic
 
 <img src="https://example.com/image.png" alt="A sample image" width="100"/>
 
+**Strings in C++**
+
+- strings are sequences of characters that are used to store words and text. They are also used to store data, such as numbers and other types of information in the form of text. Strings are provided by <string> header file in the form of std::string class.
+- syntax
+            string str_name;
+
+**c++ strings v/s c strings**
+  
+| String | Character Array | 
+| :--------- | :----------: |
+| Strings define objects that can be represented as string streams. | The null character terminates a character array of characters. |
+| No Array decay occurs in strings as strings are represented as objects.  | The threat of array decay is present in the case of the character array.    |
+| A string class provides numerous functions for manipulating strings.  | Character arrays do not offer inbuilt functions to manipulate strings.    |
+| Memory is allocated dynamically.  | The size of the character array has to be allocated statically.     | 
+
 ✅ 1. Types of Operators in C++
 -------------------------------
           Category	        Operators	                   Description
