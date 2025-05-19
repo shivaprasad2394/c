@@ -67,10 +67,10 @@ Namespace Alias:
 
 🧪 Static
 ---------
-          * Static Variables in a Function*
-          # Static Member Variable in a Class
-          *Static Member Functions in a Class
-          *Global Static Variable
+          - **Static Variables in a Function**
+          - **Static Member Variable in a Class**
+          - **Static Member Functions in a Class**
+          - **Global Static Variable**
 
 🔢 C++ Operators and Expressions (Subtopic 2)
 ---------------------------------------------
