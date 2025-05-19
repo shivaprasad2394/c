@@ -257,7 +257,7 @@ Arrays pointers & Arthematic
 <img src="https://media.geeksforgeeks.org/wp-content/uploads/20230215172222/indexing_in_array.png" alt="A sample image" width="200"/>
 
 - When a pointers is incremented,it actually increments by the number equal to the size of the data type for which it is a pointer.
-<img src="https://media.geeksforgeeks.org/wp-content/uploads/20230424100855/Pointer-Increment-Decrement.webp" alt="A sample image" width="280"/><img src="https://media.geeksforgeeks.org/wp-content/uploads/20230424100935/Pointer-Addition.webp" alt="A sample image" width="280"/><img src="https://media.geeksforgeeks.org/wp-content/uploads/20230424101002/Pointer-Subtraction.webp" alt="A sample image" width="280"/>
+<img src="https://media.geeksforgeeks.org/wp-content/uploads/20230424100855/Pointer-Increment-Decrement.webp" alt="A sample image" width="320"/>
 
           // CPP program to demonstrate the addition of a constant to a pointer
           #include <iostream>
@@ -283,8 +283,10 @@ Arrays pointers & Arthematic
           }
 
 - When a pointers is added/subtracted with an integer value,the value is first multiplied by the size of the data type and then added to the pointer.
+
+ <img src="https://media.geeksforgeeks.org/wp-content/uploads/20230424100935/Pointer-Addition.webp" alt="A sample image" width="320"/><img src="https://media.geeksforgeeks.org/wp-content/uploads/20230424101002/Pointer-Subtraction.webp" alt="A sample image" width="320"/> 
+
 <img src="https://example.com/image.png" alt="A sample image" width="100"/>
-  
 
 ✅ 1. Types of Operators in C++
 -------------------------------
