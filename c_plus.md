@@ -307,11 +307,7 @@ Arrays pointers & Arthematic
 
 |  Function Name | Description | Example |
 | :--------- | :----------: | ----------: |
-| length()       | This function returns the length of the string.         | std::string text = "geeksforGeeks";
-int length = text.length(); 
-//or
-int length = text.size(); std::string str = "GEEKSFORGEEKS";
-std::cout << str.at(3);       |
+| length()       | This function returns the length of the string.         | std::string text = "geeksforGeeks";int length = text.length(); //orint length = text.size(); std::string str = "GEEKSFORGEEKS";std::cout << str.at(3);       |
 | swap()  | This function is used to swap the values of 2 strings.  | More text   |
 | size()        | Used to find the size of string         |More text   |
 | resize()       | This function is used to resize the length of the string up to the given number of characters.         |More text   |
