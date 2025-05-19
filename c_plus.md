@@ -248,6 +248,19 @@ Pointers & refernce
 | a pointer are often made NULL | a refernce cannot be NULL |
 | No restriction with pointers for init | A refernce must be initialized when declared |
 
+Arrays pointers & Arthematic
+----------------------------
+- Arrays are Derived Data type that is used to store multiple values of similar data types in a contigous memory location.
+![A sample image]([https://media.geeksforgeeks.org/wp-content/uploads/20230302091959/Arrays-in-C.png"Sample Image]")
+![A sample image](https://media.geeksforgeeks.org/wp-content/uploads/20230302092603/c-array-declaration.png "Sample Image")
+
+- When a pointers is incremented,it actually increments by the number equal to the size of the data type for which it is a pointer.
+![A sample image](https://example.com/image.png "Sample Image")
+
+- When a pointers is added/subtracted with an integer value,the value is first multiplied by the size of the data type and then added to the pointer.
+![A sample image](https://example.com/image.png "Sample Image")
+  
+
 ✅ 1. Types of Operators in C++
 -------------------------------
           Category	        Operators	                   Description
