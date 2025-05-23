@@ -775,7 +775,400 @@ int main() {
 21
 }
 
+C++
+C++ Classes and Objects
+C++ Polymorphism
+C++ Inheritance
+C++ Abstraction
+C++ Encapsulation
+C++ OOPs Interview Questions
+C++ OOPs MCQ
+C++ Interview Questions
+C++ Function Overloading
+C++ Programs
+C++ Preprocessor
+C++ Templates
+▲
+Open In App
+C++ Classes and Objects
+Last Updated : 15 May, 2025
+In C++, classes and objects are the basic building block that leads to Object-Oriented programming in C++. We will learn about C++ classes, objects, look at how they work and how to implement them in our C++ program.
 
+C++ Classes
+A class is a user-defined data type, which holds its own data members and member functions that can be accessed and used by creating an instance of that class. A C++ class is like a blueprint for an object.
+
+For Example: Consider the Class of Cars. There may be many cars with different names and brands but all of them will share some common properties like all of them will have 4 wheels, Speed Limit, Mileage range, etc. The car can also accelerate, turn, apply brakes, etc. So here, the Car is the class, wheels, speed limits, and mileage are its attributes (data members) and accelerate, turn, apply brakes are its methods (member functions).
+
+Create a Class
+A class must be defined before its use. C++ class is defined using the keyword class keyword as shown:
+
+
+class className {
+access_specifier:
+
+    // data member
+
+    // member method
+};
+where,
+
+Data Members: These are the variables that are defined inside the class.
+Member Functions: Functions declared inside a class. Also referred to as a member method.
+Example:
+
+
+class GfG {
+public:
+
+    // Data member
+    int val;
+    
+    // Member function
+    void show() {
+        cout << "Value: " << val << endl;
+    }
+};
+In the above, GfG class is created with a data member val and member function show(). Here, member function is defined inside the class, but they can also be just declared in the class and then defined outside using scope resolution operator ::
+
+The above is called class definition or template.
+
+C++ Objects
+When a class is defined, only the specification (attributes and behaviour) for the object is defined. No memory is allocated to the class definition. To use the data and access functions defined in the class, we need to create its objects.
+
+Objects are the actual entities that are created as an instance of a class. There can be as many objects of a class as desired. For example, in the above, we discussed the class of Cars. If we create an actual car based on the properties of the Car class, the car we made is the object of that class.
+
+Create Object
+Once the class is defined, we can create its object in the same way we declare the variables of any other inbuilt data type.
+
+
+className objectName;
+This statement creates an object of className class.
+
+Member Access
+Members of the class can be accessed inside the class itself simply by using their assigned name.
+
+To access them outside, the (.) dot operator is used with the object of the class.
+
+
+obj.member1 // For data members
+obj.member2(..) // For functions
+There obj is the name of the object of the given class, member1 is data member and member2 is member function.
+
+Access Modifiers
+In C++ classes, we can control the access to the members of the class using Access Specifiers. Also known as access modifier, they are the keywords that are specified in the class and all the members of the class under that access specifier will have particular access level.
+
+In C++, there are 3 access specifiers that are as follows:
+
+Public: Members of the class can be accessed from outside the class.
+Private: Private members can only be accessed within the class itself.
+Protected: Protected members can be accessed within the class and by derived classes.
+If we do not specify the access specifier, the private specifier is applied to every member by default.
+
+Example:
+
+
+
+
+1
+#include <bits/stdc++.h>
+2
+using namespace std;
+3
+
+4
+// Creating a class
+5
+class GfG {
+6
+public:
+7
+
+8
+    // Data member
+9
+    int val;
+10
+    
+11
+    // Member function
+12
+    void show() {
+13
+        cout << "Value: " << val << endl;
+14
+    }
+15
+    
+16
+};
+17
+
+18
+int main() {
+19
+    
+20
+    // Create Object
+21
+    GfG obj;
+22
+    
+23
+    // Access data member and assign
+24
+    // it some value
+25
+    obj.val = 10;
+26
+    
+27
+    // Access member method
+28
+    obj.show();
+29
+    
+30
+    return 0;
+31
+}
+
+Output
+Value: 10
+Whether we can access a member of a class depends on the access specifier in which it is declared. In the above example, if the val variable was declared as private, then we would not have been able to access it in the main function.
+
+Explanation:
+
+Special Member Functions
+In C++ classes, there are some special member functions that are essential to manage objects and provide some basic functionalities.
+
+Constructor
+Constructors are special class members which are called by the compiler every time an object of that class is instantiated. They are used to construct the objects and making them ready for use. Constructors have the same name as the class.
+
+Example:
+
+
+
+
+1
+#include <bits/stdc++.h>
+2
+using namespace std;
+3
+
+4
+class MyClass {
+5
+public:
+6
+
+7
+    // Constructor
+8
+    MyClass() {
+9
+        cout << "Constructor called!";
+10
+    }
+11
+};
+12
+
+13
+int main() {
+14
+    
+15
+    // Constructor automatically 
+16
+    // called when object is created.
+17
+    MyClass obj;
+18
+    return 0;
+19
+}
+
+Output
+Constructor called!
+Note: If the programmer does not define the constructor, the compiler automatically creates the default, copy and move constructor.
+
+Destructors
+Destructor is another special member function that is called by the compiler when the scope of the object ends. It deallocates all the memory previously used by the object of the class so that there will be no memory leaks. The destructor also has the same name as the class but with tilde (~) as prefix.
+
+Example:
+
+
+
+
+1
+#include <bits/stdc++.h>
+2
+using namespace std;
+3
+
+4
+class MyClass {
+5
+public:
+6
+    MyClass() {
+7
+        cout << "Constructor called!" << endl;
+8
+    }
+9
+
+10
+    // Destructor
+11
+    ~MyClass() {
+12
+        cout << "Destructor called!";
+13
+    }
+14
+};
+15
+
+16
+int main() {
+17
+    MyClass obj;
+18
+    // Destructor will be called 
+19
+    // automatically when obj goes out of scope
+20
+    return 0;
+21
+}
+
+Output
+Constructor called!
+Destructor called!
+Static Members
+Members of the class can be declared as static. These static members of a class are not associated with the objects of the class but with the class itself. The main feature of these members is that they are accessible directly through the class without creating any objects. Both data members and member methods can be static:
+
+Static Data Members
+Static data members shared by all objects of the class, meaning only one copy exists for all objects of the class and they are declared with the static keyword.
+
+Example:
+
+
+
+
+1
+#include <iostream>
+2
+using namespace std;
+3
+
+4
+class GfG {
+5
+public:
+6
+    static int val;
+7
+};
+8
+
+9
+// Initialize static member
+10
+int GfG::val = 22;
+11
+int main() {
+12
+    
+13
+    // Access without creating object
+14
+    cout << GfG::val << endl;
+15
+}
+
+Output
+22
+Static Member Function
+Static member functions are associated with the class itself rather than any specific object. They can only access static data members and cannot access instance data members. Static member functions are called using the class name, not the object.
+
+We defined the member function inside the class, but we can also define the member function outside the class. To define a member function outside the class definition, we use scop resolution (::) operator.
+
+Example:
+
+
+
+
+1
+#include <iostream>
+2
+using namespace std;
+3
+
+4
+class GfG {
+5
+public:
+6
+    static void printHello(); 
+7
+};
+8
+
+9
+// Definintion of static member function
+10
+void GfG::printHello() {
+11
+    cout << "Hello World";
+12
+}
+13
+int main() {
+14
+    
+15
+    // Access without creating object
+16
+    GfG::printHello();
+17
+    
+18
+    return 0;
+19
+}
+
+Output
+Hello World
+Friend Class and Function
+In C++, friend classes and functions allow access to the private and protected members of other classes:
+
+A friend class has the ability to access the private and protected members of other classes where it is declared as a friend. This feature can be useful when it is necessary for one class to access the private and protected members of another class.
+
+A friend function in C++ is similar to a friend class. It can be given special permission to access the private and protected members of a class. Although it is not a member function of the class, it can still access and modify those private and protected members because it is declared as a friend.
+
+Local Class
+Classes are generally declared in global scope and are accessible to every function or other classes once they are defined. But C++ also provides facility to define a class within a function. It is called local class in C++ and is only accessible in that function.
+
+Nested Class
+A nested class is a class defined within another enclosing class. As a member of the enclosing class, it has the same access rights as any other member. The members of the enclosing class do not have special access to the members of the nested class; the standard access rules apply.
+
+Enum Class
+Enum classes in C++ are a safer and more organized way of using enums. They help to group related constants together while avoiding naming problems and ensuring better type safety.
+
+this Pointer
+In C++, this pointer is a pointer that points to the current instance of a class. It is used within the member functions of a class to refer to the object of that class. This pointer allows access to the calling object's data and methods within its own member functions.
+
+
+class A{
+    int n;
+    A(int n) {
+        this->n = n;
+    }
+}
+Class vs Object
+The following table lists the primary differences between the classes and objects in C++:
 
 ✅ 1. Types of Operators in C++
 -------------------------------
