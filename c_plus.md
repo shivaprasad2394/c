@@ -328,6 +328,27 @@ Arrays pointers & Arthematic
 | `erase()` | This function is used to remove a certain part of a string. | `std::string str = "HelloWorld"; str.erase(5, 5);` |
 | `rfind()` | This function is used to find the string's last occurrence. | `std::string str = "Hello World Hello"; size_t pos = str.rfind("Hello");` |
 
+
+| Function Name | Problem Statement | Example |
+| :------------ | :---------------- | ------- |
+| `length()` | **Problem:** Determine the number of characters in a string to validate input length. | ```cpp<br>std::string input = "OpenAI";<br>if (input.length() > 5) {<br>    std::cout << "Input is too long.";<br>}<br>``` |
+| `swap()` | **Problem:** Swap contents of two strings to reorder data. | ```cpp<br>std::string first = "Hello";<br>std::string second = "World";<br>first.swap(second);<br>// first is now "World", second is "Hello"<br>``` |
+| `size()` | **Problem:** Check if a string has reached a certain size limit. | ```cpp<br>std::string data = "Sample";<br>if (data.size() == 6) {<br>    std::cout << "Size is 6.";<br>}<br>``` |
+| `resize()` | **Problem:** Truncate or extend a string to a specific length. | ```cpp<br>std::string text = "HelloWorld";<br>text.resize(5);<br>// text is now "Hello"<br>``` |
+| `find()` | **Problem:** Locate the position of a substring within a string. | ```cpp<br>std::string sentence = "Find the needle in the haystack.";<br>size_t pos = sentence.find("needle");<br>if (pos != std::string::npos) {<br>    std::cout << "Found at position: " << pos;<br>}<br>``` |
+| `push_back()` | **Problem:** Append a character to the end of a string during construction. | ```cpp<br>std::string word = "Test";<br>word.push_back('s');<br>// word is now "Tests"<br>``` |
+| `pop_back()` | **Problem:** Remove the last character from a string, e.g., backspace functionality. | ```cpp<br>std::string command = "DeleteX";<br>command.pop_back();<br>// command is now "Delete"<br>``` |
+| `clear()` | **Problem:** Reset a string to empty after processing. | ```cpp<br>std::string buffer = "Temporary data";<br>buffer.clear();<br>// buffer is now empty<br>``` |
+| `strncmp()` | **Problem:** Compare the first n characters of two C-style strings. | ```cpp<br>const char* str1 = "OpenAI";<br>const char* str2 = "OpenCV";<br>if (strncmp(str1, str2, 4) == 0) {<br>    std::cout << "First 4 characters match.";<br>}<br>``` |
+| `strncpy()` | **Problem:** Copy a specified number of characters from one C-style string to another. | ```cpp<br>char source[] = "Data";<br>char destination[10];<br>strncpy(destination, source, 4);<br>destination[4] = '\0';<br>// destination is "Data"<br>``` |
+| `strrchr()` | **Problem:** Find the last occurrence of a character in a C-style string. | ```cpp<br>const char* path = "/usr/local/bin";<br>const char* filename = strrchr(path, '/');<br>if (filename) {<br>    std::cout << "Filename: " << filename + 1;<br>}<br>``` |
+| `strcat()` | **Problem:** Concatenate two C-style strings. | ```cpp<br>char dest[20] = "Hello, ";<br>char src[] = "World!";<br>strcat(dest, src);<br>// dest is now "Hello, World!"<br>``` |
+| `replace()` | **Problem:** Replace a substring within a string with another substring. | ```cpp<br>std::string text = "I like cats.";<br>text.replace(7, 4, "dogs");<br>// text is now "I like dogs."<br>``` |
+| `substr()` | **Problem:** Extract a substring from a string for parsing. | ```cpp<br>std::string date = "2025-05-23";<br>std::string year = date.substr(0, 4);<br>// year is "2025"<br>``` |
+| `compare()` | **Problem:** Compare two strings lexicographically. | ```cpp<br>std::string a = "apple";<br>std::string b = "banana";<br>if (a.compare(b) < 0) {<br>    std::cout << "apple comes before banana.";<br>}<br>``` |
+| `erase()` | **Problem:** Remove a portion of a string by position and length. | ```cpp<br>std::string text = "Hello, World!";<br>text.erase(5, 7);<br>// text is now "Hello!"<br>``` |
+| `rfind()` | **Problem:** Find the last occurrence of a substring within a string. | ```cpp<br>std::string phrase = "one fish two fish red fish blue fish";<br>size_t pos = phrase.rfind("fish");<br>if (pos != std::string::npos) {<br>    std::cout << "Last 'fish' at position: " << pos;<br>}<br>``` |
+
 --------------------------
 C++
 C++ Classes and Objects
