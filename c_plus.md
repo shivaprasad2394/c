@@ -476,76 +476,47 @@ Constructors are special class members which are called by the compiler every ti
 
 Example:
 
-#include <bits/stdc++.h>
-using namespace std;
+    #include <bits/stdc++.h>
+    using namespace std;
 
-class MyClass {
-public:
+     class MyClass {
+     public:
     // Constructor
     MyClass() {
         cout << "Constructor called!";
     }
-};
-int main() {
+    };
+    int main() {
     // Constructor automatically 
     // called when object is created.
     MyClass obj;
     return 0;
-}
-
-
-
-
+    }
 
 Destructors
 Destructor is another special member function that is called by the compiler when the scope of the object ends. It deallocates all the memory previously used by the object of the class so that there will be no memory leaks. The destructor also has the same name as the class but with tilde (~) as prefix.
 
 Example:
 
-
-
-
-1
 #include <bits/stdc++.h>
-2
 using namespace std;
-3
 
-4
 class MyClass {
-5
 public:
-6
     MyClass() {
-7
         cout << "Constructor called!" << endl;
-8
     }
-9
-
-10
     // Destructor
-11
     ~MyClass() {
-12
         cout << "Destructor called!";
-13
     }
-14
 };
-15
 
-16
 int main() {
-17
     MyClass obj;
-18
     // Destructor will be called 
-19
     // automatically when obj goes out of scope
-20
     return 0;
-21
 }
 
 C++
@@ -785,40 +756,7 @@ class MyClass {
 public:
 6
     MyClass() {
-7
-        cout << "Constructor called!" << endl;
-8
-    }
-9
 
-10
-    // Destructor
-11
-    ~MyClass() {
-12
-        cout << "Destructor called!";
-13
-    }
-14
-};
-15
-
-16
-int main() {
-17
-    MyClass obj;
-18
-    // Destructor will be called 
-19
-    // automatically when obj goes out of scope
-20
-    return 0;
-21
-}
-
-Output
-Constructor called!
-Destructor called!
 Static Members
 Members of the class can be declared as static. These static members of a class are not associated with the objects of the class but with the class itself. The main feature of these members is that they are accessible directly through the class without creating any objects. Both data members and member methods can be static:
 
