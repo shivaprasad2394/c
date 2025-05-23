@@ -743,7 +743,6 @@ C++ Programs
 C++ Preprocessor
 C++ Templates
 
-Sure! Here’s your C++ classes and objects explanation formatted neatly in Markdown:
 
 ````markdown
 # C++ Classes and Objects
@@ -754,11 +753,14 @@ Classes and objects are the basic building blocks that lead to Object-Oriented P
 
 ## C++ Classes
 
-A **class** is a user-defined data type which holds its own **data members** and **member functions**. These members can be accessed and used by creating an instance (object) of that class. A C++ class acts like a blueprint for objects.
+A *class* is a user-defined data type which holds its own **data members** and **member functions**.
+These members can be accessed and used by creating an instance (object) of that class.
+A C++ class acts like a blueprint for objects.
 
 ### Example
 
-Consider a **Class of Cars**. There may be many cars with different names and brands, but all of them share some common properties like:
+Consider a **Class of Cars**. There may be many cars with different names and brands,
+but all of them share some common properties like:
 
 - All have 4 wheels
 - Speed limit
