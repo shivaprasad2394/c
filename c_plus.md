@@ -580,57 +580,7 @@ Whether we can access a member of a class depends on the access specifier in whi
 Explanation:
 
 Special Member Functions
-In C++ classes, there are some special member functions that are essential to manage objects and provide some basic functionalities.
-
-Constructor
-Constructors are special class members which are called by the compiler every time an object of that class is instantiated. They are used to construct the objects and making them ready for use. Constructors have the same name as the class.
-
-Example:
-
-
-
-
-1
-#include <bits/stdc++.h>
-2
-using namespace std;
-3
-
-4
-class MyClass {
-5
-public:
-6
-
-7
-    // Constructor
-8
-    MyClass() {
-9
-        cout << "Constructor called!";
-10
-    }
-11
-};
-12
-
-13
-int main() {
-14
-    
-15
-    // Constructor automatically 
-16
-    // called when object is created.
-17
-    MyClass obj;
-18
-    return 0;
-19
-}
-
-Output
-Constructor called!
+In C++ classes, there are some special member functions that are 
 Note: If the programmer does not define the constructor, the compiler automatically creates the default, copy and move constructor.
 
 Destructors
