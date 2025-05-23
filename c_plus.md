@@ -1103,7 +1103,178 @@ public:
 
 ---
 
-If you want me to save or share this in a file, just let me know!
+
+# Comprehensive C++ Demo: Special Member Functions and Concepts
+
+This C++ program demonstrates several essential features and special member functions in C++ classes.
+
+## ✅ Features Demonstrated
+
+- Constructor and Destructor
+- Static Data Member and Static Member Function
+- Friend Class and Friend Function
+- Local Class
+- Nested Class
+- Enum Class
+- `this` Pointer
+
+---
+
+## 📄 Complete C++ Code
+
+```cpp
+#include <iostream>
+using namespace std;
+
+// Forward declaration for friend function
+class MainClass;
+void showPrivateData(const MainClass& obj);
+
+// ----------------------------
+// Enum Class Example
+enum class Status {
+    SUCCESS,
+    FAILURE
+};
+
+// ----------------------------
+// Main Class Declaration
+class MainClass {
+private:
+    int privateData;
+
+    // Nested Class Example
+    class Nested {
+    public:
+        void display() {
+            cout << "Inside Nested Class" << endl;
+        }
+    };
+
+public:
+    static int count;  // Static data member
+
+    // Constructor
+    MainClass(int data) {
+        this->privateData = data;  // using this pointer
+        count++;
+        cout << "Constructor called. Object count: " << count << endl;
+    }
+
+    // Destructor
+    ~MainClass() {
+        count--;
+        cout << "Destructor called. Remaining objects: " << count << endl;
+    }
+
+    // Static member function
+    static void printCount() {
+        cout << "Current object count (static): " << count << endl;
+    }
+
+    // Member function to use enum
+    void checkStatus(Status s) {
+        if (s == Status::SUCCESS)
+            cout << "Operation was successful!" << endl;
+        else
+            cout << "Operation failed!" << endl;
+    }
+
+    // Friend function declaration
+    friend void showPrivateData(const MainClass& obj);
+
+    // Friend class declaration
+    friend class FriendViewer;
+
+    // Function to demonstrate nested class
+    void useNestedClass() {
+        Nested nestedObj;
+        nestedObj.display();
+    }
+
+    // Function demonstrating local class
+    void localClassDemo() {
+        class Local {
+        public:
+            void message() {
+                cout << "Inside Local Class (Only accessible in this function)" << endl;
+            }
+        };
+
+        Local localObj;
+        localObj.message();
+    }
+};
+
+// Initialize static member
+int MainClass::count = 0;
+
+// Friend function definition
+void showPrivateData(const MainClass& obj) {
+    cout << "Accessed by Friend Function - Private Data: " << obj.privateData << endl;
+}
+
+// Friend class
+class FriendViewer {
+public:
+    void displayPrivateData(const MainClass& obj) {
+        cout << "Accessed by Friend Class - Private Data: " << obj.privateData << endl;
+    }
+};
+
+// ----------------------------
+// Main Function
+int main() {
+    cout << "=== Object Creation ===" << endl;
+    MainClass obj1(10);
+    obj1.checkStatus(Status::SUCCESS);
+
+    cout << "\\n=== Static Members ===" << endl;
+    MainClass::printCount();
+
+    cout << "\\n=== Friend Function and Class ===" << endl;
+    showPrivateData(obj1);
+    FriendViewer fv;
+    fv.displayPrivateData(obj1);
+
+    cout << "\\n=== Nested Class ===" << endl;
+    obj1.useNestedClass();
+
+    cout << "\\n=== Local Class ===" << endl;
+    obj1.localClassDemo();
+
+    cout << "\\n=== Creating Another Object ===" << endl;
+    MainClass obj2(20);
+    MainClass::printCount();
+
+    cout << "\\n=== Exiting Main ===" << endl;
+    return 0;  // Destructor will be called automatically
+}
+=== Object Creation ===
+Constructor called. Object count: 1
+Operation was successful!
+
+=== Static Members ===
+Current object count (static): 1
+
+=== Friend Function and Class ===
+Accessed by Friend Function - Private Data: 10
+Accessed by Friend Class - Private Data: 10
+
+=== Nested Class ===
+Inside Nested Class
+
+=== Local Class ===
+Inside Local Class (Only accessible in this function)
+
+=== Creating Another Object ===
+Constructor called. Object count: 2
+Current object count (static): 2
+
+=== Exiting Main ===
+Destructor called. Remaining objects: 1
+Destructor called. Remaining objects: 0
+
 
 Class vs Object
 
