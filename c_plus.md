@@ -1195,6 +1195,116 @@ int main() {
 * **Friend Function:** Not a member of the class but granted access to private and protected members.
 
 This is useful for close cooperation between classes or functions.
+# Friend Class and Function in C++
+
+In C++, **friend functions** and **friend classes** allow certain functions or classes to access the private and protected members of another class. These concepts are useful when you need to grant access to internal data while still keeping it hidden from the outside world.
+
+---
+
+## Friend Class in C++
+
+A **friend class** can access private and protected members of another class in which it is declared as a friend. Note that friendship is not mutual; if class A is a friend of class B, then class B is not automatically a friend of class A.
+
+We declare a friend class using the `friend` keyword.
+
+![Friend class](https://media.geeksforgeeks.org/wp-content/uploads/20200506141034/Friend-class.png)
+
+### Example:
+
+```cpp
+#include <iostream>
+using namespace std;
+
+class Geeks {
+private:
+    int private_variable;
+
+protected:
+    int protected_variable;
+
+public:
+    Geeks() {
+        private_variable = 10;
+        protected_variable = 99;
+    }
+
+    // Friend class declaration
+    friend class GFG;
+};
+
+// Class GFG is a friend of class Geeks
+class GFG {
+public:
+    void display(Geeks& t) {
+        cout << "The value of Private Variable = " << t.private_variable << endl;
+        cout << "The value of Protected Variable = " << t.protected_variable;
+    }
+};
+
+int main() {
+    Geeks g;
+    GFG fri;
+    fri.display(g);
+    return 0;
+}
+The value of Private Variable = 10
+The value of Protected Variable = 99
+
+Friend Function in C++
+Like friend classes, a friend function can access private and protected members of a class in which it is declared a friend. It is not a member function but is given access through the friend keyword.
+
+
+Types of Friend Functions:
+Global function
+
+Member function of another class
+
+1. Global Function as a Friend Function
+We can declare any global function as a friend. The keyword friend is used only in the declaration within the class.
+
+Example:
+#include <iostream>
+using namespace std;
+
+class base {
+private:
+    int private_variable;
+
+protected:
+    int protected_variable;
+
+public:
+    base() {
+        private_variable = 10;
+        protected_variable = 99;
+    }
+
+    // Friend function declaration
+    friend void friendFunction(base& obj);
+};
+
+// Friend function definition
+void friendFunction(base& obj) {
+    cout << "Private Variable: " << obj.private_variable << endl;
+    cout << "Protected Variable: " << obj.protected_variable;
+}
+
+int main() {
+    base obj;
+    friendFunction(obj);
+    return 0;
+}
+Output:-
+Private Variable: 10
+Protected Variable: 99
+
+
+| Feature       | Friend Class                                    | Friend Function                                           |
+| ------------- | ----------------------------------------------- | --------------------------------------------------------- |
+| Access        | Private and protected members                   | Private and protected members                             |
+| Declaration   | Inside the class using `friend class ClassName` | Inside the class using `friend ReturnType functionName()` |
+| Nature        | Entire class gets access                        | Only specific function gets access                        |
+| Mutual Access | No                                              | No                                                        |
 
 ---
 
