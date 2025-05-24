@@ -1121,8 +1121,11 @@ A **constructor** in C++ is a special member function of a class that is automat
 ## Types of Constructors
 
 ### 1. **Default Constructor**
+---
 
-A constructor with no parameters.
+A **default constructor** is a constructor that either takes no arguments or has default values for all its parameters. It is also referred to as a **zero-argument constructor** when it explicitly accepts no arguments.([GeeksforGeeks][1])
+
+If a default constructor is not explicitly defined by the programmer in the source code, the compiler automatically generates one during the compilation process. However, if a programmer explicitly defines a default constructor, the compiler does not generate it. Instead, the explicitly defined default constructor is called implicitly wherever needed.([GeeksforGeeks][1])
 
 ```cpp
 #include <iostream>
@@ -1139,7 +1142,142 @@ int main() {
     Demo obj;
     return 0;
 }
+
 ````
+
+In cases where a class is derived from a base class with a default constructor, or a class contains an object of another class with a default constructor, the compiler must insert code to ensure these default constructors are invoked appropriately for the base class or the embedded objects.([GeeksforGeeks][1])
+
+---
+
+## Default Constructors and Inheritance
+
+```cpp
+#include <iostream>
+using namespace std;
+
+class Base {
+public:
+    // Compiler "declares" constructor
+};
+
+class A {
+public:
+    // User defined constructor
+    A() { cout << "A Constructor" << endl; }
+
+    // Uninitialized
+    int size;
+};
+
+class B : public A {
+    // Compiler defines default constructor of B,
+    // and inserts stub to call A constructor
+    // Compiler won't initialize any data of A
+};
+
+class C : public A {
+public:
+    C()
+    {
+        // User defined default constructor of C
+        // Compiler inserts stub to call A's constructor
+        cout << "C Constructor" << endl;
+
+        // Compiler won't initialize any data of A
+    }
+};
+
+class D {
+    A a;
+public:
+    D()
+    {
+        // User defined default constructor of D
+        // a - constructor to be called, compiler inserts
+        // stub to call A constructor
+        cout << "D Constructor" << endl;
+
+        // Compiler won't initialize any data of 'a'
+    }
+};
+
+// Driver Code
+int main()
+{
+    Base base; // Only Base constructor (default provided by the compiler) is called
+    B b; // Calls A's constructor due to inheritance (compiler-generated constructor for B)
+    C c; // Calls A's constructor first, then C's constructor
+    D d; // Calls A's constructor for member 'a', then D's constructor
+
+    return 0;
+}
+```
+
+### Output
+
+```
+A Constructor
+A Constructor
+C Constructor
+A Constructor
+D Constructor
+```
+---
+
+## Constructors and Default Arguments
+
+```cpp
+// CPP code to demonstrate constructor can have default arguments
+#include <iostream>
+using namespace std;
+
+class A {
+public:
+    int sum = 0;
+    A(); // default constructor with no argument
+    A(int a, int x = 0) // default constructor with one default argument
+    {
+        sum = a + x;
+    }
+    void print() { cout << "Sum =" << sum << endl; }
+};
+
+int main()
+{
+    // This construct has two arguments. Second argument is
+    // initialized with a value of 0 Now we can call the constructor
+    // with one or two arguments
+    A obj1(5); // x will take default value 0
+    obj1.print();
+
+    A obj2(5, 5); // x will take value 5
+    obj2.print();
+
+    return 0;
+}
+```
+
+### Output
+
+```
+Sum =5
+Sum =10
+```
+---
+
+## FAQs
+
+**1. What is the significance of the default constructor?**
+
+> They are used to create objects, which do not have any specific initial value.
+
+**2. Is a default constructor automatically provided?**
+
+> If no constructors are explicitly declared in the class, a default constructor is provided automatically by the compiler.
+
+---
+
+
 
 ### 2. **Parameterized Constructor**
 
