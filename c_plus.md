@@ -1102,6 +1102,163 @@ int main() {
     return 0;
 }
 ```
+Here's a neatly structured `.md` (Markdown) version of the GeeksforGeeks article on **Constructors in C++** based on the provided URL: [https://www.geeksforgeeks.org/constructors-c/](https://www.geeksforgeeks.org/constructors-c/)
+
+---
+
+````markdown
+# Constructors in C++
+
+A **constructor** in C++ is a special member function of a class that is automatically called when an object of the class is created. It has the same name as the class and does not have a return type (not even `void`).
+
+## Features of Constructors
+
+- Automatically invoked during object creation
+- No return type
+- Can be overloaded
+- Can have default parameters
+
+## Types of Constructors
+
+### 1. **Default Constructor**
+
+A constructor with no parameters.
+
+```cpp
+#include <iostream>
+using namespace std;
+
+class Demo {
+public:
+    Demo() {
+        cout << "Default constructor called" << endl;
+    }
+};
+
+int main() {
+    Demo obj;
+    return 0;
+}
+````
+
+### 2. **Parameterized Constructor**
+
+Takes arguments to initialize an object.
+
+```cpp
+class Demo {
+    int a;
+public:
+    Demo(int x) {
+        a = x;
+        cout << "Parameterized constructor called: " << a << endl;
+    }
+};
+
+int main() {
+    Demo obj(10);
+    return 0;
+}
+```
+
+### 3. **Copy Constructor**
+
+Initializes a new object as a copy of an existing object.
+
+```cpp
+class Demo {
+    int a;
+public:
+    Demo(int x) { a = x; }
+    Demo(const Demo &d) {
+        a = d.a;
+        cout << "Copy constructor called" << endl;
+    }
+};
+
+int main() {
+    Demo obj1(10);
+    Demo obj2 = obj1;
+    return 0;
+}
+```
+
+## Constructor Overloading
+
+Multiple constructors can be defined with different parameters.
+
+```cpp
+class Demo {
+public:
+    Demo() {
+        cout << "Default constructor" << endl;
+    }
+    Demo(int x) {
+        cout << "Parameterized constructor: " << x << endl;
+    }
+};
+
+int main() {
+    Demo obj1;
+    Demo obj2(20);
+    return 0;
+}
+```
+
+## Constructors with Default Arguments
+
+```cpp
+class Demo {
+public:
+    Demo(int x = 10, int y = 20) {
+        cout << "x: " << x << ", y: " << y << endl;
+    }
+};
+
+int main() {
+    Demo obj1;
+    Demo obj2(30);
+    Demo obj3(40, 50);
+    return 0;
+}
+```
+
+## Explicit Constructor
+
+Prevents implicit conversions.
+
+```cpp
+class Demo {
+public:
+    explicit Demo(int x) {
+        cout << "Explicit constructor called: " << x << endl;
+    }
+};
+
+int main() {
+    Demo obj1(10);
+    // Demo obj2 = 20; // Error: conversion not allowed
+    return 0;
+}
+```
+
+## Summary
+
+| Constructor Type          | Description                                     |
+| ------------------------- | ----------------------------------------------- |
+| Default Constructor       | No arguments                                    |
+| Parameterized Constructor | Takes arguments                                 |
+| Copy Constructor          | Creates a copy of an object                     |
+| Overloaded Constructor    | Multiple constructors with different parameters |
+| Explicit Constructor      | Prevents implicit conversions                   |
+
+---
+
+**Note**: If a class does not have a constructor, the compiler provides a default constructor.
+
+```
+
+---
 
 ---
 
