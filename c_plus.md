@@ -1259,6 +1259,113 @@ int main() {
 ```
 
 ---
+You're absolutely right — the **move constructor** is an important part of modern C++ (C++11 and later). Here's an updated and neatly formatted Markdown section **specifically for the move constructor**, with clear explanation and a good example:
+
+---
+
+````markdown
+## Move Constructor (C++11 and later)
+
+A **move constructor** is a special constructor introduced in C++11 that enables the resources of a **temporary (rvalue)** object to be moved rather than copied, improving performance, especially when dealing with dynamic memory.
+
+### Syntax
+
+```cpp
+ClassName(ClassName&& other);
+````
+
+It takes an **rvalue reference** (denoted by `&&`) to another object of the same class.
+
+### When is a Move Constructor Called?
+
+* When an object is initialized using an **rvalue** (e.g., a temporary object or `std::move()`).
+* During **return by value** when the compiler performs move semantics instead of copy.
+
+### Example: Move Constructor
+
+```cpp
+#include <iostream>
+#include <cstring>
+using namespace std;
+
+class String {
+    char* str;
+
+public:
+    // Constructor
+    String(const char* s) {
+        str = new char[strlen(s) + 1];
+        strcpy(str, s);
+        cout << "Constructor: Allocated for " << str << endl;
+    }
+
+    // Copy Constructor
+    String(const String& other) {
+        str = new char[strlen(other.str) + 1];
+        strcpy(str, other.str);
+        cout << "Copy Constructor: Copied " << str << endl;
+    }
+
+    // Move Constructor
+    String(String&& other) noexcept {
+        str = other.str;
+        other.str = nullptr;
+        cout << "Move Constructor: Moved" << endl;
+    }
+
+    // Destructor
+    ~String() {
+        if (str) {
+            cout << "Destructor: Deleting " << str << endl;
+            delete[] str;
+        } else {
+            cout << "Destructor: Null pointer" << endl;
+        }
+    }
+};
+
+int main() {
+    String a = "Hello";
+    String b = std::move(a);  // Move constructor is called
+    return 0;
+}
+```
+
+### Output:
+
+```
+Constructor: Allocated for Hello
+Move Constructor: Moved
+Destructor: Null pointer
+Destructor: Deleting Hello
+```
+
+### Explanation
+
+* `String a = "Hello";` uses the normal constructor.
+* `String b = std::move(a);` transfers ownership of the internal `char*` from `a` to `b` using the move constructor.
+* After the move, `a.str` is set to `nullptr`, preventing double deletion.
+* Efficient for classes managing dynamic resources (e.g., memory, file handles).
+
+### Why Use Move Constructor?
+
+* **Performance**: Avoids expensive deep copies.
+* **Efficiency**: Transfers ownership of resources.
+* **Mandatory**: For full compliance with the Rule of Five (C++11+).
+
+### Rule of Five Reminder
+
+If a class manages resources, it should define:
+
+1. Destructor
+2. Copy Constructor
+3. Copy Assignment Operator
+4. Move Constructor
+5. Move Assignment Operator
+
+---
+
+
 
 ---
 
