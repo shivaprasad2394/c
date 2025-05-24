@@ -328,34 +328,7 @@ Arrays pointers & Arthematic
 | `erase()` | This function is used to remove a certain part of a string. | `std::string str = "HelloWorld"; str.erase(5, 5);` |
 | `rfind()` | This function is used to find the string's last occurrence. | `std::string str = "Hello World Hello"; size_t pos = str.rfind("Hello");` |
 
-| Function Name | Problem Statement | Example |
-| :------------ | :---------------- | ------- |
-| `length()` | Validate user input length. | `#include <iostream>\n#include <string>\nint main() {\n  std::string input = "OpenAI";\n  if (input.length() > 5)\n    std::cout << "Too long\\n";\n  return 0;\n}` |
-| `swap()` | Swap contents of two strings. | `#include <iostream>\n#include <string>\nint main() {\n  std::string a = "Hello", b = "World";\n  a.swap(b);\n  std::cout << a << " " << b;\n  return 0;\n}` |
-| `size()` | Check if string meets size. | `#include <iostream>\n#include <string>\nint main() {\n  std::string s = "Hello";\n  if (s.size() == 5)\n    std::cout << "Size 5\\n";\n  return 0;\n}` |
-| `resize()` | Resize a string. | `#include <iostream>\n#include <string>\nint main() {\n  std::string s = "HelloWorld";\n  s.resize(5);\n  std::cout << s;\n  return 0;\n}` |
-| `find()` | Locate substring. | `#include <iostream>\n#include <string>\nint main() {\n  std::string s = "Find the needle";\n  size_t pos = s.find("needle");\n  if (pos != std::string::npos)\n    std::cout << "Found at " << pos;\n  return 0;\n}` |
-| `push_back()` | Add char to string. | `#include <iostream>\n#include <string>\nint main() {\n  std::string s = "Hi";\n  s.push_back('!');\n  std::cout << s;\n  return 0;\n}` |
-| `pop_back()` | Remove last char. | `#include <iostream>\n#include <string>\nint main() {\n  std::string s = "Oops!";\n  s.pop_back();\n  std::cout << s;\n  return 0;\n}` |
-| `clear()` | Clear string content. | `#include <iostream>\n#include <string>\nint main() {\n  std::string s = "Reset me";\n  s.clear();\n  std::cout << "Length: " << s.length();\n  return 0;\n}` |
-| `strncmp()` | Compare parts of strings. | `#include <iostream>\n#include <cstring>\nint main() {\n  const char* a = "abc";\n  const char* b = "abd";\n  if (strncmp(a, b, 2) == 0)\n    std::cout << "First 2 match";\n  return 0;\n}` |
-| `strncpy()` | Copy n chars. | `#include <iostream>\n#include <cstring>\nint main() {\n  char src[] = "Hello";\n  char dest[10];\n  strncpy(dest, src, 5);\n  dest[5] = '\\0';\n  std::cout << dest;\n  return 0;\n}` |
-| `strrchr()` | Find last char. | `#include <iostream>\n#include <cstring>\nint main() {\n  const char* path = "/usr/bin/g++";\n  const char* file = strrchr(path, '/');\n  if (file)\n    std::cout << "File: " << file+1;\n  return 0;\n}` |
-| `strcat()` | Concatenate C-strings. | `#include <iostream>\n#include <cstring>\nint main() {\n  char s[20] = "Hi "; char t[] = "there";\n  strcat(s, t);\n  std::cout << s;\n  return 0;\n}` |
-| `replace()` | Replace part of string. | `#include <iostream>\n#include <string>\nint main() {\n  std::string s = "I like cats";\n  s.replace(7, 4, "dogs");\n  std::cout << s;\n  return 0;\n}` |
-| `substr()` | Extract substring. | `#include <iostream>\n#include <string>\nint main() {\n  std::string date = "2025-05-23";\n  std::string year = date.substr(0, 4);\n  std::cout << year;\n  return 0;\n}` |
-| `compare()` | Compare two strings. | `#include <iostream>\n#include <string>\nint main() {\n  std::string a = "abc", b = "abd";\n  if (a.compare(b) < 0)\n    std::cout << "abc < abd";\n  return 0;\n}` |
-| `erase()` | Remove substring. | `#include <iostream>\n#include <string>\nint main() {\n  std::string s = "Hello, World!";\n  s.erase(5, 7);\n  std::cout << s;\n  return 0;\n}` |
-| `rfind()` | Last substring match. | `#include <iostream>\n#include <string>\nint main() {\n  std::string s = "one fish two fish";\n  size_t pos = s.rfind("fish");\n  std::cout << pos;\n  return 0;\n}` |
 
-
-
----
-Sure! To keep the table neat and renderable **without code inside the table cells**, we put only problem info and sample input/output in the table, and then place the full code snippets **below the table**, each clearly numbered and titled. This way the Markdown renders perfectly everywhere.
-
-Here’s the full markdown content for you:
-
----
 
 ````markdown
 # 10 Must-Know Competitive Programming String Problems
@@ -876,20 +849,7 @@ Where:
 
 ## Access Modifiers
 
-Access specifiers (or access modifiers) control the access level of class members. They are keywords specified inside the class to set the accessibility of all members declared under them.
-
-There are **3 access specifiers** in C++:
-
-| Access Specifier | Access Level Description                                         |
-| ---------------- | ---------------------------------------------------------------- |
-| **public**       | Members can be accessed from outside the class.                  |
-| **private**      | Members can only be accessed within the class itself.            |
-| **protected**    | Members can be accessed within the class and by derived classes. |
-
-> **Note:**
-> If no access specifier is mentioned, members are **private** by default.
-
----
+Access modifiers, also known as access specifiers, in C++ are used to define the accessibility of class members. They play a crucial role in implementing the principle of data hiding in object-oriented programming.
 
 ## Example
 
@@ -935,9 +895,180 @@ Value: 10
 Whether we can access a member of a class depends on the access specifier under which it is declared.
 In the above example, the variable `val` is declared as **public**, so it can be accessed and modified directly through the object `obj` in `main()`. If `val` were declared **private**, then `obj.val = 10;` would cause a compilation error because private members cannot be accessed outside the class.
 
+---
+
+# Access Modifiers in C++
 
 
-Sure! Here's a well-formatted Markdown version of your explanation on **Special Member Functions in C++ classes**, with proper code blocks and headings for clarity.
+There are three types of access modifiers in C++:
+
+1. **Public**
+2. **Private** (default)
+3. **Protected**
+
+---
+
+## 1. Public Specifier
+
+* Members declared as `public` are accessible from anywhere in the program.
+* Both data members and member functions can be accessed using the object of the class.
+
+**Example:**
+
+```cpp
+#include <iostream>
+using namespace std;
+
+class Circle {
+public:
+    double radius;
+
+    double compute_area() {
+        return 3.14 * radius * radius;
+    }
+};
+
+int main() {
+    Circle obj;
+    obj.radius = 5.5;
+    cout << "Radius is: " << obj.radius << "\n";
+    cout << "Area is: " << obj.compute_area();
+    return 0;
+}
+```
+
+**Output:**
+
+```
+Radius is: 5.5
+Area is: 94.985
+```
+
+In this example, the `radius` and `compute_area()` are public members, allowing them to be accessed directly using the object `obj`.
+
+---
+
+## 2. Private Specifier
+
+* Members declared as `private` are accessible only within the class itself.
+* They cannot be accessed directly from outside the class.
+* Only member functions or friend functions/classes can access private members.
+
+**Example:**
+
+```cpp
+#include <iostream>
+using namespace std;
+
+class Circle {
+private:
+    double radius;
+
+    double compute_area() {
+        return 3.14 * radius * radius;
+    }
+};
+
+int main() {
+    Circle obj;
+    obj.radius = 1.5; // Error: 'radius' is private
+    cout << "Area is: " << obj.compute_area(); // Error: 'compute_area' is private
+    return 0;
+}
+```
+
+**Output:**
+
+```
+main.cpp: In function ‘int main()’:
+main.cpp:22:9: error: ‘double Circle::radius’ is private within this context
+   22 |     obj.radius = 1.5;
+      |         ^~~~~~
+main.cpp:7:16: note: declared private here
+    7 |         double radius;
+      |                ^~~~~~
+main.cpp:23:43: error: ‘double Circle::compute_area()’ is private within this context
+   23 |     cout << "Area is:" << obj.compute_area();
+      |                                           ^
+main.cpp:8:16: note: declared private here
+    8 |         double compute_area() {
+      |                ^~~~~~~~~~~~
+```
+
+In this example, attempting to access private members `radius` and `compute_area()` from outside the class results in compilation errors.
+
+---
+
+## 3. Protected Specifier
+
+* Members declared as `protected` are similar to private members but can be accessed in derived classes.
+* They are not accessible from outside the class hierarchy.
+
+**Example:**
+
+```cpp
+#include <iostream>
+using namespace std;
+
+class Parent {
+protected:
+    int id_protected;
+};
+
+class Child : public Parent {
+public:
+    void setId(int id) {
+        id_protected = id;
+    }
+
+    void displayId() {
+        cout << "id_protected is: " << id_protected << endl;
+    }
+};
+
+int main() {
+    Child obj1;
+    obj1.setId(81);
+    obj1.displayId();
+    return 0;
+}
+```
+
+**Output:**
+
+```
+id_protected is: 81
+```
+
+In this example, the `Child` class inherits from `Parent` and can access the protected member `id_protected`.
+
+
+There are **3 access specifiers** in C++:
+
+| Access Specifier | Access Level Description                                         |
+| ---------------- | ---------------------------------------------------------------- |
+| **public**       | Members can be accessed from outside the class.                  |
+| **private**      | Members can only be accessed within the class itself.            |
+| **protected**    | Members can be accessed within the class and by derived classes. |
+
+---
+---
+
+## Summary Table
+
+| Access Modifier | Accessible Within Class | Accessible in Derived Classes | Accessible Outside Class |
+| --------------- | ----------------------- | ----------------------------- | ------------------------ |
+| `public`        | Yes                     | Yes                           | Yes                      |
+| `protected`     | Yes                     | Yes                           | No                       |
+| `private`       | Yes                     | No                            | No                       |
+
+---
+
+**Note:** If no access modifier is specified for class members, they are `private` by default in C++.
+
+---
+
+
 
 ---
 
