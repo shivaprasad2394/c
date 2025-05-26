@@ -1,3 +1,6 @@
+---
+
+These problems represent a strong foundation for string manipulation questions frequently seen in coding interviews.
 # 10 Frequently Asked String Problems in MNC Interviews
 
 ## 1. Reverse a String
@@ -315,6 +318,345 @@ int main() {
 }
 ```
 
+
 ---
 
-These problems represent a strong foundation for string manipulation questions frequently seen in coding interviews.
+These 10 array problems cover a wide range of logic and are commonly asked in technical interviews. Each includes debug output to help understand the execution step by step.
+
+# 10 Frequently Asked Array Problems in MNC Interviews
+
+## 1. Find the Maximum Subarray (Kadane’s Algorithm)
+
+**Problem:**
+Given an integer array, find the contiguous subarray (containing at least one number) which has the largest sum.
+
+**Approach:**
+Use Kadane’s algorithm to maintain current and global max sums.
+
+```cpp
+#include <iostream>
+#include <vector>
+using namespace std;
+
+int maxSubArray(vector<int>& nums) {
+    int maxSoFar = nums[0], maxEndingHere = nums[0];
+    for (int i = 1; i < nums.size(); i++) {
+        maxEndingHere = max(nums[i], maxEndingHere + nums[i]);
+        maxSoFar = max(maxSoFar, maxEndingHere);
+        cout << "Step " << i << ": maxEndingHere=" << maxEndingHere << ", maxSoFar=" << maxSoFar << endl;
+    }
+    return maxSoFar;
+}
+
+int main() {
+    vector<int> nums = {-2,1,-3,4,-1,2,1,-5,4};
+    cout << "Max Subarray Sum: " << maxSubArray(nums) << endl;
+    return 0;
+}
+```
+
+## 2. Two Sum
+
+**Problem:**
+Given an array and a target, return indices of two numbers such that they add up to the target.
+
+**Approach:**
+Use a hashmap to store seen numbers.
+
+```cpp
+#include <iostream>
+#include <unordered_map>
+#include <vector>
+using namespace std;
+
+vector<int> twoSum(vector<int>& nums, int target) {
+    unordered_map<int, int> map;
+    for (int i = 0; i < nums.size(); i++) {
+        int complement = target - nums[i];
+        if (map.count(complement)) {
+            cout << "Found: " << complement << " at index " << map[complement] << endl;
+            return {map[complement], i};
+        }
+        map[nums[i]] = i;
+        cout << "Storing: " << nums[i] << " at index " << i << endl;
+    }
+    return {};
+}
+
+int main() {
+    vector<int> nums = {2, 7, 11, 15};
+    vector<int> result = twoSum(nums, 9);
+    cout << "Indices: " << result[0] << ", " << result[1] << endl;
+    return 0;
+}
+```
+
+## 3. Move Zeros
+
+**Problem:**
+Move all 0’s to the end of the array without changing the order of non-zero elements.
+
+**Approach:**
+Use two pointers to shift non-zero elements forward.
+
+```cpp
+#include <iostream>
+#include <vector>
+using namespace std;
+
+void moveZeroes(vector<int>& nums) {
+    int insertPos = 0;
+    for (int i = 0; i < nums.size(); i++) {
+        if (nums[i] != 0) {
+            nums[insertPos++] = nums[i];
+            cout << "Moved: " << nums[i] << " to position " << insertPos - 1 << endl;
+        }
+    }
+    while (insertPos < nums.size()) {
+        nums[insertPos++] = 0;
+        cout << "Inserted 0 at position " << insertPos - 1 << endl;
+    }
+}
+
+int main() {
+    vector<int> nums = {0,1,0,3,12};
+    moveZeroes(nums);
+    for (int x : nums) cout << x << " ";
+    cout << endl;
+    return 0;
+}
+```
+
+## 4. Merge Sorted Arrays
+
+**Problem:**
+Merge two sorted arrays into one sorted array.
+
+**Approach:**
+Use two pointers and merge like in merge sort.
+
+```cpp
+#include <iostream>
+#include <vector>
+using namespace std;
+
+vector<int> mergeSortedArrays(vector<int>& a, vector<int>& b) {
+    vector<int> result;
+    int i = 0, j = 0;
+    while (i < a.size() && j < b.size()) {
+        if (a[i] < b[j]) result.push_back(a[i++]);
+        else result.push_back(b[j++]);
+        cout << "Merged: " << result.back() << endl;
+    }
+    while (i < a.size()) result.push_back(a[i++]);
+    while (j < b.size()) result.push_back(b[j++]);
+    return result;
+}
+
+int main() {
+    vector<int> a = {1, 3, 5};
+    vector<int> b = {2, 4, 6};
+    vector<int> result = mergeSortedArrays(a, b);
+    for (int x : result) cout << x << " ";
+    return 0;
+}
+```
+
+## 5. Find Missing Number
+
+**Problem:**
+Find the missing number in an array of 0 to n.
+
+**Approach:**
+Use sum formula: `n*(n+1)/2 - actual sum`
+
+```cpp
+#include <iostream>
+#include <vector>
+using namespace std;
+
+int missingNumber(vector<int>& nums) {
+    int n = nums.size();
+    int expected = n * (n + 1) / 2;
+    int actual = 0;
+    for (int x : nums) actual += x;
+    cout << "Expected Sum: " << expected << ", Actual Sum: " << actual << endl;
+    return expected - actual;
+}
+
+int main() {
+    vector<int> nums = {3,0,1};
+    cout << "Missing Number: " << missingNumber(nums) << endl;
+    return 0;
+}
+```
+
+## 6. Contains Duplicate
+
+**Problem:**
+Check if any value appears more than once.
+
+**Approach:**
+Use an unordered_set to track elements.
+
+```cpp
+#include <iostream>
+#include <vector>
+#include <unordered_set>
+using namespace std;
+
+bool containsDuplicate(vector<int>& nums) {
+    unordered_set<int> seen;
+    for (int x : nums) {
+        if (seen.count(x)) {
+            cout << "Duplicate found: " << x << endl;
+            return true;
+        }
+        seen.insert(x);
+        cout << "Inserting: " << x << endl;
+    }
+    return false;
+}
+
+int main() {
+    vector<int> nums = {1,2,3,1};
+    cout << containsDuplicate(nums) << endl;
+    return 0;
+}
+```
+
+## 7. Rotate Array
+
+**Problem:**
+Rotate the array to the right by k steps.
+
+**Approach:**
+Reverse the array in 3 parts: full, first k, rest.
+
+```cpp
+#include <iostream>
+#include <vector>
+#include <algorithm>
+using namespace std;
+
+void rotate(vector<int>& nums, int k) {
+    int n = nums.size();
+    k = k % n;
+    reverse(nums.begin(), nums.end());
+    reverse(nums.begin(), nums.begin() + k);
+    reverse(nums.begin() + k, nums.end());
+    cout << "Rotated Array: ";
+    for (int x : nums) cout << x << " ";
+    cout << endl;
+}
+
+int main() {
+    vector<int> nums = {1,2,3,4,5,6,7};
+    rotate(nums, 3);
+    return 0;
+}
+```
+
+## 8. Intersection of Two Arrays
+
+**Problem:**
+Return the intersection of two arrays.
+
+**Approach:**
+Use sets to store and compare.
+
+```cpp
+#include <iostream>
+#include <vector>
+#include <unordered_set>
+using namespace std;
+
+vector<int> intersection(vector<int>& nums1, vector<int>& nums2) {
+    unordered_set<int> set1(nums1.begin(), nums1.end());
+    unordered_set<int> result;
+    for (int num : nums2) {
+        if (set1.count(num)) {
+            result.insert(num);
+            cout << "Found Intersection: " << num << endl;
+        }
+    }
+    return vector<int>(result.begin(), result.end());
+}
+
+int main() {
+    vector<int> a = {1,2,2,1};
+    vector<int> b = {2,2};
+    vector<int> result = intersection(a, b);
+    for (int x : result) cout << x << " ";
+    return 0;
+}
+```
+
+## 9. Maximum Product Subarray
+
+**Problem:**
+Find the contiguous subarray with the largest product.
+
+**Approach:**
+Track max and min product at each step.
+
+```cpp
+#include <iostream>
+#include <vector>
+using namespace std;
+
+int maxProduct(vector<int>& nums) {
+    int maxProd = nums[0], minProd = nums[0], result = nums[0];
+    for (int i = 1; i < nums.size(); i++) {
+        if (nums[i] < 0) swap(maxProd, minProd);
+        maxProd = max(nums[i], maxProd * nums[i]);
+        minProd = min(nums[i], minProd * nums[i]);
+        result = max(result, maxProd);
+        cout << "Step " << i << ": maxProd=" << maxProd << ", minProd=" << minProd << ", result=" << result << endl;
+    }
+    return result;
+}
+
+int main() {
+    vector<int> nums = {2,3,-2,4};
+    cout << "Max Product: " << maxProduct(nums) << endl;
+    return 0;
+}
+```
+
+## 10. Find All Duplicates
+
+**Problem:**
+Find all elements that appear twice in an array (1 ≤ a[i] ≤ n).
+
+**Approach:**
+Use in-place negation as a marker.
+
+```cpp
+#include <iostream>
+#include <vector>
+#include <cmath>
+using namespace std;
+
+vector<int> findDuplicates(vector<int>& nums) {
+    vector<int> result;
+    for (int x : nums) {
+        int index = abs(x) - 1;
+        if (nums[index] < 0) {
+            result.push_back(abs(x));
+            cout << "Duplicate: " << abs(x) << endl;
+        }
+        nums[index] = -nums[index];
+    }
+    return result;
+}
+
+int main() {
+    vector<int> nums = {4,3,2,7,8,2,3,1};
+    vector<int> result = findDuplicates(nums);
+    for (int x : result) cout << x << " ";
+    return 0;
+}
+```
+
+
