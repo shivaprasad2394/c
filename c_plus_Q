@@ -1,11 +1,10 @@
-# Top 10 Popular Array Questions with C++ Solutions and Explanations
-
 ---
 
 ## 1. Two Sum
 
 **Problem:**
 Given an array of integers `nums` and an integer `target`, return indices of the two numbers such that they add up to the target.
+
 
 **Solution:**
 ```cpp
@@ -296,7 +295,8 @@ vector<vector<int>> merge(vector<vector<int>>& intervals) {
     }
     return merged;
 }
-```
+
+
 **Explanation:**
 - Sort and merge overlapping intervals.
 - Time Complexity: O(n log n)
