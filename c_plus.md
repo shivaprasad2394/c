@@ -28,7 +28,7 @@ Basic Data Types in C++
 
 🛠 Namespace
 ------------
-          Namespace:-C++  Namespace are used to group logically related functions,variables and other entities to avoid name conflicts.
+          Namespace:-C++  Namespace is a feature used to group logically related functions,variables and other entities to avoid name conflicts.
 
 ⚠️ Examples
 -----------------
