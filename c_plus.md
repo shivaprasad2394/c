@@ -55,17 +55,8 @@ Namespace Alias:
                     namespace LNN=LongNamespaceName;//Alias
                     LNN::Example  obj;//Easier to use.
 
-🧠 Const & Macros
------------------
-          #define directive can also be used to define symbolic constants that do not require a data type. 
-          They are called macros and are replaced by their values at compile time.
-          Syntax:
-          #define CONSTANT_NAME value
 
-          constant variables in c are immutable after its definition, i.e., they can be initialized only once in the whole program. 
-          After that, we cannot modify the value stored inside that variable.
-
-🧪 Static
+🧪 Static :-storage class specifier
 ---------
 **Static Variables in a Function**
 
