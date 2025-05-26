@@ -120,6 +120,77 @@ The static member functions have the following uses in C++:
 - global static variable has internal linkage, meaning it is accessible only within the file where it is defined. 
 - This Also means you cant use extern to access the variable across folder.
 
+---
+
+This example demonstrates both concepts clearly, showing how scope and linkage affect variable visibility and lifetime in C++.
+
+---
+
+## Example: Global Static vs Local Static
+
+### `file1.cpp`
+
+```cpp
+#include 
+
+static int global_static_var = 0; // Global static: internal linkage
+
+void increment_and_print_global() {
+    global_static_var++;
+    std::cout 
+
+// extern int global_static_var; // ERROR: cannot access, internal linkage
+
+void increment_and_print_global();
+void increment_and_print_local();
+
+int main() {
+    std::cout << "Calling from file2.cpp:" << std::endl;
+
+    // Try to access global_static_var directly (uncommenting next line will cause error)
+    // std::cout << global_static_var << std::endl; // ERROR
+
+    increment_and_print_global(); // Increments and prints file1.cpp's global_static_var
+    increment_and_print_global();
+
+    increment_and_print_local();  // Increments and prints file1.cpp's local_static_var
+    increment_and_print_local();
+
+    return 0;
+}
+```
+
+---
+
+## What Will Happen
+
+- **Global static variable (`global_static_var`)** is only accessible within `file1.cpp` due to internal linkage. `file2.cpp` cannot access it directly, even with `extern`.
+- **Local static variable (`local_static_var`)** is initialized once and persists across multiple calls to the function within the same translation unit.
+- Each call to `increment_and_print_global()` or `increment_and_print_local()` will increment and print the respective static variable.
+
+---
+
+## Expected Output
+
+```
+Calling from file2.cpp:
+[file1.cpp] global_static_var: 1
+[file1.cpp] global_static_var: 2
+[file1.cpp] local_static_var: 1
+[file1.cpp] local_static_var: 2
+```
+
+---
+
+## Key Takeaways
+
+- **Global static variables** have internal linkage: only visible within their source file, not accessible from other files.
+- **Local static variables** persist their value across function calls, but their scope is limited to the function in which they are declared.
+- Attempting to access a global static variable from another file will result in a linker error.
+
+
+
+
 🔢 C++ Lambda Expressions
 ---------------------------------------------
 
