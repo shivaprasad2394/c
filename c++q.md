@@ -1,6 +1,3 @@
----
-
-These problems represent a strong foundation for string manipulation questions frequently seen in coding interviews.
 # 10 Frequently Asked String Problems in MNC Interviews
 
 ## 1. Reverse a String
