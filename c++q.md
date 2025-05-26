@@ -34,7 +34,7 @@ int main() {
     for (char c : b) freq[c - 'a']--;
     int deletions = 0;
     for (int i = 0; i 
-
+---
 **10. Count Number of Occurrences of Each Query String**
 
 **Problem Statement:**
