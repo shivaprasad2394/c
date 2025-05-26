@@ -1,5 +1,3 @@
-hi
-
 ## 10 Frequently Asked String Problems in MNC Interviews (HackerRank Style)
 
 ---
@@ -36,99 +34,37 @@ int main() {
     for (char c : b) freq[c - 'a']--;
     int deletions = 0;
     for (int i = 0; i 
-#include 
-using namespace std;
 
-int main() {
-    string s;
-    cin >> s;
-    unordered_map freq;
-    for (char c : s) freq[c]++;
-    for (char c : s) {
-        cout 
-#include 
-using namespace std;
+**10. Count Number of Occurrences of Each Query String**
 
-int main() {
-    string s;
-    cin >> s;
-    unordered_map last;
-    int maxLen = 0, start = 0;
-    for (int i = 0; i = start) {
-            cout 
-using namespace std;
+**Problem Statement:**
+Given a list of input strings and a list of query strings, for each query, count how many times it occurs in the input.
 
-int main() {
-    string s;
-    getline(cin, s);
-    bool hasDigit = false, hasLower = false, hasUpper = false, valid = true;
-    if (s.length() 
-#include 
-#include 
-using namespace std;
+**Approach:**  
 
-int main() {
-    string s, t;
-    cin >> s >> t;
-    unordered_map need, window;
-    for (char c : t) need[c]++;
-    int left = 0, right = 0, valid = 0, minLen = INT_MAX, start = 0;
-    while (right 
-#include 
-#include 
-#include 
-using namespace std;
+Use a map to count frequencies, then answer queries.
 
-int main() {
-    string s;
-    getline(cin, s);
-    stringstream ss(s);
-    string word;
-    vector words;
-    while (ss >> word) {
-        words.push_back(word);
-        cout 
-#include 
-#include 
-using namespace std;
-
-int main() {
-    string s;
-    cin >> s;
-    map freq;
-    int m = INT_MAX;
-    for (int i = s.length()-1; i >= 0; --i) {
-        freq[s[i]]++;
-        m = min(m, freq[s[i]]);
-        cout 
-using namespace std;
-
-int main() {
-    string a, b, ans;
-    cin >> a >> b;
-    int m = min(a.size(), b.size());
-    for (int i = 0; i  m) ans += a.substr(m);
-    if (b.size() > m) ans += b.substr(m);
-    cout 
-#include 
-#include 
+**C++ Solution:**
+```cpp
+#include <iostream>
+#include <unordered_map>
+#include <vector>
 using namespace std;
 
 int main() {
     int n, q;
     cin >> n;
-    unordered_map freq;
+    unordered_map<string, int> freq;
     string s;
-    for (int i = 0; i > s;
+    for (int i = 0; i < n; ++i) {
+        cin >> s;
         freq[s]++;
-        cout > q;
-    vector queries(q);
-    for (int i = 0; i > queries[i];
+        cout << "Input: " << s << ", Count: " << freq[s] << endl;
+    }
+    cin >> q;
+    vector<string> queries(q);
+    for (int i = 0; i < q; ++i) cin >> queries[i];
     for (auto &query : queries)
         cout << query << ": " << freq[query] << endl;
     return 0;
 }
-```
-
-
----
