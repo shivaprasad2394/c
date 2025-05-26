@@ -1,3 +1,139 @@
+Absolutely! Here are the **step-by-step explanations** for each of the string problems you listed, with concise logic that you can use for implementation:
+
+---
+
+### 1. Reverse a String
+
+**Goal:** Reverse the characters in a string in-place or return a reversed copy.
+
+**Steps:**
+
+* Initialize two pointers: `left` at start, `right` at end of string.
+* While `left < right`, swap characters at `left` and `right`.
+* Move `left` forward and `right` backward.
+* Stop when pointers meet or cross.
+
+---
+
+### 2. Check for Anagram
+
+**Goal:** Check if two strings have the same characters with the same frequencies.
+
+**Steps:**
+
+* If lengths differ, return false immediately.
+* Count frequency of each character in the first string (using a map or array).
+* Decrease frequency based on the second string’s characters.
+* If all frequencies return to zero, the strings are anagrams; otherwise, not.
+
+---
+
+### 3. Longest Palindromic Substring
+
+**Goal:** Find the longest substring that reads the same backward.
+
+**Steps:**
+
+* Iterate over each character as a center.
+* Expand around the center to check for odd-length palindromes.
+* Also expand around center and center+1 for even-length palindromes.
+* Keep track of the longest palindrome found.
+* Return the longest substring after scanning all centers.
+
+---
+
+### 4. Remove All Duplicates
+
+**Goal:** Remove duplicate characters, keeping only first occurrences.
+
+**Steps:**
+
+* Use a set or boolean array to track seen characters.
+* Iterate over the string and append only characters not seen before.
+* Return or modify the string to this new deduplicated string.
+
+---
+
+### 5. String Compression
+
+**Goal:** Compress consecutive repeating characters as `char + count`.
+
+**Steps:**
+
+* Iterate over the string keeping track of current char and its count.
+* When the next char is different, append the current char and count to the result.
+* If count = 1, just append the char without count.
+* Continue until the end, then return compressed string.
+
+---
+
+### 6. Check Rotation
+
+**Goal:** Check if one string is a rotation of another.
+
+**Steps:**
+
+* If lengths differ, return false.
+* Concatenate the first string with itself.
+* Check if the second string is a substring of this concatenation.
+* If yes, it's a rotation; otherwise, no.
+
+---
+
+### 7. First Non-Repeating Character
+
+**Goal:** Find the index of the first character that appears only once.
+
+**Steps:**
+
+* Count the frequency of each character.
+* Iterate over the string and return the index of the first character with frequency 1.
+* If none found, return -1.
+
+---
+
+### 8. Valid Palindrome (ignoring non-alphanumeric)
+
+**Goal:** Check if a string reads the same forward and backward, ignoring cases and non-alphanumeric chars.
+
+**Steps:**
+
+* Use two pointers `left` and `right` starting from ends.
+* Move pointers inward skipping non-alphanumeric characters.
+* Compare characters ignoring case.
+* If mismatch found, return false.
+* If pointers cross, return true.
+
+---
+
+### 9. Count and Say
+
+**Goal:** Generate the nth term of the count-and-say sequence.
+
+**Steps:**
+
+* Start with "1" as the first term.
+* For each subsequent term, read the previous term left to right.
+* Count consecutive repeating digits and say the count followed by the digit.
+* Repeat until nth term is generated.
+
+---
+
+### 10. Check Subsequence
+
+**Goal:** Check if `s` is a subsequence of `t`.
+
+**Steps:**
+
+* Use two pointers, `i` for `s`, `j` for `t`.
+* While `j` < length of `t`, compare `s[i]` and `t[j]`.
+* If equal, move `i` forward. Always move `j` forward.
+* If `i` reaches end of `s`, return true (all chars matched).
+* Otherwise, return false.
+
+---
+
+
 # 10 Frequently Asked String Problems in MNC Interviews
 
 ## 1. Reverse a String
