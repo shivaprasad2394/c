@@ -56,6 +56,22 @@ Absolutely! Here are the **step-by-step explanations** for each of the string pr
 
 ### 5. String Compression
 
+What is String Compression?
+
+You are given a string.
+
+You need to "compress" it by replacing consecutive repeating characters with the character followed by the number of times it repeats.
+
+If a character appears only once in a row, you just write the character (no number).
+
+ExampleInput:
+text
+    aaabbcddddd
+
+Output:
+text
+    a3b2cd5
+
 **Goal:** Compress consecutive repeating characters as `char + count`.
 
 **Steps:**
