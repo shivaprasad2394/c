@@ -180,19 +180,36 @@ Use a character count array of size 26.
 using namespace std;
 
 bool isAnagram(string s, string t) {
-    if (s.size() != t.size()) return false;
-    vector<int> count(26, 0);
-    for (char c : s) count[c - 'a']++;
-    for (char c : t) count[c - 'a']--;
-    for (int i = 0; i < 26; ++i) {
-        cout << "Character " << char('a' + i) << " count: " << count[i] << endl;
-        if (count[i] != 0) return false;
+    cout << "Comparing: \"" << s << "\" and \"" << t << "\"" << endl;
+    if (s.size() != t.size()) {
+        cout << "Strings have different lengths. Not anagrams." << endl;
+        return false;
     }
+    vector<int> count(26, 0);
+    cout << "Counting characters in first string..." << endl;
+    for (char c : s) {
+        count[c - 'a']++;
+        cout << "  Incrementing count for '" << c << "' to " << count[c - 'a'] << endl;
+    }
+    cout << "Subtracting characters using second string..." << endl;
+    for (char c : t) {
+        count[c - 'a']--;
+        cout << "  Decrementing count for '" << c << "' to " << count[c - 'a'] << endl;
+    }
+    cout << "Checking final counts for all characters:" << endl;
+    for (int i = 0; i < 26; ++i) {
+        cout << "  Character '" << char('a' + i) << "' count: " << count[i] << endl;
+        if (count[i] != 0) {
+            cout << "Mismatch found for '" << char('a' + i) << "'. Not anagrams." << endl;
+            return false;
+        }
+    }
+    cout << "All counts zero. Strings are anagrams." << endl;
     return true;
 }
 
 int main() {
-    cout << isAnagram("listen", "silent") << endl;
+    cout << "Result: " << isAnagram("listen", "silent") << endl;
     return 0;
 }
 ```
@@ -211,26 +228,42 @@ Expand around each character center.
 using namespace std;
 
 string expandFromCenter(string s, int left, int right) {
+    cout << "  expandFromCenter called with left=" << left << ", right=" << right << endl;
     while (left >= 0 && right < s.size() && s[left] == s[right]) {
-        cout << "Palindrome: " << s.substr(left, right - left + 1) << endl;
+        cout << "    Palindrome: " << s.substr(left, right - left + 1) << " (left=" << left << ", right=" << right << ")" << endl;
         --left; ++right;
     }
-    return s.substr(left + 1, right - left - 1);
+    string palindrome = s.substr(left + 1, right - left - 1);
+    cout << "  Returning palindrome: " << palindrome << " from left=" << (left+1) << " to right=" << (right-1) << endl;
+    return palindrome;
 }
 
 string longestPalindrome(string s) {
     string longest = "";
+    cout << "Input string: " << s << endl;
     for (int i = 0; i < s.size(); ++i) {
+        cout << "Center at index: " << i << endl;
         string odd = expandFromCenter(s, i, i);
         string even = expandFromCenter(s, i, i + 1);
-        if (odd.size() > longest.size()) longest = odd;
-        if (even.size() > longest.size()) longest = even;
+        cout << "  Odd palindrome: " << odd << endl;
+        cout << "  Even palindrome: " << even << endl;
+        if (odd.size() > longest.size()) {
+            cout << "  Updating longest with odd: " << odd << endl;
+            longest = odd;
+        }
+        if (even.size() > longest.size()) {
+            cout << "  Updating longest with even: " << even << endl;
+            longest = even;
+        }
+        cout << "  Current longest palindrome: " << longest << endl;
+        cout << "-----------------------------" << endl;
     }
+    cout << "Final longest palindrome: " << longest << endl;
     return longest;
 }
 
 int main() {
-    cout << longestPalindrome("babad") << endl;
+    cout << "Result: " << longestPalindrome("babad") << endl;
     return 0;
 }
 ```
@@ -252,18 +285,23 @@ using namespace std;
 string removeDuplicates(string s) {
     unordered_set<char> seen;
     string result = "";
+    cout << "Input string: " << s << endl;
     for (char c : s) {
+        cout << "Processing character: " << c << endl;
         if (seen.find(c) == seen.end()) {
             seen.insert(c);
             result += c;
-            cout << "Adding: " << c << endl;
+            cout << "  Adding: " << c << " to result. Result now: " << result << endl;
+        } else {
+            cout << "  Skipping: " << c << " (already seen)" << endl;
         }
     }
+    cout << "Final result: " << result << endl;
     return result;
 }
 
 int main() {
-    cout << removeDuplicates("programming") << endl;
+    cout << "Output: " << removeDuplicates("programming") << endl;
     return 0;
 }
 ```
