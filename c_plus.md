@@ -2015,23 +2015,8 @@ Loops until user chooses Exit
 - 5.6.1 Effective C++ Practices  
 - 5.6.2 Code Optimization Techniques  
 - 5.6.3 Profiling and Debugging Tools  
-- 5.6.4 Writing Maintainable Code  
----
+- 5.6.4 Writing Maintainable Code
 
-# 🔷 3.1 Classes and Objects in C++
-
----
-
-## ✅ What are Classes and Objects?
-
-> A **class** is a blueprint for creating **objects** — bundles of data and functions that model real-world entities.
-
-* **Class** → Defines structure and behavior
-* **Object** → Instance of a class
-
-🧱 Think of a class as a **building plan**, and objects as the **buildings** made from it.
-
----
 You're on fire! 🔥
 Let’s break down **2.5 Enumerations and Type Casting in C++** — a fundamental yet powerful topic that helps write safer, cleaner, and more expressive code.
 
@@ -2303,6 +2288,23 @@ We can now continue to:
 * **Templates** and `std::function`
 * **STL Containers** and Algorithms
 * Or dive into **Exception Handling (4.2)** next!
+
+---
+
+# 🔷 3.1 Classes and Objects in C++
+
+---
+
+## ✅ What are Classes and Objects?
+
+> A **class** is a blueprint for creating **objects** — bundles of data and functions that model real-world entities.
+
+* **Class** → Defines structure and behavior
+* **Object** → Instance of a class
+
+🧱 Think of a class as a **building plan**, and objects as the **buildings** made from it.
+
+---
 
 ## 🔹 3.1.1 Defining Classes
 
