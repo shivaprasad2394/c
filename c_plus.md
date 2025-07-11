@@ -1831,7 +1831,6 @@ Sure! Below is your complete **C++ roadmap** formatted in **Markdown (`.md`)** s
 
 ---
 
-```markdown
 # C++ Mastery Roadmap
 
 ## 1. Basics of C++
