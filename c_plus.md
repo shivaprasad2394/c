@@ -1827,10 +1827,6 @@ Write a menu-driven program that:
 
 Loops until user chooses Exit
 ---------------------------------------------
-Sure! Below is your complete **C++ roadmap** formatted in **Markdown (`.md`)** syntax. You can copy and paste it directly into your GitHub README or any `.md` file.
-
----
-
 # C++ Mastery Roadmap
 
 ## 1. Basics of C++
@@ -1901,7 +1897,17 @@ Sure! Below is your complete **C++ roadmap** formatted in **Markdown (`.md`)** s
 ### 2.5 Enumerations and Type Casting
 - 2.5.1 enum Types  
 - 2.5.2 Strongly Typed enum (enum class)  
-- 2.5.3 Type Casting (static_cast, dynamic_cast, const_cast, reinterpret_cast)  
+- 2.5.3 Type Casting (static_cast, dynamic_cast, const_cast, reinterpret_cast)
+ 
+### 2.6 Namespaces
+
+- 2.6.1 What is a Namespace?  
+- 2.6.2 Defining and Using Namespaces  
+- 2.6.3 The `std` Namespace  
+- 2.6.4 Nested Namespaces  
+- 2.6.5 The `using` Directive and `using` Declaration  
+- 2.6.6 Anonymous (Unnamed) Namespaces  
+- 2.6.7 Best Practices for Namespaces  
 
 ---
 
@@ -2008,7 +2014,5 @@ Sure! Below is your complete **C++ roadmap** formatted in **Markdown (`.md`)** s
 - 5.6.2 Code Optimization Techniques  
 - 5.6.3 Profiling and Debugging Tools  
 - 5.6.4 Writing Maintainable Code  
-```
 
----
 
