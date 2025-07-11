@@ -2016,11 +2016,10 @@ Loops until user chooses Exit
 - 5.6.2 Code Optimization Techniques  
 - 5.6.3 Profiling and Debugging Tools  
 - 5.6.4 Writing Maintainable Code  
+---
 
 Awesome choice! 🔥
 Let’s now thoroughly cover **3.1 Classes and Objects in C++**, from foundational concepts to advanced techniques — with **clear theory**, **real-world analogies**, and a **complete working program** to wrap everything up.
-
----
 
 # 🔷 3.1 Classes and Objects in C++
 
