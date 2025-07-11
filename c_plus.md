@@ -4359,8 +4359,270 @@ Balance: ₹5500
 
 
 
-Absolutely! You're about to level up big time. 🚀
-**Move Semantics** is a key feature of **Modern C++ (C++11 and beyond)** that can make your code **much faster and more efficient**, especially when working with **large objects**, containers, or **resource-heavy classes**.
+You're entering the **power zone of Modern C++! 🚀**
+Let’s now dive deep into **Smart Pointers and Memory Management** under `4.4`, with crystal-clear theory, real-world use cases, and a **full working example** covering every major concept.
+
+---
+
+# 🔷 4.4 Smart Pointers and Memory Management (C++11+)
+
+---
+
+## ✅ Why Smart Pointers?
+
+In traditional C++, memory allocated with `new` must be freed with `delete`. Forgetting to call `delete` leads to **memory leaks**, which can crash or slow down large systems.
+
+> **Smart pointers** automatically manage dynamic memory using **RAII** (Resource Acquisition Is Initialization), ensuring memory is **released** when no longer needed.
+
+---
+
+## 🔹 4.4.1 `std::unique_ptr`
+
+### ✅ Features:
+
+* Exclusive ownership: only **one** `unique_ptr` can own a resource.
+* Automatically deletes memory when it goes out of scope.
+* **Non-copyable**, but **movable**.
+
+### ✅ Syntax:
+
+```cpp
+#include <memory>
+
+std::unique_ptr<int> ptr1 = std::make_unique<int>(10);
+std::unique_ptr<MyClass> obj = std::make_unique<MyClass>();
+```
+
+### 🧠 Use Case: One-time ownership (e.g., file handles, DB connections).
+
+---
+
+## 🔹 4.4.2 `std::shared_ptr`
+
+### ✅ Features:
+
+* Shared ownership: multiple `shared_ptr`s can point to the same resource.
+* Uses **reference counting** under the hood.
+* When the **last reference** is destroyed, memory is released.
+
+### ✅ Syntax:
+
+```cpp
+#include <memory>
+
+std::shared_ptr<MyClass> sp1 = std::make_shared<MyClass>();
+std::shared_ptr<MyClass> sp2 = sp1; // shared ownership
+```
+
+### 🧠 Use Case: Shared access to a resource (e.g., game object shared by multiple systems).
+
+---
+
+## 🔹 4.4.3 `std::weak_ptr`
+
+### ✅ Features:
+
+* **Non-owning** reference to a `shared_ptr`-managed object.
+* Used to **break circular references** (which cause memory leaks).
+* Must be **converted to `shared_ptr`** to use the resource.
+
+### ✅ Syntax:
+
+```cpp
+std::shared_ptr<MyClass> sp = std::make_shared<MyClass>();
+std::weak_ptr<MyClass> wp = sp;
+
+if (auto spt = wp.lock()) {
+    spt->doSomething();
+}
+```
+
+### 🧠 Use Case: Observer pattern, caching systems, parent-child relationships.
+
+---
+
+## 🔹 4.4.4 Custom Deleters
+
+### ✅ Features:
+
+* Allows you to specify **custom cleanup** logic.
+* Useful for freeing non-memory resources (file handles, sockets, etc.)
+
+### ✅ Syntax with Lambda:
+
+```cpp
+std::shared_ptr<FILE> filePtr(fopen("test.txt", "r"), [](FILE* f) {
+    if (f) {
+        fclose(f);
+        std::cout << "File closed by custom deleter\n";
+    }
+});
+```
+
+### 🧠 Use Case: Custom resource deallocation, log tracking.
+
+---
+
+# 🧪 Real-World Example: Smart Pointer Usage in Resource Manager
+
+---
+
+### 🎯 Scenario:
+
+Create a resource manager for loading and handling textures in a game:
+
+* Each texture is loaded only once and shared.
+* When no one uses a texture, it is destroyed.
+* A weak reference can observe texture lifetimes.
+* Include a resource (e.g., file handle) with a **custom deleter**.
+
+---
+
+### ✅ Code:
+
+```cpp
+#include <iostream>
+#include <memory>
+#include <unordered_map>
+#include <string>
+
+using namespace std;
+
+class Texture {
+private:
+    string name;
+
+public:
+    Texture(const string& n) : name(n) {
+        cout << "[Texture Loaded] " << name << endl;
+    }
+
+    void use() {
+        cout << "Using texture: " << name << endl;
+    }
+
+    ~Texture() {
+        cout << "[Texture Unloaded] " << name << endl;
+    }
+};
+
+class TextureManager {
+private:
+    unordered_map<string, weak_ptr<Texture>> cache;
+
+public:
+    shared_ptr<Texture> loadTexture(const string& filename) {
+        if (auto existing = cache[filename].lock()) {
+            cout << "Loaded from cache: " << filename << endl;
+            return existing;
+        }
+
+        shared_ptr<Texture> newTexture = make_shared<Texture>(filename);
+        cache[filename] = newTexture;
+        return newTexture;
+    }
+};
+
+void demoUniquePtr() {
+    cout << "\n[Unique_ptr Demo]\n";
+    unique_ptr<int> uptr = make_unique<int>(42);
+    cout << "Unique value: " << *uptr << endl;
+
+    // Move ownership
+    unique_ptr<int> movedPtr = std::move(uptr);
+    if (!uptr)
+        cout << "Original pointer is now null\n";
+}
+
+void demoCustomDeleter() {
+    cout << "\n[Custom Deleter Demo]\n";
+    shared_ptr<FILE> filePtr(fopen("test.txt", "w"), [](FILE* f) {
+        if (f) {
+            fclose(f);
+            cout << "File closed with custom deleter\n";
+        }
+    });
+
+    if (filePtr)
+        fprintf(filePtr.get(), "Hello, world!\n");
+}
+
+int main() {
+    cout << "\n--- Smart Pointer Demo Start ---\n";
+
+    TextureManager manager;
+
+    shared_ptr<Texture> t1 = manager.loadTexture("brick.png");
+    t1->use();
+
+    {
+        shared_ptr<Texture> t2 = manager.loadTexture("brick.png"); // from cache
+        t2->use();
+    } // t2 goes out of scope, but t1 still alive
+
+    weak_ptr<Texture> observer = t1;
+
+    t1.reset(); // Now no shared_ptr is holding it
+
+    if (observer.expired())
+        cout << "Texture has been fully released.\n";
+    else
+        cout << "Texture still alive via shared_ptr.\n";
+
+    demoUniquePtr();
+    demoCustomDeleter();
+
+    cout << "\n--- Smart Pointer Demo End ---\n";
+    return 0;
+}
+```
+
+---
+
+### 🧾 Sample Output:
+
+```
+--- Smart Pointer Demo Start ---
+[Texture Loaded] brick.png
+Using texture: brick.png
+Loaded from cache: brick.png
+Using texture: brick.png
+[Texture Unloaded] brick.png
+Texture has been fully released.
+
+[Unique_ptr Demo]
+Unique value: 42
+Original pointer is now null
+
+[Custom Deleter Demo]
+File closed with custom deleter
+
+--- Smart Pointer Demo End ---
+```
+
+---
+
+## ✅ Summary Table
+
+| Smart Pointer    | Ownership | Auto Delete | Use Count | Key Use Case                     |
+| ---------------- | --------- | ----------- | --------- | -------------------------------- |
+| `unique_ptr`     | Exclusive | ✅           | 1         | Single-owner resources           |
+| `shared_ptr`     | Shared    | ✅           | n         | Shared access (e.g., textures)   |
+| `weak_ptr`       | Observing | ❌ (non-own) | 0         | Avoid circular refs, observe     |
+| `custom deleter` | Varies    | ✅           | Varies    | Close files, sockets, logs, etc. |
+
+---
+
+## ✅ Best Practices
+
+* Prefer `unique_ptr` unless sharing is required.
+* Use `make_unique` and `make_shared` for exception safety.
+* Use `weak_ptr` to break cycles.
+* Always consider **ownership semantics** when choosing a smart pointer.
+
+---
+
+
 
 ---
 
