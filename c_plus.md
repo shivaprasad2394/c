@@ -1826,3 +1826,190 @@ Write a menu-driven program that:
           Executes the selected operation using switch
 
 Loops until user chooses Exit
+---------------------------------------------
+Sure! Below is your complete **C++ roadmap** formatted in **Markdown (`.md`)** syntax. You can copy and paste it directly into your GitHub README or any `.md` file.
+
+---
+
+```markdown
+# C++ Mastery Roadmap
+
+## 1. Basics of C++
+
+### 1.1 Introduction to C++
+- 1.1.1 History and Evolution  
+- 1.1.2 Structure of a C++ Program  
+- 1.1.3 Compiling and Running Programs  
+
+### 1.2 Basic Syntax and Data Types
+- 1.2.1 Keywords and Identifiers  
+- 1.2.2 Variables and Constants  
+- 1.2.3 Primitive Data Types (int, float, char, bool, etc.)  
+- 1.2.4 Type Modifiers (signed, unsigned, long, short)  
+
+### 1.3 Operators and Expressions
+- 1.3.1 Arithmetic Operators  
+- 1.3.2 Relational Operators  
+- 1.3.3 Logical Operators  
+- 1.3.4 Bitwise Operators  
+- 1.3.5 Assignment Operators  
+- 1.3.6 Operator Precedence and Associativity  
+
+### 1.4 Control Structures
+- 1.4.1 Conditional Statements (if, if-else, switch)  
+- 1.4.2 Loops (for, while, do-while)  
+- 1.4.3 Break and Continue  
+- 1.4.4 Nested Loops and Conditionals  
+
+### 1.5 Functions
+- 1.5.1 Function Declaration and Definition  
+- 1.5.2 Function Parameters and Return Types  
+- 1.5.3 Function Overloading  
+- 1.5.4 Inline Functions  
+- 1.5.5 Default Arguments  
+- 1.5.6 Recursion  
+
+---
+
+## 2. Intermediate C++
+
+### 2.1 Arrays and Strings
+- 2.1.1 One-dimensional Arrays  
+- 2.1.2 Multidimensional Arrays  
+- 2.1.3 Character Arrays and C-style Strings  
+- 2.1.4 String Handling Functions (cstring)  
+- 2.1.5 std::string Class  
+
+### 2.2 Pointers and References
+- 2.2.1 Pointer Basics and Syntax  
+- 2.2.2 Pointer Arithmetic  
+- 2.2.3 Pointers and Arrays  
+- 2.2.4 Pointers to Pointers  
+- 2.2.5 References vs Pointers  
+- 2.2.6 Null and Void Pointers  
+
+### 2.3 Dynamic Memory Management
+- 2.3.1 new and delete Operators  
+- 2.3.2 Dynamic Arrays  
+- 2.3.3 Memory Leaks and Management  
+
+### 2.4 Structures and Unions
+- 2.4.1 Defining and Using Structures  
+- 2.4.2 Nested Structures  
+- 2.4.3 Unions  
+- 2.4.4 Bit Fields  
+
+### 2.5 Enumerations and Type Casting
+- 2.5.1 enum Types  
+- 2.5.2 Strongly Typed enum (enum class)  
+- 2.5.3 Type Casting (static_cast, dynamic_cast, const_cast, reinterpret_cast)  
+
+---
+
+## 3. Object-Oriented Programming (OOP)
+
+### 3.1 Classes and Objects
+- 3.1.1 Defining Classes  
+- 3.1.2 Data Members and Member Functions  
+- 3.1.3 Access Specifiers (public, private, protected)  
+- 3.1.4 Constructors and Destructors  
+- 3.1.5 Copy Constructor  
+- 3.1.6 Member Initializer Lists  
+
+### 3.2 Operator Overloading
+- 3.2.1 Overloading Unary and Binary Operators  
+- 3.2.2 Overloading Assignment Operator  
+- 3.2.3 Overloading Stream Insertion (<<) and Extraction (>>)  
+
+### 3.3 Inheritance
+- 3.3.1 Types of Inheritance (Single, Multiple, Multilevel, Hierarchical, Hybrid)  
+- 3.3.2 Access Control in Inheritance  
+- 3.3.3 Constructors and Destructors in Derived Classes  
+- 3.3.4 Virtual Base Classes  
+
+### 3.4 Polymorphism
+- 3.4.1 Function Overloading  
+- 3.4.2 Function Overriding  
+- 3.4.3 Virtual Functions  
+- 3.4.4 Pure Virtual Functions and Abstract Classes  
+- 3.4.5 Runtime Polymorphism  
+
+### 3.5 Encapsulation and Abstraction
+- 3.5.1 Data Hiding  
+- 3.5.2 Accessor and Mutator Functions (Getters and Setters)  
+- 3.5.3 Interface Design  
+
+---
+
+## 4. Advanced C++ Concepts
+
+### 4.1 Templates
+- 4.1.1 Function Templates  
+- 4.1.2 Class Templates  
+- 4.1.3 Template Specialization  
+- 4.1.4 Variadic Templates  
+
+### 4.2 Exception Handling
+- 4.2.1 try, catch, throw Syntax  
+- 4.2.2 Standard Exceptions  
+- 4.2.3 Custom Exception Classes  
+- 4.2.4 Exception Safety and Best Practices  
+
+### 4.3 The Standard Template Library (STL)
+- 4.3.1 Containers (vector, list, deque, set, map, unordered_map, etc.)  
+- 4.3.2 Iterators  
+- 4.3.3 Algorithms (sort, find, accumulate, etc.)  
+- 4.3.4 Function Objects and Lambdas  
+- 4.3.5 Allocators  
+
+### 4.4 Smart Pointers and Memory Management
+- 4.4.1 Unique_ptr  
+- 4.4.2 Shared_ptr  
+- 4.4.3 Weak_ptr  
+- 4.4.4 Custom Deleters  
+
+### 4.5 Move Semantics and Rvalue References
+- 4.5.1 Lvalues and Rvalues  
+- 4.5.2 Move Constructor and Move Assignment Operator  
+- 4.5.3 std::move and std::forward  
+
+---
+
+## 5. Expert Level and Modern C++ (C++11 and beyond)
+
+### 5.1 Advanced Lambda Expressions
+- 5.1.1 Captures by Value and Reference  
+- 5.1.2 Generic Lambdas  
+- 5.1.3 Lambdas with Mutable Keyword  
+
+### 5.2 Concurrency and Multithreading
+- 5.2.1 std::thread  
+- 5.2.2 Mutexes and Locks (std::mutex, std::lock_guard)  
+- 5.2.3 Condition Variables  
+- 5.2.4 Atomic Operations and std::atomic  
+
+### 5.3 constexpr and Constexpr Functions
+- 5.3.1 Compile-time Computations  
+- 5.3.2 constexpr vs const  
+
+### 5.4 Advanced Template Metaprogramming
+- 5.4.1 SFINAE (Substitution Failure Is Not An Error)  
+- 5.4.2 Type Traits and std::enable_if  
+- 5.4.3 Template Recursion  
+
+### 5.5 Design Patterns in C++
+- 5.5.1 Singleton  
+- 5.5.2 Factory  
+- 5.5.3 Observer  
+- 5.5.4 Strategy  
+- 5.5.5 Decorator  
+
+### 5.6 Best Practices and Optimization
+- 5.6.1 Effective C++ Practices  
+- 5.6.2 Code Optimization Techniques  
+- 5.6.3 Profiling and Debugging Tools  
+- 5.6.4 Writing Maintainable Code  
+```
+
+---
+
