@@ -2017,6 +2017,365 @@ Loops until user chooses Exit
 - 5.6.3 Profiling and Debugging Tools  
 - 5.6.4 Writing Maintainable Code  
 
+You're on a roll! 🚀
+Now let's dive into **3.3 Inheritance in C++** — one of the core pillars of object-oriented programming — with clear theory, detailed examples, and a complete real-life program at the end covering all subtopics:
+
+---
+
+# 🔷 3.3 Inheritance in C++
+
+---
+
+## ✅ What is Inheritance?
+
+> Inheritance allows a class (**derived**) to **acquire properties and behavior** (data and functions) from another class (**base**).
+
+### 🧱 Why use it?
+
+* Code reusability
+* Hierarchical classification
+* Polymorphism support
+* Extensibility
+
+---
+
+## 🔹 3.3.1 Types of Inheritance
+
+### 📌 1. **Single Inheritance**
+
+One base → one derived class
+
+```cpp
+class Animal {
+public: void eat() {}
+};
+
+class Dog : public Animal {
+public: void bark() {}
+};
+```
+
+---
+
+### 📌 2. **Multilevel Inheritance**
+
+A derived class becomes the base for another
+
+```cpp
+class Animal { };
+class Mammal : public Animal { };
+class Dog : public Mammal { };
+```
+
+---
+
+### 📌 3. **Hierarchical Inheritance**
+
+Multiple derived classes from a single base
+
+```cpp
+class Animal { };
+class Dog : public Animal { };
+class Cat : public Animal { };
+```
+
+---
+
+### 📌 4. **Multiple Inheritance**
+
+Derived class inherits from multiple base classes
+
+```cpp
+class Flyable { };
+class Swimmable { };
+
+class Duck : public Flyable, public Swimmable { };
+```
+
+---
+
+### 📌 5. **Hybrid Inheritance**
+
+Combination of two or more types (⚠️ leads to **diamond problem**)
+
+```cpp
+class Animal { };
+class Mammal : public Animal { };
+class Bird : public Animal { };
+class Bat : public Mammal, public Bird { }; // Ambiguity!
+```
+
+---
+
+## 🔹 3.3.2 Access Control in Inheritance
+
+| Access Specifier | Inherited as `public` | `protected` | `private` |
+| ---------------- | --------------------- | ----------- | --------- |
+| `public` member  | public                | protected   | private   |
+| `protected`      | protected             | protected   | private   |
+| `private`        | ❌ Not Inherited       | ❌           | ❌         |
+
+```cpp
+class Base {
+public:
+    int a;
+protected:
+    int b;
+private:
+    int c;
+};
+
+class Derived : public Base {
+    // a is public, b is protected, c is inaccessible
+};
+```
+
+---
+
+## 🔹 3.3.3 Constructors and Destructors in Derived Classes
+
+### ✅ Key Rules:
+
+* **Base class constructor** runs before derived class constructor.
+* **Destructors** run in **reverse order**: derived → base.
+* Can explicitly call base constructors using **initializer list**.
+
+```cpp
+class Base {
+public:
+    Base() { cout << "Base constructor\n"; }
+    ~Base() { cout << "Base destructor\n"; }
+};
+
+class Derived : public Base {
+public:
+    Derived() { cout << "Derived constructor\n"; }
+    ~Derived() { cout << "Derived destructor\n"; }
+};
+```
+
+---
+
+## 🔹 3.3.4 Virtual Base Classes
+
+### 🎯 Used to solve **diamond problem** in hybrid inheritance.
+
+### 🔁 Problem:
+
+A derived class inherits multiple times from the same base (ambiguity).
+
+```cpp
+class A {
+public: int x;
+};
+
+class B : virtual public A { };
+class C : virtual public A { };
+class D : public B, public C {
+    // Only ONE instance of A is inherited
+};
+```
+
+---
+
+## ✅ Summary Table
+
+| Concept                  | Purpose                                |
+| ------------------------ | -------------------------------------- |
+| Single Inheritance       | Simple base → derived hierarchy        |
+| Multiple Inheritance     | Combine features from multiple bases   |
+| Multilevel Inheritance   | Inheritance chain                      |
+| Hierarchical Inheritance | One base, multiple specialized classes |
+| Hybrid Inheritance       | Complex, may lead to diamond problem   |
+| Access Control           | Manages visibility of inherited data   |
+| Constructor Rules        | Init order: base → derived             |
+| Virtual Base Class       | Avoids duplicate base class instances  |
+
+---
+
+# 🧪 Real-Life Example: Employee Management System
+
+### 🎯 Scenario:
+
+Create a system to manage different types of employees:
+
+* `Person` is the base class (name, age)
+* `Employee` inherits from `Person` and adds employee ID
+* `Developer` and `Manager` inherit from `Employee`
+* `Freelancer` inherits from `Person` and adds pay-per-hour
+* `HybridEmployee` (freelance-developer) inherits from both `Developer` and `Freelancer` — diamond problem is solved via **virtual inheritance**
+
+---
+
+### ✅ Code:
+
+```cpp
+#include <iostream>
+#include <string>
+using namespace std;
+
+// Base class
+class Person {
+protected:
+    string name;
+    int age;
+
+public:
+    Person(string n, int a) : name(n), age(a) {
+        cout << "Person constructor\n";
+    }
+
+    virtual void display() const {
+        cout << "Name: " << name << ", Age: " << age << endl;
+    }
+
+    virtual ~Person() {
+        cout << "Person destructor\n";
+    }
+};
+
+// Employee class inherits from Person (single)
+class Employee : virtual public Person {
+protected:
+    int empID;
+
+public:
+    Employee(string n, int a, int id)
+        : Person(n, a), empID(id) {
+        cout << "Employee constructor\n";
+    }
+
+    void display() const override {
+        Person::display();
+        cout << "Employee ID: " << empID << endl;
+    }
+
+    virtual ~Employee() {
+        cout << "Employee destructor\n";
+    }
+};
+
+// Freelancer class (hierarchical, virtual base)
+class Freelancer : virtual public Person {
+protected:
+    double ratePerHour;
+    int hoursWorked;
+
+public:
+    Freelancer(string n, int a, double rate, int hours)
+        : Person(n, a), ratePerHour(rate), hoursWorked(hours) {
+        cout << "Freelancer constructor\n";
+    }
+
+    double calculatePayment() const {
+        return ratePerHour * hoursWorked;
+    }
+
+    virtual ~Freelancer() {
+        cout << "Freelancer destructor\n";
+    }
+};
+
+// Developer (multilevel)
+class Developer : public Employee {
+protected:
+    string language;
+
+public:
+    Developer(string n, int a, int id, string lang)
+        : Person(n, a), Employee(n, a, id), language(lang) {
+        cout << "Developer constructor\n";
+    }
+
+    void display() const override {
+        Employee::display();
+        cout << "Language: " << language << endl;
+    }
+
+    virtual ~Developer() {
+        cout << "Developer destructor\n";
+    }
+};
+
+// Hybrid: Inherits from Developer + Freelancer (hybrid + virtual base)
+class HybridEmployee : public Developer, public Freelancer {
+public:
+    HybridEmployee(string n, int a, int id, string lang, double rate, int hours)
+        : Person(n, a), Employee(n, a, id), Developer(n, a, id, lang), Freelancer(n, a, rate, hours) {
+        cout << "HybridEmployee constructor\n";
+    }
+
+    void display() const override {
+        Developer::display();
+        cout << "Freelance Payment: ₹" << calculatePayment() << endl;
+    }
+
+    ~HybridEmployee() {
+        cout << "HybridEmployee destructor\n";
+    }
+};
+
+int main() {
+    cout << "--- Creating Hybrid Employee ---\n";
+    HybridEmployee he("Ravi", 30, 101, "C++", 1000, 10);
+    cout << "\n--- Displaying Employee Info ---\n";
+    he.display();
+
+    cout << "\n--- Exiting Program ---\n";
+    return 0;
+}
+```
+
+---
+
+### 🧾 Output:
+
+```
+--- Creating Hybrid Employee ---
+Person constructor
+Employee constructor
+Developer constructor
+Freelancer constructor
+HybridEmployee constructor
+
+--- Displaying Employee Info ---
+Name: Ravi, Age: 30
+Employee ID: 101
+Language: C++
+Freelance Payment: ₹10000
+
+--- Exiting Program ---
+HybridEmployee destructor
+Freelancer destructor
+Developer destructor
+Employee destructor
+Person destructor
+```
+
+---
+
+## ✅ Concepts Demonstrated
+
+| Concept                           | Used? |
+| --------------------------------- | ----- |
+| Single, multiple, multilevel      | ✅     |
+| Hybrid & hierarchical inheritance | ✅     |
+| Access control                    | ✅     |
+| Virtual base class (diamond fix)  | ✅     |
+| Constructor/destructor chaining   | ✅     |
+
+---
+
+## ✅ Summary
+
+* Use **inheritance** to build structured class hierarchies.
+* Understand the **impacts of access specifiers** on inherited members.
+* Use **virtual base classes** to avoid diamond problem.
+* Manage construction/destruction order correctly in complex inheritance.
+
+---
+
+Would you like this as a `.cpp` or `.md` file for documentation? Or should we now move to **Polymorphism Deep Dive**, **Virtual Destructors**, or **Composition vs Inheritance** next?
 
 
 # 🔷 Function Overloading in C++
