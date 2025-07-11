@@ -1615,6 +1615,410 @@ Destructor called. Remaining objects: 0
 
 ---
 
+
+Class vs Object
+
+The following table lists the primary differences between the classes and objects in C++:
+| **Class**                                                                 | **Object**                                                                 |
+|---------------------------------------------------------------------------|----------------------------------------------------------------------------|
+| A blueprint or template for creating objects.                             | An instance of a class with actual values.                                |
+| No memory is allocated for a class until an object is created.            | Memory is allocated when an object is created.                            |
+| Conceptual entity describing structure and behaviour.                     | A real-world entity created from the class.                               |
+| Defines properties and functions common to all objects of that type.      | Stores specific data and manipulates it using class functions.            |
+| Represents a general concept or type.                                     | Represents a specific instance of the class.                              |
+
+
+✅ 1. Types of Operators in C++
+-------------------------------
+          Category	        Operators	                   Description
+          -----------------------------------------------------------------------
+          Arithmetic	+, -, *, /, %	          Basic math operations
+          Relational	==, !=, <, >, <=, >=	Comparison (true/false)
+          Logical	          &&, `	
+          Assignment	=, +=, -=, *=, /=, %=	Assign values
+          Increment/Decrement	++, --	                    Increase or decrease value by 1
+          Bitwise	          &, `	                    , ^, ~, <<, >>`
+          Ternary	          ? :	                    Shortcut for if-else
+          Comma	          ,	                    Evaluate multiple expressions
+          Sizeof	          sizeof()	                    Returns size of type/variable
+
+🧠 2. Operator Examples and Behavior
+-------------------------------------
+➕ Arithmetic Operators
+-----------------------
+          int a = 10, b = 3;
+          cout << a + b;  // 13
+          cout << a - b;  // 7
+          cout << a * b;  // 30
+          cout << a / b;  // 3 (integer division)
+          cout << a % b;  // 1 (modulo)
+          ⚠️ Note: a / b when both are integers does integer division. Use float for accurate decimals.
+
+🧾 Assignment and Compound Operators
+------------------------------------
+          int x = 5;
+          x += 3;   // x = x + 3 → 8
+          x *= 2;   // x = x * 2 → 16
+
+🧮 Increment and Decrement
+--------------------------
+          int a = 5;
+          ++a;  // pre-increment: a becomes 6
+          a++;  // post-increment: a used first, then becomes 7
+🔁 Relational and Logical Operators
+-----------------------------------
+          int a = 5, b = 10;
+          cout << (a < b);       // 1 (true)
+          cout << (a == b);      // 0 (false)
+          cout << (a != b);      // 1 (true)
+          
+          bool result = (a < b) && (b < 20);  // true
+❓ Ternary Operator
+-------------------
+          int age = 18;
+          string status = (age >= 18) ? "Adult" : "Minor";
+          cout << status;
+          This is a shortcut for:
+          
+          cpp
+          Copy
+          Edit
+          if (age >= 18)
+              status = "Adult";
+          else
+              status = "Minor";
+📏 Sizeof Operator
+------------------
+          cout << sizeof(int);     // typically 4
+          cout << sizeof(double);  // typically 8
+🧠 3. Expressions in C++
+------------------------
+An expression could be:
+
+          int a = 5 + 2;      // arithmetic expression
+          bool b = (a > 3);   // logical expression
+          a += 10;            // assignment expression
+🔥 4. Operator Precedence and Associativity
+-------------------------------------------
+
+Operator precedence determines the order in which expressions are evaluated.
+
+Example:
+          int result = 5 + 3 * 2;  // 3 * 2 = 6, then 5 + 6 = 11
+          
+🧠 Multiplication has higher precedence than addition.
+------------------------------------------------------
+Parentheses () can override default precedence.
+
+🧪 Mini Practice Task
+---------------------
+Write a program that:
+
+          - Takes two integers as input.
+          Displays:
+          -Their sum, product, and quotient.
+          - Which one is greater (using if or ternary).
+          - Whether the first is divisible by the second.
+🔁 Control Flow Statements in C++
+---------------------------------
+These statements allow your program to make decisions and repeat tasks.
+
+✅ 1. Conditional Statements
+----------------------------
+These are used to execute different code blocks based on conditions.
+          
+          🔹 if / else if / else
+          int age = 20;
+          
+          if (age < 18) {
+              cout << "Minor";
+          } else if (age == 18) {
+              cout << "Exactly 18!";
+          } else {
+              cout << "Adult";
+          }
+✔️ Use else if when you have multiple conditions.
+✔️ Conditions must be inside (), and code blocks inside {}.
+
+          🔹 Nested if
+          if (x > 0) {
+              if (x < 10) {
+                  cout << "Single-digit positive number";
+              }
+          }
+🔸 Avoid deeply nested if statements when possible (use else if or switch).
+
+🔹 Ternary Operator (Shortcut)
+          string result = (score >= 50) ? "Pass" : "Fail";
+          
+✅ 2. switch Statement
+----------------------
+Useful for checking a variable against multiple constant values (integers or chars).
+
+          int day = 3;
+          
+          switch (day) {
+              case 1: cout << "Monday"; break;
+              case 2: cout << "Tuesday"; break;
+              case 3: cout << "Wednesday"; break;
+              default: cout << "Invalid day";
+          }
+⚠️ Always include break; to prevent "fall-through"
+✔️ default is optional but recommended as a fallback
+
+✅ 3. Looping Statements
+-------------------------
+Used to repeat a block of code.
+
+🔁 for Loop (when number of iterations is known)
+-----------------------------------------------
+          for (int i = 0; i < 5; i++) {
+              cout << "i = " << i << '\n';
+          }
+🔁 while Loop (when condition is checked before each iteration)
+--------------------------------------------------------------
+          int i = 0;
+          while (i < 5) {
+              cout << i << '\n';
+              i++;
+          }
+🔁 do-while Loop (runs at least once)
+-------------------------------------
+          int i = 0;
+          do {
+              cout << i << '\n';
+              i++;
+          } while (i < 5);
+🔁 Break and Continue
+---------------------
+break: exits the loop early
+
+continue: skips current iteration
+
+          for (int i = 1; i <= 5; i++) {
+              if (i == 3) continue;
+              if (i == 5) break;
+              cout << i << ' ';
+          }  // Output: 1 2 4
+🧠 Interview Tip
+-----------------
+You’ll often use these in:
+          
+          - Pattern printing
+          - Searching/sorting
+          - State machines
+          - Menu-driven programs
+
+🧪 Mini Practice Task
+----------------------
+Write a menu-driven program that:
+
+          Asks user for 2 integers
+          
+          Shows a menu:
+          
+          markdown
+          Copy
+          Edit
+          1. Add
+          2. Subtract
+          3. Multiply
+          4. Divide
+          5. Exit
+          Executes the selected operation using switch
+
+Loops until user chooses Exit
+---------------------------------------------
+# C++ Mastery Roadmap
+
+## 1. Basics of C++
+
+### 1.1 Introduction to C++
+- 1.1.1 History and Evolution  
+- 1.1.2 Structure of a C++ Program  
+- 1.1.3 Compiling and Running Programs  
+
+### 1.2 Basic Syntax and Data Types
+- 1.2.1 Keywords and Identifiers  
+- 1.2.2 Variables and Constants  
+- 1.2.3 Primitive Data Types (int, float, char, bool, etc.)  
+- 1.2.4 Type Modifiers (signed, unsigned, long, short)  
+
+### 1.3 Operators and Expressions
+- 1.3.1 Arithmetic Operators  
+- 1.3.2 Relational Operators  
+- 1.3.3 Logical Operators  
+- 1.3.4 Bitwise Operators  
+- 1.3.5 Assignment Operators  
+- 1.3.6 Operator Precedence and Associativity  
+
+### 1.4 Control Structures
+- 1.4.1 Conditional Statements (if, if-else, switch)  
+- 1.4.2 Loops (for, while, do-while)  
+- 1.4.3 Break and Continue  
+- 1.4.4 Nested Loops and Conditionals  
+
+### 1.5 Functions
+- 1.5.1 Function Declaration and Definition  
+- 1.5.2 Function Parameters and Return Types  
+- 1.5.3 Function Overloading  
+- 1.5.4 Inline Functions  
+- 1.5.5 Default Arguments  
+- 1.5.6 Recursion  
+
+---
+
+## 2. Intermediate C++
+
+### 2.1 Arrays and Strings
+- 2.1.1 One-dimensional Arrays  
+- 2.1.2 Multidimensional Arrays  
+- 2.1.3 Character Arrays and C-style Strings  
+- 2.1.4 String Handling Functions (cstring)  
+- 2.1.5 std::string Class  
+
+### 2.2 Pointers and References
+- 2.2.1 Pointer Basics and Syntax  
+- 2.2.2 Pointer Arithmetic  
+- 2.2.3 Pointers and Arrays  
+- 2.2.4 Pointers to Pointers  
+- 2.2.5 References vs Pointers  
+- 2.2.6 Null and Void Pointers  
+
+### 2.3 Dynamic Memory Management
+- 2.3.1 new and delete Operators  
+- 2.3.2 Dynamic Arrays  
+- 2.3.3 Memory Leaks and Management  
+
+### 2.4 Structures and Unions
+- 2.4.1 Defining and Using Structures  
+- 2.4.2 Nested Structures  
+- 2.4.3 Unions  
+- 2.4.4 Bit Fields  
+
+### 2.5 Enumerations and Type Casting
+- 2.5.1 enum Types  
+- 2.5.2 Strongly Typed enum (enum class)  
+- 2.5.3 Type Casting (static_cast, dynamic_cast, const_cast, reinterpret_cast)
+ 
+### 2.6 Namespaces
+
+- 2.6.1 What is a Namespace?  
+- 2.6.2 Defining and Using Namespaces  
+- 2.6.3 The `std` Namespace  
+- 2.6.4 Nested Namespaces  
+- 2.6.5 The `using` Directive and `using` Declaration  
+- 2.6.6 Anonymous (Unnamed) Namespaces  
+- 2.6.7 Best Practices for Namespaces  
+
+---
+
+## 3. Object-Oriented Programming (OOP)
+
+### 3.1 Classes and Objects
+- 3.1.1 Defining Classes  
+- 3.1.2 Data Members and Member Functions  
+- 3.1.3 Access Specifiers (public, private, protected)  
+- 3.1.4 Constructors and Destructors  
+- 3.1.5 Copy Constructor  
+- 3.1.6 Member Initializer Lists  
+
+### 3.2 Operator Overloading
+- 3.2.1 Overloading Unary and Binary Operators  
+- 3.2.2 Overloading Assignment Operator  
+- 3.2.3 Overloading Stream Insertion (<<) and Extraction (>>)  
+
+### 3.3 Inheritance
+- 3.3.1 Types of Inheritance (Single, Multiple, Multilevel, Hierarchical, Hybrid)  
+- 3.3.2 Access Control in Inheritance  
+- 3.3.3 Constructors and Destructors in Derived Classes  
+- 3.3.4 Virtual Base Classes  
+
+### 3.4 Polymorphism
+- 3.4.1 Function Overloading  
+- 3.4.2 Function Overriding  
+- 3.4.3 Virtual Functions  
+- 3.4.4 Pure Virtual Functions and Abstract Classes  
+- 3.4.5 Runtime Polymorphism  
+
+### 3.5 Encapsulation and Abstraction
+- 3.5.1 Data Hiding  
+- 3.5.2 Accessor and Mutator Functions (Getters and Setters)  
+- 3.5.3 Interface Design  
+
+---
+
+## 4. Advanced C++ Concepts
+
+### 4.1 Templates
+- 4.1.1 Function Templates  
+- 4.1.2 Class Templates  
+- 4.1.3 Template Specialization  
+- 4.1.4 Variadic Templates  
+
+### 4.2 Exception Handling
+- 4.2.1 try, catch, throw Syntax  
+- 4.2.2 Standard Exceptions  
+- 4.2.3 Custom Exception Classes  
+- 4.2.4 Exception Safety and Best Practices  
+
+### 4.3 The Standard Template Library (STL)
+- 4.3.1 Containers (vector, list, deque, set, map, unordered_map, etc.)  
+- 4.3.2 Iterators  
+- 4.3.3 Algorithms (sort, find, accumulate, etc.)  
+- 4.3.4 Function Objects and Lambdas  
+- 4.3.5 Allocators  
+
+### 4.4 Smart Pointers and Memory Management
+- 4.4.1 Unique_ptr  
+- 4.4.2 Shared_ptr  
+- 4.4.3 Weak_ptr  
+- 4.4.4 Custom Deleters  
+
+### 4.5 Move Semantics and Rvalue References
+- 4.5.1 Lvalues and Rvalues  
+- 4.5.2 Move Constructor and Move Assignment Operator  
+- 4.5.3 std::move and std::forward  
+
+---
+
+## 5. Expert Level and Modern C++ (C++11 and beyond)
+
+### 5.1 Advanced Lambda Expressions
+- 5.1.1 Captures by Value and Reference  
+- 5.1.2 Generic Lambdas  
+- 5.1.3 Lambdas with Mutable Keyword  
+
+### 5.2 Concurrency and Multithreading
+- 5.2.1 std::thread  
+- 5.2.2 Mutexes and Locks (std::mutex, std::lock_guard)  
+- 5.2.3 Condition Variables  
+- 5.2.4 Atomic Operations and std::atomic  
+
+### 5.3 constexpr and Constexpr Functions
+- 5.3.1 Compile-time Computations  
+- 5.3.2 constexpr vs const  
+
+### 5.4 Advanced Template Metaprogramming
+- 5.4.1 SFINAE (Substitution Failure Is Not An Error)  
+- 5.4.2 Type Traits and std::enable_if  
+- 5.4.3 Template Recursion  
+
+### 5.5 Design Patterns in C++
+- 5.5.1 Singleton  
+- 5.5.2 Factory  
+- 5.5.3 Observer  
+- 5.5.4 Strategy  
+- 5.5.5 Decorator  
+
+### 5.6 Best Practices and Optimization
+- 5.6.1 Effective C++ Practices  
+- 5.6.2 Code Optimization Techniques  
+- 5.6.3 Profiling and Debugging Tools  
+- 5.6.4 Writing Maintainable Code  
+
+
+
 # 🔷 Function Overloading in C++
 
 ---
@@ -2153,406 +2557,277 @@ Response: Notification sent.
 
 Would you like this turned into a downloadable `.cpp` file or a Markdown tutorial for GitHub too? Or should we dive into **virtual destructors, vtables, or dynamic dispatch** next?
 
+---
 
-Class vs Object
+# 🔷 Pure Virtual Functions & Abstract Classes in C++
 
-The following table lists the primary differences between the classes and objects in C++:
-| **Class**                                                                 | **Object**                                                                 |
-|---------------------------------------------------------------------------|----------------------------------------------------------------------------|
-| A blueprint or template for creating objects.                             | An instance of a class with actual values.                                |
-| No memory is allocated for a class until an object is created.            | Memory is allocated when an object is created.                            |
-| Conceptual entity describing structure and behaviour.                     | A real-world entity created from the class.                               |
-| Defines properties and functions common to all objects of that type.      | Stores specific data and manipulates it using class functions.            |
-| Represents a general concept or type.                                     | Represents a specific instance of the class.                              |
+---
 
+## ✅ 1. What is a Pure Virtual Function?
 
-✅ 1. Types of Operators in C++
--------------------------------
-          Category	        Operators	                   Description
-          -----------------------------------------------------------------------
-          Arithmetic	+, -, *, /, %	          Basic math operations
-          Relational	==, !=, <, >, <=, >=	Comparison (true/false)
-          Logical	          &&, `	
-          Assignment	=, +=, -=, *=, /=, %=	Assign values
-          Increment/Decrement	++, --	                    Increase or decrease value by 1
-          Bitwise	          &, `	                    , ^, ~, <<, >>`
-          Ternary	          ? :	                    Shortcut for if-else
-          Comma	          ,	                    Evaluate multiple expressions
-          Sizeof	          sizeof()	                    Returns size of type/variable
+A **pure virtual function** is a virtual function with **no definition in the base class**. It’s declared using the `= 0` syntax.
 
-🧠 2. Operator Examples and Behavior
--------------------------------------
-➕ Arithmetic Operators
------------------------
-          int a = 10, b = 3;
-          cout << a + b;  // 13
-          cout << a - b;  // 7
-          cout << a * b;  // 30
-          cout << a / b;  // 3 (integer division)
-          cout << a % b;  // 1 (modulo)
-          ⚠️ Note: a / b when both are integers does integer division. Use float for accurate decimals.
+```cpp
+class Shape {
+public:
+    virtual void draw() = 0; // Pure virtual function
+};
+```
 
-🧾 Assignment and Compound Operators
-------------------------------------
-          int x = 5;
-          x += 3;   // x = x + 3 → 8
-          x *= 2;   // x = x * 2 → 16
+---
 
-🧮 Increment and Decrement
---------------------------
-          int a = 5;
-          ++a;  // pre-increment: a becomes 6
-          a++;  // post-increment: a used first, then becomes 7
-🔁 Relational and Logical Operators
------------------------------------
-          int a = 5, b = 10;
-          cout << (a < b);       // 1 (true)
-          cout << (a == b);      // 0 (false)
-          cout << (a != b);      // 1 (true)
-          
-          bool result = (a < b) && (b < 20);  // true
-❓ Ternary Operator
--------------------
-          int age = 18;
-          string status = (age >= 18) ? "Adult" : "Minor";
-          cout << status;
-          This is a shortcut for:
-          
-          cpp
-          Copy
-          Edit
-          if (age >= 18)
-              status = "Adult";
-          else
-              status = "Minor";
-📏 Sizeof Operator
-------------------
-          cout << sizeof(int);     // typically 4
-          cout << sizeof(double);  // typically 8
-🧠 3. Expressions in C++
-------------------------
-An expression could be:
+## ✅ 2. What is an Abstract Class?
 
-          int a = 5 + 2;      // arithmetic expression
-          bool b = (a > 3);   // logical expression
-          a += 10;            // assignment expression
-🔥 4. Operator Precedence and Associativity
--------------------------------------------
+A class becomes **abstract** if it **contains at least one pure virtual function**.
 
-Operator precedence determines the order in which expressions are evaluated.
+🔒 You **cannot create objects** of an abstract class.
 
-Example:
-          int result = 5 + 3 * 2;  // 3 * 2 = 6, then 5 + 6 = 11
-          
-🧠 Multiplication has higher precedence than addition.
-------------------------------------------------------
-Parentheses () can override default precedence.
+---
 
-🧪 Mini Practice Task
----------------------
-Write a program that:
+## ✅ 3. Purpose of Abstract Classes
 
-          - Takes two integers as input.
-          Displays:
-          -Their sum, product, and quotient.
-          - Which one is greater (using if or ternary).
-          - Whether the first is divisible by the second.
-🔁 Control Flow Statements in C++
----------------------------------
-These statements allow your program to make decisions and repeat tasks.
+* Define **common interfaces**
+* Enable **polymorphism**
+* Enforce **function overriding** in derived classes
+* Promote **modular and scalable** designs
 
-✅ 1. Conditional Statements
-----------------------------
-These are used to execute different code blocks based on conditions.
-          
-          🔹 if / else if / else
-          int age = 20;
-          
-          if (age < 18) {
-              cout << "Minor";
-          } else if (age == 18) {
-              cout << "Exactly 18!";
-          } else {
-              cout << "Adult";
-          }
-✔️ Use else if when you have multiple conditions.
-✔️ Conditions must be inside (), and code blocks inside {}.
+---
 
-          🔹 Nested if
-          if (x > 0) {
-              if (x < 10) {
-                  cout << "Single-digit positive number";
-              }
-          }
-🔸 Avoid deeply nested if statements when possible (use else if or switch).
+## ✅ 4. Characteristics
 
-🔹 Ternary Operator (Shortcut)
-          string result = (score >= 50) ? "Pass" : "Fail";
-          
-✅ 2. switch Statement
-----------------------
-Useful for checking a variable against multiple constant values (integers or chars).
+| Feature                      | Description                                                  |
+| ---------------------------- | ------------------------------------------------------------ |
+| Must override                | Derived classes must override pure virtual functions         |
+| Cannot instantiate           | You cannot create an object of abstract class                |
+| Can have constructors        | Yes, constructors can exist and be called by derived classes |
+| Can have non-virtual members | Yes, including concrete (implemented) functions              |
+| Can be used as base pointers | Yes, to enable polymorphism                                  |
 
-          int day = 3;
-          
-          switch (day) {
-              case 1: cout << "Monday"; break;
-              case 2: cout << "Tuesday"; break;
-              case 3: cout << "Wednesday"; break;
-              default: cout << "Invalid day";
-          }
-⚠️ Always include break; to prevent "fall-through"
-✔️ default is optional but recommended as a fallback
+---
 
-✅ 3. Looping Statements
+## ✅ 5. Syntax
+
+```cpp
+class AbstractClass {
+public:
+    virtual void func() = 0; // Pure virtual function
+};
+```
+
+Derived class must **override** this:
+
+```cpp
+class Derived : public AbstractClass {
+public:
+    void func() override {
+        // implementation
+    }
+};
+```
+
+---
+
+## ✅ 6. Multiple Pure Virtual Functions
+
+You can have **as many pure virtual functions** as needed:
+
+```cpp
+class Animal {
+public:
+    virtual void speak() = 0;
+    virtual void move() = 0;
+};
+```
+
+---
+
+## ✅ 7. Abstract Base Classes with Concrete Methods
+
+An abstract class **can have both pure and non-pure methods**.
+
+```cpp
+class Logger {
+public:
+    virtual void log(string msg) = 0;  // Pure virtual
+    void status() {                    // Concrete method
+        cout << "Logging active\n";
+    }
+};
+```
+
+---
+
+## ✅ 8. Interface-like Behavior
+
+To simulate a **Java-style interface**, create a class where **all methods are pure virtual** and **no data members** exist.
+
+```cpp
+class IPlayable {
+public:
+    virtual void play() = 0;
+    virtual void pause() = 0;
+    virtual void stop() = 0;
+    virtual ~IPlayable() {}
+};
+```
+
+---
+
+## ✅ 9. Virtual Destructors in Abstract Classes
+
+Always use a **virtual destructor** when using abstract base classes, especially when handling base pointers to derived objects.
+
+```cpp
+class Base {
+public:
+    virtual ~Base() {}
+};
+```
+
+---
+
+## ✅ 10. Derived Class Not Overriding All Pure Functions
+
+If a derived class doesn't override **all** pure virtual functions, it **remains abstract** itself.
+
+---
+
+# 🧪 Real-Life Example: Abstract Class with Pure Virtual Functions
+
+### 🎯 Scenario:
+
+Build a **Document Viewer App** framework with:
+
+* An abstract class `Document` (pure virtual `open()`, `save()`)
+* Derived classes: `PDF`, `Word`, and `Text`
+* Base pointers used for polymorphic behavior
+* Includes a concrete method in the abstract base class
+
+---
+
+### ✅ Code:
+
+```cpp
+#include <iostream>
+#include <vector>
+#include <memory>
+using namespace std;
+
+// Abstract base class
+class Document {
+public:
+    virtual void open() = 0;     // Pure virtual
+    virtual void save() = 0;     // Pure virtual
+
+    void info() {                // Concrete method
+        cout << "[Document Framework] Version 1.0\n";
+    }
+
+    virtual ~Document() {}       // Virtual destructor
+};
+
+// Derived class: PDF Document
+class PDF : public Document {
+public:
+    void open() override {
+        cout << "Opening PDF document...\n";
+    }
+
+    void save() override {
+        cout << "Saving PDF document...\n";
+    }
+};
+
+// Derived class: Word Document
+class Word : public Document {
+public:
+    void open() override {
+        cout << "Opening Word document...\n";
+    }
+
+    void save() override {
+        cout << "Saving Word document...\n";
+    }
+};
+
+// Derived class: Text Document
+class Text : public Document {
+public:
+    void open() override {
+        cout << "Opening Text file...\n";
+    }
+
+    void save() override {
+        cout << "Saving Text file...\n";
+    }
+};
+
+// Function that takes base class pointer
+void openAndSave(Document* doc) {
+    doc->info();  // Concrete base method
+    doc->open();  // Virtual override
+    doc->save();  // Virtual override
+    cout << "-------------------------\n";
+}
+
+int main() {
+    // Using smart pointers for memory safety
+    vector<unique_ptr<Document>> docs;
+
+    docs.emplace_back(make_unique<PDF>());
+    docs.emplace_back(make_unique<Word>());
+    docs.emplace_back(make_unique<Text>());
+
+    for (auto& doc : docs) {
+        openAndSave(doc.get());
+    }
+
+    return 0;
+}
+```
+
+---
+
+### 🧾 Output:
+
+```
+[Document Framework] Version 1.0
+Opening PDF document...
+Saving PDF document...
 -------------------------
-Used to repeat a block of code.
-
-🔁 for Loop (when number of iterations is known)
------------------------------------------------
-          for (int i = 0; i < 5; i++) {
-              cout << "i = " << i << '\n';
-          }
-🔁 while Loop (when condition is checked before each iteration)
---------------------------------------------------------------
-          int i = 0;
-          while (i < 5) {
-              cout << i << '\n';
-              i++;
-          }
-🔁 do-while Loop (runs at least once)
--------------------------------------
-          int i = 0;
-          do {
-              cout << i << '\n';
-              i++;
-          } while (i < 5);
-🔁 Break and Continue
----------------------
-break: exits the loop early
-
-continue: skips current iteration
-
-          for (int i = 1; i <= 5; i++) {
-              if (i == 3) continue;
-              if (i == 5) break;
-              cout << i << ' ';
-          }  // Output: 1 2 4
-🧠 Interview Tip
------------------
-You’ll often use these in:
-          
-          - Pattern printing
-          - Searching/sorting
-          - State machines
-          - Menu-driven programs
-
-🧪 Mini Practice Task
-----------------------
-Write a menu-driven program that:
-
-          Asks user for 2 integers
-          
-          Shows a menu:
-          
-          markdown
-          Copy
-          Edit
-          1. Add
-          2. Subtract
-          3. Multiply
-          4. Divide
-          5. Exit
-          Executes the selected operation using switch
-
-Loops until user chooses Exit
----------------------------------------------
-# C++ Mastery Roadmap
-
-## 1. Basics of C++
-
-### 1.1 Introduction to C++
-- 1.1.1 History and Evolution  
-- 1.1.2 Structure of a C++ Program  
-- 1.1.3 Compiling and Running Programs  
-
-### 1.2 Basic Syntax and Data Types
-- 1.2.1 Keywords and Identifiers  
-- 1.2.2 Variables and Constants  
-- 1.2.3 Primitive Data Types (int, float, char, bool, etc.)  
-- 1.2.4 Type Modifiers (signed, unsigned, long, short)  
-
-### 1.3 Operators and Expressions
-- 1.3.1 Arithmetic Operators  
-- 1.3.2 Relational Operators  
-- 1.3.3 Logical Operators  
-- 1.3.4 Bitwise Operators  
-- 1.3.5 Assignment Operators  
-- 1.3.6 Operator Precedence and Associativity  
-
-### 1.4 Control Structures
-- 1.4.1 Conditional Statements (if, if-else, switch)  
-- 1.4.2 Loops (for, while, do-while)  
-- 1.4.3 Break and Continue  
-- 1.4.4 Nested Loops and Conditionals  
-
-### 1.5 Functions
-- 1.5.1 Function Declaration and Definition  
-- 1.5.2 Function Parameters and Return Types  
-- 1.5.3 Function Overloading  
-- 1.5.4 Inline Functions  
-- 1.5.5 Default Arguments  
-- 1.5.6 Recursion  
+[Document Framework] Version 1.0
+Opening Word document...
+Saving Word document...
+-------------------------
+[Document Framework] Version 1.0
+Opening Text file...
+Saving Text file...
+-------------------------
+```
 
 ---
 
-## 2. Intermediate C++
+## ✅ Concepts Demonstrated
 
-### 2.1 Arrays and Strings
-- 2.1.1 One-dimensional Arrays  
-- 2.1.2 Multidimensional Arrays  
-- 2.1.3 Character Arrays and C-style Strings  
-- 2.1.4 String Handling Functions (cstring)  
-- 2.1.5 std::string Class  
-
-### 2.2 Pointers and References
-- 2.2.1 Pointer Basics and Syntax  
-- 2.2.2 Pointer Arithmetic  
-- 2.2.3 Pointers and Arrays  
-- 2.2.4 Pointers to Pointers  
-- 2.2.5 References vs Pointers  
-- 2.2.6 Null and Void Pointers  
-
-### 2.3 Dynamic Memory Management
-- 2.3.1 new and delete Operators  
-- 2.3.2 Dynamic Arrays  
-- 2.3.3 Memory Leaks and Management  
-
-### 2.4 Structures and Unions
-- 2.4.1 Defining and Using Structures  
-- 2.4.2 Nested Structures  
-- 2.4.3 Unions  
-- 2.4.4 Bit Fields  
-
-### 2.5 Enumerations and Type Casting
-- 2.5.1 enum Types  
-- 2.5.2 Strongly Typed enum (enum class)  
-- 2.5.3 Type Casting (static_cast, dynamic_cast, const_cast, reinterpret_cast)
- 
-### 2.6 Namespaces
-
-- 2.6.1 What is a Namespace?  
-- 2.6.2 Defining and Using Namespaces  
-- 2.6.3 The `std` Namespace  
-- 2.6.4 Nested Namespaces  
-- 2.6.5 The `using` Directive and `using` Declaration  
-- 2.6.6 Anonymous (Unnamed) Namespaces  
-- 2.6.7 Best Practices for Namespaces  
+| Concept                              | Used? |
+| ------------------------------------ | ----- |
+| Pure virtual functions               | ✅ Yes |
+| Abstract base class                  | ✅ Yes |
+| Concrete methods in abstract class   | ✅ Yes |
+| Polymorphism via base class pointers | ✅ Yes |
+| Virtual destructors                  | ✅ Yes |
+| Smart pointers for memory management | ✅ Yes |
 
 ---
 
-## 3. Object-Oriented Programming (OOP)
+## ✅ Summary
 
-### 3.1 Classes and Objects
-- 3.1.1 Defining Classes  
-- 3.1.2 Data Members and Member Functions  
-- 3.1.3 Access Specifiers (public, private, protected)  
-- 3.1.4 Constructors and Destructors  
-- 3.1.5 Copy Constructor  
-- 3.1.6 Member Initializer Lists  
-
-### 3.2 Operator Overloading
-- 3.2.1 Overloading Unary and Binary Operators  
-- 3.2.2 Overloading Assignment Operator  
-- 3.2.3 Overloading Stream Insertion (<<) and Extraction (>>)  
-
-### 3.3 Inheritance
-- 3.3.1 Types of Inheritance (Single, Multiple, Multilevel, Hierarchical, Hybrid)  
-- 3.3.2 Access Control in Inheritance  
-- 3.3.3 Constructors and Destructors in Derived Classes  
-- 3.3.4 Virtual Base Classes  
-
-### 3.4 Polymorphism
-- 3.4.1 Function Overloading  
-- 3.4.2 Function Overriding  
-- 3.4.3 Virtual Functions  
-- 3.4.4 Pure Virtual Functions and Abstract Classes  
-- 3.4.5 Runtime Polymorphism  
-
-### 3.5 Encapsulation and Abstraction
-- 3.5.1 Data Hiding  
-- 3.5.2 Accessor and Mutator Functions (Getters and Setters)  
-- 3.5.3 Interface Design  
+* **Pure virtual functions** force derived classes to implement specific behavior.
+* **Abstract classes** are powerful for designing extensible frameworks.
+* Combine **abstract and concrete methods** for flexible base class design.
+* Always use a **virtual destructor** in abstract base classes.
+* Use **base class pointers** to achieve polymorphism.
 
 ---
 
-## 4. Advanced C++ Concepts
-
-### 4.1 Templates
-- 4.1.1 Function Templates  
-- 4.1.2 Class Templates  
-- 4.1.3 Template Specialization  
-- 4.1.4 Variadic Templates  
-
-### 4.2 Exception Handling
-- 4.2.1 try, catch, throw Syntax  
-- 4.2.2 Standard Exceptions  
-- 4.2.3 Custom Exception Classes  
-- 4.2.4 Exception Safety and Best Practices  
-
-### 4.3 The Standard Template Library (STL)
-- 4.3.1 Containers (vector, list, deque, set, map, unordered_map, etc.)  
-- 4.3.2 Iterators  
-- 4.3.3 Algorithms (sort, find, accumulate, etc.)  
-- 4.3.4 Function Objects and Lambdas  
-- 4.3.5 Allocators  
-
-### 4.4 Smart Pointers and Memory Management
-- 4.4.1 Unique_ptr  
-- 4.4.2 Shared_ptr  
-- 4.4.3 Weak_ptr  
-- 4.4.4 Custom Deleters  
-
-### 4.5 Move Semantics and Rvalue References
-- 4.5.1 Lvalues and Rvalues  
-- 4.5.2 Move Constructor and Move Assignment Operator  
-- 4.5.3 std::move and std::forward  
-
----
-
-## 5. Expert Level and Modern C++ (C++11 and beyond)
-
-### 5.1 Advanced Lambda Expressions
-- 5.1.1 Captures by Value and Reference  
-- 5.1.2 Generic Lambdas  
-- 5.1.3 Lambdas with Mutable Keyword  
-
-### 5.2 Concurrency and Multithreading
-- 5.2.1 std::thread  
-- 5.2.2 Mutexes and Locks (std::mutex, std::lock_guard)  
-- 5.2.3 Condition Variables  
-- 5.2.4 Atomic Operations and std::atomic  
-
-### 5.3 constexpr and Constexpr Functions
-- 5.3.1 Compile-time Computations  
-- 5.3.2 constexpr vs const  
-
-### 5.4 Advanced Template Metaprogramming
-- 5.4.1 SFINAE (Substitution Failure Is Not An Error)  
-- 5.4.2 Type Traits and std::enable_if  
-- 5.4.3 Template Recursion  
-
-### 5.5 Design Patterns in C++
-- 5.5.1 Singleton  
-- 5.5.2 Factory  
-- 5.5.3 Observer  
-- 5.5.4 Strategy  
-- 5.5.5 Decorator  
-
-### 5.6 Best Practices and Optimization
-- 5.6.1 Effective C++ Practices  
-- 5.6.2 Code Optimization Techniques  
-- 5.6.3 Profiling and Debugging Tools  
-- 5.6.4 Writing Maintainable Code  
-
-
+Would you like this saved as a `.md` tutorial or `.cpp` file for GitHub or offline use? Or should we continue to the next concept, like **virtual destructors**, **interface segregation**, or **multiple inheritance** with abstract classes?
