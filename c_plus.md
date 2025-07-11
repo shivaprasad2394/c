@@ -2830,4 +2830,313 @@ Saving Text file...
 
 ---
 
-Would you like this saved as a `.md` tutorial or `.cpp` file for GitHub or offline use? Or should we continue to the next concept, like **virtual destructors**, **interface segregation**, or **multiple inheritance** with abstract classes?
+I'm glad you're enjoying this deep dive! Now let's tackle **Runtime Polymorphism in C++**, starting from beginner-level concepts to advanced practices. I’ll organize it neatly and finish with a **real-world program** that brings all concepts together.
+
+---
+
+# 🔷 Runtime Polymorphism in C++
+
+---
+
+## ✅ 1. What is Runtime Polymorphism?
+
+**Runtime polymorphism** allows functions to behave **differently based on the object** that invokes them — even when accessed through a **base class pointer or reference**.
+
+It is achieved through:
+
+* **Virtual functions**
+* **Inheritance**
+* **Function overriding**
+
+---
+
+## ✅ 2. Key Components
+
+| Component              | Description                                       |
+| ---------------------- | ------------------------------------------------- |
+| `virtual` keyword      | Declares a function as dynamic/overridable        |
+| Base class pointer     | Must point to derived class object                |
+| Overridden function    | Must have same signature in derived class         |
+| Virtual table (vtable) | Behind the scenes, C++ uses a vtable for dispatch |
+
+---
+
+## ✅ 3. Syntax Example
+
+```cpp
+class Animal {
+public:
+    virtual void speak() {
+        cout << "Animal speaks\n";
+    }
+};
+
+class Dog : public Animal {
+public:
+    void speak() override {
+        cout << "Dog barks\n";
+    }
+};
+
+Animal* pet = new Dog();
+pet->speak(); // Output: Dog barks (runtime polymorphism)
+```
+
+---
+
+## ✅ 4. Compile-Time vs Runtime Polymorphism
+
+| Feature            | Compile-Time                    | Runtime                       |
+| ------------------ | ------------------------------- | ----------------------------- |
+| Type of resolution | At compile time                 | At runtime                    |
+| Achieved via       | Function overloading, templates | Virtual functions, overriding |
+| Binding type       | Static binding                  | Dynamic binding (vtable)      |
+
+---
+
+## ✅ 5. Use Cases
+
+* GUI frameworks
+* Game engines
+* Device driver abstractions
+* Plugin systems
+* Generalized algorithms
+
+---
+
+## ✅ 6. Rules & Best Practices
+
+1. Use `virtual` in base class.
+2. Use `override` in derived class.
+3. Always provide a **virtual destructor** in base class.
+4. Base class pointer/reference must point to derived class.
+5. Ensure same signature for overrides.
+6. Avoid object slicing with value parameters.
+
+---
+
+## ✅ 7. Virtual Destructors (Critical!)
+
+```cpp
+class Base {
+public:
+    virtual ~Base() {
+        cout << "Base destructor\n";
+    }
+};
+
+class Derived : public Base {
+public:
+    ~Derived() {
+        cout << "Derived destructor\n";
+    }
+};
+```
+
+Without a virtual destructor, only the base destructor would run when deleting via base pointer — causing a **memory leak**.
+
+---
+
+## ✅ 8. Polymorphism with References
+
+Polymorphism also works with references:
+
+```cpp
+void makeSound(Animal& a) {
+    a.speak(); // Runtime polymorphism
+}
+```
+
+---
+
+## ✅ 9. Pointers vs Objects
+
+❗ Runtime polymorphism only works with:
+
+* Base class **pointers**
+* Base class **references**
+
+Not with **objects by value** (slicing occurs).
+
+---
+
+## ✅ 10. Virtual Table (vtable) - Behind the Scenes
+
+* The compiler creates a **vtable** for each class with virtual functions.
+* Each object contains a **vptr** pointing to the vtable.
+* At runtime, function calls are resolved via the vptr.
+
+---
+
+# 🧪 Real-Life Example: Runtime Polymorphism in a Banking System
+
+### 🎯 Scenario:
+
+Design a **banking system** that processes different types of accounts:
+
+* `Account` (abstract base class)
+* `SavingsAccount`
+* `CurrentAccount`
+* `FixedDeposit`
+
+Each overrides:
+
+* `calculateInterest()`
+* `accountType()`
+
+Base class pointer is used to achieve **runtime polymorphism**.
+
+---
+
+### ✅ Code:
+
+```cpp
+#include <iostream>
+#include <vector>
+#include <memory>
+using namespace std;
+
+// Abstract base class
+class Account {
+protected:
+    double balance;
+
+public:
+    Account(double bal) : balance(bal) {}
+
+    virtual void calculateInterest() = 0; // Pure virtual function
+
+    virtual void accountType() const {
+        cout << "Generic Account\n";
+    }
+
+    virtual ~Account() {
+        cout << "Closing Account with balance: ₹" << balance << "\n";
+    }
+};
+
+class SavingsAccount : public Account {
+public:
+    SavingsAccount(double bal) : Account(bal) {}
+
+    void calculateInterest() override {
+        double interest = balance * 0.04;
+        cout << "Savings Account Interest: ₹" << interest << "\n";
+    }
+
+    void accountType() const override {
+        cout << "Account Type: Savings\n";
+    }
+
+    ~SavingsAccount() {
+        cout << "Savings Account Closed\n";
+    }
+};
+
+class CurrentAccount : public Account {
+public:
+    CurrentAccount(double bal) : Account(bal) {}
+
+    void calculateInterest() override {
+        cout << "Current Account has no interest.\n";
+    }
+
+    void accountType() const override {
+        cout << "Account Type: Current\n";
+    }
+
+    ~CurrentAccount() {
+        cout << "Current Account Closed\n";
+    }
+};
+
+class FixedDeposit : public Account {
+public:
+    FixedDeposit(double bal) : Account(bal) {}
+
+    void calculateInterest() override {
+        double interest = balance * 0.08;
+        cout << "Fixed Deposit Interest: ₹" << interest << "\n";
+    }
+
+    void accountType() const override {
+        cout << "Account Type: Fixed Deposit\n";
+    }
+
+    ~FixedDeposit() {
+        cout << "Fixed Deposit Closed\n";
+    }
+};
+
+// Function demonstrating runtime polymorphism
+void processAccount(Account* acc) {
+    acc->accountType();
+    acc->calculateInterest();
+    cout << "-----------------------------\n";
+}
+
+int main() {
+    vector<unique_ptr<Account>> accounts;
+
+    accounts.emplace_back(make_unique<SavingsAccount>(10000));
+    accounts.emplace_back(make_unique<CurrentAccount>(5000));
+    accounts.emplace_back(make_unique<FixedDeposit>(25000));
+
+    for (const auto& acc : accounts) {
+        processAccount(acc.get());
+    }
+
+    return 0;
+}
+```
+
+---
+
+### 🧾 Output:
+
+```
+Account Type: Savings
+Savings Account Interest: ₹400
+-----------------------------
+Account Type: Current
+Current Account has no interest.
+-----------------------------
+Account Type: Fixed Deposit
+Fixed Deposit Interest: ₹2000
+-----------------------------
+Fixed Deposit Closed
+Closing Account with balance: ₹25000
+Current Account Closed
+Closing Account with balance: ₹5000
+Savings Account Closed
+Closing Account with balance: ₹10000
+```
+
+---
+
+## ✅ Concepts Demonstrated
+
+| Concept                                  | Used? |
+| ---------------------------------------- | ----- |
+| Virtual functions                        | ✅     |
+| Function overriding                      | ✅     |
+| Runtime dispatch via base pointers       | ✅     |
+| Abstract base class (pure virtual func)  | ✅     |
+| Virtual destructors                      | ✅     |
+| Polymorphism with smart pointers         | ✅     |
+| vtable/vptr behavior (behind the scenes) | ✅     |
+
+---
+
+## ✅ Summary
+
+* **Runtime polymorphism** enables dynamic behavior using inheritance and virtual functions.
+* Achieved only with **pointers/references** to base class.
+* Enables **extensible and scalable design**.
+* Always use **virtual destructors** in base classes.
+* Use **abstract classes** for flexible architecture.
+
+---
+
+Would you like this saved as a `.cpp` or `.md` file for your GitHub? Or shall we explore **multiple inheritance with virtual functions**, **diamond problem with virtual inheritance**, or **vtable memory layout** next?
+
