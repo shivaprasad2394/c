@@ -2017,8 +2017,323 @@ Loops until user chooses Exit
 - 5.6.3 Profiling and Debugging Tools  
 - 5.6.4 Writing Maintainable Code  
 
-You're on a roll! 🚀
-Now let's dive into **3.3 Inheritance in C++** — one of the core pillars of object-oriented programming — with clear theory, detailed examples, and a complete real-life program at the end covering all subtopics:
+Awesome — let’s now fully break down **3.2 Operator Overloading in C++** — with clear explanations, deep coverage of each sub-topic, and a **real-life example program** demonstrating everything.
+
+---
+
+# 🔷 3.2 Operator Overloading in C++
+
+---
+
+## ✅ What is Operator Overloading?
+
+> Operator overloading allows **custom implementation** of operators (`+`, `-`, `=`, `<<`, etc.) for **user-defined types (classes/structs)**.
+
+It makes your class behave **like a built-in type**, improving **readability**, **intuitiveness**, and **reusability**.
+
+---
+
+## ✅ Syntax of Operator Overloading
+
+```cpp
+class ClassName {
+public:
+    ReturnType operator<op>(Arguments) {
+        // implementation
+    }
+};
+```
+
+---
+
+# 🔹 3.2.1 Overloading Unary and Binary Operators
+
+---
+
+## ✅ Unary Operators
+
+These operate on **one operand**:
+
+* `++`, `--`, `-`, `!`, `~`, etc.
+
+### ▶ Example: Overloading `++` (prefix)
+
+```cpp
+class Counter {
+private:
+    int value;
+
+public:
+    Counter(int v) : value(v) {}
+
+    // Prefix ++
+    Counter& operator++() {
+        ++value;
+        return *this;
+    }
+
+    void display() { cout << value << endl; }
+};
+```
+
+### ▶ Postfix `++` Overload
+
+```cpp
+Counter operator++(int) {
+    Counter temp = *this;
+    value++;
+    return temp;
+}
+```
+
+---
+
+## ✅ Binary Operators
+
+These operate on **two operands**:
+
+* `+`, `-`, `*`, `/`, `%`, `==`, `!=`, `<`, `>`, etc.
+
+### ▶ Example: Overload `+` for complex numbers
+
+```cpp
+class Complex {
+private:
+    double real, imag;
+
+public:
+    Complex(double r, double i) : real(r), imag(i) {}
+
+    Complex operator+(const Complex& other) {
+        return Complex(real + other.real, imag + other.imag);
+    }
+};
+```
+
+---
+
+# 🔹 3.2.2 Overloading Assignment Operator (`=`)
+
+The assignment operator **copies** one object into another. If your class contains pointers or resources, you must **overload this properly** to implement **deep copy**.
+
+### ▶ Example:
+
+```cpp
+class MyString {
+private:
+    char* str;
+
+public:
+    MyString(const char* s) {
+        str = new char[strlen(s) + 1];
+        strcpy(str, s);
+    }
+
+    // Assignment operator (deep copy)
+    MyString& operator=(const MyString& other) {
+        if (this != &other) {
+            delete[] str;
+            str = new char[strlen(other.str) + 1];
+            strcpy(str, other.str);
+        }
+        return *this;
+    }
+
+    ~MyString() { delete[] str; }
+};
+```
+
+---
+
+# 🔹 3.2.3 Overloading Stream Insertion (`<<`) and Extraction (`>>`)
+
+These are typically overloaded as **non-member friend functions**.
+
+### ▶ Stream Insertion (`<<`)
+
+```cpp
+class Point {
+private:
+    int x, y;
+
+public:
+    Point(int x, int y) : x(x), y(y) {}
+
+    friend ostream& operator<<(ostream& out, const Point& p) {
+        out << "(" << p.x << ", " << p.y << ")";
+        return out;
+    }
+};
+```
+
+### ▶ Stream Extraction (`>>`)
+
+```cpp
+friend istream& operator>>(istream& in, Point& p) {
+    in >> p.x >> p.y;
+    return in;
+}
+```
+
+---
+
+## 🧠 Summary Table
+
+| Operator Type | Overloaded With | Notes                               |
+| ------------- | --------------- | ----------------------------------- |
+| Unary         | `operator++()`  | Prefix and postfix differ by `int`  |
+| Binary        | `operator+(T)`  | Must match signature                |
+| Assignment    | `operator=`     | Use deep copy if managing resources |
+| Insertion     | `operator<<`    | Usually friend function             |
+| Extraction    | `operator>>`    | Usually friend function             |
+
+---
+
+# 🧪 Real-Life Example: Overloaded `Money` Class
+
+### 🎯 Scenario:
+
+Build a `Money` class that:
+
+* Supports `+` and `-` operations
+* Increments with `++` operator
+* Can be assigned via `=`
+* Prints via `<<`
+* Accepts input via `>>`
+
+---
+
+### ✅ Code:
+
+```cpp
+#include <iostream>
+using namespace std;
+
+class Money {
+private:
+    int rupees, paise;
+
+    void normalize() {
+        if (paise >= 100) {
+            rupees += paise / 100;
+            paise %= 100;
+        }
+    }
+
+public:
+    Money(int r = 0, int p = 0) : rupees(r), paise(p) {
+        normalize();
+    }
+
+    // Overload +
+    Money operator+(const Money& other) {
+        return Money(rupees + other.rupees, paise + other.paise);
+    }
+
+    // Overload -
+    Money operator-(const Money& other) {
+        int total1 = rupees * 100 + paise;
+        int total2 = other.rupees * 100 + other.paise;
+        int diff = total1 - total2;
+        return Money(diff / 100, diff % 100);
+    }
+
+    // Overload prefix ++
+    Money& operator++() {
+        paise += 1;
+        normalize();
+        return *this;
+    }
+
+    // Overload assignment =
+    Money& operator=(const Money& other) {
+        if (this != &other) {
+            rupees = other.rupees;
+            paise = other.paise;
+        }
+        return *this;
+    }
+
+    // Overload <<
+    friend ostream& operator<<(ostream& out, const Money& m) {
+        out << "₹" << m.rupees << "." << (m.paise < 10 ? "0" : "") << m.paise;
+        return out;
+    }
+
+    // Overload >>
+    friend istream& operator>>(istream& in, Money& m) {
+        cout << "Enter rupees: ";
+        in >> m.rupees;
+        cout << "Enter paise: ";
+        in >> m.paise;
+        m.normalize();
+        return in;
+    }
+};
+
+int main() {
+    Money salary(12, 75), bonus(3, 50), total;
+
+    cout << "Salary: " << salary << endl;
+    cout << "Bonus: " << bonus << endl;
+
+    total = salary + bonus;
+    cout << "Total: " << total << endl;
+
+    total = total - Money(2, 30);
+    cout << "After tax: " << total << endl;
+
+    ++total;
+    cout << "After rounding bonus: " << total << endl;
+
+    Money custom;
+    cin >> custom;
+    cout << "Custom amount: " << custom << endl;
+
+    return 0;
+}
+```
+
+---
+
+### 🧾 Sample Output:
+
+```
+Salary: ₹12.75
+Bonus: ₹3.50
+Total: ₹16.25
+After tax: ₹13.95
+After rounding bonus: ₹13.96
+Enter rupees: 9
+Enter paise: 145
+Custom amount: ₹10.45
+```
+
+---
+
+## ✅ Concepts Demonstrated
+
+| Feature                             | Used? |
+| ----------------------------------- | ----- |
+| Unary & binary operator overloading | ✅     |
+| Stream insertion/extraction         | ✅     |
+| Assignment operator                 | ✅     |
+| Input validation and normalization  | ✅     |
+| Real-world currency modeling        | ✅     |
+
+---
+
+## ✅ Summary
+
+* Operator overloading improves class usability and mimics native types.
+* Use **deep copies** when managing resources.
+* `<<` and `>>` are overloaded as **friend functions** for flexibility.
+* Normalize custom data internally to ensure consistency.
+
+---
+
+Would you like this as a `.cpp` or `.md` file for your GitHub, or continue with another topic like **Virtual Functions**, **Templates**, or **STL Deep Dive**?
+
 
 ---
 
