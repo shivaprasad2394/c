@@ -408,20 +408,6 @@ To DS( a packet going to distributed system) & from DS  (a packet coming from di
 - Supported & Required Data Rates
 - Security Capabilities
 - QoS Parameters
-
----
-
-## 🔐 Open (No Encryption) Connection Process
-
-1. AP sends **beacon frame** (broadcast).
-2. Client sends **probe request** with SSID.
-3. AP replies with **probe response**.
-4. Client sends **authentication request**.
-5. AP sends **authentication response**.
-6. Client sends **association request**.
-7. AP sends **association response**.
-8. Client may later send **disconnect frame**.
-
 ---
 # 💡 CAM (Constantly Awake Mode) in Wi-Fi
 
@@ -634,19 +620,16 @@ Wi-Fi power-saving is based on a **client–AP (Access Point)** relationship.
 
 > 🔋 Smart Wi-Fi = Fast Internet + Longer Battery Life
 
-## 🔐 Four-Way Handshake (WPA2)
+## 🔐 Open (No Encryption) Connection Process
 
-Used for secure key exchange between client and AP.
-
-### Steps:
-
-1. **AP** generates **ANonce** and sends to **station**.
-2. **Station** computes **PMK** from SSID + password, generates **SNonce**, and derives **PTK**.
-3. **Station** sends **SNonce** to AP.
-4. **AP** derives **PTK**, generates **GTK**, and sends GTK to station.
-5. **Station** sends **ACK** to confirm.
-
----
+1. AP sends **beacon frame** (broadcast).
+2. Client sends **probe request** with SSID.
+3. AP replies with **probe response**.
+4. Client sends **authentication request**.
+5. AP sends **authentication response**.
+6. Client sends **association request**.
+7. AP sends **association response**.
+8. Client may later send **disconnect frame**.
 
 ## 🔐 WPA2 Encrypted Connection Process
 
@@ -660,7 +643,19 @@ Used for secure key exchange between client and AP.
 8. If encryption is WPA2/WPA/WEP → **Four-Way Handshake** is performed for secure communication.
 
 ---
+## 🔐 Four-Way Handshake (WPA2)
 
+Used for secure key exchange between client and AP.
+
+### Steps:
+
+1. **AP** generates **ANonce** and sends to **station**.
+2. **Station** computes **PMK**(Pairwise Master Key)  from SSID + password, generates **SNonce**, and derives **PTK**.
+3. **Station** sends **SNonce** to AP.
+4. **AP** derives **PTK**, generates **GTK**, and sends GTK to station.
+5. **Station** sends **ACK** to confirm.
+
+---
 
 
 # 📡 Wi-Fi Access Point (AP) Process
