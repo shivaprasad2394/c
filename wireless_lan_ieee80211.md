@@ -1140,3 +1140,149 @@ When the client decides to authenticate, the access point forwards the authentic
 
 
 
+# 📡 Wi-Fi Aware (NAN) and Advanced Wi-Fi Operation
+
+---
+
+## 📘 What is Wi-Fi Aware (NAN - Neighbor Awareness Networking)?
+
+* **Wi-Fi Aware** is a peer-to-peer discovery and communication protocol based on **IEEE 802.11mc**.
+* Enables continuous background discovery without requiring an internet connection or access point.
+* Built for **proximity-based services**: file sharing, multiplayer gaming, location-aware apps, etc.
+* Unlike Wi-Fi Direct, Wi-Fi Aware focuses more on discovery and low-latency communication using a shared aware infrastructure.
+
+---
+
+## 🧠 Key Concepts
+
+| Term                            | Meaning                                                               |
+| ------------------------------- | --------------------------------------------------------------------- |
+| **NAN Master Indication (NMI)** | Indicates which peer acts as the synchronization anchor               |
+| **Service Hash**                | Unique hash that represents a service being advertised                |
+| **Discovery Window**            | Time interval when nodes wake up to listen or transmit                |
+| **Publish / Subscribe**         | Core paradigm — advertise (publish) or listen (subscribe) to services |
+| **SDF / FSD / USF**             | Types of Service Discovery Frames: Solicited/Unsolicited              |
+| **NAN Cluster**                 | Group of devices synchronized via a Master Election protocol          |
+| **Synchronization Beacon**      | Broadcast by master to maintain time sync across cluster              |
+
+---
+
+## 🔄 Operational Workflow
+
+### 1. **Cluster Formation (Discovery and Sync Phase)**
+
+* Devices start by scanning for **NAN beacons**.
+* Each device evaluates if a cluster exists; if not, it becomes a **Master**.
+* Master sends out **Synchronization Beacons (NAN Sync Beacons)**.
+* Other devices sync their clocks and join the cluster as **slaves**.
+
+### 2. **Service Discovery (Publish / Subscribe)**
+
+* **Publish**:
+
+  * Device announces a service (e.g., multiplayer game available).
+  * Can be **solicited** (expects a response) or **unsolicited**.
+
+* **Subscribe**:
+
+  * Another device listens for service hash that matches.
+  * If match is found, a response is sent.
+
+* Discovery uses **NAN SDF frames** with TLVs (Type-Length-Value):
+
+  * Service Hash
+  * Service Info
+  * Match Filter
+
+### 3. **Secure Data Path Setup (NAN Data Path - NDP)**
+
+* After discovery:
+
+  * Devices exchange **NDP Setup Request / Response**
+  * Negotiate channel, security (e.g., PMKID, MAC addresses)
+  * Establish a **direct peer-to-peer data path** using Wi-Fi
+
+* Uses **NDI (NAN Data Interface)** to send traffic outside of traditional IP stack
+
+---
+
+## 🧬 Wi-Fi Aware Frame Types
+
+| Frame Type                        | Description                                                  |
+| --------------------------------- | ------------------------------------------------------------ |
+| **Sync Beacon**                   | Sent by master — includes timing, cluster ID                 |
+| **Sync + Discovery**              | Combined frame for synchronization and service advertisement |
+| **SDF (Service Discovery Frame)** | Carries service name, match filter, etc.                     |
+| **NDP Setup Req/Resp**            | Used to initiate and confirm data path setup                 |
+| **NDPE**                          | Encapsulation for sending user data over NDP                 |
+
+---
+
+## 🔒 Security
+
+* NAN itself is discovery focused, but for NDP:
+
+  * Encryption is possible with **PMK (Pairwise Master Key)** or **PMKID**
+  * Some implementations rely on Wi-Fi Protected Management Frames
+  * Identity protection is minimal by default — security is app-layer driven
+
+---
+
+## 🧪 Real-World Use Cases
+
+| Use Case             | Description                                         |
+| -------------------- | --------------------------------------------------- |
+| Multiplayer Gaming   | Discover nearby players and establish data channel  |
+| Contactless Payments | Authenticate and transact via NDP                   |
+| Smart Home           | Devices automatically find and sync with each other |
+| Location-Based Ads   | Proximity triggers messages or actions              |
+| Device Pairing       | No need for QR scan or passwords                    |
+
+---
+
+## 🧰 Developer Tools and Ecosystem
+
+* **Android Wi-Fi Aware API** (since Android 8.0):
+
+  * `WifiAwareManager`
+  * Supports session callbacks, message exchange, and data paths
+* **Linux mac80211 + cfg80211 (nl80211 NAN commands)**
+* **Wireshark filters**: `nan`, `ndp`, `nan-action`, `nan-mgmt`
+* **chipset support**: QCA6174, QCA9377, and newer Intel/MediaTek chips
+
+---
+
+## ⚙️ Internal MAC/PHY Layer Flow
+
+1. **MAC Layer: NAN State Machine**
+
+   * Handles cluster formation, master election, DW scheduling
+   * Manages publish/subscribe SDF and beacon timing
+
+2. **PHY Layer: Timing + Power Efficiency**
+
+   * Leverages **target wake time (TWT)** and **low duty cycle sync**
+   * Ensures high power efficiency for mobile nodes
+
+3. **Data Plane Path (NDP)**
+
+   * Operates outside TCP/IP stack
+   * Traffic over **NDI interfaces**, bypassing IP routing
+   * Ideal for low-latency, short-lived data transfers
+
+---
+
+## 📉 Comparison: Wi-Fi Direct vs Wi-Fi Aware
+
+| **Feature**          | Wi-Fi Direct    | Wi-Fi Aware (NAN)          |
+| ---------------- | --------------- | -------------------------- |
+| Discovery        | One-time        | Continuous Background      |
+| Sync Model       | Leader-Follower | Distributed Clustered Sync |
+| Data Path        | IP-based        | Optional Direct NDP        |
+| Power Efficiency | Moderate        | High (TWT, DW)             |
+| Group Ownership  | Yes             | No (clustered peers)       |
+| Internet Routing | Possible        | No (local only)            |
+
+---
+
+
