@@ -358,15 +358,178 @@ To DS( a packet going to distributed system) & from DS  (a packet coming from di
 > 💡 Wi-Fi uses unlicensed **ISM bands**.
 
 ---
+## 📡 Beacon Frames in Wi-Fi
 
-## 📢 Beacon Frame Includes:
+Beacon frames are **broadcast management frames** sent periodically by Access Points (APs) to announce the presence of a Wi-Fi network.
 
-- SSID
-- Channel Information
-- Supported & Required Data Rates
-- Security Capabilities
-- QoS Parameters
 ---
+
+### 🧭 Purpose of Beacon Frames
+
+| **Function**                   | **Description**                                                                 |
+|-------------------------------|---------------------------------------------------------------------------------|
+| **Announce the network**      | AP advertises its SSID (network name)                                          |
+| **Synchronization**           | Helps client devices sync their internal clocks with the AP's timestamp        |
+| **Transmit network parameters** | Includes channel, supported data rates, security info, etc.                    |
+| **Power saving support**      | Contains **TIM (Traffic Indication Map)** to help sleeping clients know if data is buffered for them |
+
+---
+## 🧱 Beacon Frame Structure (Expanded)
+
+| **Field**                              | **Purpose**                                                              |
+|---------------------------------------|---------------------------------------------------------------------------|
+| **Timestamp**                         | Syncs client clock with AP                                               |
+| **Beacon Interval**                   | Interval between beacons (in TUs)                                        |
+| **Capability Info**                   | Flags: ESS, Privacy (WEP/WPA), IBSS, etc.                                |
+| **SSID**                              | Network name (may be null for hidden networks)                           |
+| **Supported Rates**                   | Data rates supported by AP                                               |
+| **DS Parameter Set**                  | Includes **current channel** (e.g., 6, 11, etc.)                          |
+| **TIM (Traffic Indication Map)**      | Shows if AP has buffered data for sleeping clients                       |
+| **WMM Parameter Element** *(optional)*| **QoS settings** for Voice, Video, Best Effort, Background queues        |
+| **RSN Information (Security)**        | Info about WPA2/WPA3 authentication and encryption                       |
+| **Vendor-Specific IEs**               | Optional extensions like 802.11k/v/r, roaming hints, etc.                |
+
+**DS Parameter Set** = Just the channel number — tells clients what RF channel the AP is using.
+
+**QoS Info** is included only if AP supports WMM, and it appears in the WMM Parameter Element inside the optional IEs section of the beacon frame.
+Tag: WMM Parameter Element (WME)
+  - QoS Info (U-APSD support, queue settings)
+  - Access Categories: Voice, Video, Best Effort, Background
+
+
+
+### ⏱️ Beacon Interval
+
+- Defined in **time units (TUs)** — 1 TU = **1024 microseconds**
+- Default interval: **100 TUs** → ~102.4 ms (approx. 10 beacons/sec)
+
+---
+
+### 📶 Beacon Frame Properties
+
+| **Property**           | **Value**               |
+|------------------------|-------------------------|
+| **Frame Type/Subtype** | Management / Subtype 8  |
+| **Transmission Mode**  | Broadcast (to all clients) |
+| **Reliability**        | Not ACKed (unreliable delivery) |
+| **Frequency**          | Sent on primary channel only |
+| **Encryption**         | Never encrypted         |
+
+---
+
+### 🔍 Real-World Use Cases
+
+- Wi-Fi scanners (e.g., in phones or `Wireshark`) **rely on beacon frames** to detect nearby SSIDs.
+- Beacons are **always sent**, even if the SSID is "hidden" (though in that case, SSID field is null).
+- Client devices use the **timestamp and interval** to sync their sleep/wake schedules (important for power saving).
+
+---
+
+### ⚠️ Security Note
+
+- Beacon frames **advertise the presence of a network**, so:
+  - Hidden SSIDs don't offer real security — they just omit the SSID name
+  - Attackers can still detect networks based on beacon frame traffic
+
+---
+
+## ✅ Summary
+
+| **Why Beacons Matter** |
+|------------------------|
+| 📡 They announce the Wi-Fi network to nearby devices |
+| 🕒 Help clients stay synchronized and manage power |
+| 🔑 Carry critical info like supported rates, channel, and security |
+| 🧭 Clients scan and connect based on beacon frame contents |
+
+> 💡 Without beacon frames, Wi-Fi devices wouldn’t even know which networks exist — they're like digital lighthouses!
+
+## 🚶‍♂️ Fast & Smart Roaming in Wi-Fi: 802.11k / v / r
+
+When you're moving around (like walking with your phone), Wi-Fi clients need to **switch between APs** — this is called **roaming**. Without optimizations, roaming can be slow or result in dropped packets.
+
+### 📦 Purpose of 802.11k/v/r
+| **Standard** | **Focus**         | **Goal**                                |
+|--------------|------------------|-----------------------------------------|
+| **802.11k**  | Knowledge         | Help clients discover better APs faster |
+| **802.11v**  | Direction         | Let APs steer clients toward better APs |
+| **802.11r**  | Speed             | Make roaming itself faster (Fast BSS Transition) |
+
+---
+
+## 🔍 802.11k – "Know Before You Roam"
+
+**k = knowledge**
+
+- AP provides a **neighbor report** (a list of nearby APs + their signal strengths, channels, BSSIDs).
+- Client uses this to **pre-scan** and decide **where to roam next**.
+- Reduces delay because the client **doesn't have to scan every channel** blindly.
+
+### ✨ Example:
+- Your phone asks the AP: “Who else is nearby?”
+- The AP replies: “Here are 3 APs with good coverage.”
+
+---
+
+## 🧭 802.11v – "You Should Go Now"
+
+**v = direction / suggestion**
+
+- AP can suggest a better AP for the client to connect to.
+- Known as **BSS Transition Management**.
+- Used in **load balancing**, weak signal detection, or power-saving modes.
+
+### ✨ Example:
+- AP says: “Hey client, your signal is weak. Please roam to AP-2 at -55 dBm.”
+- The client may **accept or ignore** the suggestion.
+
+---
+
+## ⚡ 802.11r – "Roam Fast (FT)"
+
+**r = rapid roaming**
+
+- Reduces the **authentication delay** when switching APs.
+- Implements **Fast BSS Transition (FT)**.
+- Pre-shares cryptographic keys (PMK-R0/R1) between APs.
+- So when the client switches, it **doesn’t need full WPA2 handshake** again.
+
+### ✨ Example:
+- Without 802.11r: Roaming takes 300+ ms → noticeable lag (VoIP, gaming)
+- With 802.11r: Roaming in ~50 ms → smooth handoff
+
+---
+
+## 📶 Summary Table
+
+| **Feature** | **802.11k**              | **802.11v**                  | **802.11r**                          |
+|-------------|---------------------------|-------------------------------|--------------------------------------|
+| **Goal**    | AP Discovery               | Roaming Decision Assistance   | Fast Authentication Handoff         |
+| **Main Idea**| Get neighbor list         | AP recommends better BSS      | Pre-authenticate before roaming      |
+| **Client Control?** | Yes               | Yes                           | Yes                                  |
+| **Improves** | Scan time, battery life   | Load balancing, performance   | Handoff speed for real-time traffic  |
+| **Best Use Case** | Large campus Wi-Fi   | Mesh / enterprise networks    | VoIP, video calls, low-latency apps  |
+
+---
+
+## ✅ Real World Analogy
+
+> Imagine you're moving between conference rooms in a building with many Wi-Fi hotspots:
+
+- 🧠 **802.11k** gives you a **map** of other nearby access points.
+- 🧭 **802.11v** acts like a **guide**, telling you which door to take next.
+- ⚡ **802.11r** gives you a **VIP pass**, letting you skip the security line when you arrive.
+
+---
+
+## 🛠️ How to Use These?
+
+- Supported only if **both AP and client device** support these standards.
+- Most modern enterprise APs (e.g., Cisco, Aruba, UniFi) support them.
+- Most modern phones/laptops support **k/v**, and many also support **r**.
+- Configuration is typically done in the **Wi-Fi controller / AP settings**.
+
+
 
 # 🔗 Fragmentation & Aggregation in Wi-Fi
 
@@ -730,6 +893,88 @@ In CAM:
 > ⚡ Always awake = always fast, but at a power cost!
 
 ---
+## 🔀 Band Switching: From 2.4 GHz to 5 GHz in Wi-Fi
+
+Modern dual-band Wi-Fi networks operate on both:
+
+- **2.4 GHz** (longer range, lower speed)
+- **5 GHz** (shorter range, higher speed, less interference)
+
+---
+
+### 🧠 Why Switch from 2.4 GHz to 5 GHz?
+
+| **Reason**                  | **Explanation**                                                                 |
+|----------------------------|----------------------------------------------------------------------------------|
+| 🚀 **Faster Speeds**        | 5 GHz supports higher throughput (e.g., 802.11ac/ax), ideal for streaming, gaming |
+| 🤫 **Less Congestion**      | 2.4 GHz is crowded (Bluetooth, microwaves, neighbors), 5 GHz has more channels   |
+| 🎯 **Better QoS**           | APs may steer capable clients to 5 GHz for better load balancing                |
+
+---
+
+## 🔄 How Band Switching Happens (Client-Side)
+
+When your device connects to Wi-Fi, here's what can happen:
+
+### 1. **Initial Connection**
+- Device scans both 2.4 and 5 GHz.
+- If signal strength on 5 GHz is **too weak**, it may connect to **2.4 GHz** first.
+
+### 2. **Monitoring Signal Quality**
+- Device continuously monitors **RSSI**, **SNR**, **packet loss**, etc.
+- If 5 GHz becomes viable (e.g., you walk closer to AP), it considers switching.
+
+### 3. **Switch Triggered**
+- The device **disconnects from 2.4 GHz** and **reassociates with 5 GHz** on same SSID.
+- The AP may **assist** using **802.11k/v** to suggest a better band.
+
+---
+
+## 📡 AP-Assisted Band Steering
+
+Enterprise-grade or mesh APs use **band steering**:
+
+| **Technique**              | **What AP Does**                                                              |
+|----------------------------|--------------------------------------------------------------------------------|
+| 🔕 **Ignore 2.4 GHz requests** | If client supports 5 GHz, AP may delay or reject 2.4 GHz probes             |
+| 🧭 **802.11v BSS Transition** | AP suggests a 5 GHz BSSID via **BSS Transition Request**                   |
+| 📊 **Load Balancing**         | AP monitors client count and may steer clients for better performance       |
+
+> 🧠 Band steering is more like **“client suggestion”** — clients make the final roaming decision.
+
+---
+
+## 📶 Technical Example: iPhone Switches from 2.4 → 5 GHz
+
+1. Initially connects to 2.4 GHz due to strong signal at range
+2. As user moves closer, iPhone receives 5 GHz **beacon frames** with good RSSI
+3. AP may send **802.11v BSS Transition Request** to 5 GHz BSSID
+4. iPhone disconnects from 2.4 GHz and reassociates to 5 GHz using:
+   - **Same SSID**
+   - New **BSSID** on a 5 GHz channel
+5. **DHCP is not redone** (same L3 settings usually retained)
+
+---
+
+## 🛠️ Troubleshooting Tip
+
+| **Symptom**                       | **Possible Cause**                        | **Fix**                          |
+|----------------------------------|-------------------------------------------|----------------------------------|
+| Stuck on 2.4 GHz                 | Weak 5 GHz signal or client preference    | Adjust AP power/band steering   |
+| Flaky switching                  | Poor AP placement, no roaming support     | Enable 802.11k/v/r on AP        |
+| No switch even near AP          | Device roaming aggressiveness is low      | Tweak client-side roaming settings (if possible) |
+
+---
+
+## ✅ Summary: Band Switch Flow
+
+```mermaid
+graph TD
+A[Device connects on 2.4 GHz] --> B[AP sends 5 GHz beacons]
+B --> C[Client sees stronger 5 GHz signal]
+C --> D{AP sends BSS Transition (802.11v)?}
+D -- Yes --> E[Client roams to 5 GHz]
+D -- No --> F[Client may still roam by itself]
 
 # 📡 Wi-Fi Access Point (AP) Process
 
