@@ -975,6 +975,57 @@ B --> C[Client sees stronger 5 GHz signal]
 C --> D{AP sends BSS Transition (802.11v)?}
 D -- Yes --> E[Client roams to 5 GHz]
 D -- No --> F[Client may still roam by itself]
+```
+# 🔍 DFS Scan in Wi-Fi
+
+DFS Scan is a special type of **passive channel scan** that access points (APs) must perform **before** using any **DFS channel** (radar-sensitive) in the 5 GHz band.
+
+---
+
+## ⚙️ What is a DFS Scan?
+
+- Also known as **Channel Availability Check (CAC)**.
+- It is a **mandatory listening period** where the AP checks for radar signals **before transmitting** on a DFS channel.
+- The AP must stay **completely silent** during this scan.
+
+---
+
+## ⏱️ How Long Does It Take?
+
+| **Region** | **Scan Duration (CAC Time)** |
+|------------|------------------------------|
+| 🇺🇸 US (FCC) | **60 seconds**               |
+| 🇪🇺 EU (ETSI) | **60 – 600 seconds** depending on channel |
+| 🌏 Others     | **Usually 60 seconds**       |
+
+> 🛑 During this time, the AP **won’t broadcast SSID** or allow connections on that channel.
+
+---
+
+## 📶 When Does DFS Scan Happen?
+
+### 💡 Scenario 1: Initial Boot or Channel Change
+- AP boots up and selects a DFS channel → **must perform DFS scan first**.
+- No Wi-Fi service until the scan completes.
+
+### 💡 Scenario 2: DFS Radar Detected
+- AP already operating on a DFS channel.
+- Radar appears → AP **immediately switches** to a new channel (DFS or non-DFS).
+- If new channel is also DFS → another **DFS scan is triggered**.
+
+---
+
+## 🧠 What Happens During DFS Scan?
+
+```mermaid
+sequenceDiagram
+Client->>AP: Attempt to join network
+AP--xClient: No beacon / no SSID broadcast
+AP->>Itself: Listen silently for radar (60s)
+Note right of AP: DFS scan in progress
+AP->>All: Beacon starts on selected channel
+Client->>AP: Association begins
+```
 
 # 📡 Wi-Fi Access Point (AP) Process
 
