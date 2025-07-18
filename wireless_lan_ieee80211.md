@@ -1732,3 +1732,141 @@ The AP’s MAC layer scheduler dynamically:
 
 
 
+# 🧠 Wi-Fi Advanced Deep Dive: MLO, TSPEC, Drivers, and Future Standards
+
+---
+
+## 🔍 Real MLO + TSPEC Frame Captures (Wireshark)
+
+### 🧪 Multi-Link Operation (MLO) in Action
+
+* **Multi-Link frames** are embedded with:
+
+  * **Link ID subfields** in the MAC header
+  * **Link-specific Block Ack (BA) frames**
+* **A-MPDU** is split and mapped across links
+* Use **"Radiotap" headers** in Wireshark to inspect:
+
+  * Band/frequency
+  * MCS/NSS per link
+  * Frame Reordering
+
+### 📜 TSPEC Frame Capture Breakdown
+
+* **ADDTS Request** Frame:
+
+  * Frame Type: Action
+  * Category: Spectrum Management
+  * Action Code: ADDTS Request (0x00)
+  * Includes TSPEC IE with QoS details
+* **ADDTS Response**:
+
+  * Admission Accepted/Denied
+  * Reason Code (if rejected)
+
+### 🧰 Wireshark Filters
+
+* `wlan.fc.type_subtype == 0x00` → Management frames
+* `wlan.qos.tspec.*` → Specific TSPEC IE fields
+* `radiotap.mcs` → MCS index
+* `wlan_mlo.*` → Fields (in recent Wireshark builds)
+
+---
+
+## 🧬 Linux Wi-Fi Driver Internals: mac80211, cfg80211, and Firmware Flow
+
+### 📚 mac80211 (SoftMAC)
+
+* Handles most of the MAC logic in software
+
+* **TX Flow**:
+
+  1. `cfg80211_ops::start_ap()` or `join_ibss()` calls from user space (via `nl80211`)
+  2. Calls `ieee80211_ops::start()`
+  3. Queues frames → `ieee80211_tx()` → Hardware queues
+  4. Handles encryption, A-MPDU, Block ACKs
+
+* **RX Flow**:
+
+  1. Firmware posts frames to kernel via `ieee80211_rx()`
+  2. Reordering, defragmentation, decryption (if needed)
+  3. Sent up via `cfg80211_rx_mgmt()` or `netif_rx()`
+
+### 🧠 cfg80211
+
+* Acts as bridge between `nl80211` and mac80211
+* Exposes kernel control to user space (e.g. wpa\_supplicant, hostapd)
+
+### 🔌 Firmware (iwlwifi / ath10k / esp32)
+
+* Handles:
+
+  * DMA of frames
+  * Low-level PHY timing
+  * Wake/sleep (TWT)
+  * MLO link management (in Wi-Fi 7 chips)
+* Communicates with kernel via shared memory or RPC
+
+---
+
+## 📦 ESP32-C3 (TX/RX Concepts from PFIP)
+
+### 🧠 PFIP (Programmable Frame Injection Path)
+
+* Used to send custom Wi-Fi frames or emulate advanced MAC features
+
+### 📡 TX Concepts
+
+* **Raw Frame Injection** via ESP32 Wi-Fi driver
+* Examples:
+
+  * 802.11 Beacon or Probe Response
+  * Deauthentication, custom Action frames
+* Often done via `esp_wifi_80211_tx()`
+
+### 📥 RX Concepts
+
+* **Sniffer Mode (Promiscuous)**:
+
+  * `esp_wifi_set_promiscuous(true)`
+  * Capture ALL 802.11 frames
+* Useful for monitoring TSPEC requests, control frames, MLO frames (if supported)
+
+### 🛠 PFIP Use Cases
+
+* Emulating OFDMA/BSS Coloring behavior
+* Custom QoS scheduling
+* Passive capture of roaming/association handshakes
+
+---
+
+## 🛰 Wi-Fi 8 Preview (802.11bn)
+
+### 🚀 What We Know (Draft Stage as of 2025)
+
+* Focus: **Ultra-low latency**, **AI/ML integration**, **massive multi-user support**
+* Expected PHY advances:
+
+  * Advanced MIMO topologies (16x16)
+  * AI-guided Beamforming
+  * Adaptive waveform shaping
+* MAC layer goals:
+
+  * **QoS Orchestration** using ML (dynamic priority elevation)
+  * **Latency Budgeting** per STA/application
+  * Enhanced **TWT++** (more dynamic wake scheduling)
+
+### 📐 Timeline & Compatibility
+
+* Likely finalization by **2028**
+* Will operate in **6 GHz+ spectrum**, possibly introducing 7 GHz usage
+
+### 🔮 Vision
+
+* Wi-Fi 8 aims to merge:
+
+  * Real-time edge inference
+  * Deterministic latency for robotics/AR/medical
+  * Ubiquitous ambient sensing + high-precision localization
+
+---
