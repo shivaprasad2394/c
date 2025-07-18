@@ -212,6 +212,53 @@ In Mac we have two more layers
 
 CSMA/CA is **essential** for wireless networking, but it comes with **challenges**, especially in **crowded** or **large** networks. Understanding these problems helps in designing **better Wi-Fi** systems and troubleshooting **connectivity issues**.
 
+### 🚦 OFDMA (Orthogonal Frequency Division Multiple Access)
+
+- **What it is**: An enhancement of OFDM (used in previous Wi-Fi standards) that allows multiple users to transmit data **simultaneously** by dividing a channel into smaller sub-channels called **Resource Units (RUs)**.
+  
+- **How it works**:
+  - The available bandwidth (e.g., 20/40/80 MHz) is divided into smaller frequency tones (subcarriers).
+  - Each user is assigned a group of these subcarriers (RUs), allowing multiple users to share the channel **at the same time** instead of waiting their turn.
+### 👥 MU-MIMO (Multi-User Multiple Input, Multiple Output)
+
+- **What it is**: A method that allows a wireless access point to transmit **different data streams to multiple devices simultaneously**, using multiple antennas.
+
+- **How it works**:
+  - The AP has multiple antennas that can focus signals (beamforming) and serve several clients **at once** instead of one at a time.
+  - Previously, MU-MIMO worked only for **downlink**; 802.11ax introduces **uplink MU-MIMO** as well.
+### 🔄 Downlink vs Uplink MU-MIMO
+
+**MU-MIMO (Multi-User Multiple Input, Multiple Output)** allows multiple devices to communicate with an access point (AP) at the same time, using multiple antennas. This can happen in two directions:
+
+---
+
+#### 📤 Uplink MU-MIMO
+
+- **What it is**: Multiple client devices **simultaneously send data** to the access point.
+- **Introduced in**: **802.11ax** (Wi-Fi 6)
+- **Example**: Several smartphones uploading photos to the cloud at the same time.
+- **Benefit**: Reduces congestion and wait time when many devices are transmitting data to the AP.
+
+---
+
+#### 📥 Downlink MU-MIMO
+
+- **What it is**: The access point **simultaneously sends different data streams** to multiple devices.
+- **Introduced in**: **802.11ac Wave 2** (downlink only), enhanced in **802.11ax**
+- **Example**: Streaming different videos to a tablet, a laptop, and a smart TV — all at once.
+- **Benefit**: Increases download efficiency and overall throughput.
+
+---
+
+### 🧠 Summary Table
+
+| Direction     | Introduced In | Who Sends Data | Who Receives Data | Real-Life Example                            |
+|---------------|----------------|----------------|--------------------|----------------------------------------------|
+| **Downlink**  | 802.11ac (Wave 2) | Access Point   | Multiple Devices   | Watching YouTube on multiple devices         |
+| **Uplink**    | 802.11ax          | Multiple Devices | Access Point       | Uploading files to Google Drive from phones  |
+
+---
+
 ## 🔍 Scanning and Association
 
 ### What is Scanning?
