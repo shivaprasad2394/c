@@ -259,11 +259,13 @@ After a successful Layer 2 (Wi-Fi) connection, your device begins the **DHCP (Dy
 
 
 ## 🧾 IEEE 802.11 Frame Format
+|----|---|------|------|------|----|------|------|----|
 | FC | d | add1 | add2 | add3 | SC | add4 | body | fcs|
 |2byte|2byte|6byte|6byte|6byte|2byte|6byte|0-2312byte|2byte|
 
 ### Frame Control (FC) Fields:
 it consists of various bits Namely
+  |--------------------|-----|
 - |**Protocol Version**|2bits|
 - |**Frame Type**|2bits|
 - |**Subtype**|4bits|
