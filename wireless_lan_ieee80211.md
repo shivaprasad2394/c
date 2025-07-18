@@ -291,12 +291,11 @@ These determine **what kind of frame it is** and **what it's used for**.
 ### Frame Types:
 Frame type is subdivided into
 1. **Management Frames**
-   - Probe, Association, Authentication, Beacon
 2. **Control Frames**
-   - RTS, CTS, Acknowledgment
 3. **Data Frames**
 
 Sub type helps specify the exact frametype(Probe,RTS etc..)
+
 ---
 
 ### 📊 Frame Types & Subtypes Table
