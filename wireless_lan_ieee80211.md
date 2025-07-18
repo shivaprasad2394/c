@@ -457,41 +457,46 @@ Here’s a simplified diagram of the flow:
                              ↓
                        [Internet Websites]
 
+```
+# 📚 Key Terms for Beginners
 
-📚 Key Terms for Beginners
-Term	Meaning
-- SSID	Network name (e.g., "HomeWiFi")
-- DHCP	Automatically gives IP address to your device
-- NAT	Shares public IP among many private devices
-- IP Address	A unique number identifying your device on a network
-- DNS	Converts website names into IP addresses
-- Gateway	A device that routes traffic between local network and internet
-- Subnet Mask	Defines network range (usually 255.255.255.0 for home networks)
-- ISP	Internet Service Provider (e.g., Jio, Airtel, BSNL)
+| **Term**         | **Meaning**                                                                 |
+|------------------|------------------------------------------------------------------------------|
+| **SSID**         | Network name (e.g., *"HomeWiFi"*)                                            |
+| **DHCP**         | Automatically assigns an IP address to your device                          |
+| **NAT**          | Shares one public IP among multiple private devices                         |
+| **IP Address**   | A unique number identifying your device on a network                        |
+| **DNS**          | Converts website names (like `google.com`) into IP addresses                |
+| **Gateway**      | Routes traffic between your local network and the internet                  |
+| **Subnet Mask**  | Defines the network range (usually `255.255.255.0` for home networks)        |
+| **ISP**          | Internet Service Provider (e.g., **Jio**, **Airtel**, **BSNL**)              |
 
-🏠 Real World Analogy
-Think of your Wi-Fi Access Point like a receptionist at an office:
+---
 
-- You (the device) ask the receptionist for internet access.
+# 🏠 Real-World Analogy
 
-- The receptionist gives you an ID badge (IP address).
+**Think of your Wi-Fi Access Point like a receptionist at an office:**
 
-- When you send a letter (data), the receptionist logs your name and sends it out.
+- 🧑‍💻 You (*the device*) ask the receptionist for internet access.
+- 🪪 The receptionist gives you an **ID badge** (*IP address*).
+- 📤 When you send a letter (*data*), the receptionist logs your name and sends it out.
+- 📥 When mail comes back (*a reply*), the receptionist knows it's for you and hands it over.
 
-- When mail comes back (reply), the receptionist knows it's for you and hands it over.
+---
 
-✅ Final Summary
-Your device connects to the AP via Wi-Fi.
+# ✅ Final Summary
 
-- The AP (or router) gives your device an IP address using DHCP.
+📶 Your **device** connects to the **Access Point (AP)** via **Wi-Fi**.
 
-- Your device sends data to the internet, and the AP handles forwarding.
+- The **AP/router** assigns your device an IP address using **DHCP**.
+- Your device sends **data to the internet**, and the AP handles the forwarding.
+- The AP uses **NAT** to allow multiple devices to **share one internet connection**.
+- Incoming data is routed **back to the correct device** using the IP address.
 
-- AP uses NAT to allow multiple devices to share one internet connection.
+---
 
-- Data comes back from the internet and is delivered to the correct device.
+# 📡 The AP is your **wireless gateway** to the digital world!
 
-📡 The AP is your wireless gateway to the digital world!
 
 
 
