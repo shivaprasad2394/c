@@ -1985,3 +1985,108 @@ Primarily operates in **5.9 GHz band** with 10 MHz channel widths for reduced de
 ---
 
 Let me know if you'd like packet traces, NS-3 simulation samples, or want to connect this with future tech like **C-V2X** or **802.11bd** (next-gen vehicular Wi-Fi extension of 802.11p and 802.11ac, designed for backward compatibility and high data rate V2X applications like HD sensor sharing, cooperative driving, and real-time updates) Wi-Fi).
+
+
+Perfect! Here's the detailed explanation for **IEEE 802.11bd**, extending your `.md` with advanced insights into the evolution from 802.11p. I'll append it in the same clean format right below your 802.11p section:
+
+---
+
+## 🚘 IEEE 802.11bd — Next-Gen V2X (Vehicular Wi-Fi Evolution)
+
+### 📘 What is 802.11bd?
+
+IEEE 802.11bd is the successor to 802.11p, designed to bring **higher data rates, reliability, and backward compatibility** for advanced **V2X (Vehicle-to-Everything)** applications. It enhances the PHY/MAC layers using features from **802.11ac/ax** while maintaining interop with 11p devices.
+
+---
+
+### 🌐 Use Cases (Beyond 802.11p)
+
+* High-definition sensor data sharing (LiDAR, camera)
+* Real-time map updates
+* Collaborative perception & driving (ADAS, automated driving)
+* Intersection coordination, see-through vehicles
+
+---
+
+### 🔁 Key Features & Enhancements
+
+#### 🧬 1. **Backward Compatibility**
+
+* Can operate in **dual-mode**: fall back to 802.11p for older vehicles
+* Uses **preamble reuse** to ensure legacy receivers can decode packets
+
+#### 🚀 2. **High Data Rates**
+
+* Utilizes **802.11ac PHY**: wider bandwidths (20/40/80 MHz)
+* MIMO support and **higher modulation (up to 256-QAM)**
+
+#### 🧠 3. **Low-Latency & Reliable Scheduling**
+
+* Leverages **QoS features** from Wi-Fi 6 (e.g., TWT, BSS coloring)
+* Optional **NR (New Radio)-like** scheduling patterns with short guard intervals
+
+#### 📡 4. **Robustness for Mobility**
+
+* Doppler-tolerant designs
+* Adaptive modulation and coding schemes based on speed and signal quality
+
+---
+
+### ⚙️ MAC-Level Improvements
+
+* **Immediate feedback** mechanisms (e.g., fast ACK)
+* **HARQ-like retransmissions** (Hybrid Automatic Repeat Request)
+* **Sidelink MAC scheduling** for direct vehicle-to-vehicle communication (no AP required)
+
+---
+
+### 🔐 Security Enhancements
+
+* Integrates **IEEE 1609.2.1** for PKI-based message signing and encryption
+* Forward-secrecy and anti-replay mechanisms
+
+---
+
+### 🔬 Frame Format Comparison (11p vs 11bd)
+
+| Field        | 802.11p        | 802.11bd                            |
+| ------------ | -------------- | ----------------------------------- |
+| Bandwidth    | 10 MHz         | 10/20/40/80 MHz                     |
+| Modulation   | BPSK/QPSK only | BPSK to 256-QAM                     |
+| Coding Rate  | ≤ 1/2          | Up to 5/6 (like 11ac)               |
+| MIMO         | Not supported  | Up to 2x2 MIMO                      |
+| Feedback     | None           | ACK + Optional HARQ                 |
+| PHY Preamble | Unique to 11p  | 11p-compatible preamble (dual-mode) |
+
+---
+
+### 🛠️ Tools and Simulation
+
+* **NS-3 (wave + 11bd extensions)** — available in development branches
+* **OMNeT++/Veins** with patches to simulate 802.11bd-style QoS
+* **DSRC & 11bd coexistence testing** via SDR platforms (e.g., NI/Ettus USRP)
+
+---
+
+### 🔄 802.11bd vs C-V2X
+
+| Feature          | 802.11bd                         | C-V2X (Rel. 14–16)               |
+| ---------------- | -------------------------------- | -------------------------------- |
+| Standard Body    | IEEE                             | 3GPP                             |
+| MAC Type         | Decentralized                    | Scheduled (via sidelink control) |
+| Latency          | <10 ms (typical)                 | <5 ms (ideal)                    |
+| Range            | \~1 km                           | \~1.5 km                         |
+| Spectrum         | 5.9 GHz                          | 5.9 GHz                          |
+| Interoperability | Backward compatible w/ 802.11p   | Not backward compatible          |
+| Deployment Model | Open (no SIM/network dependency) | Operator-based (often SIM-bound) |
+
+---
+
+Let me know if you'd like to:
+
+* Visualize the **MIMO+MAC timing** for 802.11bd
+* Add **driver/firmware notes** for Linux V2X stacks
+* Or build a testbed using **SDR + NS-3 + SUMO**
+
+We’ve now covered the **full modern Wi-Fi & vehicular comms stack** — from energy-saving and QoS to automotive and futuristic V2X tech 🚘📡🚀
+
