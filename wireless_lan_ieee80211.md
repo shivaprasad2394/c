@@ -336,15 +336,22 @@ App/Data → TCP/UDP → IP Packet → MSDU → MPDU → Wireless Transmission
 
 
 ## 🧾 IEEE 802.11 Frame Format
-
+| FC | d | add1 | add2 | add3 | SC | add4 | body | fcs|
+|2byte|2byte|6byte|6byte|6byte|2byte|6byte|0-2312byte|2byte|
 
 ### Frame Control (FC) Fields:
 it consists of various bits Namely
-- **Protocol Version**
-- **Frame Type**
-- **Subtype**
-- **To DS**
-- **From DS**
+- |**Protocol Version**|2bits|
+- |**Frame Type**|2bits|
+- |**Subtype**|4bits|
+- |**To DS**|1bit|
+- |**From DS**|1bit|
+- |**more frag**|1bit|
+- |**retry**|1bit|
+- |**power management**|1bit|
+- |**more data**|1bit|
+- |**wep**|1bit|
+- |**order**|1bit|
 
 ### Frame Types:
 Frame type is subdivided into
@@ -373,6 +380,11 @@ To DS( a packet going to distributed system) & from DS  (a packet coming from di
 | Addr4   | Original Source (if needed)    |
 
 > 🔹 If `To DS = 0` and `From DS = 0` → Direct station-to-station communication.
+
+**More frag** (More fragments): It is 1 bit long field which when set to 1 means frame is followed by other fragments.
+**Order**: It is 1 bit long field, if this bit is set to 1 the received frames must be processed in strict order.
+**retry**:it is 1-bit long field, if the current frame is a retransmission of an earlier frame.
+**power mgmt**:If the field is set to 1, station goes into power-save mode. If the field is set to 0, the station stays active.
 
 ---
 
