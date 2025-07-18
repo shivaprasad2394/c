@@ -418,6 +418,104 @@ App/Data → TCP/UDP → IP Packet → MSDU → MPDU → Wireless Transmission
 - Client sends **PS-Poll** to retrieve buffered data.
 
 ---
+# 🔋 Power Management in Wi-Fi
+
+Wi-Fi devices (like phones, laptops, and IoT devices) often run on batteries. To **extend battery life**, Wi-Fi includes smart **power-saving mechanisms**.
+
+---
+
+## 🧠 Why Power Management Matters
+
+- 🪫 Devices are **often idle** between data transmissions.
+- ⚡ Wireless radios consume **significant power** when active.
+- 💡 Power management allows devices to **sleep intelligently** without losing connectivity.
+
+---
+
+## ⚙️ How Power Management Works in Wi-Fi
+
+Wi-Fi power-saving is based on a **client–AP (Access Point)** relationship.
+
+### 🧱 Key Concepts:
+
+| **Term**             | **Meaning**                                                                 |
+|----------------------|------------------------------------------------------------------------------|
+| **Sleep Mode**       | Client turns off its radio to save power                                     |
+| **Listen Interval**  | Tells the AP how often the client wakes up to check for data                 |
+| **Traffic Indication Map (TIM)** | Bitmap in beacon frames that indicates if AP has data for sleeping clients  |
+| **Beacon Frame**     | Periodic signal from AP that includes the TIM and other control info         |
+| **PS-Poll**          | Power Save Poll — client uses this to request queued data from AP            |
+
+---
+
+## 📶 Power Save Mechanism – Step by Step
+
+1. **Client enters Power Save mode** and informs the AP.
+2. AP **buffers data** for that client.
+3. Client **wakes up periodically** based on the *Listen Interval*.
+4. AP sends a **Beacon** with a TIM indicating buffered data.
+5. Client sends a **PS-Poll** or triggers download to receive data.
+6. After receiving, the client may **go back to sleep**.
+
+---
+
+## 💡 Types of Wi-Fi Power Saving Techniques
+
+### 1. 💤 Legacy Power Save Mode
+
+- Defined in early Wi-Fi standards.
+- Based on **PS-Poll** mechanism and **beacon-based** listening.
+- Still widely supported, but **not optimal** for modern use.
+
+---
+
+### 2. 🚀 WMM Power Save (U-APSD)
+
+> **WMM = Wi-Fi Multimedia**  
+> **U-APSD = Unscheduled Automatic Power Save Delivery**
+
+- Introduced to support **VoIP** and **real-time multimedia**.
+- More **efficient** than legacy methods.
+- Client tells AP when it’s ready, and AP **pushes** buffered packets.
+
+---
+
+### 3. 📡 Target Wake Time (TWT) – Wi-Fi 6 (802.11ax)
+
+- AP and client **negotiate** specific times for communication.
+- Great for **IoT devices** and **smart homes**.
+- Dramatically reduces **power consumption** by avoiding unnecessary wakeups.
+
+---
+
+## 📊 Comparison Table
+
+| **Feature**         | **Legacy PS Mode**         | **WMM Power Save**           | **TWT (Wi-Fi 6+)**               |
+|---------------------|-----------------------------|-------------------------------|-----------------------------------|
+| **Power Efficient** | Medium                      | High                          | Very High                         |
+| **Latency**         | Higher                      | Lower                         | Lowest (with scheduling)          |
+| **Ideal For**       | General devices             | VoIP, multimedia               | IoT, smart sensors, automation    |
+| **Mechanism**       | Beacon + PS-Poll            | Client-triggered AP delivery  | Scheduled wake/sleep windows      |
+
+---
+
+## 🧠 Real-World Analogy
+
+> Imagine a student (device) who doesn’t stay in the classroom (network) all the time:
+
+- 💤 **Legacy Mode**: They peek into the room every 10 minutes to see if there’s homework.
+- 🚪 **WMM PS**: They notify the teacher when they’re ready, and the teacher gives all the homework at once.
+- 🕐 **TWT**: They and the teacher agree on *exact times* to meet. No wasted trips!
+
+---
+
+## ✅ Final Summary
+
+- Wi-Fi uses **smart power-saving** to help mobile and IoT devices conserve energy.
+- **Legacy**, **WMM Power Save**, and **TWT** are different techniques depending on device needs and Wi-Fi generation.
+- Modern devices leverage **TWT** for scheduled, ultra-efficient communication.
+
+> 🔋 Smart Wi-Fi = Fast Internet + Longer Battery Life
 
 ## 🔐 Four-Way Handshake (WPA2)
 
