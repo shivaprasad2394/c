@@ -218,6 +218,45 @@ Used for secure key exchange between client and AP.
 5. **Station** sends **ACK** to confirm.
 
 ---
+## 🌍 Layer 3 – DHCP Process + Network Info
+
+After a successful Layer 2 (Wi-Fi) connection, your device begins the **DHCP (Dynamic Host Configuration Protocol)** process to obtain Layer 3 network configuration.
+
+---
+
+### 🔁 DHCP Exchange & Network Info
+
+| **DHCP Step**         | **Who Sends It**         | **Message Type**       | **Purpose**                                                                 |
+|-----------------------|---------------------------|-------------------------|------------------------------------------------------------------------------|
+| **1. DHCP Discover**  | 📱 Your device             | 🔊 Broadcast            | "Is there a DHCP server? I need an IP address!"                            |
+| **2. DHCP Offer**     | 📡 Router/AP               | 📢 Unicast/Broadcast    | "Here’s an IP config you can use!"                                         |
+|                       |                           |                         | → Offers: IP address, subnet mask, gateway, DNS                            |
+| **3. DHCP Request**   | 📱 Your device             | 🔊 Broadcast            | "Yes, I accept this configuration. Please assign it to me."                |
+| **4. DHCP ACK**       | 📡 Router/AP               | 📩 Unicast              | "Confirmed! The IP and network settings are now officially assigned to you."|
+
+---
+
+### 📦 Network Info Received in DHCP Offer & ACK
+
+| **Network Info**        | **Example**              | **Received In**         | **Purpose**                                              |
+|-------------------------|--------------------------|--------------------------|----------------------------------------------------------|
+| **IP Address**          | `192.168.0.101`           | 📩 DHCP Offer & ACK      | Identifies your device on the local network              |
+| **Subnet Mask**         | `255.255.255.0`           | 📩 DHCP Offer & ACK      | Defines which IPs are in the same network                |
+| **Default Gateway**     | `192.168.0.1`             | 📩 DHCP Offer & ACK      | Where to send traffic destined for the internet          |
+| **DNS Server**          | `8.8.8.8` or router IP    | 📩 DHCP Offer & ACK      | Resolves domain names like `google.com` to IP addresses  |
+
+---
+
+### ✅ Final Summary
+
+- DHCP is part of the **Layer 3 setup** after the device joins Wi-Fi at Layer 2.
+- It gives your device everything it needs to **communicate beyond the local network**.
+- Without DHCP, you'd need to configure all these values **manually** (static IP).
+
+> 🧠 DHCP is the bridge between being connected to Wi-Fi and actually accessing the internet.
+
+
+
 
 ## 🧾 IEEE 802.11 Frame Format
 | FC | d | add1 | add2 | add3 | SC | add4 | body | fcs|
