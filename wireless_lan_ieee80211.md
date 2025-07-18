@@ -219,3 +219,136 @@ Used for secure key exchange between client and AP.
 
 
 
+# 📡 Wi-Fi Access Point (AP) Process
+
+A **Wi-Fi Access Point (AP)** is a Layer 2 device that acts as a bridge between wireless client devices and the wired network (LAN).
+
+It plays a central role in managing communication, association, and data forwarding in wireless networks.
+
+---
+
+## 🔁 Access Point Roles
+
+- **Beacon Broadcasting**: Periodically advertises its presence and capabilities.
+- **Authentication & Association Handling**: Manages connection requests from stations.
+- **Frame Forwarding**: Routes data between wireless clients and the wired network.
+- **Encryption Management**: Initiates and completes secure key handshakes (e.g., WPA2/WPA3).
+- **QoS & Buffering**: Supports traffic prioritization and manages buffers (especially for sleeping clients).
+
+---
+
+## 🔄 Wi-Fi AP Process Workflow
+
+### 1. **Beacon Frame Broadcast**
+
+- AP periodically sends **beacon frames** on its operating channel.
+- Beacon includes:
+  - **SSID**
+  - **Channel info**
+  - **Supported data rates**
+  - **Security capabilities**
+  - **QoS and TIM (Traffic Indication Map)**
+
+> 🔔 This is part of **passive scanning**—clients listen to beacons to discover networks.
+
+---
+
+### 2. **Handling Probe Requests (Active Scanning)**
+
+- Client sends a **probe request** (with or without SSID).
+- AP responds with a **probe response** containing:
+  - Network info
+  - Capabilities
+  - Encryption methods
+
+---
+
+### 3. **Authentication Request**
+
+- The client sends an **authentication request** to the AP.
+- AP replies with an **authentication response** (accept or reject).
+
+> 📌 This is **open system authentication** in most modern networks (pre-shared key authentication handled later via 4-way handshake).
+
+---
+
+### 4. **Association Request/Response**
+
+- Once authenticated, client sends an **association request**:
+  - SSID
+  - Supported rates
+  - Security capabilities
+- AP sends an **association response**:
+  - Status (success/failure)
+  - Association ID (AID)
+
+> ✅ After this, the client is fully associated and allowed to exchange data frames.
+
+---
+
+## 🔐 Optional: WPA2/WPA3 Four-Way Handshake
+
+If encryption is enabled (WPA2/WPA3):
+
+1. **AP sends ANonce** to client.
+2. **Client generates PMK/PTK**, sends SNonce.
+3. **AP generates PTK**, derives GTK, sends it to client.
+4. **Client sends ACK** to complete the handshake.
+
+> 🔑 This step ensures both sides share secure session keys.
+
+---
+
+## 🔁 Frame Forwarding & Data Handling
+
+- Once associated:
+  - AP receives **data frames** from clients.
+  - Forwards them to:
+    - Another wireless client (intra-BSS)
+    - Or a wired LAN endpoint (via **DS** – Distribution System)
+
+---
+
+## 💤 Power Save Mode Handling
+
+- AP buffers packets for clients in **sleep mode**.
+- AP sets **TIM flag** in beacon to notify pending data.
+- Client wakes up and sends **PS-Poll frame** to retrieve data.
+
+---
+
+## 📶 AP Channel Management
+
+- Operates on a fixed or dynamic channel in 2.4GHz/5GHz/6GHz bands.
+- May support:
+  - **Channel bonding** (40/80/160 MHz)
+  - **DFS** (Dynamic Frequency Selection)
+  - **Band Steering** (2.4 → 5GHz steering)
+
+---
+
+## 🧠 Other AP Features
+
+- **QoS Management**: Uses WMM (Wi-Fi Multimedia) to prioritize traffic.
+- **Load Balancing**: Distributes clients among neighboring APs (in ESS).
+- **Client Isolation**: Prevents client-to-client traffic on the same BSS.
+- **Roaming Support**: Coordinates with other APs in ESS for seamless handover.
+
+---
+
+## 🧾 AP Responsibilities Summary
+
+| Task                        | Description                                                                 |
+|-----------------------------|-----------------------------------------------------------------------------|
+| Beacon Broadcast            | Periodically sends management frames to advertise network presence         |
+| Handle Probe Requests       | Replies to active scan requests from client devices                        |
+| Manage Authentication       | Handles client authentication using open/shared key                        |
+| Manage Association          | Accepts or denies client association requests                              |
+| Encryption Setup            | Coordinates 4-way handshake for WPA2/WPA3                                  |
+| Frame Forwarding            | Forwards frames to other wireless clients or wired LAN                     |
+| Power Save Support          | Buffers data and uses TIM/PS-Poll mechanism for sleeping clients           |
+| QoS / WMM Support           | Enables traffic prioritization (voice, video, best-effort, background)     |
+| Roaming & Load Balancing    | Part of ESS to support seamless mobility and balanced network usage        |
+
+---
+
