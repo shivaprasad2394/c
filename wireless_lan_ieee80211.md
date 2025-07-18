@@ -1286,3 +1286,158 @@ When the client decides to authenticate, the access point forwards the authentic
 ---
 
 
+# 🔐 Advanced Wi-Fi Technologies: DPP, FTM/RTT, and Wi-Fi Sensing
+
+---
+
+## 📶 Device Provisioning Protocol (DPP - Easy Connect)
+
+DPP is a modern, secure, and flexible method to provision Wi-Fi devices without needing default passwords or QR codes.
+
+---
+
+### 🔑 Why DPP?
+
+* Replaces legacy WPA2-PSK (pre-shared key)
+* Eliminates default credentials and manual password entry
+* Enables secure out-of-band (OOB) device onboarding via QR code, NFC, or BLE
+* Designed for smart homes, IoT, and enterprise onboarding
+
+---
+
+### 🧠 DPP Core Concepts
+
+| Term                       | Meaning                                               |
+| -------------------------- | ----------------------------------------------------- |
+| **Configurator**           | Device that initiates provisioning (e.g., smartphone) |
+| **Enrollee**               | Device being provisioned (e.g., IoT device, AP)       |
+| **Bootstrapping**          | Establish initial secure contact (QR/NFC/BLE/PKEX)    |
+| **Authentication**         | Mutual public key cryptography (Curve25519/ED25519)   |
+| **Configurator Connector** | Contains encrypted Wi-Fi credentials and policy       |
+
+---
+
+### 🔄 DPP Operation Flow
+
+1. **Bootstrapping Phase**
+
+   * Enrollee shares bootstrapping info (QR code, NFC tag, BLE, PKEX)
+   * Configurator captures and stores public key and bootstrapping info
+
+2. **Authentication Phase**
+
+   * Mutual authentication via authenticated Diffie-Hellman (Curve25519)
+   * Prevents MITM and impersonation
+
+3. **Configuration Phase**
+
+   * Configurator sends Connector (Wi-Fi SSID, password, AKMs, etc.) encrypted to Enrollee
+   * Enrollee applies credentials and connects to Wi-Fi
+
+4. **Acknowledgment**
+
+   * Enrollee confirms successful provisioning
+
+---
+
+### 🛡️ Security Highlights
+
+* Public key cryptography
+* Authenticated Diffie-Hellman exchange
+* Anti-cloning & anti-spoofing
+* No need for shared secrets or default keys
+
+---
+
+## 🛰️ Fine Time Measurement (FTM) / Wi-Fi RTT (802.11mc)
+
+FTM allows accurate distance measurement using Wi-Fi by calculating the round-trip time of frames between devices.
+
+---
+
+### 🔧 How RTT Works
+
+1. **FTM Request / Response**
+
+   * Initiator sends an FTM request to Responder (e.g., AP)
+   * Responder replies with timestamps (T1, T2)
+
+2. **Timing Exchange**
+
+   * Round-trip time = (T4 - T1) - (T3 - T2)
+   * Distance ≈ (RTT × speed of light) / 2
+
+---
+
+### ⚙️ Requirements
+
+* 802.11mc support on both devices (AP and client)
+* Location permission (on Android)
+* Accurate timestamping capability in hardware/firmware
+
+---
+
+### 📐 Applications
+
+* Indoor navigation (malls, airports)
+* Device localization and AR
+* Home automation triggering based on proximity
+
+---
+
+### 🔍 Packet Types Involved
+
+* **Action frames** (FTM Request / Response)
+* **Timestamp IEs**
+* Timestamps at PHY-level resolution (sub-microsecond)
+
+---
+
+## 🌐 Wi-Fi Sensing / Location Awareness
+
+Wi-Fi Sensing uses variations in RF signals (amplitude, phase, Doppler shifts) to infer motion, presence, or gestures.
+
+---
+
+### 🎯 Key Concepts
+
+| Feature                             | Description                                |
+| ----------------------------------- | ------------------------------------------ |
+| **Channel State Information (CSI)** | Fine-grained per-subcarrier signal info    |
+| **RSSI/Phase/ToF**                  | Traditional signal parameters              |
+| **Doppler Shift**                   | Used to detect motion and velocity         |
+| **Multipath Analysis**              | Detect presence via changes in reflections |
+
+---
+
+### ⚙️ Sensing Techniques
+
+1. **Passive Sensing**: Analyze changes in signal from ambient traffic (e.g., AP to client)
+2. **Active Sensing**: Generate specific probe packets and analyze returns
+
+---
+
+### 🤖 Use Cases
+
+* Intrusion detection (human presence)
+* Sleep monitoring
+* Gesture recognition
+* Fall detection for elderly
+* Smart lighting and HVAC control
+
+---
+
+### 📡 Technical Stack
+
+* Wi-Fi 802.11bf (Sensing standardization effort)
+* Use of OFDM and MIMO reflections
+* CSI extraction from firmware/driver (Intel, Atheros, Mediatek chips)
+
+---
+
+### 🔬 Real-World Integration
+
+* Qualcomm, Intel, Cisco developing Wi-Fi sensing APIs
+* Wi-Fi sensing chipsets with CSI export becoming more common
+
+---
