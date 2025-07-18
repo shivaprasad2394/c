@@ -1870,3 +1870,118 @@ The AP’s MAC layer scheduler dynamically:
   * Ubiquitous ambient sensing + high-precision localization
 
 ---
+# 🚀 Final Deep Dive: Target Wake Time (TWT) & IEEE 802.11p
+
+---
+
+## ⏰ Target Wake Time (TWT) — Wi-Fi 6 / 6E / 7 Power Optimization
+
+### 📘 What is TWT?
+
+TWT (Target Wake Time) is a power-saving mechanism introduced in **IEEE 802.11ax (Wi-Fi 6)**. It allows devices (STAs) to **negotiate specific times** with the Access Point (AP) to wake up for transmissions.
+
+This reduces the time the radio stays awake — critical for **IoT, wearables, mobile clients**, and **dense network** scenarios.
+
+---
+
+### ⚙️ How TWT Works
+
+#### 🧩 Types of TWT Agreements
+
+* **Individual TWT**: Specific to a client (STA and AP negotiate directly)
+* **Broadcast TWT**: AP schedules a group of STAs to wake at the same time
+
+#### 🗂️ Key Parameters in a TWT Agreement
+
+* **TWT Wake Interval**: How often to wake (in TU — Time Units)
+* **TWT Duration**: How long to stay awake after waking
+* **TWT Target Time**: Exact wake-up moment (relative to Beacon time)
+* **TWT Flow Identifier**: Identifies TWT sessions
+
+---
+
+### 🔄 TWT Negotiation Process
+
+1. **TWT Request Frame** (from STA)
+2. **TWT Response Frame** (from AP): Accept/Decline + parameters
+3. STA configures its sleep/wake schedule
+
+#### 💡 Implementation Insights
+
+* TWT IE (Information Element) is embedded in **Action Frames**
+* Uses **Management Action Frame Category: QoS Management**
+* Bit fields indicate negotiation type (Request, Accept, Teardown, etc.)
+
+---
+
+### 📉 Benefits of TWT
+
+* 💤 **Power Efficiency**: Clients sleep for longer intervals
+* 📶 **Reduced Contention**: Predictable wake-ups lower airtime contention
+* 🔋 **Battery Gains**: Especially for Wi-Fi 6 IoT devices
+
+---
+
+## 🚘 IEEE 802.11p — Wireless Access in Vehicular Environments (WAVE)
+
+### 📘 Overview
+
+802.11p is designed for **Vehicle-to-Vehicle (V2V)** and **Vehicle-to-Infrastructure (V2I)** communication — enabling **DSRC (Dedicated Short-Range Communication)**.
+
+Primarily operates in **5.9 GHz band** with 10 MHz channel widths for reduced delay.
+
+---
+
+### 🚗 Use Cases
+
+* Collision avoidance
+* Traffic signal alerts
+* Emergency vehicle priority
+* Platooning & Cooperative Adaptive Cruise Control (CACC)
+
+---
+
+### ⚙️ PHY/MAC Differences (from 802.11a)
+
+* **OFDM-based** like 802.11a
+* **10 MHz channel bandwidth** (vs 20 MHz in 802.11a)
+* **No association process** — "connectionless mode"
+* **Wildcard BSSID** used (since no AP association)
+* **No encryption/authentication** in base spec (safety prioritized over security)
+
+---
+
+### 🔄 Frame Exchange in 802.11p
+
+* Data exchange starts directly using wildcard BSSID
+* Beaconing still used for service announcements
+* Uses **WAVE Service Advertisements (WSA)** to indicate app-level services
+
+---
+
+### 🧪 Performance Aspects
+
+* Lower PHY rate than 11a (due to 10 MHz)
+* Highly tolerant to delay, Doppler shifts
+* Designed for **high-mobility scenarios** (>100 km/h)
+
+---
+
+### 🔐 Security Extensions
+
+802.11p alone doesn't define security — usually coupled with:
+
+* **IEEE 1609.2** (security for vehicular messages)
+* **PKI-based certificates** for trusted messages
+
+---
+
+### 🛠️ Simulation/Testing Tools
+
+* **NS-3** with `wave` module
+* **OMNeT++** + Veins + SUMO for mobility
+* Wireshark with DSRC support (some experimental patches)
+
+---
+
+Let me know if you'd like packet traces, NS-3 simulation samples, or want to connect this with future tech like **C-V2X** or **802.11bd** (next-gen vehicular Wi-Fi extension of 802.11p and 802.11ac, designed for backward compatibility and high data rate V2X applications like HD sensor sharing, cooperative driving, and real-time updates) Wi-Fi).
