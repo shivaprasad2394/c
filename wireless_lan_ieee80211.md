@@ -303,7 +303,7 @@ Think of it as the **shipping box** that actually leaves the warehouse.
 
 ```text
 App/Data → TCP/UDP → IP Packet → MSDU → MPDU → Wireless Transmission
-
+```
 ## ⚖️ Fragmentation vs Aggregation
 
 |                | **Fragmentation**                          | **Aggregation**                             |
