@@ -263,7 +263,7 @@ CSMA/CA is **essential** for wireless networking, but it comes with **challenges
 
 ### What is Scanning?
 
-The process by which a station associates with an AP.
+The process by which a station discovers available wireless networks(AP) before associating with an AP.
 
 ### Scanning Steps:
 
