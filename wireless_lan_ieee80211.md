@@ -1441,3 +1441,156 @@ Wi-Fi Sensing uses variations in RF signals (amplitude, phase, Doppler shifts) t
 * Wi-Fi sensing chipsets with CSI export becoming more common
 
 ---
+# 🚀 Advanced Wi-Fi Topics: Wi-Fi 5, Wi-Fi 6, Wi-Fi 7, and QoS (WMM/TSPEC)
+
+---
+
+## 📶 IEEE 802.11ac (Wi-Fi 5)
+
+### 🧠 Key Features
+
+* Introduced in 2013 (Wave 1) and extended in 2016 (Wave 2)
+* Operates in **5 GHz** band only
+* **MU-MIMO (Downlink)** for simultaneous stream transmission
+* **Channel bandwidths**: 20, 40, 80, 160 MHz (Wave 2)
+* Max theoretical PHY rate: \~6.9 Gbps (8 spatial streams, 160 MHz)
+
+### 📐 Technology Stack
+
+* **Modulation**: Up to 256-QAM
+* **FEC**: LDPC (optional)
+* **Beamforming**: Explicit Beamforming for targeted spatial streams
+* **Frame Aggregation**: A-MPDU, A-MSDU
+* **Block Ack**: Improves efficiency by grouping ACKs
+
+### 🧪 Practical Impact
+
+| Feature        | Benefit                                  |
+| -------------- | ---------------------------------------- |
+| Wider Channels | Higher throughput                        |
+| MU-MIMO        | Better performance with multiple clients |
+| 256-QAM        | Higher spectral efficiency               |
+
+---
+
+## ⚡ IEEE 802.11ax (Wi-Fi 6)
+
+### 🧠 Key Innovations
+
+* Operates in both **2.4 GHz + 5 GHz** bands
+* Introduced **OFDMA (Orthogonal Frequency Division Multiple Access)**
+* **Uplink + Downlink MU-MIMO**
+* **Target Wake Time (TWT)** for power efficiency
+* **1024-QAM** modulation for denser packing
+
+### 📐 OFDMA Breakdown
+
+* Each channel is split into **Resource Units (RUs)**
+* Multiple clients can transmit simultaneously in a single channel
+* Reduces latency and improves spectrum use
+
+### 📉 Airtime Fairness
+
+* Legacy Wi-Fi gives time fairness, not throughput fairness
+* Wi-Fi 6 allocates **equal airtime** using scheduling and OFDMA
+
+### 🔐 BSS Coloring
+
+* Tags frames from different APs to reduce co-channel interference
+* Enables spatial reuse in dense environments
+
+### 🧪 Wi-Fi 6 Performance Features
+
+| Feature           | Role                                |
+| ----------------- | ----------------------------------- |
+| TWT               | Reduces power drain                 |
+| OFDMA             | Multi-user channel access           |
+| MU-MIMO (UL + DL) | Better simultaneous client handling |
+| 1024-QAM          | Denser data modulation              |
+| Spatial Reuse     | Better range & concurrency          |
+
+---
+
+## 🚀 IEEE 802.11be (Wi-Fi 7)
+
+### 🧠 Evolutionary Goals
+
+* Operates in **2.4, 5, and 6 GHz** (multi-band convergence)
+* Up to **320 MHz channel bandwidth**
+* **4096-QAM** (12 bits/symbol)
+* **Multi-Link Operation (MLO)**: combine multiple bands/interfaces
+* **Preamble Puncturing**: dynamically use portions of spectrum
+* **Extremely Low Latency (ELL)**: <1ms target for AR/VR
+
+### 🔗 Multi-Link Operation (MLO)
+
+* One MAC coordinates multiple PHYs
+* Parallel use of 5 GHz + 6 GHz + 2.4 GHz
+* Improves reliability and latency by switching or aggregating links
+
+### 🧠 Technical Enhancements
+
+| Feature           | Function                   |
+| ----------------- | -------------------------- |
+| 320 MHz BW        | Doubles max throughput     |
+| MLO               | Seamless multi-band use    |
+| 4096-QAM          | Very high data density     |
+| Flexible OFDMA    | Smarter dynamic scheduling |
+| Coordinated OFDMA | Low-latency group access   |
+
+### 📈 Expected Throughput
+
+* Max theoretical rate: **>46 Gbps**
+* Depends on channel conditions, MLO, QAM, and stream count
+
+---
+
+## 🎯 QoS in Wi-Fi: WMM and TSPEC
+
+### 📘 WMM (Wi-Fi Multimedia)
+
+* Based on IEEE 802.11e
+* Defines **Access Categories (ACs)**:
+
+  * **AC\_VO**: Voice
+  * **AC\_VI**: Video
+  * **AC\_BE**: Best Effort
+  * **AC\_BK**: Background
+
+Each AC has its own **Contention Window (CW)** and **Arbitration Inter-Frame Space (AIFS)**:
+
+* Voice gets smallest CW and AIFS → prioritized
+* Background gets largest → deprioritized
+
+### ⚙️ WMM Parameters Table
+
+| AC | CWmin | CWmax | AIFS | TXOP Limit |
+| -- | ----- | ----- | ---- | ---------- |
+| VO | 3     | 7     | 2    | 1.504 ms   |
+| VI | 7     | 15    | 2    | 3.008 ms   |
+| BE | 15    | 1023  | 3    | N/A        |
+| BK | 15    | 1023  | 7    | N/A        |
+
+### 🎯 TSPEC (Traffic Specification)
+
+* TSPEC is used in **QoS-capable networks** for reserved traffic
+* Clients send TSPEC requests with:
+
+  * Traffic type (voice, video)
+  * Data rate
+  * Delay bounds
+  * Service intervals
+* AP admits or rejects based on available resources
+
+### 🧪 Use Cases
+
+| Application | AC     | Why?                         |
+| ----------- | ------ | ---------------------------- |
+| Voice Call  | AC\_VO | Lowest latency needed        |
+| Video Call  | AC\_VI | High throughput & low jitter |
+| Web Surfing | AC\_BE | No strict requirements       |
+| Sync Backup | AC\_BK | Least priority               |
+
+---
+
+
