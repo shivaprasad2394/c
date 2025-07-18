@@ -250,6 +250,59 @@ In Wi-Fi, **performance** and **reliability** are affected by how data is packag
 - **Delay-sensitive** applications may suffer due to buffering before aggregation
 
 ---
+# 🧱 MPDU vs MSDU in Wi-Fi
+
+In Wi-Fi communication, data flows through several layers. Two key units involved in packaging and transmitting this data are:
+
+- **MSDU (MAC Service Data Unit)**
+- **MPDU (MAC Protocol Data Unit)**
+
+Understanding the difference between them helps in grasping how Wi-Fi handles data efficiency, error control, and speed.
+
+---
+
+## 📦 What is MSDU?
+
+### ➕ Full Form:
+**MAC Service Data Unit**
+
+### 📍 Description:
+An **MSDU** is a data packet received from the **upper layers** (like IP or TCP) and handed off to the **MAC layer** for transmission.
+
+### 🔄 Example:
+Think of it as a **customer's order** that needs to be packed before shipping.
+
+### ✅ Key Points:
+
+- Contains actual **payload** (user data)
+- Sits at the **interface between Layer 2 and Layer 3** (Data Link ↔ Network)
+- Before transmission, it's usually **converted into MPDU**
+
+---
+
+## 📡 What is MPDU?
+
+### ➕ Full Form:
+**MAC Protocol Data Unit**
+
+### 📍 Description:
+An **MPDU** is the **final packet** that is transmitted over the air by the Wi-Fi interface.
+
+### 🔄 Example:
+Think of it as the **shipping box** that actually leaves the warehouse.
+
+### ✅ Key Points:
+
+- Includes **MAC header**, **frame check sequence (FCS)**, and **possibly one or more MSDUs**
+- It’s what actually gets **transmitted on the wireless medium**
+- Can be aggregated (A-MPDU) for performance
+
+---
+
+## ⚙️ Flow of Data: From MSDU to MPDU
+
+```text
+App/Data → TCP/UDP → IP Packet → MSDU → MPDU → Wireless Transmission
 
 ## ⚖️ Fragmentation vs Aggregation
 
