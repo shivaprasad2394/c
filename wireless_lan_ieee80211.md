@@ -255,29 +255,39 @@ After a successful Layer 2 (Wi-Fi) connection, your device begins the **DHCP (Dy
 
 > 🧠 DHCP is the bridge between being connected to Wi-Fi and actually accessing the internet.
 
+## 📡 Wi-Fi MAC Frame Format (802.11)
+
+| **Field** | **Duration** | **Address 1** | **Address 2** | **Address 3** | **Seq Ctrl** | **Address 4** | **Frame Body** | **FCS** |
+|-----------|--------------|---------------|---------------|---------------|---------------|----------------|----------------|----------|
+| FC (2 B)  | Duration (2 B) | 6 bytes      | 6 bytes       | 6 bytes       | 2 bytes       | 6 bytes        | 0–2312 bytes   | 4 bytes  |
+
+> **Total Size:** Variable (typically 28–2346 bytes depending on payload)
 
 
 
-## 🧾 IEEE 802.11 Frame Format
-|----|---|------|------|------|----|------|------|----|
-| FC | d | add1 | add2 | add3 | SC | add4 | body | fcs|
-|2byte|2byte|6byte|6byte|6byte|2byte|6byte|0-2312byte|2byte|
 
-### Frame Control (FC) Fields:
+### 🧩 Frame Control Field Structure (2 bytes = 16 bits)
 it consists of various bits Namely
-  |--------------------|-----|
-- |**Protocol Version**|2bits|
-- |**Frame Type**|2bits|
-- |**Subtype**|4bits|
-- |**To DS**|1bit|
-- |**From DS**|1bit|
-- |**more frag**|1bit|
-- |**retry**|1bit|
-- |**power management**|1bit|
-- |**more data**|1bit|
-- |**wep**|1bit|
-- |**order**|1bit|
+| **Subfield**             | **Size** |
+|--------------------------|----------|
+| Protocol Version         | 2 bits   |
+| Type                     | 2 bits   |
+| Subtype                  | 4 bits   |
+| To DS                    | 1 bit    |
+| From DS                  | 1 bit    |
+| More Fragments           | 1 bit    |
+| Retry                    | 1 bit    |
+| Power Management         | 1 bit    |
+| More Data                | 1 bit    |
+| WEP (Encryption Enabled) | 1 bit    |
+| Order                    | 1 bit    |
 
+> 🧪 This field defines the **type, control, and behavior** of the 802.11 frame.
+
+## 🧾 IEEE 802.11 Frame Types and Subtypes
+
+Each 802.11 frame has a **Frame Type** field (2 bits) and a **Subtype** field (4 bits) inside the **Frame Control (FC)** field.
+These determine **what kind of frame it is** and **what it's used for**.
 ### Frame Types:
 Frame type is subdivided into
 1. **Management Frames**
@@ -287,6 +297,30 @@ Frame type is subdivided into
 3. **Data Frames**
 
 Sub type helps specify the exact frametype(Probe,RTS etc..)
+---
+
+### 📊 Frame Types & Subtypes Table
+
+| **Frame Type**       | **Type Value** | **Common Subtypes**                          | **Usage**                                         |
+|----------------------|----------------|-----------------------------------------------|--------------------------------------------------|
+| **Management**       | `00`           | - Association Request<br>- Association Response<br>- Probe Request<br>- Probe Response<br>- Beacon<br>- Authentication<br>- Deauthentication | Used to **establish, manage, and terminate** Wi-Fi connections |
+| **Control**          | `01`           | - RTS (Request to Send)<br>- CTS (Clear to Send)<br>- ACK (Acknowledgment)<br>- PS-Poll | Assists with **medium access control**, power saving, and reliability |
+| **Data**             | `10`           | - Data<br>- QoS Data<br>- Null Function<br>- CF-Ack | Carries **actual payload** (e.g., IP packets, ARP, DNS, etc.) |
+| **Reserved**         | `11`           | - N/A                                          | Reserved for future use by IEEE                  |
+
+---
+
+### 🧠 Key Concepts
+
+- The **Frame Type** tells us the category (Mgmt, Control, Data).
+- The **Subtype** field (4 bits) tells us **exactly what kind of frame** it is within that category.
+- These values are found inside the **Frame Control field** of every 802.11 frame.
+
+> 🔍 Example:  
+> A **Beacon Frame** has Frame Type = `00` (Management), Subtype = `1000` (Beacon)
+
+---
+
 
 ### Other Fields:
 
