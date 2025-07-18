@@ -1593,4 +1593,142 @@ Each AC has its own **Contention Window (CW)** and **Arbitration Inter-Frame Spa
 
 ---
 
+# 📡 Advanced Wi-Fi MAC/PHY Topics: OFDMA, TSPEC, MLO (802.11be)
+
+---
+
+## 🔬 OFDMA Scheduling Internals (802.11ax)
+
+### 🧠 Concept
+
+OFDMA = Orthogonal Frequency Division Multiple Access. Introduced in Wi-Fi 6 to allow **multiple clients to share a single channel simultaneously**.
+
+### 📐 Resource Units (RUs)
+
+* Channel is divided into **Resource Units** (RUs)
+* AP assigns RUs to clients
+
+  * Smallest RU = 26-tone
+  * Largest RU = 996-tone (entire 80 MHz channel)
+
+### 🗂️ Scheduler Logic
+
+The AP’s MAC layer scheduler dynamically:
+
+* Monitors **Buffer Status Reports (BSR)**
+* Accounts for **QoS** levels (voice, video, etc.)
+* Uses **Channel State Information (CSI)** to optimize throughput
+* Sends **Trigger Frames** to initiate uplink OFDMA
+
+### 🧱 OFDMA Downlink Frame Structure
+
+* Preamble
+
+  * Common + User-specific
+* Data: RUs interleaved for different clients
+
+### 📶 Trigger-Based Uplink
+
+1. AP sends **Trigger Frame**
+2. STAs respond with **OFDMA-scheduled data** on assigned RUs
+3. Enables synchronized, low-latency access
+
+### 🛠️ Benefits
+
+* Spectral efficiency
+* Reduced latency
+* Scalable IoT performance
+
+---
+
+## 🎯 TSPEC Negotiation (WMM Admission Control)
+
+### 🔁 Process
+
+1. STA sends **ADDTS Request** with TSPEC IE (via Action Frame)
+2. AP evaluates and replies with **ADDTS Response** (Accept or Reject)
+
+### 🧾 TSPEC IE Fields
+
+* **Traffic Type** (e.g., Voice)
+* **Nominal MSDU Size**
+* **Mean Data Rate**
+* **Minimum PHY Rate**
+* **Delay Bound**
+* **Surplus Bandwidth Allowance**
+
+### ⚖️ Admission Control Decision
+
+* AP uses **ACM (Admission Control Mandatory)** flags
+* Checks **available bandwidth** and **QoS policy**
+* May reject if traffic cannot be guaranteed
+
+### 🧪 Use Case: Voice over Wi-Fi
+
+* Voice STA uses AC\_VO
+* Sends ADDTS for \~64 Kbps traffic
+* Low delay bound (e.g., < 50ms)
+
+### 🔍 Frame View (Wireshark)
+
+* Frame Type: Action
+* Category: QoS
+* Element ID: TSPEC (221)
+
+---
+
+## 🚀 Multi-Link Operation (MLO) in Wi-Fi 7 (802.11be)
+
+### 🌐 Motivation
+
+* Combine multiple frequency bands and links for **ultra-high throughput** and **reliability**
+
+### 🔗 Types of MLO
+
+1. **STR-MLO**: Simultaneous Tx/Rx
+2. **Non-STR-MLO**: Alternating link usage
+3. **Link Aggregation**: Data split across links
+4. **Link Redundancy**: Same data sent over multiple links
+
+### 🧠 MAC Coordination
+
+* **Single MLD (Multi-Link Device)** entity at MAC layer
+* Each link has a **Link Context**
+* Shared queues and session state
+
+### ⚙️ Frame Structure
+
+* MLO-specific fields in MAC header
+* Extended sequence numbers per link
+* Shared Block Ack sessions
+
+### 📚 Reordering Logic
+
+* Reorder buffers per link
+* Maintain in-order delivery
+* Handles lost/misaligned frames independently
+
+### 🚦 Traffic Steering
+
+* Based on:
+
+  * Link quality (SNR)
+  * Congestion
+  * Power efficiency (battery-aware clients)
+
+---
+
+## 🧱 Summary Table
+
+| Feature | Wi-Fi 6 (ax)   | Wi-Fi 7 (be)  |
+| ------- | -------------- | ------------- |
+| OFDMA   | ✅ UL+DL        | ✅ Enhanced    |
+| MU-MIMO | ✅              | ✅ 16x16 DL+UL |
+| MLO     | ❌              | ✅             |
+| TSPEC   | ✅              | ✅             |
+| QoS AC  | VO, VI, BE, BK | Same          |
+
+---
+
+
 
