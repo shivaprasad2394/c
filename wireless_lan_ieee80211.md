@@ -1022,6 +1022,121 @@ Each P2P IE follows this format:
 
 ---
 
-Would you like a companion `.pcap` file walkthrough, or code examples using `nl80211`, `wpa_cli`, or raw sockets to demonstrate real-world P2P negotiation?
+# 📡 Wi-Fi Direct, Hotspot 2.0 and Advanced Wi-Fi Operation
+
+---
+
+## 🌐 Hotspot 2.0 / Passpoint Deep Dive
+
+### 📘 What is Hotspot 2.0 / Passpoint?
+
+* **Hotspot 2.0**, also known as **Passpoint**, is a Wi-Fi Alliance certification aimed at making public Wi-Fi access seamless and secure—just like cellular networks.
+* Built on **IEEE 802.11u**, with extensions for secure authentication, automatic provisioning, and roaming.
+
+### 🧠 Key Concepts
+
+| Term          | Meaning                                                                                             |
+| ------------- | --------------------------------------------------------------------------------------------------- |
+| **ANQP**      | Access Network Query Protocol — protocol for client to discover network details before associating  |
+| **OSU**       | Online Sign-Up — secure method to provision credentials over HTTPS                                  |
+| **EAP**       | Extensible Authentication Protocol — supports secure authentication like EAP-TTLS, EAP-SIM, EAP-AKA |
+| **AAA**       | Authentication, Authorization, Accounting — back-end service, often RADIUS                          |
+| **NAI Realm** | Network Access Identifier — identifies home service provider                                        |
+| **HESSID**    | Homogeneous Extended Service Set ID — like BSSID, used to identify network groups                   |
+
+### 📡 Operational Flow
+
+1. **Discovery Phase**
+
+   * Client sends Probe Request
+   * AP responds with **ANQP Response** containing:
+
+     * Supported Roaming Consortium
+     * Venue Name
+     * Network Type (e.g., free, commercial)
+     * NAI Realms
+     * IP Capability
+     * WAN Metrics
+
+2. **Authentication**
+
+   * If client has credentials for roaming consortium, it connects using EAP (e.g., EAP-SIM/TTLS/AKA)
+
+3. **Provisioning (if no credentials)**
+
+   * Client connects to **OSU SSID**
+   * HTTPS used to securely download a profile
+   * Device stores credentials for future use
+
+4. **Roaming**
+
+   * Once provisioned, user can roam between providers using same identity (SIM, certificate, username)
+
+### 📦 Hotspot 2.0 Information Elements
+
+| IE Name                 | Description                                                   |
+| ----------------------- | ------------------------------------------------------------- |
+| Interworking IE         | Advertises network type, access (emergency, chargeable, etc.) |
+| Roaming Consortium IE   | Lists OI (Organization Identifiers) for partner networks      |
+| HESSID                  | Identifies the extended network group (like cellular PLMN)    |
+| WAN Metrics IE          | Indicates network bandwidth, load, etc.                       |
+| Venue Name IE           | Human-readable venue description                              |
+| IP Address Availability | Shows whether IPv4/IPv6 is supported                          |
+| Connection Capability   | Lists accessible TCP/UDP ports                                |
+
+### 🔧 Backend RADIUS + EAP (TTLS / SIM / AKA)
+
+When the client decides to authenticate, the access point forwards the authentication to a **RADIUS server**, which handles AAA (Authentication, Authorization, Accounting).
+
+#### 🔐 EAP-TTLS Flow (Username + Password)
+
+1. Client sends EAP-Request to AP
+2. AP forwards to RADIUS server
+3. RADIUS and client set up TLS tunnel
+4. Inside the tunnel, user credentials are validated
+5. If valid, server sends EAP-Success
+6. Session keys are derived → 802.11 association completed
+
+#### 📱 EAP-SIM / EAP-AKA (SIM-Based Auth)
+
+* Used in mobile devices (smartphones, tablets)
+* SIM card generates authentication tokens
+* RADIUS server forwards to **Mobile Core** or **HSS/HLR** to validate SIM
+* Enables **seamless roaming** just like LTE/5G
+
+#### 🔐 Certificates (EAP-TLS)
+
+* Uses X.509 certificates on both client and server
+* Strongest security, but provisioning is harder
+
+### 🧪 Real Frame Exchange
+
+* **Client sends:** Probe Request (with Hotspot 2.0 capability)
+* **AP replies with:** Probe Response + ANQP advertisement
+* **Client issues:** ANQP Query (NAI Realm, Roaming Consortium, etc.)
+* **AP sends:** ANQP Response
+* **Client decides:** Whether to authenticate or use OSU provisioning
+* **Authentication:** EAP-based (handled via RADIUS)
+
+### 🧪 Real-World Tools
+
+* `hostapd` with Hotspot 2.0 config
+* `wpa_supplicant` with Passpoint credentials
+* `wireshark` filters: `anqp`, `hs20`, `eap`
+* Supported in Android (>=4.4), iOS (>=7), Windows 10+
+
+### 🆚 Regular AP vs Passpoint AP
+
+| Feature              | Regular Wi-Fi   | Passpoint (HS2.0)    |
+| -------------------- | --------------- | -------------------- |
+| Auto Sign-In         | ❌ Manual        | ✅ Seamless           |
+| SIM Auth             | ❌ No            | ✅ Yes (EAP-SIM/AKA)  |
+| Roaming              | ❌ Rare          | ✅ Standardized       |
+| Security             | WPA2-PSK        | WPA2/WPA3 Enterprise |
+| Venue Info           | ❌ No            | ✅ Venue IE           |
+| Profile Provisioning | ❌ Not supported | ✅ OSU                |
+
+---
+
 
 
