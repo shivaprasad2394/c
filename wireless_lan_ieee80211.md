@@ -16,10 +16,10 @@ IEEE 802.11 provides a standard for wireless LAN, covering two layers:
 ---
 
 ## 📶 Wireless Services in IEEE 802.11
+802.11 standard we have two kinds of services
+## 1. **BSS (Basic Service Set)**
 
-### 1. **BSS (Basic Service Set)**
-
-- A unit of wireless network devices communicating with the same **Access Point (AP)**.
+- A group/unit of wireless network devices communicating with the same **Access Point (AP)**.
 
 ### 2. **ESS (Extended Service Set)**
 
@@ -31,20 +31,21 @@ IEEE 802.11 provides a standard for wireless LAN, covering two layers:
 
 ## 📡 Key Terms
 
-- **BSSID**: The physical MAC address of the AP (48-bit hex).
-- **AP (Access Point)**:
+- **BSSID**: The physical /MAC address of the AP (48-bit hex).
+- **AP (Access Point)**:these are devices which accept Wireless signals from multiple devices and retransmit them to  the rest of the network.
   - Acts as a bridge between wireless devices and the wired network.
   - Operates at Layer 2 (Data Link Layer).
 - **SSID**: A unique string identifying a wireless network.
 - **Ad-Hoc Mode**:
   - Peer-to-peer communication without AP.
-  - Decentralized, direct communication between stations.
+  - Decentralized network, direct communication between stations.
 - **Promiscuous Mode (Monitor Mode)**:
   - Allows a device to listen to all Wi-Fi packets over-the-air.
 
 ---
 
-## 🧩 Data Link Layer Details
+## 🧩 Data Link Layer Details:-
+Data link layer is divided into two layers
 
 ### Two Sublayers:
 1. **Logical Link Control (LLC)**
@@ -52,13 +53,13 @@ IEEE 802.11 provides a standard for wireless LAN, covering two layers:
 
 ---
 
-## 🕹️ MAC Layer Functions
-
+## 🕹️ MAC Layer Functions:-
+In Mac we have two more layers
 ### 1. **DCF (Distributed Coordination Function)**
 
-- Uses **CSMA/CA** (Carrier Sense Multiple Access with Collision Avoidance).
+- it provides contention Based Services i.e it uses **CSMA/CA** (Carrier Sense Multiple Access with Collision Avoidance).
 - Operates on **half-duplex**.
-- **Timers** are used to avoid collisions.
+- **csma\ca Timers** are used to avoid collisions.
 
 > 📌 *CSMA/CA is for wireless, CSMA/CD is for wired.*
 
@@ -84,7 +85,7 @@ The process by which a station associates with an AP.
 ### Scanning Types:
 
 - **Active Scanning**: Station sends probe request → AP responds.
-- **Passive Scanning**: APs periodically send **beacon frames**.
+- **Passive Scanning**: APs periodically send **beacon frames**( advertising packets illustrating its capability to all stations).
 
 ---
 
