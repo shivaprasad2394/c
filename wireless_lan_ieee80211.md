@@ -546,31 +546,62 @@ Wi-Fi power-saving is based on a **client–AP (Access Point)** relationship.
 > **WMM = Wi-Fi Multimedia**  
 > **U-APSD = Unscheduled Automatic Power Save Delivery**
 
+**WMM Power Save**, also known as **Unscheduled Automatic Power Save Delivery (U-APSD)**, is an enhanced power-saving mechanism introduced with **Wi-Fi Multimedia (WMM)**.
+
 - Introduced to support **VoIP** and **real-time multimedia**.
 - More **efficient** than legacy methods.
 - Client tells AP when it’s ready, and AP **pushes** buffered packets.
 
+### ⚙️ How It Works
+
+- The client (STA) enters power-save mode.
+- Instead of sending **PS-Poll** frames, the client sends a **trigger frame** (like a QoS data or null frame).
+- The AP, upon receiving the trigger, delivers **all buffered packets** for that Access Category (AC).
+- After delivery, the client may go back to sleep.
+
 ---
 
-### 3. 📡 Target Wake Time (TWT) – Wi-Fi 6 (802.11ax)
+### 3. 📡 Target Wake Time (TWT) – Wi-Fi 6 (802.11ax) and Beyond
 
-- AP and client **negotiate** specific times for communication.
+- AP and client **negotiate scheduled communication windows** to avoid unnecessary radio activity. 
 - Great for **IoT devices** and **smart homes**.
 - Dramatically reduces **power consumption** by avoiding unnecessary wakeups.
 
 ---
+### ⚙️ How It Works
 
-## 📊 Comparison Table
+1. Client and AP agree on a **TWT schedule** — e.g., wake every 100ms.
+2. Outside of the agreed window, the client **sleeps**.
+3. At the TWT time, both AP and client **wake up and exchange data**.
+4. The client goes back to sleep until the next window.
 
-| **Feature**         | **Legacy PS Mode**         | **WMM Power Save**           | **TWT (Wi-Fi 6+)**               |
-|---------------------|-----------------------------|-------------------------------|-----------------------------------|
-| **Power Efficient** | Medium                      | High                          | Very High                         |
-| **Latency**         | Higher                      | Lower                         | Lowest (with scheduling)          |
-| **Ideal For**       | General devices             | VoIP, multimedia               | IoT, smart sensors, automation    |
+### 📋 Key Features
+
+| Feature                   | Description                                                  |
+|---------------------------|--------------------------------------------------------------|
+| **Trigger-based**         | Client initiates delivery by sending a frame                 |
+| **Low latency**           | Better for voice/video since delivery is immediate           |
+| **Efficient**             | Reduces need for constant polling or waking                  |
+| **AC-specific**           | Buffers and delivers data per Access Category (voice, video) |
+
+### 🧠 Real-World Analogy
+
+> Like telling the receptionist: “I’m ready now, give me **all my messages** at once.”  
+> You don’t have to keep asking — just one signal, and you get everything.
+---
+
+## ⚖️ Power Save Modes – Summary Comparison
+
+| Feature               | Legacy Power Save         | WMM Power Save (U-APSD)            | TWT (Wi-Fi 6+)                        |
+|------------------------|---------------------------|-------------------------------------|---------------------------------------|
+| **Wake Trigger**       | TIM + PS-Poll              | Trigger Frame (QoS Null/Data)       | Pre-scheduled wake times              |
+| **Best For**           | General traffic            | Voice, Video                        | IoT, battery-powered smart devices    |
+| **Latency**            | Medium                     | Low                                 | Very Low (scheduled)                  |
+| **Power Efficiency**   | Moderate                   | High                                | Very High                             |
+| **Standard**           | 802.11a/b/g/n              | 802.11e (WMM)                       | 802.11ax (Wi-Fi 6 and later)          |
 | **Mechanism**       | Beacon + PS-Poll            | Client-triggered AP delivery  | Scheduled wake/sleep windows      |
 
 ---
-
 ## 🧠 Real-World Analogy
 
 > Imagine a student (device) who doesn’t stay in the classroom (network) all the time:
