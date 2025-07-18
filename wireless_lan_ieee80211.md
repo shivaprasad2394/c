@@ -521,6 +521,14 @@ Wi-Fi power-saving is based on a **client–AP (Access Point)** relationship.
 5. Client sends a **PS-Poll** or triggers download to receive data.
 6. After receiving, the client may **go back to sleep**.
 
+
+## 🔋 Power Saving Mode (Legacy PS Mode only)
+
+- Client sends a **null data frame** with the **Power Management bit set** to indicate it's entering sleep mode.
+- The **Access Point (AP)** buffers any incoming data for the client while it’s asleep.
+- AP includes a **TIM (Traffic Indication Map)** in its periodic **beacon frames**, signaling which clients have buffered data.
+- When the client wakes up and sees its ID in the TIM, it sends a **PS-Poll** frame to request the buffered data from the AP.
+
 ---
 
 ## 💡 Types of Wi-Fi Power Saving Techniques
