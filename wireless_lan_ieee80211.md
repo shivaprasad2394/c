@@ -189,14 +189,14 @@ In Mac we have two more layers
 ---
 
 ## ✅ Summary of CSMA/CA Limitations
+| **Issue**            | **Description**                                                            | **Solutions**                                                                 |
+|----------------------|-----------------------------------------------------------------------------|-------------------------------------------------------------------------------|
+| **Hidden Node**       | Devices unaware of each other cause unintentional collisions               | Use of **RTS/CTS (Request to Send / Clear to Send)** mechanism in 802.11     |
+| **Exposed Node**      | Devices unnecessarily delay sending even when it's safe                    | Improved MAC protocols and **carrier sensing** with RTS/CTS                   |
+| **Overhead**          | Waiting, backoff, and acknowledgment mechanisms reduce speed               | **Frame aggregation**, **block acknowledgments**, and **802.11n/ac/ax** improvements |
+| **Scalability**       | Performance degrades as the number of users increases                      | Introduction of **OFDMA** (Orthogonal Frequency Division Multiple Access) and **MU-MIMO** in 802.11ax |
+| **Lack of Coordination** | No central controller leads to inefficiencies in shared environments   | Use of **Access Points** in Infrastructure mode and centralized management via controllers (in enterprise WLANs) |
 
-| **Issue**            | **Description**                                                            |
-|----------------------|-----------------------------------------------------------------------------|
-| Hidden Node          | Devices unaware of each other cause unintentional collisions               |
-| Exposed Node         | Devices unnecessarily delay sending even when it's safe                    |
-| Overhead             | Waiting, backoff, and acknowledgment mechanisms reduce speed               |
-| Scalability          | Performance degrades as the number of users increases                      |
-| Lack of Coordination | No central controller leads to inefficiencies in shared environments       |
 
 ---
 
