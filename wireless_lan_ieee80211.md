@@ -409,13 +409,77 @@ App/Data → TCP/UDP → IP Packet → MSDU → MPDU → Wireless Transmission
 8. Client may later send **disconnect frame**.
 
 ---
+# 💡 CAM (Constantly Awake Mode) in Wi-Fi
 
-## 🔋 Power Saving Mode
+## 🔍 What is CAM?
 
-- Client sends **null data** frame with **PS-Poll bit** set.
-- AP buffers data for the client.
-- AP uses **TIM** flag in beacons to notify the client.
-- Client sends **PS-Poll** to retrieve buffered data.
+**CAM** stands for **Constantly Awake Mode**. It is the **default power mode** in Wi-Fi where the device's radio is **always on** and actively listening for data or signals from the Access Point (AP).
+
+---
+
+## ⚙️ How CAM Works
+
+In CAM:
+
+- The Wi-Fi radio **never sleeps**.
+- The device **immediately processes** all incoming and outgoing data.
+- There is **no buffering** of data at the AP — the client is always ready.
+
+---
+
+## ✅ Advantages of CAM
+
+| **Benefit**                  | **Explanation**                                           |
+|------------------------------|-----------------------------------------------------------|
+| ⚡ Low Latency                | Instant response times; good for real-time applications  |
+| 🔁 Immediate Connectivity     | Always ready to send/receive data                        |
+| 📶 Reliable Signal Handling   | Better performance in voice, video, or gaming apps       |
+
+---
+
+## ❌ Disadvantages of CAM
+
+| **Drawback**                 | **Explanation**                                           |
+|------------------------------|-----------------------------------------------------------|
+| 🔋 High Power Consumption     | Constantly running the radio drains the battery faster   |
+| 🔥 Not Energy Efficient       | Unsuitable for IoT or battery-powered devices            |
+
+---
+
+## 🧠 Real-World Analogy
+
+> Imagine a **security guard** (your device) who never sleeps, watching the front door **24/7**.  
+> They can react instantly — but they'll be **exhausted** and **consume a lot of energy**!
+
+---
+
+## 🔁 CAM vs Power Save Mode – Quick Comparison
+
+| **Feature**           | **CAM (Constantly Awake Mode)** | **Power Save Mode**               |
+|------------------------|----------------------------------|-----------------------------------|
+| **Radio State**        | Always ON                        | Sleeps when idle                  |
+| **Power Usage**        | High                             | Low to Medium                     |
+| **Latency**            | Very Low                         | Slight delay (due to wake-ups)    |
+| **Best For**           | Video, VoIP, gaming, real-time   | Background apps, IoT, sensors     |
+
+---
+
+## 🔧 When is CAM Used?
+
+- **Laptops and desktops** plugged into power
+- **Real-time communication apps** like Zoom or Teams
+- **Streaming** or **gaming**
+- When **power saving is turned off** in network settings
+
+---
+
+## ✅ Final Summary
+
+- **CAM (Constantly Awake Mode)** keeps the device ready for communication at all times.
+- Great for **performance**, not great for **battery life**.
+- Choose CAM when **speed and responsiveness** matter more than power savings.
+
+> ⚡ Always awake = always fast, but at a power cost!
 
 ---
 # 🔋 Power Management in Wi-Fi
