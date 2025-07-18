@@ -8,7 +8,7 @@ A **Wireless LAN** is a network where devices communicate using wireless protoco
 
 ## 📜 IEEE 802.11 Standard
 
-IEEE 802.11 provides a standard for wireless LAN, covering two layers:
+IEEE 802.11 provides a standard for wireless LAN, it specifies functionalities across two key layers of the OSI model:
 
 - **Physical Layer**
 - **Data Link Layer**
