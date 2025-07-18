@@ -339,7 +339,7 @@ App/Data → TCP/UDP → IP Packet → MSDU → MPDU → Wireless Transmission
 
 
 ### Frame Control (FC) Fields:
-
+it consists of various bits Namely
 - **Protocol Version**
 - **Frame Type**
 - **Subtype**
@@ -347,21 +347,22 @@ App/Data → TCP/UDP → IP Packet → MSDU → MPDU → Wireless Transmission
 - **From DS**
 
 ### Frame Types:
-
+Frame type is subdivided into
 1. **Management Frames**
    - Probe, Association, Authentication, Beacon
 2. **Control Frames**
    - RTS, CTS, Acknowledgment
 3. **Data Frames**
 
+Sub type helps specify the exact frametype(Probe,RTS etc..)
+
 ### Other Fields:
 
-- **Duration**: Time to occupy channel
-- **Sequence Control (SC)**: Synchronization
-- **FCS**: Frame Check Sequence (CRC32)
-
+- **Duration**: The duration bit specify  time interval we want to occupy the channel.
+- **Sequence Control (SC)**: Used for Synchronization
+- **FCS**: Frame Check Sequence is used for are checking probably (CRC32)
 ---
-
+To DS( a packet going to distributed system) & from DS  (a packet coming from distributed system) are Wired lan address 1 to address 4
 ## 🧭 Addressing in Wi-Fi
 
 | Address | Purpose                        |
@@ -382,6 +383,7 @@ App/Data → TCP/UDP → IP Packet → MSDU → MPDU → Wireless Transmission
 - **802.11a**: 5.75 GHz, OFDM, PSK, 6–54 Mbps
 - **802.11b**: 2.44 GHz, DSSS, PSK, 5.5–11 Mbps
 - **802.11g**: 2.4 GHz, OFDM, 54 Mbps
+- **802.11n**: 2.4/5 GHz,64-QAM,600 Mbps
 
 > 💡 Wi-Fi uses unlicensed **ISM bands**.
 
