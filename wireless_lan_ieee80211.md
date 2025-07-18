@@ -69,26 +69,6 @@ In Mac we have two more layers
 
 ---
 
-## 🔍 Scanning and Association
-
-### What is Scanning?
-
-The process by which a station associates with an AP.
-
-### Scanning Steps:
-
-1. Station sends a **probe request frame**.
-2. Nearby APs respond with **probe response frames**.
-3. Station sends an **association request** to the chosen AP.
-4. AP sends back an **association response**.
-
-### Scanning Types:
-
-- **Active Scanning**: Station sends probe request → AP responds.
-- **Passive Scanning**: APs periodically send **beacon frames**( advertising packets illustrating its capability to all stations).
-
----
-
 # 📡 CSMA/CA in Wi-Fi: Problems Explained
 
 ## 🧠 What is CSMA/CA?
@@ -183,7 +163,136 @@ The process by which a station associates with an AP.
 
 CSMA/CA is **essential** for wireless networking, but it comes with **challenges**, especially in **crowded** or **large** networks. Understanding these problems helps in designing **better Wi-Fi** systems and troubleshooting **connectivity issues**.
 
+## 🔍 Scanning and Association
 
+### What is Scanning?
+
+The process by which a station associates with an AP.
+
+### Scanning Steps:
+
+1. Station sends a **probe request frame**.
+2. Nearby APs respond with **probe response frames**.
+3. Station sends an **association request** to the chosen AP.
+4. AP sends back an **association response**.
+
+### Scanning Types:
+
+- **Active Scanning**: Station sends probe request → AP responds.
+- **Passive Scanning**: APs periodically send **beacon frames**( advertising packets illustrating its capability to all stations).
+
+---
+## 🔐 Open (No Encryption) Connection Process
+
+1. AP sends **beacon frame** (broadcast).
+2. Client sends **probe request** with SSID.
+3. AP replies with **probe response**.
+4. Client sends **authentication request**.
+5. AP sends **authentication response**.
+6. Client sends **association request**.
+7. AP sends **association response**.
+8. Client may later send **disconnect frame**.
+
+## 🔐 WPA2 Encrypted Connection Process
+
+1. Station sends **probe request** (with supported data rates and capabilities).
+2. AP checks compatibility and sends **probe response**.
+3. Station sends **authentication request**.
+4. AP sends **authentication response**.
+5. Station is now *authenticated* but not yet *associated*.
+6. Station sends **association request** (includes selected encryption type).
+7. AP responds with **association response** (includes status code and AID).
+8. If encryption is WPA2/WPA/WEP → **Four-Way Handshake** is performed for secure communication.
+
+---
+## 🔐 Four-Way Handshake (WPA2)
+
+Used for secure key exchange between client and AP.
+
+### Steps:
+
+1. **AP** generates **ANonce** and sends to **station**.
+2. **Station** computes **PMK**(Pairwise Master Key)  from SSID + password, generates **SNonce**, and derives **PTK**.
+3. **Station** sends **SNonce** to AP.
+4. **AP** derives **PTK**, generates **GTK**, and sends GTK to station.
+5. **Station** sends **ACK** to confirm.
+
+---
+
+## 🧾 IEEE 802.11 Frame Format
+| FC | d | add1 | add2 | add3 | SC | add4 | body | fcs|
+|2byte|2byte|6byte|6byte|6byte|2byte|6byte|0-2312byte|2byte|
+
+### Frame Control (FC) Fields:
+it consists of various bits Namely
+- |**Protocol Version**|2bits|
+- |**Frame Type**|2bits|
+- |**Subtype**|4bits|
+- |**To DS**|1bit|
+- |**From DS**|1bit|
+- |**more frag**|1bit|
+- |**retry**|1bit|
+- |**power management**|1bit|
+- |**more data**|1bit|
+- |**wep**|1bit|
+- |**order**|1bit|
+
+### Frame Types:
+Frame type is subdivided into
+1. **Management Frames**
+   - Probe, Association, Authentication, Beacon
+2. **Control Frames**
+   - RTS, CTS, Acknowledgment
+3. **Data Frames**
+
+Sub type helps specify the exact frametype(Probe,RTS etc..)
+
+### Other Fields:
+
+- **Duration**: The duration bit specify  time interval we want to occupy the channel.
+- **Sequence Control (SC)**: Used for Synchronization
+- **FCS**: Frame Check Sequence is used for are checking probably (CRC32)
+---
+To DS( a packet going to distributed system) & from DS  (a packet coming from distributed system) are Wired lan address 1 to address 4
+## 🧭 Addressing in Wi-Fi
+
+| Address | Purpose                        |
+|---------|--------------------------------|
+| Addr1   | Next Destination               |
+| Addr2   | Previous Sender                |
+| Addr3   | Final Destination              |
+| Addr4   | Original Source (if needed)    |
+
+> 🔹 If `To DS = 0` and `From DS = 0` → Direct station-to-station communication.
+
+**More frag** (More fragments): It is 1 bit long field which when set to 1 means frame is followed by other fragments.
+**Order**: It is 1 bit long field, if this bit is set to 1 the received frames must be processed in strict order.
+**retry**:it is 1-bit long field, if the current frame is a retransmission of an earlier frame.
+**power mgmt**:If the field is set to 1, station goes into power-save mode. If the field is set to 0, the station stays active.
+
+---
+
+## ⚙️ Physical Layer and Modulation Schemes
+
+### Based on encoding, speed, and range:
+
+- **802.11a**: 5.75 GHz, OFDM, PSK, 6–54 Mbps
+- **802.11b**: 2.44 GHz, DSSS, PSK, 5.5–11 Mbps
+- **802.11g**: 2.4 GHz, OFDM, 54 Mbps
+- **802.11n**: 2.4/5 GHz,64-QAM,600 Mbps
+
+> 💡 Wi-Fi uses unlicensed **ISM bands**.
+
+---
+
+## 📢 Beacon Frame Includes:
+
+- SSID
+- Channel Information
+- Supported & Required Data Rates
+- Security Capabilities
+- QoS Parameters
+---
 
 # 🔗 Fragmentation & Aggregation in Wi-Fi
 
@@ -335,153 +444,7 @@ App/Data → TCP/UDP → IP Packet → MSDU → MPDU → Wireless Transmission
 > 🚀 Efficient data handling = Faster Wi-Fi + Fewer errors!
 
 
-## 🧾 IEEE 802.11 Frame Format
-| FC | d | add1 | add2 | add3 | SC | add4 | body | fcs|
-|2byte|2byte|6byte|6byte|6byte|2byte|6byte|0-2312byte|2byte|
 
-### Frame Control (FC) Fields:
-it consists of various bits Namely
-- |**Protocol Version**|2bits|
-- |**Frame Type**|2bits|
-- |**Subtype**|4bits|
-- |**To DS**|1bit|
-- |**From DS**|1bit|
-- |**more frag**|1bit|
-- |**retry**|1bit|
-- |**power management**|1bit|
-- |**more data**|1bit|
-- |**wep**|1bit|
-- |**order**|1bit|
-
-### Frame Types:
-Frame type is subdivided into
-1. **Management Frames**
-   - Probe, Association, Authentication, Beacon
-2. **Control Frames**
-   - RTS, CTS, Acknowledgment
-3. **Data Frames**
-
-Sub type helps specify the exact frametype(Probe,RTS etc..)
-
-### Other Fields:
-
-- **Duration**: The duration bit specify  time interval we want to occupy the channel.
-- **Sequence Control (SC)**: Used for Synchronization
-- **FCS**: Frame Check Sequence is used for are checking probably (CRC32)
----
-To DS( a packet going to distributed system) & from DS  (a packet coming from distributed system) are Wired lan address 1 to address 4
-## 🧭 Addressing in Wi-Fi
-
-| Address | Purpose                        |
-|---------|--------------------------------|
-| Addr1   | Next Destination               |
-| Addr2   | Previous Sender                |
-| Addr3   | Final Destination              |
-| Addr4   | Original Source (if needed)    |
-
-> 🔹 If `To DS = 0` and `From DS = 0` → Direct station-to-station communication.
-
-**More frag** (More fragments): It is 1 bit long field which when set to 1 means frame is followed by other fragments.
-**Order**: It is 1 bit long field, if this bit is set to 1 the received frames must be processed in strict order.
-**retry**:it is 1-bit long field, if the current frame is a retransmission of an earlier frame.
-**power mgmt**:If the field is set to 1, station goes into power-save mode. If the field is set to 0, the station stays active.
-
----
-
-## ⚙️ Physical Layer and Modulation Schemes
-
-### Based on encoding, speed, and range:
-
-- **802.11a**: 5.75 GHz, OFDM, PSK, 6–54 Mbps
-- **802.11b**: 2.44 GHz, DSSS, PSK, 5.5–11 Mbps
-- **802.11g**: 2.4 GHz, OFDM, 54 Mbps
-- **802.11n**: 2.4/5 GHz,64-QAM,600 Mbps
-
-> 💡 Wi-Fi uses unlicensed **ISM bands**.
-
----
-
-## 📢 Beacon Frame Includes:
-
-- SSID
-- Channel Information
-- Supported & Required Data Rates
-- Security Capabilities
-- QoS Parameters
----
-# 💡 CAM (Constantly Awake Mode) in Wi-Fi
-
-## 🔍 What is CAM?
-
-**CAM** stands for **Constantly Awake Mode**. It is the **default power mode** in Wi-Fi where the device's radio is **always on** and actively listening for data or signals from the Access Point (AP).
-
----
-
-## ⚙️ How CAM Works
-
-In CAM:
-
-- The Wi-Fi radio **never sleeps**.
-- The device **immediately processes** all incoming and outgoing data.
-- There is **no buffering** of data at the AP — the client is always ready.
-
----
-
-## ✅ Advantages of CAM
-
-| **Benefit**                  | **Explanation**                                           |
-|------------------------------|-----------------------------------------------------------|
-| ⚡ Low Latency                | Instant response times; good for real-time applications  |
-| 🔁 Immediate Connectivity     | Always ready to send/receive data                        |
-| 📶 Reliable Signal Handling   | Better performance in voice, video, or gaming apps       |
-
----
-
-## ❌ Disadvantages of CAM
-
-| **Drawback**                 | **Explanation**                                           |
-|------------------------------|-----------------------------------------------------------|
-| 🔋 High Power Consumption     | Constantly running the radio drains the battery faster   |
-| 🔥 Not Energy Efficient       | Unsuitable for IoT or battery-powered devices            |
-
----
-
-## 🧠 Real-World Analogy
-
-> Imagine a **security guard** (your device) who never sleeps, watching the front door **24/7**.  
-> They can react instantly — but they'll be **exhausted** and **consume a lot of energy**!
-
----
-
-## 🔁 CAM vs Power Save Mode – Quick Comparison
-
-| **Feature**           | **CAM (Constantly Awake Mode)** | **Power Save Mode**               |
-|------------------------|----------------------------------|-----------------------------------|
-| **Radio State**        | Always ON                        | Sleeps when idle                  |
-| **Power Usage**        | High                             | Low to Medium                     |
-| **Latency**            | Very Low                         | Slight delay (due to wake-ups)    |
-| **Best For**           | Video, VoIP, gaming, real-time   | Background apps, IoT, sensors     |
-
----
-
-## 🔧 When is CAM Used?
-
-- **Laptops and desktops** plugged into power
-- **Real-time communication apps** like Zoom or Teams
-- **Streaming** or **gaming**
-- When **power saving is turned off** in network settings
-
----
-
-## ✅ Final Summary
-
-- **CAM (Constantly Awake Mode)** keeps the device ready for communication at all times.
-- Great for **performance**, not great for **battery life**.
-- Choose CAM when **speed and responsiveness** matter more than power savings.
-
-> ⚡ Always awake = always fast, but at a power cost!
-
----
 # 🔋 Power Management in Wi-Fi
 
 Wi-Fi devices (like phones, laptops, and IoT devices) often run on batteries. To **extend battery life**, Wi-Fi includes smart **power-saving mechanisms**.
@@ -620,43 +583,79 @@ Wi-Fi power-saving is based on a **client–AP (Access Point)** relationship.
 
 > 🔋 Smart Wi-Fi = Fast Internet + Longer Battery Life
 
-## 🔐 Open (No Encryption) Connection Process
+# 💡 CAM (Constantly Awake Mode) in Wi-Fi
 
-1. AP sends **beacon frame** (broadcast).
-2. Client sends **probe request** with SSID.
-3. AP replies with **probe response**.
-4. Client sends **authentication request**.
-5. AP sends **authentication response**.
-6. Client sends **association request**.
-7. AP sends **association response**.
-8. Client may later send **disconnect frame**.
+## 🔍 What is CAM?
 
-## 🔐 WPA2 Encrypted Connection Process
-
-1. Station sends **probe request** (with supported data rates and capabilities).
-2. AP checks compatibility and sends **probe response**.
-3. Station sends **authentication request**.
-4. AP sends **authentication response**.
-5. Station is now *authenticated* but not yet *associated*.
-6. Station sends **association request** (includes selected encryption type).
-7. AP responds with **association response** (includes status code and AID).
-8. If encryption is WPA2/WPA/WEP → **Four-Way Handshake** is performed for secure communication.
-
----
-## 🔐 Four-Way Handshake (WPA2)
-
-Used for secure key exchange between client and AP.
-
-### Steps:
-
-1. **AP** generates **ANonce** and sends to **station**.
-2. **Station** computes **PMK**(Pairwise Master Key)  from SSID + password, generates **SNonce**, and derives **PTK**.
-3. **Station** sends **SNonce** to AP.
-4. **AP** derives **PTK**, generates **GTK**, and sends GTK to station.
-5. **Station** sends **ACK** to confirm.
+**CAM** stands for **Constantly Awake Mode**. It is the **default power mode** in Wi-Fi where the device's radio is **always on** and actively listening for data or signals from the Access Point (AP).
 
 ---
 
+## ⚙️ How CAM Works
+
+In CAM:
+
+- The Wi-Fi radio **never sleeps**.
+- The device **immediately processes** all incoming and outgoing data.
+- There is **no buffering** of data at the AP — the client is always ready.
+
+---
+
+## ✅ Advantages of CAM
+
+| **Benefit**                  | **Explanation**                                           |
+|------------------------------|-----------------------------------------------------------|
+| ⚡ Low Latency                | Instant response times; good for real-time applications  |
+| 🔁 Immediate Connectivity     | Always ready to send/receive data                        |
+| 📶 Reliable Signal Handling   | Better performance in voice, video, or gaming apps       |
+
+---
+
+## ❌ Disadvantages of CAM
+
+| **Drawback**                 | **Explanation**                                           |
+|------------------------------|-----------------------------------------------------------|
+| 🔋 High Power Consumption     | Constantly running the radio drains the battery faster   |
+| 🔥 Not Energy Efficient       | Unsuitable for IoT or battery-powered devices            |
+
+---
+
+## 🧠 Real-World Analogy
+
+> Imagine a **security guard** (your device) who never sleeps, watching the front door **24/7**.  
+> They can react instantly — but they'll be **exhausted** and **consume a lot of energy**!
+
+---
+
+## 🔁 CAM vs Power Save Mode – Quick Comparison
+
+| **Feature**           | **CAM (Constantly Awake Mode)** | **Power Save Mode**               |
+|------------------------|----------------------------------|-----------------------------------|
+| **Radio State**        | Always ON                        | Sleeps when idle                  |
+| **Power Usage**        | High                             | Low to Medium                     |
+| **Latency**            | Very Low                         | Slight delay (due to wake-ups)    |
+| **Best For**           | Video, VoIP, gaming, real-time   | Background apps, IoT, sensors     |
+
+---
+
+## 🔧 When is CAM Used?
+
+- **Laptops and desktops** plugged into power
+- **Real-time communication apps** like Zoom or Teams
+- **Streaming** or **gaming**
+- When **power saving is turned off** in network settings
+
+---
+
+## ✅ Final Summary
+
+- **CAM (Constantly Awake Mode)** keeps the device ready for communication at all times.
+- Great for **performance**, not great for **battery life**.
+- Choose CAM when **speed and responsiveness** matter more than power savings.
+
+> ⚡ Always awake = always fast, but at a power cost!
+
+---
 
 # 📡 Wi-Fi Access Point (AP) Process
 
