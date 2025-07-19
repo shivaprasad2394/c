@@ -1798,28 +1798,25 @@ Wi-Fi Direct enables devices to create a network **without an AP**, using the fu
 
 ## 🔍 Wi-Fi P2P Group Formation - Sequence Diagram
 
-```mermaid
 sequenceDiagram
-    participant Device_A as Device A (P2P)
-    participant Device_B as Device B (P2P)
-    participant GO as Group Owner (elected)
+    participant DeviceA as Device A
+    participant DeviceB as Device B
+    participant GO as Group Owner
     
-    Device_A->>Device_B: Probe Request (P2P IE)
-    Device_B-->>Device_A: Probe Response (P2P IE)
+    DeviceA->>DeviceB: Probe Request (P2P IE)
+    DeviceB-->>DeviceA: Probe Response (P2P IE)
     
-    Device_A->>Device_B: GO Negotiation Request (Intent=7)
-    Device_B-->>Device_A: GO Negotiation Response (Intent=10)
-    Device_A->>Device_B: GO Negotiation Confirmation
+    DeviceA->>DeviceB: GO Negotiation Request (Intent=7)
+    DeviceB-->>DeviceA: GO Negotiation Response (Intent=10)
+    DeviceA->>DeviceB: GO Negotiation Confirmation
     
-    note over Device_B,GO: Device B becomes Group Owner (GO)
+    note over DeviceB, GO: Device B becomes Group Owner (GO)
     
-    GO->>Device_A: Beacon + P2P Group Info
-    Device_A->>GO: Authentication (WPS)
-    GO->>Device_A: WPA2 4-Way Handshake
-    GO->>Device_A: DHCP Offer (IP address)
-    
-    Device_A->>GO: Join Group (Ready)
-
+    GO->>DeviceA: Beacon (SSID, P2P Group Info)
+    DeviceA->>GO: WPS Authentication (PIN/PBC)
+    GO->>DeviceA: WPA2 4-Way Handshake
+    GO->>DeviceA: DHCP Offer (IP Address)
+    DeviceA->>GO: Join Group (Ready)
 
 
 ## 📦 P2P Information Elements (IE) in Wi-Fi Frames
