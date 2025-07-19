@@ -1308,13 +1308,12 @@ Enterprise-grade or mesh APs use **band steering**:
 ## ✅ Summary: Band Switch Flow
 
 ```mermaid
-
 graph TD
 A[Device connects on 2.4 GHz] --> B[AP sends 5 GHz beacons]
 B --> C[Client sees stronger 5 GHz signal]
-C --> D{AP sends BSS Transition (802.11v)?}
+C --> D{Is BSS Transition enabled}
 D -- Yes --> E[Client roams to 5 GHz]
-D -- No --> F[Client may still roam by itself]
+D -- No --> F[Client may still roam on its own]
 
 ```
 # 🔍 DFS Scan in Wi-Fi
