@@ -3026,7 +3026,28 @@ This reduces the time the radio stays awake — critical for **IoT, wearables, m
 Primarily operates in **5.9 GHz band** with 10 MHz channel widths for reduced delay.
 
 ---
+# 🚘 Deep Dive: IEEE 802.11p/bd, 
 
+---
+
+## 🔁 1. WAVE Message Exchange – Sequence Diagram
+
+```mermaid
+sequenceDiagram
+    participant RSU as Roadside Unit (RSU)
+    participant OBU as On-Board Unit (Vehicle)
+    participant App as V2X Application
+
+    RSU->>OBU: WAVE Service Advertisement (WSA)
+    note right of OBU: Receives WSA with service info (channel, port, etc.)
+
+    OBU->>RSU: Join requested service (optional, depends on app)
+    RSU->>OBU: WAVE Short Message (WSM)
+
+    OBU->>App: Pass WSM to higher-layer (e.g., DENM/CAM)
+    App->>OBU: Generate CAM/DENM message
+    OBU-->>RSU: WSM (containing CAM or DENM payload)
+```
 ### 🚗 Use Cases
 
 * Collision avoidance
