@@ -1798,6 +1798,7 @@ Wi-Fi Direct enables devices to create a network **without an AP**, using the fu
 
 ## 🔍 Wi-Fi P2P Group Formation - Sequence Diagram
 
+```mermaid
 sequenceDiagram
     participant DeviceA as Device A
     participant DeviceB as Device B
@@ -1817,7 +1818,7 @@ sequenceDiagram
     GO->>DeviceA: WPA2 4-Way Handshake
     GO->>DeviceA: DHCP Offer (IP Address)
     DeviceA->>GO: Join Group (Ready)
-
+```
 
 ## 📦 P2P Information Elements (IE) in Wi-Fi Frames
 
