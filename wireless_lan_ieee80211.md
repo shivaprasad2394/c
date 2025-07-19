@@ -3206,3 +3206,39 @@ Let me know if you'd like to:
 
 We’ve now covered the **full modern Wi-Fi & vehicular comms stack** — from energy-saving and QoS to automotive and futuristic V2X tech 🚘📡🚀
 
+6. Protocol Stack Comparison (PHY → App)
+📶 IEEE 802.11bd Stack (Simplified)
+```text
+diff
+Copy
+Edit
++---------------------------+
+| V2X Application (CAM/DENM)|
++---------------------------+
+| WSMP / IPv6              |
++---------------------------+
+| IEEE 1609.3 LLC           |
++---------------------------+
+| 802.11bd MAC              |
++---------------------------+
+| 802.11bd PHY (OFDMA, MIMO, LDPC, HARQ) |
++---------------------------+
+| RF @ 5.9 GHz              |
+📶 5G-V2X (PC5 Sidelink)
+diff
+Copy
+Edit
++---------------------------+
+| V2X App (ASN.1 ITS msg)   |
++---------------------------+
+| BTP/GeoNetworking Layer   |
++---------------------------+
+| SCI / PSSCH / PSCCH       |
++---------------------------+
+| MAC Layer (SPS-based)     |
++---------------------------+
+| PHY Layer (SC-FDMA, Turbo, HARQ) |
++---------------------------+
+| RF @ 5.9 GHz (licensed)   |
+
+```
