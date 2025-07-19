@@ -1849,24 +1849,25 @@ Each device undergoes a **4-way handshake** post-WPS to establish **Pairwise Tem
 
 ```mermaid
 sequenceDiagram
-    participant A as Device A (P2P)
-    participant B as Device B (P2P)
-    participant GO as Group Owner (soft AP)
-    
-    A->>B: Probe Request (P2P IE)
-    B-->>A: Probe Response (P2P IE)
+    participant A as Device A
+    participant B as Device B
+    participant GO as Group Owner
+
+    A->>B: Probe Request with P2P IE
+    B-->>A: Probe Response with P2P IE
 
     A->>B: GO Negotiation Request (Intent=7)
     B-->>A: GO Negotiation Response (Intent=12)
     A->>B: GO Negotiation Confirmation
 
-    note over B, GO: Device B becomes GO (soft AP)
+    Note over B,GO: Device B becomes GO
 
     GO->>A: Beacon (SSID, Channel, P2P IE)
-    A->>GO: WPS Authentication (PIN/PBC)
+    A->>GO: WPS Authentication
     GO->>A: WPA2 4-Way Handshake
-    GO->>A: DHCP Offer (IP address)
-    A->>GO: Connect + Data Exchange
+    GO->>A: DHCP Offer
+    A->>GO: Final Join and Data Exchange
+```
 
 
 ## 🗂️ Comparison Table
