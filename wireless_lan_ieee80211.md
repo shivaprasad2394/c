@@ -1727,13 +1727,13 @@ Unlike Ad-Hoc (IBSS), Wi-Fi Direct introduces structure and security by **emulat
 
 ```mermaid
 flowchart TD
-    A[Application Layer<br/>(Wi-Fi Display, Print, etc.)]
-    B[Service Discovery<br/>(Bonjour, UPnP)]
-    C[IP Layer<br/>(DHCP, NAT, APIPA, mDNS)]
-    D[Authentication Layer<br/>(WPA2-PSK / WPA3-SAE)]
-    E[P2P Management Layer<br/>(GO Negotiation, Discovery)]
-    F[802.11 MAC Layer<br/>(Mgmt, Data, Control)]
-    G[PHY Layer<br/>(2.4/5 GHz Radios)]
+    A[Application Layer: Wi-Fi Display, Print, etc.]
+    B[Service Discovery: Bonjour, UPnP]
+    C[IP Layer: DHCP, NAT, APIPA, mDNS]
+    D[Authentication: WPA2-PSK / WPA3-SAE]
+    E[P2P Management: GO Negotiation, Discovery]
+    F[802.11 MAC Layer: Mgmt, Data, Control]
+    G[PHY Layer: 2.4/5 GHz Radios]
 
     A --> B
     B --> C
@@ -1741,7 +1741,6 @@ flowchart TD
     D --> E
     E --> F
     F --> G
-
 ```
 
 ## 🧭 Group Formation - Deep Protocol Phases
