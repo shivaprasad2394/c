@@ -1922,28 +1922,134 @@ sequenceDiagram
 
 ---
 
-## 🔍 Wi-Fi P2P Group Formation - Sequence Diagram
+# 🔁 Wi-Fi Direct (P2P) Group Formation – Deep Dive
+
+Wi-Fi Direct allows two or more Wi-Fi devices to communicate **without a traditional access point**, using standard 802.11 protocols enhanced by P2P negotiation, provisioning, and discovery mechanisms.
+
+---
+
+## 📚 Overview of Group Formation Types
+
+| Type                 | Description                                                                 |
+|----------------------|-----------------------------------------------------------------------------|
+| **Standard GO Negotiation** | Two devices negotiate a GO (Group Owner) via intent value exchange        |
+| **Persistent Group**        | Devices remember credentials and roles from a previous session            |
+| **Autonomous GO**           | One device self-declares as GO and starts broadcasting                   |
+| **Invitation Procedure**    | Reconnection to a persistent group using invitation request/response     |
+
+---
+
+## 1️⃣ Standard GO Negotiation (Dynamic Formation)
+
+### ✅ Use Case:
+- First-time connection between devices.
+- Neither device pre-configured as GO.
+
+### 🧭 Step-by-Step:
+
+1. **Device Discovery**
+   - Devices scan social channels (1, 6, 11)
+   - Exchange `Probe Request/Response` with P2P IE (Information Element)
+
+2. **GO Negotiation Phase**
+   - Device A sends: `GO Negotiation Request (Intent = 7)`
+   - Device B replies: `GO Negotiation Response (Intent = 10)`
+   - Device A confirms: `GO Negotiation Confirmation`
+   - Higher `Intent` wins; if tied, a tiebreaker bit is used.
+
+3. **Provisioning Phase**
+   - WPS setup (Push Button / PIN)
+   - Device roles are temporarily established
+   - Credentials (PSK or SAE) exchanged securely
+
+4. **Group Formation**
+   - GO starts beaconing with `DIRECT-XXXX` SSID
+   - Client performs `WPA2 4-Way Handshake`
+   - DHCP negotiation assigns IP to client
+
+### 📊 Packet Exchange:
+
+| Sender     | Message                                  |
+|------------|------------------------------------------|
+| A          | Probe Request (P2P IE)                   |
+| B          | Probe Response (P2P IE)                  |
+| A → B      | GO Negotiation Request                   |
+| B → A      | GO Negotiation Response                  |
+| A → B      | GO Negotiation Confirmation              |
+| B (GO)     | Beacon Frames (SSID, P2P Group Info)     |
+| A → GO     | WPS Authentication                       |
+| GO ↔ A     | WPA2 4-Way Handshake                     |
+| GO → A     | DHCP Offer (if using DHCP)               |
+
+---
+
+## 2️⃣ Persistent Group
+
+### ✅ Use Case:
+- Devices have connected before.
+- Bypass full GO negotiation next time.
+
+### 🧭 Key Characteristics:
+
+- During provisioning, both devices may agree to **store credentials** (via `Persistent` flag).
+- On reconnection, either side can send an **Invitation Request** to rejoin a group.
+- The previously elected GO resumes its role.
+
+### 📦 Messages:
+- `Invitation Request` → contains Group Info and optional GO role indication
+- `Invitation Response` → acknowledges group restoration
+
+---
+
+## 3️⃣ Autonomous GO
+
+### ✅ Use Case:
+- A device wants to act as an AP-like server without negotiation.
+
+### 🧭 Behavior:
+
+- Device configures itself as a **Group Owner** in advance.
+- Immediately starts beaconing with `DIRECT-XXXX` SSID on a chosen channel.
+- Waits for peers to join (like a soft AP).
+- No GO negotiation is required.
+
+### 📝 Real-World Examples:
+- Smart TVs, printers, or file servers acting as permanent GOs.
+- Miracast source devices like laptops.
+
+---
+
+## 4️⃣ Invitation Procedure (Re-Forming Persistent Groups)
+
+### ✅ Use Case:
+- Fast reconnection to an existing group.
+- Especially useful for app-to-app communications.
+
+### 🧭 Steps:
+
+1. Device A sends `P2P Invitation Request`
+   - Includes: Persistent Group ID, Device Address, and optionally GO intent
+2. Device B responds with `P2P Invitation Response`
+   - Includes status (accepted, rejected, timed out)
+
+---
+
+## 🛠️ Architecture Summary Diagram (Mermaid)
 
 ```mermaid
-sequenceDiagram
-    participant DeviceA as Device A
-    participant DeviceB as Device B
-    participant GO as Group Owner
-    
-    DeviceA->>DeviceB: Probe Request (P2P IE)
-    DeviceB-->>DeviceA: Probe Response (P2P IE)
-    
-    DeviceA->>DeviceB: GO Negotiation Request (Intent=7)
-    DeviceB-->>DeviceA: GO Negotiation Response (Intent=10)
-    DeviceA->>DeviceB: GO Negotiation Confirmation
-    
-    note over DeviceB, GO: Device B becomes Group Owner (GO)
-    
-    GO->>DeviceA: Beacon (SSID, P2P Group Info)
-    DeviceA->>GO: WPS Authentication (PIN/PBC)
-    GO->>DeviceA: WPA2 4-Way Handshake
-    GO->>DeviceA: DHCP Offer (IP Address)
-    DeviceA->>GO: Join Group (Ready)
+flowchart TD
+    A[Device Discovery<br>Probe Request/Response]
+    B[GO Negotiation<br>Intent Exchange]
+    C[Provisioning<br>WPS PIN or PBC]
+    D[Group Formation<br>Beaconing + WPA2]
+    E[Persistent Group<br>Stored Credentials]
+    F[Autonomous GO<br>No Negotiation]
+    G[Invitation Procedure<br>Reconnect Path]
+
+    A --> B --> C --> D
+    D --> E
+    E --> G
+    C --> F
 ```
 
 ## 📦 P2P Information Elements (IE) in Wi-Fi Frames
