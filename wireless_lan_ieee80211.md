@@ -1724,7 +1724,22 @@ Unlike Ad-Hoc (IBSS), Wi-Fi Direct introduces structure and security by **emulat
 ---
 
 ## 📶 Under-the-Hood Protocol Stack
-
++--------------------------------------------------------------+
+| Application Layer |
+| (Wi-Fi Display, Wi-Fi Print, Nearby Share, etc.) |
++--------------------------------------------------------------+
+| Service Discovery (Bonjour, UPnP) |
++--------------------------------------------------------------+
+| IP Layer (DHCP, APIPA, NAT, mDNS) |
++--------------------------------------------------------------+
+| WPA2-PSK / WPA3-SAE Authentication (Provisioning) |
++--------------------------------------------------------------+
+| P2P Management Layer (GO Negotiation, Discovery, etc.) |
++--------------------------------------------------------------+
+| 802.11 MAC Layer (Mgmt/Data/Control) |
++--------------------------------------------------------------+
+| PHY Layer (2.4/5 GHz Wi-Fi Radios) |
++--------------------------------------------------------------+
 
 ---
 
