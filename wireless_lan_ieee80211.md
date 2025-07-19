@@ -1697,78 +1697,177 @@ Ad-Hoc mode allows Wi-Fi-capable devices to communicate directly without an acce
 
 ---
 
-## 🔁 2. Wi-Fi Direct (P2P)
-
-### 🧠 Concept
-
-Wi-Fi Direct enables devices to create a network **without an AP**, using the full 802.11 stack with enhanced features like security, power saving, and service discovery. A device assumes the role of a **Group Owner (GO)** and acts as a soft AP.
+# 🔁 Wi-Fi Direct (P2P) – Deep Technical Dive
 
 ---
 
-## 🏗️ Architecture Overview
+## 🧠 Concept
 
-### 👥 Entities
+Wi-Fi Direct allows two or more Wi-Fi-enabled devices to communicate directly **without needing a traditional Access Point (AP)**. It builds upon the **IEEE 802.11 standard** and adds functionality via the **Wi-Fi Alliance P2P specification**.
 
-| Component       | Description                          |
-| --------------- | ------------------------------------ |
-| P2P Device      | Wi-Fi Direct capable device          |
-| P2P Group       | Logical group formed for communication |
-| Group Owner (GO)| Acts like a soft AP                  |
-| P2P Client      | Joins the GO to access services/data |
-| Persistent Group| Remembers credentials for rejoining |
+Unlike Ad-Hoc (IBSS), Wi-Fi Direct introduces structure and security by **emulating infrastructure mode** — one device becomes a **Group Owner (GO)**, and others become **clients**.
 
 ---
 
-## 🧭 Group Formation Phases
+## 🏗️ System Architecture
 
-### 1. 📡 Device Discovery
+### 👤 Entities and Their Roles
 
-- Devices scan on **social channels (1, 6, 11)**.
-- Exchange **Probe Requests/Responses** with **P2P IE** fields.
-
-### 2. 🤝 GO Negotiation
-
-- Devices send a **GO Negotiation Request**.
-- Exchange **GO Intent Value (0–15)**.
-- Higher intent becomes GO.
-- If tied, tie-breaker bit is used.
-
-### 3. 🔐 Provisioning
-
-- Devices use **Wi-Fi Protected Setup (WPS)**:
-  - Push Button Method (PBC)
-  - PIN Method
-
-### 4. 📶 Group Formation
-
-- GO starts beaconing (`SSID="DIRECT-XXXX"`)
-- Client performs a WPA2 4-way handshake.
-- Devices now communicate like STA <-> AP.
-
-### 5. 🔁 Persistent Groups
-
-- Devices store credentials and roles.
-- Reconnect later without repeating GO negotiation.
-
-### 6. ⚙️ Autonomous GO
-
-- A device **pre-configures itself as GO**.
-- Starts beaconing immediately.
-- Allows other devices to join without negotiation.
+| Entity             | Role                                                                 |
+|--------------------|----------------------------------------------------------------------|
+| **P2P Device**     | A Wi-Fi-capable device with P2P support (e.g., smartphone, printer)  |
+| **Group Owner (GO)**| Becomes a soft AP for the group                                      |
+| **P2P Client**     | Joins a group managed by the GO                                      |
+| **Persistent Group**| Previously formed group remembered for seamless reconnection         |
+| **WPS Registrar**  | Manages key exchange and PIN/PBC security during provisioning        |
 
 ---
 
-## 🌐 Operation After Formation
+## 📶 Under-the-Hood Protocol Stack
 
-| Layer       | Behavior                                                                 |
-| ----------- | ------------------------------------------------------------------------ |
-| MAC/PHY     | GO sends beacon frames, clients behave like STA                          |
-| Security    | WPA2-PSK or WPA3-SAE + 4-way handshake                                   |
-| IP Layer    | GO acts as **DHCP server** (or uses APIPA)                               |
-| Power Mgmt  | Supports **Notice of Absence (NoA)** and client power-saving mechanisms |
-| Service Disc| Uses **Bonjour, UPnP, DNS-SD**                                           |
 
 ---
+
+## 🧭 Group Formation - Deep Protocol Phases
+
+### Phase 1: **Device Discovery**
+
+- Uses **social channels** (1, 6, 11).
+- Devices alternate between **search** and **listen** states.
+- **Probe Requests** and **Probe Responses** carry **P2P IE (Information Element)**:
+  - `P2P Capability`
+  - `Device Info` (MAC, device name, etc.)
+  - `Group Info`
+  - `Channel List`
+  - `Intended P2P Interface Address`
+
+🧪 Tools: Capture traffic in **Wireshark** (Monitor Mode), filter on `wlan.fc.type_subtype == 0x04` (probe req) and `0x05` (probe resp)
+
+---
+
+### Phase 2: **GO Negotiation**
+
+A three-way handshake to decide who becomes **Group Owner**:
+
+1. **GO Negotiation Request**
+2. **GO Negotiation Response**
+3. **GO Negotiation Confirmation**
+
+> 📌 Each device declares a **GO Intent value (0–15)** in the P2P IE.
+> The higher number wins. If equal, a **tie-breaker bit** is used.
+
+P2P IE contains:
+
+- `GO Intent`
+- `GO Device Address`
+- `Config Timeout`
+- `Operating Channel`
+
+---
+
+### Phase 3: **Provisioning (Authentication)**
+
+Once the GO is elected:
+
+- The group is provisioned via **Wi-Fi Protected Setup (WPS)** using:
+  - **Push Button Configuration (PBC)**
+  - **PIN Entry** (display or input)
+
+> 🔐 WPA2-PSK or WPA3-SAE key generation occurs here.
+
+Each device undergoes a **4-way handshake** post-WPS to establish **Pairwise Temporal Keys (PTKs)**.
+
+---
+
+### Phase 4: **Group Formation**
+
+- GO creates a **soft AP interface** (e.g., `p2p-wlan0-0`)
+- Starts **beaconing** with:
+  - SSID like `DIRECT-XY-[DeviceName]`
+  - Beacon frames carry **P2P IE** and **WPS IE**
+- Clients scan, authenticate, associate, and obtain an IP via **DHCP** or **APIPA**
+
+---
+
+### Phase 5: **Persistent Groups**
+
+- Devices cache:
+  - Group SSID
+  - PSK credentials
+  - Roles (GO or Client)
+- On rediscovery, they reconnect **without repeating GO negotiation**.
+
+---
+
+### Phase 6: **Autonomous Group Formation**
+
+- A device **preemptively** becomes GO:
+  - Creates a group locally
+  - Beacon frames announce the group
+- Other P2P devices may scan and connect directly
+
+---
+
+## 🌐 After Group Formation - Layer Breakdown
+
+| Layer        | Description                                                                 |
+|--------------|------------------------------------------------------------------------------|
+| **Beaconing**| GO sends beacon frames with P2P IE and SSID                                 |
+| **Auth**     | WPA2/WPA3 encryption (like standard AP-based Wi-Fi)                         |
+| **IP Address**| GO typically runs a **DHCP server**; Clients get IP dynamically            |
+| **Power Save**| P2P clients can enter PS mode; GO uses **Notice of Absence (NoA)**         |
+| **Service Discovery** | Clients query GO using **DNS-SD**, **Bonjour**, or **UPnP**        |
+
+---
+
+## 🖥 Implementation Details
+
+### 🧪 Linux Stack
+
+| Layer               | Implementation Tool             |
+|---------------------|---------------------------------|
+| User API            | `wpa_cli`, `wpa_supplicant.conf`|
+| Control Interface   | `D-Bus` or `wpa_cli`            |
+| Driver Interface    | `nl80211` (netlink interface)   |
+| Kernel Driver       | `mac80211` + vendor-specific    |
+| Interface Names     | `p2p-dev-wlan0`, `p2p-wlan0-0`  |
+
+### 🧪 Android APIs
+
+- **WifiP2pManager**
+  - `initialize()`
+  - `discoverPeers()`
+  - `connect()`
+  - `createGroup()`
+  - `requestConnectionInfo()`
+
+📦 Framework interacts with `wpa_supplicant` via Android's HAL → netd → kernel.
+
+---
+
+## 🔁 Wi-Fi Direct Group Formation: Sequence Diagram
+
+```mermaid
+sequenceDiagram
+    participant A as Device A (P2P)
+    participant B as Device B (P2P)
+    participant GO as Group Owner (soft AP)
+    
+    A->>B: Probe Request (P2P IE)
+    B-->>A: Probe Response (P2P IE)
+
+    A->>B: GO Negotiation Request (Intent=7)
+    B-->>A: GO Negotiation Response (Intent=12)
+    A->>B: GO Negotiation Confirmation
+
+    note over B, GO: Device B becomes GO (soft AP)
+
+    GO->>A: Beacon (SSID, Channel, P2P IE)
+    A->>GO: WPS Authentication (PIN/PBC)
+    GO->>A: WPA2 4-Way Handshake
+    GO->>A: DHCP Offer (IP address)
+    A->>GO: Connect + Data Exchange
+
 
 ## 🗂️ Comparison Table
 
