@@ -1594,16 +1594,26 @@ Your AP shares one **public IP address** (from the ISP) among multiple devices.
 
 Here’s a simplified diagram of the flow:
 
-```txt
-[Your Device] ⇄ Wi-Fi ⇄ [Access Point]
-                             ↓
-                   [Local Network Router/AP]
-                             ↓
-                       [Internet Modem]
-                             ↓
-                          [ISP]
-                             ↓
-                       [Internet Websites]
+```mermaid
+sequenceDiagram
+    participant Device as Your Device (Laptop/Phone)
+    participant WiFiAP as Wi-Fi Access Point (AP)
+    participant Router as Local Router
+    participant Modem as Internet Modem
+    participant ISP as ISP (Internet Service Provider)
+    participant Cloud as Internet Service (Website / Server)
+
+    Device->>WiFiAP: Connect via Wi-Fi (802.11)
+    WiFiAP->>Router: Forward data via Ethernet or internal bridge
+    Router->>Modem: NAT + Firewall + Packet Forwarding
+    Modem->>ISP: Transmit via DSL/Fiber/Cable
+    ISP->>Cloud: Route data to destination (e.g. website)
+    Cloud-->>ISP: Response (e.g. HTTP 200 OK)
+    ISP-->>Modem: Deliver return packets
+    Modem-->>Router: Pass upstream response
+    Router-->>WiFiAP: Forward to local wireless
+    WiFiAP-->>Device: Deliver response via Wi-Fi
+
 
 ```
 # 📚 Key Terms for Beginners
