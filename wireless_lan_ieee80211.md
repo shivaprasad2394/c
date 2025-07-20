@@ -559,138 +559,160 @@ Once the SAE handshake and Four-Way Handshake are completed:
 
 ## 🏢 WPA2-Enterprise Connection Process (with EAP-TLS / PEAP)
 
-**WPA2-Enterprise** uses **802.1X authentication** and the **Extensible Authentication Protocol (EAP)** to provide **strong, centralized, and certificate-based security**, ideal for enterprise environments.
-
-The process differs from WPA2-Personal, as it involves a **RADIUS server** and may use **client/server certificates** depending on the EAP method.
+**WPA2-Enterprise** leverages **IEEE 802.1X** and the **Extensible Authentication Protocol (EAP)** to provide **strong, centralized authentication** — ideal for enterprise networks. It differs from WPA2-Personal by using a **RADIUS server** for back-end authentication and may involve **client/server certificates**, depending on the EAP method.
 
 ---
 
-### 🔁 Shared Steps (WPA2-Enterprise with EAP)
+## 🔄 WPA2-Enterprise Connection Workflow
 
-1. **🔎 Probe Request / Response**
-   - The **station (STA)** sends a **probe request** to discover nearby APs.
-   - The **AP** replies with its supported capabilities.
+### 1. 🔍 Probe Request / Response
+- The **station (STA)** sends a **probe request** to discover nearby APs.
+- The **AP** responds with a **probe response**, listing supported security capabilities (e.g., WPA2-Enterprise).
 
-2. **🛂 Open System Authentication**
-   - A basic **open authentication exchange** occurs (not actual security auth).
-   - STA is now authenticated at Layer 2 but not yet authorized to access the network.
+### 2. 🛂 Open System Authentication
+- A basic Layer 2 **authentication frame exchange** occurs.
+- This does **not provide security**, just network initiation.
 
-3. **🔗 Association Request / Response**
-   - The STA sends an **association request** to the AP, signaling intent to join the network.
-   - The AP responds with an **association response**, assigning an AID.
+### 3. 🔗 Association Request / Response
+- The **STA** sends an **association request** to join the AP.
+- The **AP** responds with an **association response**, assigning an **Association ID (AID)**.
 
-4. **🧠 802.1X Authentication Begins**
-   - The AP acts as a **relay** between the STA and the **RADIUS server**.
-   - The **EAP authentication method** is negotiated (e.g., EAP-TLS or PEAP).
+### 4. 🧠 802.1X Authentication Begins
+- The **AP acts as a pass-through proxy** for EAP messages between the STA and the **RADIUS server**.
+- The EAP method (e.g., **EAP-TLS**, **PEAP**) is negotiated.
 
 ---
 
-### 🔐 EAP-TLS (Certificate-Based)
+## 🔐 EAP Authentication Methods
 
+### 🔒 EAP-TLS (Certificate-Based)
 - **Mutual certificate-based authentication**:
-  - The **RADIUS server presents its certificate** to the client.
-  - The **client also presents a certificate** to the server.
-- **TLS handshake** establishes a **secure tunnel**.
-- A **master session key (MSK)** is derived and securely shared with the AP.
-- Requires:
-  - **Client certificate**
-  - **Server certificate**
-- **Security**: Very high, with mutual authentication and no passwords.
+  - **Server sends its certificate** to the client.
+  - **Client also presents a certificate**.
+- A **TLS handshake** establishes a **secure tunnel**.
+- A **Master Session Key (MSK)** is derived and securely passed to the AP.
+- 🔑 Requires:
+  - ✅ Server certificate
+  - ✅ Client certificate
+- 🛡️ **Security Level**: Very High (no passwords, full mutual auth)
 
 ---
 
-### 🔐 PEAP (Password + TLS Tunnel)
-
-- **Protected EAP (PEAP)** creates a secure TLS tunnel between the client and server.
-- Only the **server presents a certificate** (client does not).
-- After the tunnel is established:
-  - The client authenticates using **username/password** (e.g., MSCHAPv2).
-- Easier to manage (no client certs), but:
-  - Slightly **less secure** than EAP-TLS.
-  - Still strong when configured properly.
+### 🔐 PEAP (Password-Based)
+- **PEAP = Protected EAP**: Uses TLS tunnel but only requires a **server certificate**.
+- Once the tunnel is established:
+  - The **client authenticates using username/password** (e.g., MSCHAPv2).
+- ✅ Easier to deploy (no client certs), but:
+  - ⚠️ Slightly lower security than EAP-TLS
 
 ---
 
-### 🔄 4-Way Handshake
+## 🔄 4-Way Handshake
 
-- Once EAP authentication succeeds:
-  - Both parties derive a shared **Pairwise Master Key (PMK)**.
-  - The AP and station perform the **Four-Way Handshake**:
-    - Derive **PTK** (Pairwise Transient Key)
-    - Exchange **GTK** (Group Temporal Key)
-    - Finalize encryption setup
-
----
-
-### ✅ Summary
-
-After successful EAP authentication and the 4-Way Handshake:
-- The client is **securely authenticated**.
-- **Encrypted communication** is enabled using AES (CCMP).
-- Centralized identity and access management is enforced via the **RADIUS server**.
+After EAP authentication succeeds:
+- A **Pairwise Master Key (PMK)** is derived and shared with the AP.
+- The **STA and AP perform the Four-Way Handshake** using **EAPOL-Key frames**:
+  - Generate **Pairwise Transient Key (PTK)**
+  - Exchange the **Group Temporal Key (GTK)**
+  - Confirm key installation
+- Enables **encrypted communication** using AES (CCMP)
 
 ---
 
-### 🔍 EAP-TLS vs PEAP Comparison
+## 🧾 EAP-TLS vs PEAP: Comparison Table
 
-| Feature                   | **EAP-TLS**                          | **PEAP (e.g., with MSCHAPv2)**             |
-|---------------------------|--------------------------------------|--------------------------------------------|
-| Auth Method               | Mutual certificate-based             | Username/password inside TLS tunnel        |
-| Client Certificate Needed | ✅ Yes                                | ❌ No                                       |
-| Server Certificate Needed | ✅ Yes                                | ✅ Yes                                      |
-| Mutual Authentication     | ✅ Strong                             | ⚠️ Partial (only server verified directly)  |
-| Security Level            | 🔒 Very High                          | 🔐 Moderate–High (depends on password policy) |
-| Management Overhead       | ⚠️ Higher (certificate provisioning)  | ✅ Lower (easier for large orgs)            |
-
----
-
-## 📡 What is EAPOL (Extensible Authentication Protocol over LAN)?
-
-**EAPOL** is the protocol used to transport **EAP messages** between the **station (client)** and the **Access Point (AP)** in **802.1X-based authentication**, including EAP-TLS and PEAP.
-
-- Defined by: **IEEE 802.1X**
-- Runs at: **Data Link Layer (Layer 2)**
-- Used in: **Both wired and wireless networks**
+| Feature                   | **EAP-TLS**                          | **PEAP (e.g., MSCHAPv2)**                    |
+|---------------------------|--------------------------------------|----------------------------------------------|
+| Auth Method               | Mutual certificate-based             | Username/password in TLS tunnel              |
+| Client Certificate Needed | ✅ Yes                                | ❌ No                                         |
+| Server Certificate Needed | ✅ Yes                                | ✅ Yes                                        |
+| Mutual Authentication     | ✅ Yes                                | ⚠️ Only server authentication                 |
+| Security Level            | 🔒 Very High                          | 🔐 Moderate to High                           |
+| Deployment Complexity     | ⚠️ Higher (certs needed on clients)  | ✅ Easier for large orgs                      |
 
 ---
 
-### 📥 Where is EAPOL Used in the WPA2-Enterprise (EAP-TLS/PEAP) Process?
+## 📡 What is EAPOL?
 
-Here's how it fits into the authentication sequence:
+**EAPOL (Extensible Authentication Protocol over LAN)** is the Layer 2 protocol used to transport EAP messages between the **STA** and **AP** in 802.1X authentication workflows.
 
-1. **Station connects to the AP** via association request/response (standard Wi-Fi process).
-2. **802.1X authentication begins.**
-   - AP sends an **EAP-Request/Identity** frame to the station using **EAPOL**.
-   - Station responds with **EAPOL-Response/Identity**.
-3. All subsequent **EAP-TLS or PEAP messages** (certificates, credentials, etc.) are exchanged over **EAPOL** between the station and AP.
-   - The AP **relays EAPOL messages** to/from the **RADIUS server** using **RADIUS over UDP**.
+- 📘 Defined in: **IEEE 802.1X**
+- 🌐 Used in: Both **wired and wireless networks**
+- 🔄 Purpose: Carry **EAP Identity**, **TLS handshake**, and **4-Way Handshake** frames
 
 ---
 
-### 🔐 Transition to 4-Way Handshake
+### 📥 Role of EAPOL in WPA2-Enterprise
 
-- Once the **EAP-TLS handshake is complete**, a **Pairwise Master Key (PMK)** is derived.
-- Then, the **4-Way Handshake** begins, which is also carried over **EAPOL frames**:
-  - These include key confirmation, PTK/GTK derivation, and key installation.
-
----
-
-### ✅ Summary Table
-
-| Stage                        | Protocol Used | Transport Medium      |
-|-----------------------------|---------------|------------------------|
-| EAP Identity Exchange        | EAPOL         | Between STA and AP     |
-| EAP-TLS / PEAP Auth Process  | EAP over EAPOL| STA ↔ AP ↔ RADIUS Server|
-| 4-Way Handshake (Key Exchange)| EAPOL-Key     | STA ↔ AP               |
+| Step | Action | Protocol |
+|------|--------|----------|
+| 1 | STA associates with AP | Standard Wi-Fi frames |
+| 2 | AP sends `EAP-Request/Identity` | EAPOL |
+| 3 | STA replies with `EAPOL-Response/Identity` | EAPOL |
+| 4 | AP relays EAP messages to/from RADIUS | EAP over UDP |
+| 5 | On success, 4-Way Handshake begins | EAPOL-Key frames |
 
 ---
 
-### 📝 Key Points
-- **EAPOL** is not an EAP method itself; it’s the **carrier** for EAP messages in 802.1X.
-- It’s used in **both authentication and key exchange** phases of WPA2-Enterprise.
-- **EAPOL-Key frames** are used specifically in the **4-Way Handshake** after authentication succeeds.
+## 🧠 Summary: EAPOL and WPA2-Enterprise
 
+- **EAPOL** is not an EAP method itself — it is a **transport protocol** used during:
+  - **EAP authentication**
+  - **4-Way Handshake**
+- It ensures the station and AP can negotiate and apply encryption keys securely.
+- **After authentication**, the client can exchange **encrypted traffic** on the WLAN.
 
+---
+
+## ✅ Final Outcome
+
+After all steps:
+- The client is **authenticated centrally** via RADIUS.
+- **Encryption is enabled** using AES (CCMP).
+- Network access is **granted based on identity and policy** — ideal for enterprise environments.
+
+```mermaid
+sequenceDiagram
+    participant STA as 💻 STA (Client)
+    participant AP as 📡 AP (Authenticator)
+    participant RADIUS as 🧠 RADIUS Server (Authentication Server)
+
+    Note over STA, AP: 📶 STA sends Probe Request → AP responds
+
+    STA->>AP: Open System Auth
+    AP-->>STA: Auth Response
+
+    STA->>AP: Association Request
+    AP-->>STA: Association Response
+
+    Note over STA, AP, RADIUS: 🔐 802.1X Authentication Starts (EAPOL)
+
+    AP->>STA: EAP-Request/Identity (via EAPOL)
+    STA->>AP: EAP-Response/Identity (via EAPOL)
+
+    AP->>RADIUS: EAP-Response/Identity (via RADIUS)
+    RADIUS-->>AP: EAP-Request (e.g., TLS Start)
+
+    AP->>STA: EAP-Request (TLS Hello or PEAP Start)
+    STA->>AP: EAP-Response (Client Hello or PEAP Response)
+
+    loop TLS / PEAP handshake
+        AP<->>STA: EAPOL Frames (certs, keys, challenge/response)
+        AP<->>RADIUS: RADIUS Messages (EAP Payloads)
+    end
+
+    RADIUS-->>AP: Access-Accept (includes PMK)
+    AP-->>STA: EAP-Success
+
+    Note over STA, AP: 🔄 4-Way Handshake (EAPOL-Key frames)
+
+    AP->>STA: Message 1 (ANonce)
+    STA->>AP: Message 2 (SNonce + MIC)
+    AP->>STA: Message 3 (GTK + MIC)
+    STA->>AP: Message 4 (Confirm)
+
+    Note over STA, AP: ✅ STA is Authenticated & Encrypted
+```
 
 ## 🌍 Layer 3 – DHCP Process + Network Info
 
