@@ -3036,8 +3036,7 @@ sequenceDiagram
     STA->>AP6: Data Stream B (Bulk Transfer)
 
     Note right of STA: 
-      Uses both links (STR-MLO)\n
-      MAC manages queues and sequencing
+      Uses both links (STR-MLO)MAC manages queues and sequencing
 
     AP5-->>STA: ACK + Block Ack (Stream A)
     AP6-->>STA: ACK + Block Ack (Stream B)
