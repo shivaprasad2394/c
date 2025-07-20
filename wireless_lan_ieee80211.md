@@ -673,45 +673,47 @@ After all steps:
 
 ```mermaid
 sequenceDiagram
-    participant STA as 💻 STA (Client)
-    participant AP as 📡 AP (Authenticator)
-    participant RADIUS as 🧠 RADIUS Server (Authentication Server)
+    participant STA as STA (Client)
+    participant AP as AP (Authenticator)
+    participant RADIUS as RADIUS Server
 
-    Note over STA, AP: 📶 STA sends Probe Request → AP responds
+    Note over STA, AP: STA sends Probe Request → AP responds
 
-    STA->>AP: Open System Auth
-    AP-->>STA: Auth Response
+    STA->>AP: Open System Authentication
+    AP-->>STA: Authentication Response
 
     STA->>AP: Association Request
     AP-->>STA: Association Response
 
-    Note over STA, AP: 🔐 802.1X Authentication Starts (EAPOL)
+    Note over STA, AP: 802.1X Authentication Starts (EAPOL)
 
     AP->>STA: EAP-Request/Identity (via EAPOL)
     STA->>AP: EAP-Response/Identity (via EAPOL)
 
     AP->>RADIUS: EAP-Response/Identity (via RADIUS)
-    RADIUS-->>AP: EAP-Request (e.g., TLS Start)
+    RADIUS-->>AP: EAP-Request (e.g., TLS Hello or PEAP Start)
 
-    AP->>STA: EAP-Request (TLS Hello or PEAP Start)
-    STA->>AP: EAP-Response (Client Hello or PEAP Response)
+    AP->>STA: EAP-Request (TLS or PEAP)
+    STA->>AP: EAP-Response (TLS or PEAP)
 
-    loop TLS / PEAP handshake
-        AP<->>STA: EAPOL Frames (certs, keys, challenge/response)
-        AP<->>RADIUS: RADIUS Messages (EAP Payloads)
+    loop TLS / PEAP Handshake
+        AP->>STA: EAPOL Frame (Handshake Step)
+        STA->>AP: EAPOL Frame (Response)
+        AP->>RADIUS: RADIUS (EAP Payload)
+        RADIUS->>AP: RADIUS (EAP Payload)
     end
 
-    RADIUS-->>AP: Access-Accept (includes PMK)
+    RADIUS-->>AP: Access-Accept (with PMK)
     AP-->>STA: EAP-Success
 
-    Note over STA, AP: 🔄 4-Way Handshake (EAPOL-Key frames)
+    Note over STA, AP: 4-Way Handshake Begins (EAPOL-Key)
 
     AP->>STA: Message 1 (ANonce)
     STA->>AP: Message 2 (SNonce + MIC)
     AP->>STA: Message 3 (GTK + MIC)
-    STA->>AP: Message 4 (Confirm)
+    STA->>AP: Message 4 (ACK)
 
-    Note over STA, AP: ✅ STA is Authenticated & Encrypted
+    Note over STA, AP: STA is Authenticated and Encrypted
 ```
 
 ## 🌍 Layer 3 – DHCP Process + Network Info
