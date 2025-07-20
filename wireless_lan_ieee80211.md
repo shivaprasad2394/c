@@ -8,15 +8,17 @@ A **Wireless LAN** is a network where devices communicate using wireless protoco
 
 ## 📜 IEEE 802.11 Standard
 
-IEEE 802.11 provides a standard for wireless LAN, it specifies functionalities across two key layers of the OSI model:
+the IEEE 802.11 standard defines how Wireless LANs operate. It provides a common framework that governs how data is transmitted, accessed, and secured over the air.
 
-- **Physical Layer**
-- **Data Link Layer**
+The standard specifically addresses two key layers of the OSI model, each with distinct responsibilities:
+
+- **Physical Layer** :-Transmission/reception and modulation/demodulation of raw bits/signal over the wireless medium
+- **Data Link Layer**:-Ensures reliable data delivery/access over the physical medium
 
 ---
 
 ## 📶 Wireless Services in IEEE 802.11
-802.11 standard we have two kinds of services
+The IEEE 802.11 standard defines two main types of service structures that organize how wireless networks operate:
 ## 1. **BSS (Basic Service Set)**
 
 - A group/unit of wireless network devices communicating with the same **Access Point (AP)**.
