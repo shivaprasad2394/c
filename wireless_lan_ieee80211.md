@@ -2922,48 +2922,70 @@ sequenceDiagram
 # 📡 Advanced Wi-Fi MAC/PHY Topics: OFDMA, TSPEC, MLO (802.11be)
 
 ---
-
-## 🔬 OFDMA Scheduling Internals (802.11ax)
+## 🔬 OFDMA Scheduling Internals (802.11ax / Wi-Fi 6)
 
 ### 🧠 Concept
 
-OFDMA = Orthogonal Frequency Division Multiple Access. Introduced in Wi-Fi 6 to allow **multiple clients to share a single channel simultaneously**.
+**OFDMA (Orthogonal Frequency Division Multiple Access)** is a key enhancement in Wi-Fi 6 (802.11ax), enabling **multiple clients to share the same channel simultaneously**.
 
+Unlike older Wi-Fi versions (which use OFDM for one device at a time), OFDMA improves efficiency by dividing the channel into smaller units.
+
+---
 ### 📐 Resource Units (RUs)
 
-* Channel is divided into **Resource Units** (RUs)
-* AP assigns RUs to clients
+- The available channel bandwidth is split into **Resource Units (RUs)**.
+- Each RU can be assigned to a different client for simultaneous transmission.
 
-  * Smallest RU = 26-tone
-  * Largest RU = 996-tone (entire 80 MHz channel)
+| RU Size | Description            |
+|---------|------------------------|
+| 26-tone(sub carrier) | Smallest RU (for low data, e.g., IoT) |
+| 996-tone(sub carrier) | Largest RU (entire 80 MHz channel)   |
 
-### 🗂️ Scheduler Logic
+📌 The AP decides how to allocate RUs based on traffic and client capability.
 
-The AP’s MAC layer scheduler dynamically:
+---
+### 🗂️ Scheduler Logic at the AP (MAC Layer)
 
-* Monitors **Buffer Status Reports (BSR)**
-* Accounts for **QoS** levels (voice, video, etc.)
-* Uses **Channel State Information (CSI)** to optimize throughput
-* Sends **Trigger Frames** to initiate uplink OFDMA
+The Access Point (AP) runs an internal scheduler that dynamically:
+
+- Monitors **Buffer Status Reports (BSRs)** from clients (how much data they need to send).
+- Considers **QoS priorities** (e.g., voice over video).
+- Analyzes **Channel State Information (CSI)** to assess link quality.
+- Sends **Trigger Frames** to initiate **uplink OFDMA transmissions**.
+
+📡 The goal is to optimize performance and minimize airtime waste.
+
+---
 
 ### 🧱 OFDMA Downlink Frame Structure
 
-* Preamble
+Wi-Fi 6 downlink frames in OFDMA mode include:
 
-  * Common + User-specific
-* Data: RUs interleaved for different clients
+- **Preamble**:-initial part of a Wi-Fi frame
+  - Contains a **common field** (for all users)
+  - Followed by **user-specific fields**(Contains info just for each client/RU)
+- **Data section**:
+  - Contains **interleaved RUs**, each assigned to a specific client
 
-### 📶 Trigger-Based Uplink
+This structure allows multiple devices to receive their data simultaneously within a single transmission.
 
-1. AP sends **Trigger Frame**
-2. STAs respond with **OFDMA-scheduled data** on assigned RUs
-3. Enables synchronized, low-latency access
+---
+### 📶 Trigger-Based Uplink (Multi-User Uplink)
 
-### 🛠️ Benefits
+1. The **AP sends a Trigger Frame** indicating RU assignments.
+2. **Stations (STAs)** respond using their assigned RUs.
+3. All clients transmit **at the same time**, but on different frequency segments.
 
-* Spectral efficiency
-* Reduced latency
-* Scalable IoT performance
+This enables **synchronized, low-latency** uplink communication and better airtime fairness.
+
+---
+### 🛠️ Key Benefits of OFDMA
+
+- ✅ **Improved spectral efficiency**
+- ✅ **Lower latency** for real-time and interactive apps
+- ✅ **Better support for dense client environments**
+- ✅ **Scalability for IoT devices** (many clients, small data bursts)
+
 ---
 
 ## 🚀 Multi-Link Operation (MLO) in Wi-Fi 7 (802.11be)
