@@ -294,6 +294,194 @@ When a station receives a frame, it performs the following check:
 - **Reduces unnecessary deferrals** in dense Wi-Fi environments.
 - **Improves channel reuse** and **overall efficiency**.
 - Especially useful in places with multiple APs (offices, apartments, campuses).
+## 📡 Wi-Fi MAC Frame Format (802.11)
+
+| **Field** | **Duration** | **Address 1** | **Address 2** | **Address 3** | **Seq Ctrl** | **Address 4** | **Frame Body** | **FCS** |
+|-----------|--------------|---------------|---------------|---------------|---------------|----------------|----------------|----------|
+| FC (2 B)  | Duration (2 B) | 6 bytes      | 6 bytes       | 6 bytes       | 2 bytes       | 6 bytes        | 0–2312 bytes   | 4 bytes  |
+
+> **Total Size:** Variable (typically 28–2346 bytes depending on payload)
+
+
+
+
+### 🧩 Frame Control Field Structure (2 bytes = 16 bits)
+it consists of various bits Namely
+| **Subfield**             | **Size** |
+|--------------------------|----------|
+| Protocol Version         | 2 bits   |
+| Type                     | 2 bits   |
+| Subtype                  | 4 bits   |
+| To DS                    | 1 bit    |
+| From DS                  | 1 bit    |
+| More Fragments           | 1 bit    |
+| Retry                    | 1 bit    |
+| Power Management         | 1 bit    |
+| More Data                | 1 bit    |
+| WEP (Encryption Enabled) | 1 bit    |
+| Order                    | 1 bit    |
+
+> 🧪 This field defines the **type, control, and behavior** of the 802.11 frame.
+
+## 🧾 IEEE 802.11 Frame Types and Subtypes
+
+Each 802.11 frame has a **Frame Type** field (2 bits) and a **Subtype** field (4 bits) inside the **Frame Control (FC)** field.
+These determine **what kind of frame it is** and **what it's used for**.
+### Frame Types:
+Frame type is subdivided into
+1. **Management Frames**
+2. **Control Frames**
+3. **Data Frames**
+
+Sub type helps specify the exact frametype(Probe,RTS etc..)
+
+---
+
+### 📊 Frame Types & Subtypes Table
+
+| **Frame Type**       | **Type Value** | **Common Subtypes**                          | **Usage**                                         |
+|----------------------|----------------|-----------------------------------------------|--------------------------------------------------|
+| **Management**       | `00`           | - Association Request<br>- Association Response<br>- Probe Request<br>- Probe Response<br>- Beacon<br>- Authentication<br>- Deauthentication | Used to **establish, manage, and terminate** Wi-Fi connections |
+| **Control**          | `01`           | - RTS (Request to Send)<br>- CTS (Clear to Send)<br>- ACK (Acknowledgment)<br>- PS-Poll | Assists with **medium access control**, power saving, and reliability |
+| **Data**             | `10`           | - Data<br>- QoS Data<br>- Null Function<br>- CF-Ack | Carries **actual payload** (e.g., IP packets, ARP, DNS, etc.) |
+| **Reserved**         | `11`           | - N/A                                          | Reserved for future use by IEEE                  |
+
+---
+
+### 🧠 Key Concepts
+
+- The **Frame Type** tells us the category (Mgmt, Control, Data).
+- The **Subtype** field (4 bits) tells us **exactly what kind of frame** it is within that category.
+- These values are found inside the **Frame Control field** of every 802.11 frame.
+
+> 🔍 Example:  
+> A **Beacon Frame** has Frame Type = `00` (Management), Subtype = `1000` (Beacon)
+
+---
+
+
+### Other Fields:
+
+- **Duration**: The duration bit specify  time interval we want to occupy the channel.
+- **Sequence Control (SC)**: Used for Synchronization
+- **FCS**: Frame Check Sequence is used for are checking probably (CRC32)
+---
+To DS( a packet going to distributed system) & from DS  (a packet coming from distributed system) are Wired lan address 1 to address 4
+## 🧭 Addressing in Wi-Fi
+
+| Address | Purpose                        |
+|---------|--------------------------------|
+| Addr1   | Next Destination               |
+| Addr2   | Previous Sender                |
+| Addr3   | Final Destination              |
+| Addr4   | Original Source (if needed)    |
+
+> 🔹 If `To DS = 0` and `From DS = 0` → Direct station-to-station communication.
+
+**More frag** (More fragments): It is 1 bit long field which when set to 1 means frame is followed by other fragments.
+**Order**: It is 1 bit long field, if this bit is set to 1 the received frames must be processed in strict order.
+**retry**:it is 1-bit long field, if the current frame is a retransmission of an earlier frame.
+**power mgmt**:If the field is set to 1, station goes into power-save mode. If the field is set to 0, the station stays active.
+
+---
+
+## ⚙️ Physical Layer and Modulation Schemes
+
+### Based on encoding, speed, and range:
+
+- **802.11a**: 5.75 GHz, OFDM, PSK, 6–54 Mbps
+- **802.11b**: 2.44 GHz, DSSS, PSK, 5.5–11 Mbps
+- **802.11g**: 2.4 GHz, OFDM, 54 Mbps
+- **802.11n**: 2.4/5 GHz,64-QAM,600 Mbps
+
+> 💡 Wi-Fi uses unlicensed **ISM bands**.
+
+---
+## 📡 Beacon Frames in Wi-Fi
+
+Beacon frames are **broadcast management frames** sent periodically by Access Points (APs) to announce the presence of a Wi-Fi network.
+
+---
+
+### 🧭 Purpose of Beacon Frames
+
+| **Function**                   | **Description**                                                                 |
+|-------------------------------|---------------------------------------------------------------------------------|
+| **Announce the network**      | AP advertises its SSID (network name)                                          |
+| **Synchronization**           | Helps client devices sync their internal clocks with the AP's timestamp        |
+| **Transmit network parameters** | Includes channel, supported data rates, security info, etc.                    |
+| **Power saving support**      | Contains **TIM (Traffic Indication Map)** to help sleeping clients know if data is buffered for them |
+
+---
+## 🧱 Beacon Frame Structure (Expanded)
+
+| **Field**                              | **Purpose**                                                              |
+|---------------------------------------|---------------------------------------------------------------------------|
+| **Timestamp**                         | Syncs client clock with AP                                               |
+| **Beacon Interval**                   | Interval between beacons (in TUs)                                        |
+| **Capability Info**                   | Flags: ESS, Privacy (WEP/WPA), IBSS, etc.                                |
+| **SSID**                              | Network name (may be null for hidden networks)                           |
+| **Supported Rates**                   | Data rates supported by AP                                               |
+| **DS Parameter Set**                  | Includes **current channel** (e.g., 6, 11, etc.)                          |
+| **TIM (Traffic Indication Map)**      | Shows if AP has buffered data for sleeping clients                       |
+| **WMM Parameter Element** *(optional)*| **QoS settings** for Voice, Video, Best Effort, Background queues        |
+| **RSN Information (Security)**        | Info about WPA2/WPA3 authentication and encryption                       |
+| **Vendor-Specific IEs**               | Optional extensions like 802.11k/v/r, roaming hints, etc.                |
+
+**DS Parameter Set** = Just the channel number — tells clients what RF channel the AP is using.
+
+**QoS Info** is included only if AP supports WMM, and it appears in the WMM Parameter Element inside the optional IEs section of the beacon frame.
+Tag: WMM Parameter Element (WME)
+  - QoS Info (U-APSD support, queue settings)
+  - Access Categories: Voice, Video, Best Effort, Background
+
+
+
+### ⏱️ Beacon Interval
+
+- Defined in **time units (TUs)** — 1 TU = **1024 microseconds**
+- Default interval: **100 TUs** → ~102.4 ms (approx. 10 beacons/sec)
+
+---
+
+### 📶 Beacon Frame Properties
+
+| **Property**           | **Value**               |
+|------------------------|-------------------------|
+| **Frame Type/Subtype** | Management / Subtype 8  |
+| **Transmission Mode**  | Broadcast (to all clients) |
+| **Reliability**        | Not ACKed (unreliable delivery) |
+| **Frequency**          | Sent on primary channel only |
+| **Encryption**         | Never encrypted         |
+
+---
+
+### 🔍 Real-World Use Cases
+
+- Wi-Fi scanners (e.g., in phones or `Wireshark`) **rely on beacon frames** to detect nearby SSIDs.
+- Beacons are **always sent**, even if the SSID is "hidden" (though in that case, SSID field is null).
+- Client devices use the **timestamp and interval** to sync their sleep/wake schedules (important for power saving).
+
+---
+
+### ⚠️ Security Note
+
+- Beacon frames **advertise the presence of a network**, so:
+  - Hidden SSIDs don't offer real security — they just omit the SSID name
+  - Attackers can still detect networks based on beacon frame traffic
+
+---
+
+## ✅ Summary
+
+| **Why Beacons Matter** |
+|------------------------|
+| 📡 They announce the Wi-Fi network to nearby devices |
+| 🕒 Help clients stay synchronized and manage power |
+| 🔑 Carry critical info like supported rates, channel, and security |
+| 🧭 Clients scan and connect based on beacon frame contents |
+
+> 💡 Without beacon frames, Wi-Fi devices wouldn’t even know which networks exist — they're like digital lighthouses!
 
 ### 🚦 OFDMA (Orthogonal Frequency Division Multiple Access)
 
@@ -753,194 +941,6 @@ After a successful Layer 2 (Wi-Fi) connection, your device begins the **DHCP (Dy
 
 > 🧠 DHCP is the bridge between being connected to Wi-Fi and actually accessing the internet.
 
-## 📡 Wi-Fi MAC Frame Format (802.11)
-
-| **Field** | **Duration** | **Address 1** | **Address 2** | **Address 3** | **Seq Ctrl** | **Address 4** | **Frame Body** | **FCS** |
-|-----------|--------------|---------------|---------------|---------------|---------------|----------------|----------------|----------|
-| FC (2 B)  | Duration (2 B) | 6 bytes      | 6 bytes       | 6 bytes       | 2 bytes       | 6 bytes        | 0–2312 bytes   | 4 bytes  |
-
-> **Total Size:** Variable (typically 28–2346 bytes depending on payload)
-
-
-
-
-### 🧩 Frame Control Field Structure (2 bytes = 16 bits)
-it consists of various bits Namely
-| **Subfield**             | **Size** |
-|--------------------------|----------|
-| Protocol Version         | 2 bits   |
-| Type                     | 2 bits   |
-| Subtype                  | 4 bits   |
-| To DS                    | 1 bit    |
-| From DS                  | 1 bit    |
-| More Fragments           | 1 bit    |
-| Retry                    | 1 bit    |
-| Power Management         | 1 bit    |
-| More Data                | 1 bit    |
-| WEP (Encryption Enabled) | 1 bit    |
-| Order                    | 1 bit    |
-
-> 🧪 This field defines the **type, control, and behavior** of the 802.11 frame.
-
-## 🧾 IEEE 802.11 Frame Types and Subtypes
-
-Each 802.11 frame has a **Frame Type** field (2 bits) and a **Subtype** field (4 bits) inside the **Frame Control (FC)** field.
-These determine **what kind of frame it is** and **what it's used for**.
-### Frame Types:
-Frame type is subdivided into
-1. **Management Frames**
-2. **Control Frames**
-3. **Data Frames**
-
-Sub type helps specify the exact frametype(Probe,RTS etc..)
-
----
-
-### 📊 Frame Types & Subtypes Table
-
-| **Frame Type**       | **Type Value** | **Common Subtypes**                          | **Usage**                                         |
-|----------------------|----------------|-----------------------------------------------|--------------------------------------------------|
-| **Management**       | `00`           | - Association Request<br>- Association Response<br>- Probe Request<br>- Probe Response<br>- Beacon<br>- Authentication<br>- Deauthentication | Used to **establish, manage, and terminate** Wi-Fi connections |
-| **Control**          | `01`           | - RTS (Request to Send)<br>- CTS (Clear to Send)<br>- ACK (Acknowledgment)<br>- PS-Poll | Assists with **medium access control**, power saving, and reliability |
-| **Data**             | `10`           | - Data<br>- QoS Data<br>- Null Function<br>- CF-Ack | Carries **actual payload** (e.g., IP packets, ARP, DNS, etc.) |
-| **Reserved**         | `11`           | - N/A                                          | Reserved for future use by IEEE                  |
-
----
-
-### 🧠 Key Concepts
-
-- The **Frame Type** tells us the category (Mgmt, Control, Data).
-- The **Subtype** field (4 bits) tells us **exactly what kind of frame** it is within that category.
-- These values are found inside the **Frame Control field** of every 802.11 frame.
-
-> 🔍 Example:  
-> A **Beacon Frame** has Frame Type = `00` (Management), Subtype = `1000` (Beacon)
-
----
-
-
-### Other Fields:
-
-- **Duration**: The duration bit specify  time interval we want to occupy the channel.
-- **Sequence Control (SC)**: Used for Synchronization
-- **FCS**: Frame Check Sequence is used for are checking probably (CRC32)
----
-To DS( a packet going to distributed system) & from DS  (a packet coming from distributed system) are Wired lan address 1 to address 4
-## 🧭 Addressing in Wi-Fi
-
-| Address | Purpose                        |
-|---------|--------------------------------|
-| Addr1   | Next Destination               |
-| Addr2   | Previous Sender                |
-| Addr3   | Final Destination              |
-| Addr4   | Original Source (if needed)    |
-
-> 🔹 If `To DS = 0` and `From DS = 0` → Direct station-to-station communication.
-
-**More frag** (More fragments): It is 1 bit long field which when set to 1 means frame is followed by other fragments.
-**Order**: It is 1 bit long field, if this bit is set to 1 the received frames must be processed in strict order.
-**retry**:it is 1-bit long field, if the current frame is a retransmission of an earlier frame.
-**power mgmt**:If the field is set to 1, station goes into power-save mode. If the field is set to 0, the station stays active.
-
----
-
-## ⚙️ Physical Layer and Modulation Schemes
-
-### Based on encoding, speed, and range:
-
-- **802.11a**: 5.75 GHz, OFDM, PSK, 6–54 Mbps
-- **802.11b**: 2.44 GHz, DSSS, PSK, 5.5–11 Mbps
-- **802.11g**: 2.4 GHz, OFDM, 54 Mbps
-- **802.11n**: 2.4/5 GHz,64-QAM,600 Mbps
-
-> 💡 Wi-Fi uses unlicensed **ISM bands**.
-
----
-## 📡 Beacon Frames in Wi-Fi
-
-Beacon frames are **broadcast management frames** sent periodically by Access Points (APs) to announce the presence of a Wi-Fi network.
-
----
-
-### 🧭 Purpose of Beacon Frames
-
-| **Function**                   | **Description**                                                                 |
-|-------------------------------|---------------------------------------------------------------------------------|
-| **Announce the network**      | AP advertises its SSID (network name)                                          |
-| **Synchronization**           | Helps client devices sync their internal clocks with the AP's timestamp        |
-| **Transmit network parameters** | Includes channel, supported data rates, security info, etc.                    |
-| **Power saving support**      | Contains **TIM (Traffic Indication Map)** to help sleeping clients know if data is buffered for them |
-
----
-## 🧱 Beacon Frame Structure (Expanded)
-
-| **Field**                              | **Purpose**                                                              |
-|---------------------------------------|---------------------------------------------------------------------------|
-| **Timestamp**                         | Syncs client clock with AP                                               |
-| **Beacon Interval**                   | Interval between beacons (in TUs)                                        |
-| **Capability Info**                   | Flags: ESS, Privacy (WEP/WPA), IBSS, etc.                                |
-| **SSID**                              | Network name (may be null for hidden networks)                           |
-| **Supported Rates**                   | Data rates supported by AP                                               |
-| **DS Parameter Set**                  | Includes **current channel** (e.g., 6, 11, etc.)                          |
-| **TIM (Traffic Indication Map)**      | Shows if AP has buffered data for sleeping clients                       |
-| **WMM Parameter Element** *(optional)*| **QoS settings** for Voice, Video, Best Effort, Background queues        |
-| **RSN Information (Security)**        | Info about WPA2/WPA3 authentication and encryption                       |
-| **Vendor-Specific IEs**               | Optional extensions like 802.11k/v/r, roaming hints, etc.                |
-
-**DS Parameter Set** = Just the channel number — tells clients what RF channel the AP is using.
-
-**QoS Info** is included only if AP supports WMM, and it appears in the WMM Parameter Element inside the optional IEs section of the beacon frame.
-Tag: WMM Parameter Element (WME)
-  - QoS Info (U-APSD support, queue settings)
-  - Access Categories: Voice, Video, Best Effort, Background
-
-
-
-### ⏱️ Beacon Interval
-
-- Defined in **time units (TUs)** — 1 TU = **1024 microseconds**
-- Default interval: **100 TUs** → ~102.4 ms (approx. 10 beacons/sec)
-
----
-
-### 📶 Beacon Frame Properties
-
-| **Property**           | **Value**               |
-|------------------------|-------------------------|
-| **Frame Type/Subtype** | Management / Subtype 8  |
-| **Transmission Mode**  | Broadcast (to all clients) |
-| **Reliability**        | Not ACKed (unreliable delivery) |
-| **Frequency**          | Sent on primary channel only |
-| **Encryption**         | Never encrypted         |
-
----
-
-### 🔍 Real-World Use Cases
-
-- Wi-Fi scanners (e.g., in phones or `Wireshark`) **rely on beacon frames** to detect nearby SSIDs.
-- Beacons are **always sent**, even if the SSID is "hidden" (though in that case, SSID field is null).
-- Client devices use the **timestamp and interval** to sync their sleep/wake schedules (important for power saving).
-
----
-
-### ⚠️ Security Note
-
-- Beacon frames **advertise the presence of a network**, so:
-  - Hidden SSIDs don't offer real security — they just omit the SSID name
-  - Attackers can still detect networks based on beacon frame traffic
-
----
-
-## ✅ Summary
-
-| **Why Beacons Matter** |
-|------------------------|
-| 📡 They announce the Wi-Fi network to nearby devices |
-| 🕒 Help clients stay synchronized and manage power |
-| 🔑 Carry critical info like supported rates, channel, and security |
-| 🧭 Clients scan and connect based on beacon frame contents |
-
-> 💡 Without beacon frames, Wi-Fi devices wouldn’t even know which networks exist — they're like digital lighthouses!
 
 ## 🚶‍♂️ Fast & Smart Roaming in Wi-Fi: 802.11k / v / r
 
