@@ -415,7 +415,38 @@ In **WPA3-Personal**, the connection process replaces the traditional PSK-based 
   - Confirms mutual possession of keys.
 
 ---
+```mermaid
+sequenceDiagram
+    participant STA as Station (STA)
+    participant AP as Access Point (AP)
 
+    Note over STA,AP: 🔐 WPA3-Personal using SAE
+
+    STA->>AP: 🔎 Probe Request\n(SSID, security capabilities)
+    AP-->>STA: 📡 Probe Response\n(WPA3 support, capabilities)
+
+    Note over STA,AP: 🤝 SAE Handshake (Authentication Phase)
+    
+    STA->>AP: SAE Commit Message\n(public value, scalar)
+    AP-->>STA: SAE Commit Message\n(public value, scalar)
+    
+    STA->>AP: SAE Confirm Message
+    AP-->>STA: SAE Confirm Message
+
+    Note over STA,AP: 🔐 PMK is derived independently on both sides\nMutual authentication achieved
+
+    STA->>AP: 🔗 Association Request\n(WPA3 support confirmation)
+    AP-->>STA: 📶 Association Response\n(AID, status: success)
+
+    Note over STA,AP: 🔐 Four-Way Handshake Begins (using SAE-derived PMK)
+
+    AP->>STA: Message 1\n(ANonce)
+    STA->>AP: Message 2\n(SNonce, MIC, RSN info)
+    AP->>STA: Message 3\n(GTK, MIC)
+    STA->>AP: Message 4\n(MIC, confirmation)
+
+    Note over STA,AP: ✅ Secure connection established\nPTK and GTK are installed
+```
 ### ✅ Summary
 Once the SAE handshake and Four-Way Handshake are completed:
 - The **station is securely authenticated**.
