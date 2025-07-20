@@ -685,7 +685,7 @@ sequenceDiagram
     STA->>AP: Association Request
     AP-->>STA: Association Response
 
-    Note over STA, AP, RADIUS: 🔐 802.1X Authentication Starts (EAPOL)
+    Note over STA, AP: 🔐 802.1X Authentication Starts (EAPOL)
 
     AP->>STA: EAP-Request/Identity (via EAPOL)
     STA->>AP: EAP-Response/Identity (via EAPOL)
