@@ -3023,26 +3023,26 @@ MLO allows devices to use **multiple frequency bands or links simultaneously**, 
 ### MLO Across 5 GHz & 6 GHz Links
 ```mermaid
 sequenceDiagram
-    participant STA as 🔵 STA (Multi-Link Device)
-    participant AP5 as 🟢 AP - 5 GHz Link
-    participant AP6 as 🟢 AP - 6 GHz Link
+    participant STA as STA (Multi-Link Device)
+    participant AP5 as AP - 5 GHz Link
+    participant AP6 as AP - 6 GHz Link
 
-    Note over STA,AP5,AP6: 🚀 Multi-Link Operation in Wi-Fi 7 (802.11be)
+    Note over STA,AP5: Multi-Link Operation begins
 
-    STA->>AP5: 📡 Auth/Assoc on 5 GHz
-    STA->>AP6: 📡 Auth/Assoc on 6 GHz
+    STA->>AP5: Auth/Assoc on 5 GHz
+    STA->>AP6: Auth/Assoc on 6 GHz
 
-    STA->>AP5: 🔄 Data Stream A (High Priority / Low Latency)
-    STA->>AP6: 🔄 Data Stream B (Bulk Transfer)
+    STA->>AP5: Data Stream A (Low Latency)
+    STA->>AP6: Data Stream B (Bulk Transfer)
 
     Note right of STA: 
-      - Uses both links simultaneously (STR-MLO)
-      - MAC layer manages sequencing & queues
+      Uses both links (STR-MLO)\n
+      MAC manages queues and sequencing
 
-    AP5-->>STA: ✅ ACK + BA (Stream A)
-    AP6-->>STA: ✅ ACK + BA (Stream B)
+    AP5-->>STA: ACK + Block Ack (Stream A)
+    AP6-->>STA: ACK + Block Ack (Stream B)
 
-    Note over STA,AP5,AP6: 🔀 Reordering logic ensures in-order delivery
+    Note over AP5,AP6: Reordering logic ensures in-order delivery
 ```
 ### MLO over Dual Bands
 ```mermaid
