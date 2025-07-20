@@ -2777,21 +2777,38 @@ Wi-Fi Sensing uses variations in RF signals (amplitude, phase, Doppler shifts) t
 
 ## 🎯 QoS in Wi-Fi: WMM and TSPEC
 
-### 📘 WMM (Wi-Fi Multimedia)
+## 🎯 Quality of Service (QoS) in Wi-Fi
 
-* Based on IEEE 802.11e
-* Defines **Access Categories (ACs)**:
+**Quality of Service (QoS)** in Wi-Fi ensures that time-sensitive applications like **video streaming**, **VoIP**, and **online gaming** get prioritized access to the wireless medium, improving performance and user experience.
 
-  * **AC\_VO**: Voice
-  * **AC\_VI**: Video
-  * **AC\_BE**: Best Effort
-  * **AC\_BK**: Background
+Without QoS, all traffic competes equally for transmission — which can lead to delays or poor quality for real-time applications.
+
+---
+
+## ⚙️ WMM (Wi-Fi Multimedia)
+
+**WMM** is a simplified QoS framework defined by the **Wi-Fi Alliance**, based on IEEE 802.11e.
+
+It classifies traffic into four **Access Categories (ACs)**, each with different priority levels:
+
+| Access Category | Priority | Typical Use             |
+|------------------|----------|--------------------------|
+| AC_VO            | Highest  | Voice (VoIP)             |
+| AC_VI            | High     | Video streaming          |
+| AC_BE            | Medium   | Best effort (web, apps)  |
+| AC_BK            | Lowest   | Background (downloads)   |
+
+Each category uses different **EDCA (Enhanced Distributed Channel Access)** parameters like:
+- Contention window size (CWmin, CWmax)
+- Arbitration Inter-Frame Space (AIFS)
+- Transmission Opportunity (TXOP) limits
 
 Each AC has its own **Contention Window (CW)** and **Arbitration Inter-Frame Space (AIFS)**:
 
 * Voice gets smallest CW and AIFS → prioritized
 * Background gets largest → deprioritized
 
+✅ **Higher priority traffic** gets shorter wait times and better chance to transmit first.
 ### ⚙️ WMM Parameters Table
 
 | AC | CWmin | CWmax | AIFS | TXOP Limit |
@@ -2801,16 +2818,42 @@ Each AC has its own **Contention Window (CW)** and **Arbitration Inter-Frame Spa
 | BE | 15    | 1023  | 3    | N/A        |
 | BK | 15    | 1023  | 7    | N/A        |
 
+---
 ### 🎯 TSPEC (Traffic Specification)
 
-* TSPEC is used in **QoS-capable networks** for reserved traffic
-* Clients send TSPEC requests with:
+**TSPEC** is used in **QoS-capable Wi-Fi networks** (based on IEEE 802.11e) to request **reserved bandwidth** for specific traffic streams such as voice or video.
 
-  * Traffic type (voice, video)
-  * Data rate
-  * Delay bounds
-  * Service intervals
-* AP admits or rejects based on available resources
+#### 📡 How It Works:
+- A **client station** sends a TSPEC request to the Access Point (AP) using an **ADDTS (Add Traffic Stream)** request frame.
+- The TSPEC defines the **QoS requirements** for the stream, including:
+  - **Traffic type** (e.g., voice, video)
+  - **Mean data rate**
+  - **Maximum burst size**
+  - **Delay bound**
+  - **Service interval**
+
+- The **Access Point (AP)** evaluates whether it can support the request (based on available resources).
+  - If accepted, it **reserves bandwidth** and maintains QoS for the stream.
+  - If denied, the station may fall back to best-effort.
+
+#### 🧩 Purpose:
+- Ensures time-sensitive applications get **guaranteed QoS**.
+- Enables **Traffic Admission Control (TAC)** for bandwidth management.
+
+🟡 TSPEC is more advanced than WMM and supports **traffic admission control (TAC)**.
+
+---
+
+## 🧩 Summary
+
+| Feature     | WMM                          | TSPEC                                 |
+|-------------|------------------------------|----------------------------------------|
+| Purpose     | Prioritize traffic types     | Reserve bandwidth for specific streams |
+| Based on    | Access Categories (ACs)      | Per-flow traffic specification         |
+| Use Case    | General consumer traffic     | Enterprise VoIP, video conferencing    |
+| Admission Control | Optional (WMM-AC)     | Supported                              |
+
+---
 
 ### 🧪 Use Cases
 
@@ -2821,6 +2864,11 @@ Each AC has its own **Contention Window (CW)** and **Arbitration Inter-Frame Spa
 | Web Surfing | AC\_BE | No strict requirements       |
 | Sync Backup | AC\_BK | Least priority               |
 
+## ✅ Benefits of QoS in Wi-Fi
+
+- Reduces jitter and latency for voice/video.
+- Improves performance in congested networks.
+- Enhances user experience for real-time apps.
 ---
 
 # 📡 Advanced Wi-Fi MAC/PHY Topics: OFDMA, TSPEC, MLO (802.11be)
