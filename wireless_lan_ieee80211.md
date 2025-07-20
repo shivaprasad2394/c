@@ -3035,8 +3035,7 @@ sequenceDiagram
     STA->>AP5: Data Stream A (Low Latency)
     STA->>AP6: Data Stream B (Bulk Transfer)
 
-    Note right of STA: 
-      Uses both links (STR-MLO)MAC manages queues and sequencing
+    Note right of STA: Uses both links (STR-MLO)MAC manages queues and sequencing
 
     AP5-->>STA: ACK + Block Ack (Stream A)
     AP6-->>STA: ACK + Block Ack (Stream B)
