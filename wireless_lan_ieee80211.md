@@ -227,7 +227,36 @@ sequenceDiagram
 - 🧱 **RTS/CTS (Request to Send / Clear to Send)**: Optional handshake that reduces hidden node collisions.
 - 🚀 **Wi-Fi 6 (802.11ax)** introduces better coordination through **OFDMA** and **BSS Coloring**.
 - 🛰️ **Mesh Networking** helps balance loads and reduce interference.
+```mermaid
+sequenceDiagram
+    participant STA1 as Station 1 (STA1)
+    participant STA2 as Station 2 (STA2)
+    participant AP as Access Point (802.11ax)
 
+    Note over AP: Wi-Fi 6 AP uses OFDMA & BSS Coloring
+
+    AP-->>STA1: Assigns OFDMA Resource Unit (RU 1)
+    AP-->>STA2: Assigns OFDMA Resource Unit (RU 2)
+
+    Note over STA1,STA2: STA1 and STA2 transmit simultaneously\non different Resource Units
+
+    STA1->>AP: 📡 Data on RU 1
+    STA2->>AP: 📡 Data on RU 2
+
+    Note over AP: ✅ Parallel transmissions received successfully\n(no collision)
+
+    Note over STA1,STA2: Stations are coordinated via AP scheduling
+
+    Note over AP: If overlapping BSS exists...
+
+    participant OBSS as Other BSS (Color: 7)
+
+    OBSS->>AP: Transmits on same channel with different BSS Color
+
+    Note over AP: AP detects different BSS Color → avoids unnecessary defer
+
+    AP-->>OBSS: ✅ No interference due to BSS Coloring
+```
 ---
 
 ## 🌐 Final Thought
