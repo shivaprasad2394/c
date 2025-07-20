@@ -2841,7 +2841,55 @@ Each AC has its own **Contention Window (CW)** and **Arbitration Inter-Frame Spa
 - Enables **Traffic Admission Control (TAC)** for bandwidth management.
 
 🟡 TSPEC is more advanced than WMM and supports **traffic admission control (TAC)**.
+## 🎯 TSPEC Negotiation (WMM Admission Control)
+### ⚖️ Admission Control Decision
 
+- The Access Point (AP) uses the **ACM (Admission Control Mandatory)** flag to determine whether certain traffic categories (e.g., voice, video) require **explicit admission** before transmission.
+- Upon receiving a TSPEC request, the AP evaluates:
+  - **Available bandwidth**
+  - Current **QoS policy**
+  - Active traffic streams
+- If the AP cannot meet the QoS requirements, it **rejects** the request to avoid overloading the network.
+
+---
+
+### 🧪 Use Case: Voice over Wi-Fi (VoWiFi)
+
+- A voice client (STA) uses the **AC_VO** (Voice Access Category).
+- Sends an **ADDTS request** with a TSPEC for approximately **64 Kbps** (typical voice codec).
+- Includes a **low delay bound**, often **< 50 ms**, to ensure minimal latency and jitter.
+
+---
+
+### 🔍 TSPEC Frame View (Wireshark)
+
+- **Frame Type**: Action Frame
+- **Category**: QoS
+- **Element ID**: 221 (TSPEC)
+- Additional Fields:
+  - **Traffic Type**, **Data Rate**, **Delay Bound**, **Service Interval**
+  - Direction (uplink/downlink), Nominal MSDU Size, Surplus Bandwidth
+
+```mermaid
+sequenceDiagram
+    participant STA as Client Station (STA)
+    participant AP as Access Point (AP)
+
+    Note over STA,AP: 🎯 TSPEC-Based Traffic Stream Setup (Voice/Video)
+
+    STA->>AP: 🔄 ADDTS Request\n(includes TSPEC: rate, delay, burst, etc.)
+    AP->>AP: ⚖️ Admission Control Decision\nCheck ACM flag, bandwidth, QoS policy
+
+    alt Resources Available
+        AP-->>STA: ✅ ADDTS Response: Accepted
+        Note over AP,STA: 🟢 Traffic stream established with QoS guarantees
+        STA->>AP: 📡 Begin QoS traffic (e.g., voice packets)
+    else Insufficient Resources
+        AP-->>STA: ❌ ADDTS Response: Rejected
+        Note over STA: 🔁 STA may fall back to best-effort AC (e.g., AC_BE)
+    end
+
+```
 ---
 
 ## 🧩 Summary
@@ -2916,43 +2964,6 @@ The AP’s MAC layer scheduler dynamically:
 * Spectral efficiency
 * Reduced latency
 * Scalable IoT performance
-
----
-
-## 🎯 TSPEC Negotiation (WMM Admission Control)
-
-### 🔁 Process
-
-1. STA sends **ADDTS Request** with TSPEC IE (via Action Frame)
-2. AP evaluates and replies with **ADDTS Response** (Accept or Reject)
-
-### 🧾 TSPEC IE Fields
-
-* **Traffic Type** (e.g., Voice)
-* **Nominal MSDU Size**
-* **Mean Data Rate**
-* **Minimum PHY Rate**
-* **Delay Bound**
-* **Surplus Bandwidth Allowance**
-
-### ⚖️ Admission Control Decision
-
-* AP uses **ACM (Admission Control Mandatory)** flags
-* Checks **available bandwidth** and **QoS policy**
-* May reject if traffic cannot be guaranteed
-
-### 🧪 Use Case: Voice over Wi-Fi
-
-* Voice STA uses AC\_VO
-* Sends ADDTS for \~64 Kbps traffic
-* Low delay bound (e.g., < 50ms)
-
-### 🔍 Frame View (Wireshark)
-
-* Frame Type: Action
-* Category: QoS
-* Element ID: TSPEC (221)
-
 ---
 
 ## 🚀 Multi-Link Operation (MLO) in Wi-Fi 7 (802.11be)
