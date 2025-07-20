@@ -2987,47 +2987,132 @@ This enables **synchronized, low-latency** uplink communication and better airti
 - ✅ **Scalability for IoT devices** (many clients, small data bursts)
 
 ---
-
 ## 🚀 Multi-Link Operation (MLO) in Wi-Fi 7 (802.11be)
-
 ### 🌐 Motivation
 
-* Combine multiple frequency bands and links for **ultra-high throughput** and **reliability**
+MLO allows devices to use **multiple frequency bands or links simultaneously**, enabling:
 
+- 📈 **Higher throughput**
+- 🔄 **Improved reliability and link redundancy**
+- ⚡ **Lower latency and better responsiveness**
+---
 ### 🔗 Types of MLO
 
-1. **STR-MLO**: Simultaneous Tx/Rx
-2. **Non-STR-MLO**: Alternating link usage
-3. **Link Aggregation**: Data split across links
-4. **Link Redundancy**: Same data sent over multiple links
+1. **STR-MLO (Simultaneous Transmit & Receive)**  
+   - All links are active at the same time for full-duplex performance.
 
-### 🧠 MAC Coordination
+2. **Non-STR-MLO (Non-Simultaneous Tx/Rx)**  
+   - Links are alternated to avoid RF conflicts (useful in legacy coexistence).
 
-* **Single MLD (Multi-Link Device)** entity at MAC layer
-* Each link has a **Link Context**
-* Shared queues and session state
+3. **Link Aggregation**  
+   - Data is split across multiple links for maximum throughput.
 
-### ⚙️ Frame Structure
-
-* MLO-specific fields in MAC header
-* Extended sequence numbers per link
-* Shared Block Ack sessions
-
-### 📚 Reordering Logic
-
-* Reorder buffers per link
-* Maintain in-order delivery
-* Handles lost/misaligned frames independently
-
-### 🚦 Traffic Steering
-
-* Based on:
-
-  * Link quality (SNR)
-  * Congestion
-  * Power efficiency (battery-aware clients)
+4. **Link Redundancy**  
+   - Duplicate data is sent over multiple links to ensure delivery in lossy environments.
 
 ---
+### 🧠 MAC Coordination & Architecture
+
+- The device is managed as a **Single MLD (Multi-Link Device)**.
+- Each link (e.g., 2.4 GHz, 5 GHz, 6 GHz) has its own **Link Context**.
+- Shared elements across links:
+  - Transmission queues
+  - Session state (authentication, QoS, etc.)
+  - Power management coordination
+---
+### MLO Across 5 GHz & 6 GHz Links
+```mermaid
+sequenceDiagram
+    participant STA as 🔵 STA (Multi-Link Device)
+    participant AP5 as 🟢 AP - 5 GHz Link
+    participant AP6 as 🟢 AP - 6 GHz Link
+
+    Note over STA,AP5,AP6: 🚀 Multi-Link Operation in Wi-Fi 7 (802.11be)
+
+    STA->>AP5: 📡 Auth/Assoc on 5 GHz
+    STA->>AP6: 📡 Auth/Assoc on 6 GHz
+
+    STA->>AP5: 🔄 Data Stream A (High Priority / Low Latency)
+    STA->>AP6: 🔄 Data Stream B (Bulk Transfer)
+
+    Note right of STA: 
+      - Uses both links simultaneously (STR-MLO)
+      - MAC layer manages sequencing & queues
+
+    AP5-->>STA: ✅ ACK + BA (Stream A)
+    AP6-->>STA: ✅ ACK + BA (Stream B)
+
+    Note over STA,AP5,AP6: 🔀 Reordering logic ensures in-order delivery
+```
+### MLO over Dual Bands
+```mermaid
+flowchart TB
+    subgraph STA["🔵 STA (Client Device)"]
+        STA_MAC["🧠 MLD MAC Layer"]
+        Q1["📥 Shared Queues"]
+        Link5_STA["🔷 Link Context - 5 GHz"]
+        Link6_STA["🔷 Link Context - 6 GHz"]
+    end
+
+    subgraph AP["🟢 Access Point"]
+        AP_MAC["🧠 MLD MAC Layer"]
+        Q2["📤 Shared Queues"]
+        Link5_AP["🟩 Link Context - 5 GHz"]
+        Link6_AP["🟩 Link Context - 6 GHz"]
+    end
+
+    STA_MAC --> Q1
+    Q1 --> Link5_STA
+    Q1 --> Link6_STA
+
+    AP_MAC --> Q2
+    Q2 --> Link5_AP
+    Q2 --> Link6_AP
+
+    Link5_STA <---> Link5_AP
+    Link6_STA <---> Link6_AP
+
+    classDef box fill:#f9f9f9,stroke:#ccc;
+    class STA_MAC,AP_MAC,Q1,Q2,Link5_STA,Link6_STA,Link5_AP,Link6_AP box;
+```
+---
+
+### ⚙️ Frame Structure Enhancements
+
+- MAC headers include **MLO-specific fields**:
+  - MLD identifiers
+  - Per-link metadata
+- **Extended sequence numbers** are maintained per link to support parallel streams.
+- **Block Ack (BA)** sessions can span multiple links, reducing overhead.
+
+---
+### 📚 Reordering & Reliability
+
+- Each link has an independent **reorder buffer**.
+- Ensures **in-order delivery** at the receiver, even if frames arrive out-of-sync.
+- Lost/misaligned frames on one link don't block others.
+
+---
+### 🚦 Intelligent Traffic Steering
+
+MLO enables the AP or STA to steer traffic dynamically based on:
+
+- 📶 **Link Quality** (e.g., SNR, RSSI)
+- 🚦 **Congestion levels** on each band
+- 🔋 **Power considerations** for mobile/battery-sensitive clients
+- 🧠 **Policy-based decisions** (e.g., latency-sensitive apps prefer one link)
+
+---
+### ✅ Benefits Summary
+
+| Feature             | Benefit                             |
+|---------------------|--------------------------------------|
+| Multi-Link Use       | High throughput, load balancing     |
+| Redundancy           | Increased reliability and robustness |
+| MAC Coordination     | Seamless session across links       |
+| Adaptive Steering    | Better performance and efficiency   |
+
+
 
 ## 🧱 Summary Table
 
@@ -3040,7 +3125,6 @@ This enables **synchronized, low-latency** uplink communication and better airti
 | QoS AC  | VO, VI, BE, BK | Same          |
 
 ---
-
 
 
 # 🧠 Wi-Fi Advanced Deep Dive: MLO, TSPEC, Drivers, and Future Standards
