@@ -372,47 +372,68 @@ Used for secure key exchange between client and AP.
 - **Encryption Algorithm**: Technique used to encrypt and ensure data integrity.
 - **Authentication Method**: How users/devices prove their identity.
 
----
 ## 🔐 WPA3 Encrypted Connection Process (with SAE)
 
-In **WPA3-Personal**, the connection process replaces the traditional PSK-based handshake with **SAE (Simultaneous Authentication of Equals)** for improved security. Here's how a WPA3 connection is established:
+In **WPA3-Personal**, the connection process enhances security by replacing the traditional **Pre-Shared Key (PSK)** mechanism with **SAE (Simultaneous Authentication of Equals)**. SAE provides forward secrecy and robust protection against offline dictionary attacks.
+
+Below is a step-by-step overview of how a WPA3 connection is established:
 
 ---
 
 ### 1. 🔎 **Probe Request**
-- The **station (STA)** sends a **probe request** to discover nearby APs.
-- It includes supported security capabilities and optionally the SSID.
+- The **station (STA)** broadcasts a **probe request** to discover nearby access points (APs).
+- This request includes the SSID (optionally) and the station's supported security capabilities.
+
+---
 
 ### 2. 📡 **Probe Response**
-- The **AP** replies with a **probe response**, listing its supported features, including WPA3 (SAE).
+- The **access point (AP)** replies with a **probe response**.
+- It advertises its capabilities, including support for WPA3 and SAE.
 
 ---
 
 ### 3. 🤝 **SAE Handshake (Authentication)**
-- **SAE** replaces the traditional open-system authentication.
-- A secure **Diffie-Hellman key exchange** is performed:
-  - Both station and AP generate cryptographic elements using the shared password.
-  - They exchange public values.
-  - Each side derives the same **Pairwise Master Key (PMK)** without exposing the password.
-- **Mutual authentication** is achieved.
-- SAE is **resistant to offline dictionary attacks**.
-- After a successful exchange, the **station is authenticated**.
+- The traditional open-system authentication used in WPA2 is replaced by **SAE**, a password-authenticated key exchange (PAKE).
+- SAE performs a secure **Diffie-Hellman key exchange** using the shared password:
+  - Both the STA and the AP generate cryptographic elements derived from the password.
+  - They exchange **commit messages** (containing public values) and **confirm messages** to verify authenticity.
+  - Both sides independently derive the same **Pairwise Master Key (PMK)**.
+- Key Features:
+  - **Mutual authentication** is achieved without revealing the password.
+  - Resistant to **offline dictionary attacks** and **passive eavesdropping**.
+- Upon successful SAE handshake, the **station is authenticated**.
 
 ---
 
 ### 4. 🔗 **Association Request**
-- The **station** sends an **association request**, indicating its desire to join the network and confirming support for WPA3.
+- The **station** sends an **association request** to the AP, expressing intent to join the network.
+- This message includes supported features and confirms WPA3 capabilities.
+
+---
 
 ### 5. 📶 **Association Response**
-- The **AP** replies with an **association response**, assigning an **Association ID (AID)** and confirming success.
+- The **access point** replies with an **association response**.
+- If successful, it assigns an **Association ID (AID)** to the station, completing the association phase.
 
 ---
 
 ### 6. 🔐 **Four-Way Handshake**
-- Just like WPA2, WPA3 still uses the **Four-Way Handshake**, but with the **SAE-derived PMK**:
-  - Establishes the **Pairwise Transient Key (PTK)** for encryption.
-  - Delivers the **Group Temporal Key (GTK)** for multicast/broadcast.
-  - Confirms mutual possession of keys.
+- As in WPA2, WPA3 uses the **Four-Way Handshake** to derive session keys and ensure key confirmation.
+- The difference: WPA3 uses the **PMK derived from the SAE handshake** instead of a PSK.
+- Steps:
+  1. The AP sends a **nonce (ANonce)** to the station.
+  2. The station replies with its **nonce (SNonce)**, computes the **Pairwise Transient Key (PTK)**, and includes a MIC (Message Integrity Code).
+  3. The AP derives the PTK, verifies the MIC, and sends the **Group Temporal Key (GTK)** encrypted using the PTK.
+  4. The station confirms receipt and key installation.
+
+- Outcome:
+  - Both parties confirm possession of matching keys.
+  - The connection is now fully encrypted with **unique session keys**.
+
+---
+
+✅ **Conclusion**:
+WPA3 with SAE significantly improves Wi-Fi security by eliminating vulnerabilities in WPA2's PSK model. It ensures robust authentication, forward secrecy, and resistance to offline attacks while maintaining interoperability with familiar connection procedures.
 
 ---
 ```mermaid
