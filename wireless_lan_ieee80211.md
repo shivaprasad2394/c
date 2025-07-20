@@ -41,7 +41,7 @@ The IEEE 802.11 standard defines two main types of service structures that organ
 
 # 📡 Wireless Network Modes
 
-Wireless network interface cards (NICs) can operate in several modes, each designed for specific purposes. Below are the common Wi-Fi modes:
+Wlan can operate in several modes, each designed for specific purposes. Below are the common Wi-Fi modes:
 
 ## **1. Infrastructure Mode**
 - **Most common mode** used in Wi-Fi networks.
