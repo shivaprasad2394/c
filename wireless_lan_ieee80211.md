@@ -6,7 +6,7 @@ A **Wireless LAN** is a network where devices communicate using wireless protoco
 
 ---
 
-## 📜 IEEE 802.11 Standard
+## 📜 What is IEEE 802.11 ?
 
 the IEEE 802.11 standard defines how Wireless LANs operate. It provides a common framework that governs how data is transmitted, accessed, and secured over the air.
 
