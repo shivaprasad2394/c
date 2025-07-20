@@ -253,7 +253,7 @@ sequenceDiagram
 
     OBSS->>AP: Transmits on same channel with different BSS Color
 
-    Note over AP: AP detects different BSS Color → avoids unnecessary defer
+    Note over AP: AP detects different BSS Color(frames) → avoids unnecessary wait
 
     AP-->>OBSS: ✅ No interference due to BSS Coloring
 ```
@@ -262,6 +262,38 @@ sequenceDiagram
 ## 🌐 Final Thought
 
 CSMA/CA is **essential** for wireless networking, but it comes with **challenges**, especially in **crowded** or **large** networks. Understanding these problems helps in designing **better Wi-Fi** systems and troubleshooting **connectivity issues**.
+
+## 🎨 BSS Coloring in Wi-Fi 6 (802.11ax)
+
+**BSS Coloring** adds a small identifier (called a *color*) to every Wi-Fi frame, indicating which **BSS (Basic Service Set)** or network the frame belongs to.
+
+This mechanism helps devices differentiate between transmissions from:
+- **Their own network (intra-BSS)**
+- **Other overlapping networks (OBSS – Overlapping BSS)**
+
+---
+
+### 🧠 How It Works:
+
+When a station receives a frame, it performs the following check:
+
+- **Is this my BSS color?**
+  - ✅ **Yes** → It's from my network.  
+    → **Defer transmission** to avoid collision.
+  
+  - ❌ **No** → It's from another network (OBSS).  
+    → Check the signal strength:
+      - If the signal is **strong** → Still defer to avoid interference.
+      - If the signal is **weak (below threshold)** →  
+        ➡️ **Ignore it** and **continue transmission**.
+
+---
+
+### ✅ Why It Matters:
+
+- **Reduces unnecessary deferrals** in dense Wi-Fi environments.
+- **Improves channel reuse** and **overall efficiency**.
+- Especially useful in places with multiple APs (offices, apartments, campuses).
 
 ### 🚦 OFDMA (Orthogonal Frequency Division Multiple Access)
 
