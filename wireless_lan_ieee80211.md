@@ -147,7 +147,27 @@ In Mac we have two more layers
 - Two devices (A and C) are **out of range** of each other but **both in range** of the same Access Point (B).
 - A and C **can’t hear** each other.
 - Both think the channel is free and **transmit at the same time** → causing a **collision** at B.
+```mermaid
+sequenceDiagram
+    participant A as Station A
+    participant B as Access Point (AP)
+    participant C as Station C
 
+    Note over A,C: A and C are out of range of each other\n(but both can reach AP B)
+
+    A->>B: 📡 Transmit Data
+    Note over A,C: C does not sense A's transmission
+    C->>B: 📡 Transmit Data (simultaneously)
+
+    Note over B: ❌ Collision occurs at AP B
+
+    Note over A,C: A and C are unaware of the collision
+
+    B-->>A: ⚠️ No ACK (due to collision)
+    B-->>C: ⚠️ No ACK (due to collision)
+
+    Note over A,C: Both A and C must retransmit later
+```
 #### 📌 Real-World Analogy:
 > Imagine two people in separate rooms trying to talk to the same receptionist over a walkie-talkie. They can’t hear each other and both talk at once, confusing the receptionist.
 
