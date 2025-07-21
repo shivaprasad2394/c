@@ -152,7 +152,7 @@ sequenceDiagram
 
     Note right of Device B: WPS Handshake (e.g., Push Button)
     Note right of Device B: Secure Group Formation (WPA2-PSK)
-
+```
 ## 2. Autonomous Group Formation
 
 In this mode, a device **self-initiates** and starts functioning as a Group Owner (GO) **without role negotiation**.
