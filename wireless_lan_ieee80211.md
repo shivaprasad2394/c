@@ -3602,6 +3602,78 @@ Primarily operates in **5.9 GHz band** with 10 MHz channel widths for reduced de
 
 ---
 # 🚘 Deep Dive: IEEE 802.11p/bd, 
+# 🚗 IEEE 802.11p — Wireless Access in Vehicular Environments (WAVE)
+
+802.11p is a Wi-Fi amendment designed for **Vehicle-to-Vehicle (V2V)** and **Vehicle-to-Infrastructure (V2I)** communication, used in **Intelligent Transportation Systems (ITS)**.
+
+---
+
+## 🧠 Key Characteristics
+
+- Operates in the **5.9 GHz band** (Dedicated Short Range Communications / DSRC).
+- Enables **low-latency**, **high-speed** communication between fast-moving vehicles.
+- Part of the broader **WAVE (Wireless Access in Vehicular Environments)** stack.
+
+---
+
+## 📶 Data Exchange Without Association
+
+- **No authentication or association handshake** required.
+- Devices communicate using a **wildcard BSSID (`FF:FF:FF:FF:FF:FF`)**.
+- Allows **instant data transmission** — ideal for fast vehicular environments.
+
+---
+
+## 📣 Beaconing and Advertisements
+
+Even though association is skipped, **beacons are still used**, primarily for:
+
+- **Service announcements**
+- **Timing synchronization**
+
+### 🔊 WAVE Service Advertisements (WSA)
+
+- A specialized frame used to announce **application-level services**.
+- Contains:
+  - Provider Service Identifier (PSID)
+  - Service Info (IP, port, channel, priority, etc.)
+  - Transmission frequency
+- Enables vehicles to **selectively listen** and react to nearby services.
+
+---
+
+## 🔁 Channel Operation
+
+- Uses **Control Channel (CCH)** for safety messages (e.g., emergency braking).
+- **Service Channels (SCHs)** used for infotainment and non-critical data.
+- Alternates between CCH and SCHs based on a **synchronized interval schedule** (typically 50 ms CCH / 50 ms SCH).
+
+---
+
+## 🚗 Example Use Cases
+
+- Forward Collision Warnings
+- Emergency Vehicle Alerts
+- Intersection Movement Assist
+- Toll Collection
+- Traffic Signal Priority
+- Over-the-air firmware updates
+
+---
+
+## 📘 Summary
+
+| Feature                  | Description                                               |
+|--------------------------|-----------------------------------------------------------|
+| BSSID                    | Wildcard — allows communication without association       |
+| Beaconing                | Still used for sync and WSA broadcast                     |
+| Authentication           | None (open communication)                                 |
+| Communication Type       | V2V, V2I                                                  |
+| Frame Type               | WSA (WAVE Service Advertisement)                          |
+| Channels                 | CCH (control), SCH (service)                              |
+| Applications             | Safety, ITS, infotainment                                 |
+
+> ✅ 802.11p is optimized for high-speed, real-time vehicle communication — making it a core technology for connected cars and smart roads.
 
 ---
 
