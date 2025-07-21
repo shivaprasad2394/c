@@ -637,8 +637,8 @@ Used for secure key exchange between client and AP.
 
 ### Steps:
 
-1. **AP** generates **ANonce** and sends to **station**.
-2. **Station** computes **PMK**(Pairwise Master Key)  from SSID + password, generates **SNonce**, and derives **PTK**.
+1. **AP** generates **ANonce** and sends to **station**.(Sent to the client to begin key derivation)
+2. **Station** computes **PMK**(Pairwise Master Key)  from SSID + password, generates **SNonce**, and derives **PTK**.(Sent to the AP/GO to complete key derivation)
 3. **Station** sends **SNonce** to AP.
 4. **AP** derives **PTK**, generates **GTK**, and sends GTK to station.
 5. **Station** sends **ACK** to confirm.
@@ -724,8 +724,8 @@ Below is a step-by-step overview of how a WPA3 connection is established:
 - As in WPA2, WPA3 uses the **Four-Way Handshake** to derive session keys and ensure key confirmation.
 - The difference: WPA3 uses the **PMK derived from the SAE handshake** instead of a PSK.
 - Steps:
-  1. The AP sends a **nonce (ANonce)** to the station.
-  2. The station replies with its **nonce (SNonce)**, computes the **Pairwise Transient Key (PTK)**, and includes a MIC (Message Integrity Code).
+  1. The AP sends a **nonce (ANonce)** to the station.(sent to client to begin key derivation)
+  2. The station replies with its **nonce (SNonce)**, computes the **Pairwise Transient Key (PTK)**, and includes a MIC (Message Integrity Code).(Sent to the AP/GO to complete key derivation)
   3. The AP derives the PTK, verifies the MIC, and sends the **Group Temporal Key (GTK)** encrypted using the PTK.
   4. The station confirms receipt and key installation.
 
@@ -1686,8 +1686,8 @@ It plays a central role in managing communication, association, and data forward
 
 If encryption is enabled (WPA2/WPA3):
 
-1. **AP sends ANonce** to client.
-2. **Client generates PMK/PTK**, sends SNonce.
+1. **AP sends ANonce** to client.(sent to client to begin key derivation)
+2. **Client generates PMK/PTK**, sends SNonce.(Sent to the AP/GO to complete key derivation)
 3. **AP generates PTK**, derives GTK, sends it to client.
 4. **Client sends ACK** to complete the handshake.
 
