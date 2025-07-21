@@ -77,3 +77,34 @@ sequenceDiagram
     Device A->>Device B: Association Response
     Note right of Device B: Security Handshake
 ```
+## 2. Autonomous Group Formation
+
+In this mode, a device **self-initiates** and starts functioning as a Group Owner (GO) **without role negotiation**.
+
+### Step-by-Step Process
+
+1. Device declares itself as GO  
+2. Starts broadcasting **Beacons**  
+3. Other devices discover and join as clients
+
+### Use Case
+
+Used in **IoT devices**, **printers**, or **digital displays**, where one device is always the GO and expects clients to join without negotiation.
+
+### Mermaid Diagram
+
+```mermaid
+sequenceDiagram
+    participant Device GO
+    participant Device Client
+
+    Device GO->>All: Beacon (IE: P2P Group Info)
+    Device Client->>Device GO: Probe Request
+    Device GO-->>Device Client: Probe Response
+
+    Device Client->>Device GO: Provision Discovery Request
+    Device GO-->>Device Client: WPS Push Button Method
+
+    Device Client->>Device GO: Association Request
+    Device GO-->>Device Client: Association Response
+```
