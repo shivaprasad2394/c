@@ -803,29 +803,139 @@ Once the SAE handshake and Four-Way Handshake are completed:
 
 ---
 
-## 🔐 EAP Authentication Methods
+## 🔐 802.1X EAP-TLS Authentication Process (Phase-by-Phase)
 
-### 🔒 EAP-TLS (Certificate-Based)
-- **Mutual certificate-based authentication**:
-  - **Server sends its certificate** to the client.
-  - **Client also presents a certificate**.
-- A **TLS handshake** establishes a **secure tunnel**.
-- A **Master Session Key (MSK)** is derived and securely passed to the AP.
-- 🔑 Requires:
-  - ✅ Server certificate
-  - ✅ Client certificate
-- 🛡️ **Security Level**: Very High (no passwords, full mutual auth)
+The 802.1X authentication mechanism, often used in enterprise Wi-Fi (including WPA2-Enterprise), relies on the **Extensible Authentication Protocol (EAP)**, a **RADIUS server**, and often the **EAP-TLS method** for certificate-based mutual authentication. Below is a step-by-step explanation.
 
 ---
 
-### 🔐 PEAP (Password-Based)
-- **PEAP = Protected EAP**: Uses TLS tunnel but only requires a **server certificate**.
-- Once the tunnel is established:
-  - The **client authenticates using username/password** (e.g., MSCHAPv2).
-- ✅ Easier to deploy (no client certs), but:
-  - ⚠️ Slightly lower security than EAP-TLS
+### 🔁 Phase 0: Initialization
+
+- **Message Type**: `EAPOL-Start`
+- **Sender**: Supplicant (STA/client)
+- **Purpose**:
+  - The client sends an `EAPOL-Start` frame to the Authenticator (AP or GO) to indicate it wants to start the 802.1X authentication process.
 
 ---
+
+### 🔐 Phase 1: EAP Identity Exchange
+
+- **Message Type**: `EAP-Request/Identity` and `EAP-Response/Identity`
+- **Flow**:
+  1. The Authenticator (AP) forwards `EAP-Request/Identity` to the client.
+  2. The client replies with `EAP-Response/Identity`.
+  3. The AP forwards this to the RADIUS server.
+- **Purpose**:
+  - Establish the client's identity before selecting the EAP method (e.g., EAP-TLS).
+
+---
+
+### 📜 Phase 2: EAP-TLS Handshake
+
+- **Message Type**: EAP encapsulates the full TLS handshake
+- **Exchanged Contents**:
+  - `ServerHello` + Server Certificate
+  - `ClientHello` + Client Certificate
+  - `ClientKeyExchange`
+  - `TLS Finished` messages
+- **Flow**:
+  1. The server sends its certificate to the client.
+  2. The client validates the server certificate and replies with its own certificate.
+  3. Key exchange (e.g., Diffie-Hellman or RSA) takes place.
+  4. TLS Finished messages are exchanged to confirm secure session setup.
+- **Purpose**:
+  - Authenticate both client and server using certificates.
+  - Establish a secure TLS tunnel.
+  - Derive a **Master Session Key (MSK)**.
+
+---
+
+### ✅ Phase 3: EAP Success
+
+- **Message Type**: `EAP-Success`
+- **Flow**:
+  1. After the TLS handshake succeeds, the RADIUS server sends an `EAP-Success` message to the AP.
+  2. The AP relays it to the client.
+- **Purpose**:
+  - Officially mark the authentication as successful.
+  - Close the EAP session.
+
+---
+
+### 🔑 Phase 4: MSK Delivery
+
+- **Key Type**: `MSK` (Master Session Key)
+- **Flow**:
+  - The RADIUS server securely delivers the MSK to the AP (via RADIUS protocol).
+- **Purpose**:
+  - The MSK is used as the root key to derive encryption keys for the Wi-Fi session (e.g., PTK and GTK).
+
+---
+
+### 🔒 Phase 5: Key Derivation and 4-Way Handshake
+
+- **Process**:
+  - The AP and client perform the **WPA2 4-Way Handshake** using the MSK as input.
+- **Key Outcomes**:
+  - **PTK** (Pairwise Transient Key): For unicast encryption
+  - **GTK** (Group Temporal Key): For broadcast/multicast
+- **Purpose**:
+  - Ensure both sides independently derive the same encryption keys.
+  - Finalize secure connectivity at the link layer.
+
+---
+
+## 🛡️ Security Properties of EAP-TLS
+
+- ✅ Mutual Authentication via certificates
+- ✅ TLS ensures confidentiality and integrity
+- 🔐 No passwords are exchanged
+- 🚫 Resistant to phishing and MITM attacks
+- 🔑 Strongest EAP method (ideal for enterprise Wi-Fi)
+
+---
+
+## 📌 Summary Table
+
+| Phase | Message Type                  | Contents                                              |
+|-------|-------------------------------|-------------------------------------------------------|
+| 0     | `EAPOL-Start`                 | Supplicant asks to begin 802.1X                      |
+| 1     | `EAP-Identity Exchange`       | Identity sent from STA to RADIUS                     |
+| 2     | `EAP-TLS Handshake`           | Certificates, key exchange, TLS Finished             |
+| 3     | `EAP-Success`                 | Sent from RADIUS → AP → STA after successful TLS     |
+| 4     | `MSK (Master Session Key)`    | Delivered from RADIUS to AP securely                 |
+| 5     | `PTK + GTK` via WPA Handshake | Encryption keys derived from MSK                     |
+
+---
+
+
+## 🔐 Phase 2: TLS Tunnel Setup (Outer)
+
+- Only the **server presents a certificate**.
+- The **client validates** the server certificate to ensure authenticity.
+- A **secure TLS tunnel is formed** between the client and the RADIUS server.
+- This tunnel protects the subsequent authentication exchange from eavesdropping or tampering.
+
+---
+
+## 🔑 Phase 3: Inner EAP Authentication (Inside Tunnel)
+
+If using **MSCHAPv2** (most common with PEAP):
+
+1. **STA sends Username**  
+   - The client begins authentication by submitting its identity within the tunnel.
+
+2. **RADIUS sends MSCHAPv2 Challenge**  
+   - The server issues a challenge (a random number) that the client must encrypt using its password.
+
+3. **STA responds with MSCHAPv2 Response**  
+   - The client calculates a hashed response using the password and sends it back.
+
+4. **RADIUS verifies and sends Success**  
+   - The server compares the response to an expected value. If correct, authentication succeeds.
+
+✅ **No password is transmitted directly** — instead, authentication uses a challenge/response mechanism for security.
+
 
 ## 🔄 4-Way Handshake
 
