@@ -1,219 +1,79 @@
-📡 Wireless LAN and IEEE 802.11 Overview
-Wireless LAN is a network where devices use wireless protocols/technology to communicate within a defined area.
+# Wi-Fi Direct: Deep Dive & Internal Architecture
 
-🌐 IEEE 802.11 Standards
-IEEE 802.11 provides standards for wireless LAN covering two primary layers:
+## Introduction
 
-Physical Layer
+**Wi-Fi Direct** is a peer-to-peer (P2P) wireless communication technology that allows devices to connect directly to each other without requiring a traditional Wi-Fi access point (AP). 
 
-Data Link Layer
+Built on the IEEE 802.11 family of standards, Wi-Fi Direct reuses several underlying MAC/PHY mechanisms such as **probe requests/responses**, **beacons**, and **association procedures**. However, it introduces **dynamic role negotiation**, **enhanced power-saving mechanisms**, and **secure direct communication**, enabling flexible and efficient wireless connectivity.
 
-🔧 Types of Services in IEEE 802.11
-1. BSS (Basic Service Set)
-A group/unit of wireless devices communicating with the same Access Point (AP).
+---
 
-BSSID: The AP's MAC address (48-bit hexadecimal).
+## Internal Components of Wi-Fi Direct
 
-2. ESS (Extended Service Set)
-A network of multiple APs and their associated clients connected via a single Distribution System Medium (DSM).
+At its core, Wi-Fi Direct operates with two primary roles:
 
-ESSID: Shared network name across APs.
+### 1. P2P Group Owner (GO)
+- Functions similarly to a traditional AP.
+- Manages **beaconing**, **client associations**, **network parameter coordination**, **encryption**, and **security protocols**.
+  
+### 2. P2P Client
+- Connects to the P2P Group managed by the GO.
+- Participates in **power-saving protocols**, **security handshakes**, and **data exchanges** under GO instructions.
 
-SSID and ESSID are often used interchangeably.
+---
 
-📶 Access Point (AP)
-Devices that accept wireless signals from clients and retransmit them to the wired network.
+## Internal Working of Wi-Fi Direct
 
-Acts as a Layer 2 device (bridge).
+### 1. MAC/PHY Layer Interactions
+Wi-Fi Direct reuses standard IEEE 802.11 frame formats (e.g., **probe request**, **probe response**, **authentication**, **association**).
 
-Also known as a Base Station.
+- **Discovery Phase:** Devices alternate between `search` and `listen` states.
+- These states occur over pre-defined **social channels**: **Channel 1**, **Channel 6**, and **Channel 11** in the 2.4 GHz band.
 
-🧩 Ad-Hoc Mode
-Without AP (peer-to-peer).
+### 2. Dynamic Role Negotiation
+- Devices calculate a **GO Intent value** during discovery to indicate their willingness to act as Group Owner.
+- The device with the **higher intent value becomes the GO**.
+- A **tie-breaker bit** is used if intent values are equal.
+- This logic is managed internally by a **state machine** within the Wi-Fi Direct protocol stack.
 
-Wireless devices communicate directly.
+### 3. Concurrent Mode Support
+- Some devices can operate as:
+  - A P2P GO and,
+  - A traditional client simultaneously.
+- Requires **internal scheduling**, **resource allocation**, and **interface sharing** logic.
 
-Decentralized network.
+---
 
-🕵️ Promiscuous Mode (Monitor Mode)
-Used to listen to Wi-Fi packets over the air (e.g., sniffers, analyzers).
+## Group Formation Scenarios
 
-🧱 IEEE 802.11 Layer Structure
-➤ Data Link Layer
-Divided into:
+Wi-Fi Direct supports three group formation mechanisms. Each mechanism follows a slightly different procedure.
 
-Logical Link Control (LLC)
+---
 
-Medium Access Control (MAC)
+### 1. Standard Group Formation
 
-MAC Sublayers:
-DCF (Distributed Coordination Function):
+**Step-by-step Process:**
+1. Devices enter **discovery mode**.
+2. Exchange **probe request/response** on social channels.
+3. Negotiate roles using **GO Intent** values.
+4. The selected GO begins beaconing.
+5. Clients detect beacons and **associate** with the GO.
+6. Security handshake (e.g., WPS or WPA2) is performed.
+7. Data transmission starts.
 
-Based on CSMA/CA (Carrier Sense Multiple Access with Collision Avoidance).
+**Mermaid Diagram:**
+```mermaid
+sequenceDiagram
+    participant Device A
+    participant Device B
 
-Used for wireless (unlike CSMA/CD for wired).
-
-Half-duplex only (can send or receive, not both).
-
-PCF (Point Coordination Function):
-
-Poll-based, priority access mechanism.
-
-🔍 Scanning Process (Joining a Network)
-A station scans to associate with an AP.
-
-🔄 Steps:
-Send a Probe Frame
-
-Nearby APs respond with Probe Response
-
-Station sends Association Request
-
-AP replies with Association Response
-
-🧭 Types of Scanning
-Active Scanning: Station sends probe → AP replies.
-
-Passive Scanning: APs broadcast Beacon Frames regularly.
-
-🚫 CSMA/CA Problems
-1. Hidden Terminal Problem
-Clients can't detect each other, causing collisions.
-
-Solved using RTS/CTS mechanism.
-
-2. Exposed Terminal Problem
-Station avoids transmitting despite the channel being idle.
-
-Also solved using RTS/CTS, if devices are synchronized.
-
-✂️ Fragmentation
-Encouraged in noisy channels.
-
-Prevents retransmitting the whole packet on error.
-
-🧾 Frame Format
-less
-Copy
-Edit
-FC | Duration | Addr1 | Addr2 | Addr3 | SC | Addr4 | Body | FCS
-Frame Control (FC) contains:
-Protocol Version
-
-Frame Type (Management, Control, Data)
-
-Subtype
-
-To DS / From DS bits
-
-Addresses:
-Addr1: Next destination
-
-Addr2: Previous sender
-
-Addr3: Final destination
-
-Addr4: Original source (used in WDS or mesh)
-
-Other Fields:
-SC (Sequence Control): Synchronization
-
-FCS (Frame Check Sequence): CRC32 checking
-
-🧬 Frame Types
-1. Management Frames
-Probe
-
-Association
-
-Authentication
-
-Beacon
-
-2. Control Frames
-RTS (Request to Send)
-
-CTS (Clear to Send)
-
-ACK (Acknowledgement)
-
-3. Data Frames
-Carry user payloads
-
-🔐 Beacon Frame Contents
-Broadcasted periodically by APs, containing:
-
-SSID
-
-Channel Information
-
-Supported & Required Data Rates
-
-Security Capabilities
-
-QoS Parameters
-
-🌐 IEEE 802.11 Versions (Physical Layer)
-Version	Frequency	Modulation	Speed (Max)
-802.11a	5.75 GHz	OFDM, PSK	6–54 Mbps
-802.11b	2.44 GHz	DSSS, PSK	5.5–11 Mbps
-802.11g	2.4 GHz	OFDM	54 Mbps
-
-Wi-Fi operates in the unlicensed ISM band.
-
-🔓 Connection Process (No Encryption)
-AP sends a Beacon Frame (broadcast)
-
-Client sends Probe Request (with SSID)
-
-AP responds (if open, no encryption required)
-
-Client sends Authentication Request
-
-AP replies with Authentication Response
-
-Client sends Association Request
-
-AP responds with Association Response
-
-Client can now send a Disassociation Frame to disconnect
-
-💤 Power Saving Mode
-Station sends null data frame with PS-Poll bit.
-
-AP buffers data and signals via TIM (Traffic Indication Map).
-
-Station polls when it wakes to retrieve buffered data.
-
-🔐 Four-Way Handshake (WPA2)
-Used to establish encrypted data traffic.
-
-Steps:
-AP sends ANonce (random number) to station.
-
-Station computes PMK (from password + SSID), generates SNonce, and computes PTK.
-
-Station sends SNonce to AP.
-
-AP computes PTK, generates GTK (Group Temporal Key), and sends it to the station.
-
-Station sends ACK — handshake complete.
-
-🔒 WPA2 Encrypted Connection Process
-Client sends Probe Request (includes capabilities)
-
-AP responds with Probe Response (SSID + encryption info)
-
-Client sends Authentication Request
-
-AP replies with Authentication Response
-
-Client is authenticated (but not yet associated)
-
-Client sends Association Request (includes desired encryption)
-
-AP responds with Association Response
-
-If WPA2 is chosen, the Four-Way Handshake occurs for encryption
-
-Note: A station can be authenticated to multiple APs, but associated with only one at a time.
+    Device A->>Device B: Probe Request
+    Device B->>Device A: Probe Response
+    Device A->>Device B: GO Negotiation Request (Intent=7)
+    Device B->>Device A: GO Negotiation Response (Intent=5)
+    Device A->>Device B: GO Confirmation (Device A becomes GO)
+    Device A-->>Device B: Beaconing Starts
+    Device B->>Device A: Association Request
+    Device A->>Device B: Association Response
+    Note right of Device B: Security Handshake
+```
