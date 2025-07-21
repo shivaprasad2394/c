@@ -129,9 +129,11 @@ App/Data → TCP/UDP → IP Packet → MSDU → MPDU → Wireless Transmission
 ## ⚙️ How CSMA/CA Works (Simplified)
 
 1. A device **"listens"** to check if the wireless channel is free.
-2. If the channel is **idle**, it waits for a short, random time.
-3. If still idle, it **sends** the data.
-4. If the channel is **busy**, the device waits and tries again later.
+2. If the channel is **idle**, it waits for a **DIFS(Distributed Interframe Space)** & random back-off time.
+3. If still idle Backoff timer decrements, when the channel remains idle & the timer hits **zero**, the device transmits its frame(data).
+4. If the channel is **busy**, the device wait for next DIFS, and tries again later.
+5. - If an **ACK Handling** is received → success.
+   - If not → assume collision → **increase CW**, retry (up to a max retry limit).
 
 ---
 
@@ -167,6 +169,29 @@ sequenceDiagram
 #### 📌 Real-World Analogy:
 > Imagine two people in separate rooms trying to talk to the same receptionist over a walkie-talkie. They can’t hear each other and both talk at once, confusing the receptionist.
 
+```mermaid
+sequenceDiagram
+    participant Node A
+    participant Node B (Receiver)
+    participant Node C
+    participant Node D
+
+    %% Hidden Terminal Problem Resolution
+    Note over Node A,Node C: Hidden Terminal Scenario
+    Node A->>Node B (Receiver): RTS
+    Node B (Receiver)->>Node A: CTS
+
+    Note right of Node C: Hears CTS from B
+    Note right of Node C: Defers transmission (avoids collision)
+
+    %% Exposed Node Problem Resolution
+    Note over Node C,Node D: Exposed Node Scenario
+    Node C->>Node B (Receiver): RTS
+    Node B (Receiver)->>Node C: CTS
+
+    Note right of Node A: Hears RTS only (no CTS)
+    Note right of Node A: Knows it's safe to transmit elsewhere
+```
 ---
 
 ### 2. 📡 Exposed Node Problem
