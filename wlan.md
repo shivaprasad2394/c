@@ -176,15 +176,46 @@ sequenceDiagram
 - Enables smooth streaming and VoIP over Wi-Fi Direct links
 
 ---
-
-### Power Saving
-
+### Power Saving Mechanisms
+Wi-Fi Direct introduces specialized mechanisms to minimize energy consumption during peer-to-peer communication.
 - Clients follow the **Notice of Absence (NoA)** schedule defined by the GO
 - Implements **P2P Power Save Protocol (PPSP)** to reduce power consumption
 - Key techniques include:
   - **GO buffering data** for clients while asleep
   - **Traffic Indication Maps (TIMs)** to notify clients when data is buffered
 - Critical for mobile and battery-powered devices
+---
+
+#### Notice of Absence (NoA)
+
+- The **Group Owner (GO)** periodically broadcasts a **Notice of Absence (NoA)** schedule to inform clients when it will be unavailable for communication.
+- Clients synchronize their power-saving cycles with this schedule to avoid unnecessary wake-ups.
+- NoA Parameters include:
+  - **Count** – Number of absence intervals (0 = indefinite)
+  - **Duration** – Duration of each absence period
+  - **Interval** – Time between the start of two consecutive absence periods
+  - **Start Time (TSF)** – Timestamp for when absence starts
+- Helps reduce contention and idle listening, especially when GO is also serving as a legacy client (concurrent mode).
+
+---
+
+#### P2P Power Save Protocol (PPSP)
+
+- Wi-Fi Direct implements **P2P Power Save Protocol (PPSP)** to manage power-saving behaviors beyond standard 802.11 mechanisms.
+- PPSP supports:
+  - **Client-initiated sleep** with GO-aware coordination
+  - **Buffered traffic handling** by the GO
+  - **Client wake-up signaling** using **Traffic Indication Maps (TIMs)**
+- GO maintains a **traffic buffer** and notifies sleeping clients only when data is pending.
+- Reduces unnecessary data polling and active channel usage.
+
+---
+
+#### Key Benefits
+
+- Enhances battery life of connected clients
+- Minimizes airtime usage during idle periods
+- Enables better coexistence with infrastructure networks or other P2P groups (especially in concurrent operation scenarios)
 
 ---
 
