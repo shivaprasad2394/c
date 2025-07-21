@@ -146,3 +146,73 @@ sequenceDiagram
     Device B-->>Device A: Join without full negotiation
     Note over Device A,Device B: Fast Group Reconnection
 ```
+## Additional Functional Aspects
+
+---
+
+### Data Transfer
+
+- Communication is based on standard **IEEE 802.11 data frames**
+- Wi-Fi Direct supports all **IP-based protocols**, including:
+  - **UDP**
+  - **TCP/IP**
+  - **HTTP**, **FTP**, **RTSP**, and others
+- Throughput and performance vary depending on:
+  - **Channel quality**
+  - **Signal interference**
+  - **Device role** (Group Owner (GO) has higher processing and scheduling overhead)
+- Performance is often comparable to infrastructure mode Wi-Fi in short-range scenarios
+
+---
+
+### QoS (Quality of Service)
+
+- Uses **Wi-Fi Multimedia (WMM)** to provide traffic prioritization
+- Traffic is classified into **four Access Categories (ACs)**:
+  - **Voice** – Highest priority (low latency)
+  - **Video** – Medium-high priority
+  - **Best Effort** – Default priority
+  - **Background** – Lowest priority (e.g., file downloads)
+- Enables smooth streaming and VoIP over Wi-Fi Direct links
+
+---
+
+### Power Saving
+
+- Clients follow the **Notice of Absence (NoA)** schedule defined by the GO
+- Implements **P2P Power Save Protocol (PPSP)** to reduce power consumption
+- Key techniques include:
+  - **GO buffering data** for clients while asleep
+  - **Traffic Indication Maps (TIMs)** to notify clients when data is buffered
+- Critical for mobile and battery-powered devices
+
+---
+
+### Security Mechanisms
+
+- Supports industry-standard **Wi-Fi Protected Access**:
+  - **WPA2-PSK (Pre-Shared Key)**
+  - **WPA3-SAE (Simultaneous Authentication of Equals)** for stronger protection
+- Uses **Wi-Fi Protected Setup (WPS)** for group formation:
+  - **PIN Method** – Displays a code for manual entry
+  - **Push Button Configuration (PBC)** – User-friendly pairing
+  - **NFC (Near-Field Communication)** – Tap-to-pair support
+- All management frames are optionally protected using **Protected Management Frames (PMF)** to prevent spoofing and eavesdropping
+
+---
+
+### Connection Management
+
+- The **Group Owner (GO)** maintains a dynamic list of connected clients
+- Provides mechanisms for:
+  - **Client eviction** – Manual or automated disconnection
+  - **Disassociation** – Graceful connection teardown
+  - **Group termination** – Ends group and clears all clients
+- Clients can:
+  - **Re-negotiate roles** dynamically during reconnection
+  - **Initiate or join** new groups as needed
+- Wi-Fi Direct also supports **concurrent operation** with infrastructure networks (via virtual interfaces), enabling devices to act as both:
+  - **GO or Client**
+  - **Standard Wi-Fi STA** (Station) simultaneously
+
+---
