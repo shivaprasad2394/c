@@ -1717,7 +1717,7 @@ If encryption is enabled (WPA2/WPA3):
 
 - Operates on a fixed or dynamic channel in 2.4GHz/5GHz/6GHz bands.
 - May support:
-  - **Channel bonding** (40/80/160 MHz)
+  - **Channel bonding** (40/80/160 MHz)->(combine two or more adjacent frequency channels into a single wider channel, allowing for higher data rates and throughput.By bonding two of them (e.g., Channel 1 + 5), you get 40 MHz → more bandwidth = faster speeds)
   - **DFS** (Dynamic Frequency Selection)
   - **Band Steering** (2.4 → 5GHz steering)
 
