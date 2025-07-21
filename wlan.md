@@ -108,3 +108,41 @@ sequenceDiagram
     Device Client->>Device GO: Association Request
     Device GO-->>Device Client: Association Response
 ```
+## 3. Persistent Group Formation
+
+**Persistent groups** are pre-negotiated and saved on devices for **seamless future reconnection**.
+
+### Step-by-Step Process
+
+1. First connection is a standard group formation with the **"Persistent" bit set**  
+2. Devices **store credentials** and assigned **GO/Client roles**  
+3. On future encounters, devices **skip role negotiation and security exchange**, reconnecting automatically
+
+---
+
+### Use Case
+
+Persistent groups are ideal for recurring connections, such as:
+
+- Wireless speakers  
+- Smart TVs  
+- Previously paired mobile phones
+
+---
+
+### Mermaid Diagram
+
+```mermaid
+sequenceDiagram
+    participant Device A
+    participant Device B
+
+    Note over Device A,Device B: Initial Standard Formation
+    Device A->>Device B: GO Negotiation + Security Exchange
+    Device A-->>Device B: Mark Group as Persistent
+
+    Note over Device A,Device B: Future Encounter
+    Device A->>Device B: Probe Request (Persistent Group Info)
+    Device B-->>Device A: Join without full negotiation
+    Note over Device A,Device B: Fast Group Reconnection
+```
