@@ -133,25 +133,123 @@ Used in general-purpose, **on-demand P2P communication**:
 
 ### Mermaid Diagram
 
+## 1. Standard Group Formation (Wi-Fi Direct)
+
+Standard group formation is the most commonly used method for forming a temporary Wi-Fi Direct group where devices dynamically negotiate roles and establish a secure peer-to-peer connection.
+
+---
+
+### Step-by-step Process
+
+1. **Device Discovery Phase**
+   - Devices alternate between two states:
+     - **Search**: Actively sends **Probe Requests** on social channels (CH 1, 6, 11)
+     - **Listen**: Listens for incoming probes on one of the social channels
+   - Each **discovery iteration** typically lasts:
+     - **Search State**: ~100 ms per channel
+     - **Listen State**: ~100 ms
+   - The process continues until a peer is found
+
+2. **Probe Request/Response Exchange**
+   - Sent over **social channels**
+   - Contains:
+     - **P2P IE**: Device capabilities, GO Intent, config timeout, group capabilities
+     - **WSC IE** (Wi-Fi Simple Config): Device info (e.g., name, category, WPS method support)
+   - Devices use this to evaluate compatibility and form intent values
+
+3. **GO Negotiation**
+   - Conducted over the discovered channel
+   - A 3-way handshake:
+     1. **GO Negotiation Request**
+     2. **GO Negotiation Response**
+     3. **GO Negotiation Confirmation**
+   - Key fields:
+     - **GO Intent Value (0–15)**: Indicates preference to become GO
+     - **Tie Breaker Bit**: Used when both devices present equal intent
+
+4. **Beaconing**
+   - The selected GO begins **Beacon transmission**
+   - Beacon includes:
+     - **SSID** (e.g., DIRECT-xy-DeviceName)
+     - **P2P Group Info Attribute** in P2P IE
+     - **WSC IE** describing supported security setup
+
+5. **Association**
+   - P2P client sends an **Association Request**
+     - Contains supported capabilities, WPS method preferences
+   - GO replies with **Association Response**
+   - Occurs on the channel the GO is beaconing on
+
+6. **Security Handshake**
+   - Wi-Fi Direct mandates **WPS** for key exchange
+     - **Push Button** or **PIN-based** pairing
+   - During WPS:
+     - Devices exchange:
+       - **Device Password ID**
+       - **DH Public Keys**
+       - **Authentication Nonces**
+       - **Device Capabilities**
+     - A shared **Pre-Shared Key (PSK)** is derived
+   - After WPS, a **WPA2 4-way handshake** or **WPA3 SAE exchange** is performed
+
+7. **Group Formation Complete**
+   - Devices exchange **DHCP messages** (if needed)
+   - Secure communication begins
+   - Optional: Save credentials for **Persistent Group**
+
+---
+
+### Timing and Channel Information
+
+| Phase                   | Channel(s)   | Time Range     | Notes                                              |
+|-------------------------|--------------|----------------|----------------------------------------------------|
+| Discovery (Search/Listen)| 1, 6, 11     | ~100 ms/channel | Search and Listen alternate every ~100ms           |
+| GO Negotiation          | Dynamic (peer’s CH) | Few hundred ms | Channel stays fixed once peer is detected          |
+| Beaconing + Association | GO's CH      | <100 ms        | GO begins beaconing on its preferred social CH     |
+| WPS Handshake           | GO's CH      | ~2–5 seconds   | Depends on method (Push Button faster than PIN)    |
+| WPA2 4-Way Handshake    | GO's CH      | <100 ms        | Cryptographic key derivation and confirmation      |
+
+---
+
+### Use Case
+
+Ideal for:
+- Temporary peer-to-peer file sharing
+- Media streaming (e.g., Wi-Fi Direct screen casting)
+- Controller-to-console pairing (e.g., gaming devices)
+- Mobile ad-hoc networking setups
+
+---
+
+### Mermaid Diagram
 ```mermaid
 sequenceDiagram
     participant Device A
     participant Device B
 
-    Device A->>Device B: Probe Request (P2P IE + WSC IE)
+    Device A->>Device B: Probe Request (CH 1–6–11) [P2P IE + WSC IE]
     Device B->>Device A: Probe Response (P2P IE + WSC IE)
 
     Device A->>Device B: GO Negotiation Request (Intent=7)
     Device B->>Device A: GO Negotiation Response (Intent=5)
     Device A->>Device B: GO Confirmation (Device A becomes GO)
 
-    Device A-->>Device B: Beaconing Starts (SSID + P2P + WSC)
+    Device A-->>Device B: Beaconing Starts (SSID + P2P IE + WSC IE)
 
-    Device B->>Device A: Association Request (P2P IE)
-    Device A->>Device B: Association Response (P2P IE)
+    Device B->>Device A: Association Request (P2P Capabilities)
+    Device A->>Device B: Association Response
 
-    Note right of Device B: WPS Handshake (e.g., Push Button)
-    Note right of Device B: Secure Group Formation (WPA2-PSK)
+    Note right of Device B: Begin WPS (Push Button)
+    Device B->>Device A: WSC Message (Public Key, Nonce)
+    Device A->>Device B: WSC Message (Public Key, Auth Key, PSK Derivation)
+
+    Note right of Device B: WPA2 4-Way Handshake
+    Device B->>Device A: EAPOL Msg 1
+    Device A->>Device B: EAPOL Msg 2
+    Device B->>Device A: EAPOL Msg 3
+    Device A->>Device B: EAPOL Msg 4
+
+    Note right of Device B: Secure Link Established (WPA2-PSK)
 ```
 ## 2. Autonomous Group Formation
 
