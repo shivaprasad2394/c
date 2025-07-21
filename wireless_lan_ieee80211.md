@@ -2569,12 +2569,75 @@ After the client completes OSU (Online Sign-Up), the next steps are critical for
 
 ## 🔄 Operational Workflow
 
-### 1. **Cluster Formation (Discovery and Sync Phase)**
+## 📡 Cluster Formation in Wi-Fi Aware (NAN)
 
-* Devices start by scanning for **NAN beacons**.
-* Each device evaluates if a cluster exists; if not, it becomes a **Master**.
-* Master sends out **Synchronization Beacons (NAN Sync Beacons)**.
-* Other devices sync their clocks and join the cluster as **slaves**.
+When devices participate in a Wi-Fi Aware (NAN) network, they go through the **Discovery and Synchronization Phase** to form or join a cluster.
+
+---
+
+### 🔍 1. Passive Scanning for NAN Beacons
+- Each device **listens on social channels** (usually 2.4 GHz: ch 6 and/or 5 GHz).
+- They **scan for existing NAN Sync Beacons** to check if a cluster is already active.
+
+---
+
+### 🧠 2. Cluster Detection Logic
+- If a device **detects existing beacons**, it may:
+  - Join the cluster as a **synchronized node (Slave)**.
+  - Align its **Timing Synchronization Function (TSF)** with the Master.
+
+- If **no beacons are found** within a given scan period:
+  - The device **elects itself as Master**.
+
+---
+
+### 🕒 3. Sync Beacon Transmission
+- The **Master node** begins sending periodic **NAN Sync Beacons**.
+- These beacons include:
+  - **NAN Timing Window (NTW) schedule**
+  - **Cluster ID**
+  - **Master Preference**
+  - **Availability windows (for data exchange)**
+
+---
+
+### 🤝 4. Cluster Joining by Other Devices
+- Other NAN-capable devices receive the Sync Beacons.
+- They evaluate:
+  - Master preference
+  - Clock stability
+  - Signal strength
+- Then they **synchronize to the Master** and join as **Slaves**.
+
+---
+
+### 🔁 5. Master Reelection (if needed)
+- Devices may monitor **Master quality** (e.g., missed beacons, low preference).
+- If the Master fails or a better Master appears:
+  - A new Master may be **elected dynamically**.
+
+---
+
+### 📦 Protocol Elements in NAN Sync Beacon
+- **Service Discovery Frame (SDF)**
+- **NAN Sync Parameters**
+- **Timing Sync Info**
+- **Cluster Information**
+
+---
+
+### 📘 Summary:
+| Role          | Function                                 |
+|---------------|------------------------------------------|
+| Master        | Sends Sync Beacons; defines NTW schedule |
+| Slave         | Syncs with Master; joins cluster         |
+| Beacon        | Broadcasts timing, cluster ID, roles     |
+| Reelection    | Triggered by failure or higher preference|
+
+---
+
+> ✅ This cluster formation ensures devices share a common time reference and can discover services or communicate with low power.
+
 
 ### 2. **Service Discovery (Publish / Subscribe)**
 
