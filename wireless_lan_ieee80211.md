@@ -172,25 +172,19 @@ sequenceDiagram
 ```mermaid
 sequenceDiagram
     participant Node A
-    participant Node B (Receiver)
+    participant Node B
     participant Node C
-    participant Node D
 
-    %% Hidden Terminal Problem Resolution
-    Note over Node A,Node C: Hidden Terminal Scenario
-    Node A->>Node B (Receiver): RTS
-    Node B (Receiver)->>Node A: CTS
+    Node A->>Node B: RTS
+    Note right of Node B: B receives RTS from A
 
-    Note right of Node C: Hears CTS from B
-    Note right of Node C: Defers transmission (avoids collision)
+    Node B->>Node A: CTS
+    Note over Node C: C hears CTS (from B) → defers transmission
 
-    %% Exposed Node Problem Resolution
-    Note over Node C,Node D: Exposed Node Scenario
-    Node C->>Node B (Receiver): RTS
-    Node B (Receiver)->>Node C: CTS
+    Node A-->>Node B: Data Frame
+    Node B-->>Node A: ACK
 
-    Note right of Node A: Hears RTS only (no CTS)
-    Note right of Node A: Knows it's safe to transmit elsewhere
+    Note over Node C: C waits until transmission is done
 ```
 ---
 
@@ -207,7 +201,25 @@ sequenceDiagram
 
 #### ❌ Result:
 - **Unnecessary waiting** → **inefficient use** of the wireless channel.
+```mermaid
+sequenceDiagram
+    participant Node A
+    participant Node B
+    participant Node C
+    participant Node D
 
+    Node B-->>Node A: RTS
+    Node A-->>Node B: CTS
+    Note over Node C: C hears RTS from B, but not CTS from A
+
+    Node C->>Node D: RTS
+    Node D->>Node C: CTS
+
+    Node C-->>Node D: Data Frame
+    Node D-->>Node C: ACK
+
+    Note over Node B: A and B are unaffected by C→D transmission
+```
 ---
 
 ### 3. 🐢 High Overhead from Waiting
