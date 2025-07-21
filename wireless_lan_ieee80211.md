@@ -1083,538 +1083,6 @@ After a successful Layer 2 (Wi-Fi) connection, your device begins the **DHCP (Dy
 
 > 🧠 DHCP is the bridge between being connected to Wi-Fi and actually accessing the internet.
 
-
-## 🚶‍♂️ Fast & Smart Roaming in Wi-Fi: 802.11k / v / r
-
-When you're moving around (like walking with your phone), Wi-Fi clients need to **switch between APs** — this is called **roaming**. Without optimizations, roaming can be slow or result in dropped packets.
-
-### 📦 Purpose of 802.11k/v/r
-| **Standard** | **Focus**         | **Goal**                                |
-|--------------|------------------|-----------------------------------------|
-| **802.11k**  | Knowledge         | Help clients discover better APs faster |
-| **802.11v**  | Direction         | Let APs steer clients toward better APs |
-| **802.11r**  | Speed             | Make roaming itself faster (Fast BSS Transition) |
-
----
-
-## 🔍 802.11k – "Know Before You Roam"
-
-**k = knowledge**
-
-- AP provides a **neighbor report** (a list of nearby APs + their signal strengths, channels, BSSIDs).
-- Client uses this to **pre-scan** and decide **where to roam next**.
-- Reduces delay because the client **doesn't have to scan every channel** blindly.
-
-### ✨ Example:
-- Your phone asks the AP: “Who else is nearby?”
-- The AP replies: “Here are 3 APs with good coverage.”
-
----
-
-## 🧭 802.11v – "You Should Go Now"
-
-**v = direction / suggestion**
-
-- AP can suggest a better AP for the client to connect to.
-- Known as **BSS Transition Management**.
-- Used in **load balancing**, weak signal detection, or power-saving modes.
-
-### ✨ Example:
-- AP says: “Hey client, your signal is weak. Please roam to AP-2 at -55 dBm.”
-- The client may **accept or ignore** the suggestion.
-
----
-
-## ⚡ 802.11r – "Roam Fast (FT)"
-
-**r = rapid roaming**
-
-- Reduces the **authentication delay** when switching APs.
-- Implements **Fast BSS Transition (FT)**.
-- Pre-shares cryptographic keys (PMK-R0/R1) between APs.
-- So when the client switches, it **doesn’t need full WPA2 handshake** again.
-
-### ✨ Example:
-- Without 802.11r: Roaming takes 300+ ms → noticeable lag (VoIP, gaming)
-- With 802.11r: Roaming in ~50 ms → smooth handoff
-
----
-
-## 📶 Summary Table
-
-| **Feature** | **802.11k**              | **802.11v**                  | **802.11r**                          |
-|-------------|---------------------------|-------------------------------|--------------------------------------|
-| **Goal**    | AP Discovery               | Roaming Decision Assistance   | Fast Authentication Handoff         |
-| **Main Idea**| Get neighbor list         | AP recommends better BSS      | Pre-authenticate before roaming      |
-| **Client Control?** | Yes               | Yes                           | Yes                                  |
-| **Improves** | Scan time, battery life   | Load balancing, performance   | Handoff speed for real-time traffic  |
-| **Best Use Case** | Large campus Wi-Fi   | Mesh / enterprise networks    | VoIP, video calls, low-latency apps  |
-
----
-
-## ✅ Real World Analogy
-
-> Imagine you're moving between conference rooms in a building with many Wi-Fi hotspots:
-
-- 🧠 **802.11k** gives you a **map** of other nearby access points.
-- 🧭 **802.11v** acts like a **guide**, telling you which door to take next.
-- ⚡ **802.11r** gives you a **VIP pass**, letting you skip the security line when you arrive.
-
----
-
-## 🛠️ How to Use These?
-
-- Supported only if **both AP and client device** support these standards.
-- Most modern enterprise APs (e.g., Cisco, Aruba, UniFi) support them.
-- Most modern phones/laptops support **k/v**, and many also support **r**.
-- Configuration is typically done in the **Wi-Fi controller / AP settings**.
-
-
-
-# 🔗 Fragmentation & Aggregation in Wi-Fi
-
-In Wi-Fi, **performance** and **reliability** are affected by how data is packaged and transmitted. Two techniques that help optimize wireless communication are:
-
-- **Fragmentation** – Breaking data into smaller pieces.
-- **Aggregation** – Combining multiple data packets into one.
-
----
-
-## ✂️ Fragmentation in Wi-Fi
-
-### 📍 What is it?
-
-**Fragmentation** divides a large data frame into smaller parts (fragments) before transmission.
-
-### 💡 Why it’s used:
-
-- To **reduce retransmission time** if a packet is lost or corrupted.
-- Smaller fragments have a **higher chance of successful delivery**, especially in noisy environments.
-
-### 🧠 How it works:
-
-1. A large data frame is split into smaller fragments.
-2. Each fragment is sent with its own **header** and **checksum**.
-3. Only the **lost or corrupted fragment** needs to be retransmitted.
-
-### ✅ Benefits:
-
-- **Improved reliability** in environments with high interference.
-- **Faster recovery** from transmission errors.
-
-### ❌ Drawbacks:
-
-- **More overhead** due to extra headers.
-- Can **reduce throughput** if not managed properly.
-
----
-
-## 📦 Aggregation in Wi-Fi
-
-### 📍 What is it?
-
-**Aggregation** combines multiple data packets into a **single larger frame** before transmission.
-
-> Introduced in **802.11n (Wi-Fi 4)** and enhanced in **Wi-Fi 5/6**, aggregation improves **efficiency**.
-
-### 🧠 Types of Aggregation:
-
-| **Type**    | **Full Name**                        | **Description**                                              |
-|-------------|---------------------------------------|--------------------------------------------------------------|
-| **A-MSDU**  | Aggregated MAC Service Data Unit     | Combines multiple data units at the **higher MAC layer**     |
-| **A-MPDU**  | Aggregated MAC Protocol Data Unit    | Combines multiple MPDUs at the **lower MAC layer**           |
-
-### ✅ Benefits:
-
-- **Less overhead** (fewer headers per packet)
-- **Higher throughput** and **better efficiency**
-- Especially useful in **high-speed** or **low-error** environments
-
-### ❌ Drawbacks:
-
-- If one part of an aggregated frame is corrupted, **entire frame may need retransmission**
-- **Delay-sensitive** applications may suffer due to buffering before aggregation
-
----
-
-## ⚖️ Fragmentation vs Aggregation
-
-|                | **Fragmentation**                          | **Aggregation**                             |
-|----------------|---------------------------------------------|----------------------------------------------|
-| **Purpose**     | Increase reliability                        | Improve efficiency and speed                 |
-| **Use Case**    | Noisy environments, weak signals            | Clean environments, high-speed transmissions |
-| **Overhead**    | High (more headers, more frames)            | Low (shared headers across packets)          |
-| **Throughput**  | Can reduce throughput                       | Increases throughput                         |
-| **Introduced In**| Legacy Wi-Fi (before 802.11n)              | 802.11n and later (Wi-Fi 4, 5, 6)            |
-
----
-
-## 🏠 Real-World Analogy
-
-### Fragmentation:
-> Like sending multiple **smaller envelopes** instead of one big package when mailing fragile items — fewer chances of complete loss.
-
-### Aggregation:
-> Like putting several letters into a **single large envelope** to save on postage and time — more efficient, unless the envelope gets damaged.
-
----
-
-## 🧠 Final Summary
-
-- **Fragmentation** helps improve **reliability** by reducing the size of each transmission.
-- **Aggregation** improves **efficiency** and **speed** by sending more data in fewer transmissions.
-- **Modern Wi-Fi** standards use both smartly, depending on signal quality, traffic type, and device capability.
-
-> 🚀 Efficient data handling = Faster Wi-Fi + Fewer errors!
-
-
-
-# 🔋 Power Management in Wi-Fi
-
-Wi-Fi devices (like phones, laptops, and IoT devices) often run on batteries. To **extend battery life**, Wi-Fi includes smart **power-saving mechanisms**.
-
----
-
-## 🧠 Why Power Management Matters
-
-- 🪫 Devices are **often idle** between data transmissions.
-- ⚡ Wireless radios consume **significant power** when active.
-- 💡 Power management allows devices to **sleep intelligently** without losing connectivity.
-
----
-
-## ⚙️ How Power Management Works in Wi-Fi
-
-Wi-Fi power-saving is based on a **client–AP (Access Point)** relationship.
-
-### 🧱 Key Concepts:
-
-| **Term**             | **Meaning**                                                                 |
-|----------------------|------------------------------------------------------------------------------|
-| **Sleep Mode**       | Client turns off its radio to save power                                     |
-| **Listen Interval**  | Tells the AP how often the client wakes up to check for data                 |
-| **Traffic Indication Map (TIM)** | Bitmap in beacon frames that indicates if AP has data for sleeping clients  |
-| **Beacon Frame**     | Periodic signal from AP that includes the TIM and other control info         |
-| **PS-Poll**          | Power Save Poll — client uses this to request queued data from AP            |
-
----
-
-## 📶 Power Save Mechanism – Step by Step
-
-1. **Client enters Power Save mode** and informs the AP.
-2. AP **buffers data** for that client.
-3. Client **wakes up periodically** based on the *Listen Interval*.
-4. AP sends a **Beacon** with a TIM indicating buffered data.
-5. Client sends a **PS-Poll** or triggers download to receive data.
-6. After receiving, the client may **go back to sleep**.
-
-
-## 🔋 Power Saving Mode (Legacy PS Mode only)
-
-- Client sends a **null data frame** with the **Power Management bit set** to indicate it's entering sleep mode.
-- The **Access Point (AP)** buffers any incoming data for the client while it’s asleep.
-- AP includes a **TIM (Traffic Indication Map)** in its periodic **beacon frames**, signaling which clients have buffered data.
-- When the client wakes up and sees its ID in the TIM, it sends a **PS-Poll** frame to request the buffered data from the AP.
-
----
-
-## 💡 Types of Wi-Fi Power Saving Techniques
-
-### 1. 💤 Legacy Power Save Mode
-
-- Defined in early Wi-Fi standards.
-- Based on **PS-Poll** mechanism and **beacon-based** listening.
-- Still widely supported, but **not optimal** for modern use.
-
----
-
-### 2. 🚀 WMM Power Save (U-APSD)
-
-> **WMM = Wi-Fi Multimedia**  
-> **U-APSD = Unscheduled Automatic Power Save Delivery**
-
-**WMM Power Save**, also known as **Unscheduled Automatic Power Save Delivery (U-APSD)**, is an enhanced power-saving mechanism introduced with **Wi-Fi Multimedia (WMM)**.
-
-- Introduced to support **VoIP** and **real-time multimedia**.
-- More **efficient** than legacy methods.
-- Client tells AP when it’s ready, and AP **pushes** buffered packets.
-
-### ⚙️ How It Works
-
-- The client (STA) enters power-save mode.
-- Instead of sending **PS-Poll** frames, the client sends a **trigger frame** (like a QoS data or null frame).
-- The AP, upon receiving the trigger, delivers **all buffered packets** for that Access Category (AC).
-- After delivery, the client may go back to sleep.
-
----
-
-### 3. 📡 Target Wake Time (TWT) – Wi-Fi 6 (802.11ax) and Beyond
-
-- AP and client **negotiate scheduled communication windows** to avoid unnecessary radio activity. 
-- Great for **IoT devices** and **smart homes**.
-- Dramatically reduces **power consumption** by avoiding unnecessary wakeups.
-
----
-### ⚙️ How It Works
-
-1. Client and AP agree on a **TWT schedule** — e.g., wake every 100ms.
-2. Outside of the agreed window, the client **sleeps**.
-3. At the TWT time, both AP and client **wake up and exchange data**.
-4. The client goes back to sleep until the next window.
-
-### 📋 Key Features
-
-| Feature                   | Description                                                  |
-|---------------------------|--------------------------------------------------------------|
-| **Trigger-based**         | Client initiates delivery by sending a frame                 |
-| **Low latency**           | Better for voice/video since delivery is immediate           |
-| **Efficient**             | Reduces need for constant polling or waking                  |
-| **AC-specific**           | Buffers and delivers data per Access Category (voice, video) |
-
-### 🧠 Real-World Analogy
-
-> Like telling the receptionist: “I’m ready now, give me **all my messages** at once.”  
-> You don’t have to keep asking — just one signal, and you get everything.
----
-
-## ⚖️ Power Save Modes – Summary Comparison
-
-| Feature               | Legacy Power Save         | WMM Power Save (U-APSD)            | TWT (Wi-Fi 6+)                        |
-|------------------------|---------------------------|-------------------------------------|---------------------------------------|
-| **Wake Trigger**       | TIM + PS-Poll              | Trigger Frame (QoS Null/Data)       | Pre-scheduled wake times              |
-| **Best For**           | General traffic            | Voice, Video                        | IoT, battery-powered smart devices    |
-| **Latency**            | Medium                     | Low                                 | Very Low (scheduled)                  |
-| **Power Efficiency**   | Moderate                   | High                                | Very High                             |
-| **Standard**           | 802.11a/b/g/n              | 802.11e (WMM)                       | 802.11ax (Wi-Fi 6 and later)          |
-| **Mechanism**       | Beacon + PS-Poll            | Client-triggered AP delivery  | Scheduled wake/sleep windows      |
-
----
-## 🧠 Real-World Analogy
-
-> Imagine a student (device) who doesn’t stay in the classroom (network) all the time:
-
-- 💤 **Legacy Mode**: They peek into the room every 10 minutes to see if there’s homework.
-- 🚪 **WMM PS**: They notify the teacher when they’re ready, and the teacher gives all the homework at once.
-- 🕐 **TWT**: They and the teacher agree on *exact times* to meet. No wasted trips!
-
----
-
-## ✅ Final Summary
-
-- Wi-Fi uses **smart power-saving** to help mobile and IoT devices conserve energy.
-- **Legacy**, **WMM Power Save**, and **TWT** are different techniques depending on device needs and Wi-Fi generation.
-- Modern devices leverage **TWT** for scheduled, ultra-efficient communication.
-
-> 🔋 Smart Wi-Fi = Fast Internet + Longer Battery Life
-
-# 💡 CAM (Constantly Awake Mode) in Wi-Fi
-
-## 🔍 What is CAM?
-
-**CAM** stands for **Constantly Awake Mode**. It is the **default power mode** in Wi-Fi where the device's radio is **always on** and actively listening for data or signals from the Access Point (AP).
-
----
-
-## ⚙️ How CAM Works
-
-In CAM:
-
-- The Wi-Fi radio **never sleeps**.
-- The device **immediately processes** all incoming and outgoing data.
-- There is **no buffering** of data at the AP — the client is always ready.
-
----
-
-## ✅ Advantages of CAM
-
-| **Benefit**                  | **Explanation**                                           |
-|------------------------------|-----------------------------------------------------------|
-| ⚡ Low Latency                | Instant response times; good for real-time applications  |
-| 🔁 Immediate Connectivity     | Always ready to send/receive data                        |
-| 📶 Reliable Signal Handling   | Better performance in voice, video, or gaming apps       |
-
----
-
-## ❌ Disadvantages of CAM
-
-| **Drawback**                 | **Explanation**                                           |
-|------------------------------|-----------------------------------------------------------|
-| 🔋 High Power Consumption     | Constantly running the radio drains the battery faster   |
-| 🔥 Not Energy Efficient       | Unsuitable for IoT or battery-powered devices            |
-
----
-
-## 🧠 Real-World Analogy
-
-> Imagine a **security guard** (your device) who never sleeps, watching the front door **24/7**.  
-> They can react instantly — but they'll be **exhausted** and **consume a lot of energy**!
-
----
-
-## 🔁 CAM vs Power Save Mode – Quick Comparison
-
-| **Feature**           | **CAM (Constantly Awake Mode)** | **Power Save Mode**               |
-|------------------------|----------------------------------|-----------------------------------|
-| **Radio State**        | Always ON                        | Sleeps when idle                  |
-| **Power Usage**        | High                             | Low to Medium                     |
-| **Latency**            | Very Low                         | Slight delay (due to wake-ups)    |
-| **Best For**           | Video, VoIP, gaming, real-time   | Background apps, IoT, sensors     |
-
----
-
-## 🔧 When is CAM Used?
-
-- **Laptops and desktops** plugged into power
-- **Real-time communication apps** like Zoom or Teams
-- **Streaming** or **gaming**
-- When **power saving is turned off** in network settings
-
----
-
-## ✅ Final Summary
-
-- **CAM (Constantly Awake Mode)** keeps the device ready for communication at all times.
-- Great for **performance**, not great for **battery life**.
-- Choose CAM when **speed and responsiveness** matter more than power savings.
-
-> ⚡ Always awake = always fast, but at a power cost!
-
----
-## 🔀 Band Switching: From 2.4 GHz to 5 GHz in Wi-Fi
-
-Modern dual-band Wi-Fi networks operate on both:
-
-- **2.4 GHz** (longer range, lower speed)
-- **5 GHz** (shorter range, higher speed, less interference)
-
----
-
-### 🧠 Why Switch from 2.4 GHz to 5 GHz?
-
-| **Reason**                  | **Explanation**                                                                 |
-|----------------------------|----------------------------------------------------------------------------------|
-| 🚀 **Faster Speeds**        | 5 GHz supports higher throughput (e.g., 802.11ac/ax), ideal for streaming, gaming |
-| 🤫 **Less Congestion**      | 2.4 GHz is crowded (Bluetooth, microwaves, neighbors), 5 GHz has more channels   |
-| 🎯 **Better QoS**           | APs may steer capable clients to 5 GHz for better load balancing                |
-
----
-
-## 🔄 How Band Switching Happens (Client-Side)
-
-When your device connects to Wi-Fi, here's what can happen:
-
-### 1. **Initial Connection**
-- Device scans both 2.4 and 5 GHz.
-- If signal strength on 5 GHz is **too weak**, it may connect to **2.4 GHz** first.
-
-### 2. **Monitoring Signal Quality**
-- Device continuously monitors **RSSI**, **SNR**, **packet loss**, etc.
-- If 5 GHz becomes viable (e.g., you walk closer to AP), it considers switching.
-
-### 3. **Switch Triggered**
-- The device **disconnects from 2.4 GHz** and **reassociates with 5 GHz** on same SSID.
-- The AP may **assist** using **802.11k/v** to suggest a better band.
-
----
-
-## 📡 AP-Assisted Band Steering
-
-Enterprise-grade or mesh APs use **band steering**:
-
-| **Technique**              | **What AP Does**                                                              |
-|----------------------------|--------------------------------------------------------------------------------|
-| 🔕 **Ignore 2.4 GHz requests** | If client supports 5 GHz, AP may delay or reject 2.4 GHz probes             |
-| 🧭 **802.11v BSS Transition** | AP suggests a 5 GHz BSSID via **BSS Transition Request**                   |
-| 📊 **Load Balancing**         | AP monitors client count and may steer clients for better performance       |
-
-> 🧠 Band steering is more like **“client suggestion”** — clients make the final roaming decision.
-
----
-
-## 📶 Technical Example: iPhone Switches from 2.4 → 5 GHz
-
-1. Initially connects to 2.4 GHz due to strong signal at range
-2. As user moves closer, iPhone receives 5 GHz **beacon frames** with good RSSI
-3. AP may send **802.11v BSS Transition Request** to 5 GHz BSSID
-4. iPhone disconnects from 2.4 GHz and reassociates to 5 GHz using:
-   - **Same SSID**
-   - New **BSSID** on a 5 GHz channel
-5. **DHCP is not redone** (same L3 settings usually retained)
-
----
-
-## 🛠️ Troubleshooting Tip
-
-| **Symptom**                       | **Possible Cause**                        | **Fix**                          |
-|----------------------------------|-------------------------------------------|----------------------------------|
-| Stuck on 2.4 GHz                 | Weak 5 GHz signal or client preference    | Adjust AP power/band steering   |
-| Flaky switching                  | Poor AP placement, no roaming support     | Enable 802.11k/v/r on AP        |
-| No switch even near AP          | Device roaming aggressiveness is low      | Tweak client-side roaming settings (if possible) |
-
----
-
-## ✅ Summary: Band Switch Flow
-
-```mermaid
-graph TD
-A[Device connects on 2.4 GHz] --> B[AP sends 5 GHz beacons]
-B --> C[Client sees stronger 5 GHz signal]
-C --> D{Is BSS Transition enabled}
-D -- Yes --> E[Client roams to 5 GHz]
-D -- No --> F[Client may still roam on its own]
-
-```
-# 🔍 DFS Scan in Wi-Fi
-
-DFS Scan is a special type of **passive channel scan** that access points (APs) must perform **before** using any **DFS channel** (radar-sensitive) in the 5 GHz band.
-
----
-
-## ⚙️ What is a DFS Scan?
-
-- Also known as **Channel Availability Check (CAC)**.
-- It is a **mandatory listening period** where the AP checks for radar signals **before transmitting** on a DFS channel.
-- The AP must stay **completely silent** during this scan.
-
----
-
-## ⏱️ How Long Does It Take?
-
-| **Region** | **Scan Duration (CAC Time)** |
-|------------|------------------------------|
-| 🇺🇸 US (FCC) | **60 seconds**               |
-| 🇪🇺 EU (ETSI) | **60 – 600 seconds** depending on channel |
-| 🌏 Others     | **Usually 60 seconds**       |
-
-> 🛑 During this time, the AP **won’t broadcast SSID** or allow connections on that channel.
-
----
-
-## 📶 When Does DFS Scan Happen?
-
-### 💡 Scenario 1: Initial Boot or Channel Change
-- AP boots up and selects a DFS channel → **must perform DFS scan first**.
-- No Wi-Fi service until the scan completes.
-
-### 💡 Scenario 2: DFS Radar Detected
-- AP already operating on a DFS channel.
-- Radar appears → AP **immediately switches** to a new channel (DFS or non-DFS).
-- If new channel is also DFS → another **DFS scan is triggered**.
-
----
-
-## 🧠 What Happens During DFS Scan?
-
-```mermaid
-sequenceDiagram
-Client->>AP: Attempt to join network
-AP--xClient: No beacon / no SSID broadcast
-AP->>Itself: Listen silently for radar (60s)
-Note right of AP: DFS scan in progress
-AP->>All: Beacon starts on selected channel
-Client->>AP: Association begins
-```
-
 # 📡 Wi-Fi Access Point (AP) Process
 
 A **Wi-Fi Access Point (AP)** is a Layer 2 device that acts as a bridge between wireless client devices and the wired network (LAN).
@@ -2748,6 +2216,536 @@ When devices participate in a Wi-Fi Aware (NAN) network, they go through the **D
 
 ---
 
+## 🚶‍♂️ Fast & Smart Roaming in Wi-Fi: 802.11k / v / r
+
+When you're moving around (like walking with your phone), Wi-Fi clients need to **switch between APs** — this is called **roaming**. Without optimizations, roaming can be slow or result in dropped packets.
+
+### 📦 Purpose of 802.11k/v/r
+| **Standard** | **Focus**         | **Goal**                                |
+|--------------|------------------|-----------------------------------------|
+| **802.11k**  | Knowledge         | Help clients discover better APs faster |
+| **802.11v**  | Direction         | Let APs steer clients toward better APs |
+| **802.11r**  | Speed             | Make roaming itself faster (Fast BSS Transition) |
+
+---
+
+## 🔍 802.11k – "Know Before You Roam"
+
+**k = knowledge**
+
+- AP provides a **neighbor report** (a list of nearby APs + their signal strengths, channels, BSSIDs).
+- Client uses this to **pre-scan** and decide **where to roam next**.
+- Reduces delay because the client **doesn't have to scan every channel** blindly.
+
+### ✨ Example:
+- Your phone asks the AP: “Who else is nearby?”
+- The AP replies: “Here are 3 APs with good coverage.”
+
+---
+
+## 🧭 802.11v – "You Should Go Now"
+
+**v = direction / suggestion**
+
+- AP can suggest a better AP for the client to connect to.
+- Known as **BSS Transition Management**.
+- Used in **load balancing**, weak signal detection, or power-saving modes.
+
+### ✨ Example:
+- AP says: “Hey client, your signal is weak. Please roam to AP-2 at -55 dBm.”
+- The client may **accept or ignore** the suggestion.
+
+---
+
+## ⚡ 802.11r – "Roam Fast (FT)"
+
+**r = rapid roaming**
+
+- Reduces the **authentication delay** when switching APs.
+- Implements **Fast BSS Transition (FT)**.
+- Pre-shares cryptographic keys (PMK-R0/R1) between APs.
+- So when the client switches, it **doesn’t need full WPA2 handshake** again.
+
+### ✨ Example:
+- Without 802.11r: Roaming takes 300+ ms → noticeable lag (VoIP, gaming)
+- With 802.11r: Roaming in ~50 ms → smooth handoff
+
+---
+
+## 📶 Summary Table
+
+| **Feature** | **802.11k**              | **802.11v**                  | **802.11r**                          |
+|-------------|---------------------------|-------------------------------|--------------------------------------|
+| **Goal**    | AP Discovery               | Roaming Decision Assistance   | Fast Authentication Handoff         |
+| **Main Idea**| Get neighbor list         | AP recommends better BSS      | Pre-authenticate before roaming      |
+| **Client Control?** | Yes               | Yes                           | Yes                                  |
+| **Improves** | Scan time, battery life   | Load balancing, performance   | Handoff speed for real-time traffic  |
+| **Best Use Case** | Large campus Wi-Fi   | Mesh / enterprise networks    | VoIP, video calls, low-latency apps  |
+
+---
+
+## ✅ Real World Analogy
+
+> Imagine you're moving between conference rooms in a building with many Wi-Fi hotspots:
+
+- 🧠 **802.11k** gives you a **map** of other nearby access points.
+- 🧭 **802.11v** acts like a **guide**, telling you which door to take next.
+- ⚡ **802.11r** gives you a **VIP pass**, letting you skip the security line when you arrive.
+
+---
+
+## 🛠️ How to Use These?
+
+- Supported only if **both AP and client device** support these standards.
+- Most modern enterprise APs (e.g., Cisco, Aruba, UniFi) support them.
+- Most modern phones/laptops support **k/v**, and many also support **r**.
+- Configuration is typically done in the **Wi-Fi controller / AP settings**.
+
+
+
+# 🔗 Fragmentation & Aggregation in Wi-Fi
+
+In Wi-Fi, **performance** and **reliability** are affected by how data is packaged and transmitted. Two techniques that help optimize wireless communication are:
+
+- **Fragmentation** – Breaking data into smaller pieces.
+- **Aggregation** – Combining multiple data packets into one.
+
+---
+
+## ✂️ Fragmentation in Wi-Fi
+
+### 📍 What is it?
+
+**Fragmentation** divides a large data frame into smaller parts (fragments) before transmission.
+
+### 💡 Why it’s used:
+
+- To **reduce retransmission time** if a packet is lost or corrupted.
+- Smaller fragments have a **higher chance of successful delivery**, especially in noisy environments.
+
+### 🧠 How it works:
+
+1. A large data frame is split into smaller fragments.
+2. Each fragment is sent with its own **header** and **checksum**.
+3. Only the **lost or corrupted fragment** needs to be retransmitted.
+
+### ✅ Benefits:
+
+- **Improved reliability** in environments with high interference.
+- **Faster recovery** from transmission errors.
+
+### ❌ Drawbacks:
+
+- **More overhead** due to extra headers.
+- Can **reduce throughput** if not managed properly.
+
+---
+
+## 📦 Aggregation in Wi-Fi
+
+### 📍 What is it?
+
+**Aggregation** combines multiple data packets into a **single larger frame** before transmission.
+
+> Introduced in **802.11n (Wi-Fi 4)** and enhanced in **Wi-Fi 5/6**, aggregation improves **efficiency**.
+
+### 🧠 Types of Aggregation:
+
+| **Type**    | **Full Name**                        | **Description**                                              |
+|-------------|---------------------------------------|--------------------------------------------------------------|
+| **A-MSDU**  | Aggregated MAC Service Data Unit     | Combines multiple data units at the **higher MAC layer**     |
+| **A-MPDU**  | Aggregated MAC Protocol Data Unit    | Combines multiple MPDUs at the **lower MAC layer**           |
+
+### ✅ Benefits:
+
+- **Less overhead** (fewer headers per packet)
+- **Higher throughput** and **better efficiency**
+- Especially useful in **high-speed** or **low-error** environments
+
+### ❌ Drawbacks:
+
+- If one part of an aggregated frame is corrupted, **entire frame may need retransmission**
+- **Delay-sensitive** applications may suffer due to buffering before aggregation
+
+---
+
+## ⚖️ Fragmentation vs Aggregation
+
+|                | **Fragmentation**                          | **Aggregation**                             |
+|----------------|---------------------------------------------|----------------------------------------------|
+| **Purpose**     | Increase reliability                        | Improve efficiency and speed                 |
+| **Use Case**    | Noisy environments, weak signals            | Clean environments, high-speed transmissions |
+| **Overhead**    | High (more headers, more frames)            | Low (shared headers across packets)          |
+| **Throughput**  | Can reduce throughput                       | Increases throughput                         |
+| **Introduced In**| Legacy Wi-Fi (before 802.11n)              | 802.11n and later (Wi-Fi 4, 5, 6)            |
+
+---
+
+## 🏠 Real-World Analogy
+
+### Fragmentation:
+> Like sending multiple **smaller envelopes** instead of one big package when mailing fragile items — fewer chances of complete loss.
+
+### Aggregation:
+> Like putting several letters into a **single large envelope** to save on postage and time — more efficient, unless the envelope gets damaged.
+
+---
+
+## 🧠 Final Summary
+
+- **Fragmentation** helps improve **reliability** by reducing the size of each transmission.
+- **Aggregation** improves **efficiency** and **speed** by sending more data in fewer transmissions.
+- **Modern Wi-Fi** standards use both smartly, depending on signal quality, traffic type, and device capability.
+
+> 🚀 Efficient data handling = Faster Wi-Fi + Fewer errors!
+
+
+
+# 🔋 Power Management in Wi-Fi
+
+Wi-Fi devices (like phones, laptops, and IoT devices) often run on batteries. To **extend battery life**, Wi-Fi includes smart **power-saving mechanisms**.
+
+---
+
+## 🧠 Why Power Management Matters
+
+- 🪫 Devices are **often idle** between data transmissions.
+- ⚡ Wireless radios consume **significant power** when active.
+- 💡 Power management allows devices to **sleep intelligently** without losing connectivity.
+
+---
+
+## ⚙️ How Power Management Works in Wi-Fi
+
+Wi-Fi power-saving is based on a **client–AP (Access Point)** relationship.
+
+### 🧱 Key Concepts:
+
+| **Term**             | **Meaning**                                                                 |
+|----------------------|------------------------------------------------------------------------------|
+| **Sleep Mode**       | Client turns off its radio to save power                                     |
+| **Listen Interval**  | Tells the AP how often the client wakes up to check for data                 |
+| **Traffic Indication Map (TIM)** | Bitmap in beacon frames that indicates if AP has data for sleeping clients  |
+| **Beacon Frame**     | Periodic signal from AP that includes the TIM and other control info         |
+| **PS-Poll**          | Power Save Poll — client uses this to request queued data from AP            |
+
+---
+
+## 📶 Power Save Mechanism – Step by Step
+
+1. **Client enters Power Save mode** and informs the AP.
+2. AP **buffers data** for that client.
+3. Client **wakes up periodically** based on the *Listen Interval*.
+4. AP sends a **Beacon** with a TIM indicating buffered data.
+5. Client sends a **PS-Poll** or triggers download to receive data.
+6. After receiving, the client may **go back to sleep**.
+
+
+## 🔋 Power Saving Mode (Legacy PS Mode only)
+
+- Client sends a **null data frame** with the **Power Management bit set** to indicate it's entering sleep mode.
+- The **Access Point (AP)** buffers any incoming data for the client while it’s asleep.
+- AP includes a **TIM (Traffic Indication Map)** in its periodic **beacon frames**, signaling which clients have buffered data.
+- When the client wakes up and sees its ID in the TIM, it sends a **PS-Poll** frame to request the buffered data from the AP.
+
+---
+
+## 💡 Types of Wi-Fi Power Saving Techniques
+
+### 1. 💤 Legacy Power Save Mode
+
+- Defined in early Wi-Fi standards.
+- Based on **PS-Poll** mechanism and **beacon-based** listening.
+- Still widely supported, but **not optimal** for modern use.
+
+---
+
+### 2. 🚀 WMM Power Save (U-APSD)
+
+> **WMM = Wi-Fi Multimedia**  
+> **U-APSD = Unscheduled Automatic Power Save Delivery**
+
+**WMM Power Save**, also known as **Unscheduled Automatic Power Save Delivery (U-APSD)**, is an enhanced power-saving mechanism introduced with **Wi-Fi Multimedia (WMM)**.
+
+- Introduced to support **VoIP** and **real-time multimedia**.
+- More **efficient** than legacy methods.
+- Client tells AP when it’s ready, and AP **pushes** buffered packets.
+
+### ⚙️ How It Works
+
+- The client (STA) enters power-save mode.
+- Instead of sending **PS-Poll** frames, the client sends a **trigger frame** (like a QoS data or null frame).
+- The AP, upon receiving the trigger, delivers **all buffered packets** for that Access Category (AC).
+- After delivery, the client may go back to sleep.
+
+---
+
+### 3. 📡 Target Wake Time (TWT) – Wi-Fi 6 (802.11ax) and Beyond
+
+- AP and client **negotiate scheduled communication windows** to avoid unnecessary radio activity. 
+- Great for **IoT devices** and **smart homes**.
+- Dramatically reduces **power consumption** by avoiding unnecessary wakeups.
+
+---
+### ⚙️ How It Works
+
+1. Client and AP agree on a **TWT schedule** — e.g., wake every 100ms.
+2. Outside of the agreed window, the client **sleeps**.
+3. At the TWT time, both AP and client **wake up and exchange data**.
+4. The client goes back to sleep until the next window.
+
+### 📋 Key Features
+
+| Feature                   | Description                                                  |
+|---------------------------|--------------------------------------------------------------|
+| **Trigger-based**         | Client initiates delivery by sending a frame                 |
+| **Low latency**           | Better for voice/video since delivery is immediate           |
+| **Efficient**             | Reduces need for constant polling or waking                  |
+| **AC-specific**           | Buffers and delivers data per Access Category (voice, video) |
+
+### 🧠 Real-World Analogy
+
+> Like telling the receptionist: “I’m ready now, give me **all my messages** at once.”  
+> You don’t have to keep asking — just one signal, and you get everything.
+---
+
+## ⚖️ Power Save Modes – Summary Comparison
+
+| Feature               | Legacy Power Save         | WMM Power Save (U-APSD)            | TWT (Wi-Fi 6+)                        |
+|------------------------|---------------------------|-------------------------------------|---------------------------------------|
+| **Wake Trigger**       | TIM + PS-Poll              | Trigger Frame (QoS Null/Data)       | Pre-scheduled wake times              |
+| **Best For**           | General traffic            | Voice, Video                        | IoT, battery-powered smart devices    |
+| **Latency**            | Medium                     | Low                                 | Very Low (scheduled)                  |
+| **Power Efficiency**   | Moderate                   | High                                | Very High                             |
+| **Standard**           | 802.11a/b/g/n              | 802.11e (WMM)                       | 802.11ax (Wi-Fi 6 and later)          |
+| **Mechanism**       | Beacon + PS-Poll            | Client-triggered AP delivery  | Scheduled wake/sleep windows      |
+
+---
+## 🧠 Real-World Analogy
+
+> Imagine a student (device) who doesn’t stay in the classroom (network) all the time:
+
+- 💤 **Legacy Mode**: They peek into the room every 10 minutes to see if there’s homework.
+- 🚪 **WMM PS**: They notify the teacher when they’re ready, and the teacher gives all the homework at once.
+- 🕐 **TWT**: They and the teacher agree on *exact times* to meet. No wasted trips!
+
+---
+
+## ✅ Final Summary
+
+- Wi-Fi uses **smart power-saving** to help mobile and IoT devices conserve energy.
+- **Legacy**, **WMM Power Save**, and **TWT** are different techniques depending on device needs and Wi-Fi generation.
+- Modern devices leverage **TWT** for scheduled, ultra-efficient communication.
+
+> 🔋 Smart Wi-Fi = Fast Internet + Longer Battery Life
+
+# 💡 CAM (Constantly Awake Mode) in Wi-Fi
+
+## 🔍 What is CAM?
+
+**CAM** stands for **Constantly Awake Mode**. It is the **default power mode** in Wi-Fi where the device's radio is **always on** and actively listening for data or signals from the Access Point (AP).
+
+---
+
+## ⚙️ How CAM Works
+
+In CAM:
+
+- The Wi-Fi radio **never sleeps**.
+- The device **immediately processes** all incoming and outgoing data.
+- There is **no buffering** of data at the AP — the client is always ready.
+
+---
+
+## ✅ Advantages of CAM
+
+| **Benefit**                  | **Explanation**                                           |
+|------------------------------|-----------------------------------------------------------|
+| ⚡ Low Latency                | Instant response times; good for real-time applications  |
+| 🔁 Immediate Connectivity     | Always ready to send/receive data                        |
+| 📶 Reliable Signal Handling   | Better performance in voice, video, or gaming apps       |
+
+---
+
+## ❌ Disadvantages of CAM
+
+| **Drawback**                 | **Explanation**                                           |
+|------------------------------|-----------------------------------------------------------|
+| 🔋 High Power Consumption     | Constantly running the radio drains the battery faster   |
+| 🔥 Not Energy Efficient       | Unsuitable for IoT or battery-powered devices            |
+
+---
+
+## 🧠 Real-World Analogy
+
+> Imagine a **security guard** (your device) who never sleeps, watching the front door **24/7**.  
+> They can react instantly — but they'll be **exhausted** and **consume a lot of energy**!
+
+---
+
+## 🔁 CAM vs Power Save Mode – Quick Comparison
+
+| **Feature**           | **CAM (Constantly Awake Mode)** | **Power Save Mode**               |
+|------------------------|----------------------------------|-----------------------------------|
+| **Radio State**        | Always ON                        | Sleeps when idle                  |
+| **Power Usage**        | High                             | Low to Medium                     |
+| **Latency**            | Very Low                         | Slight delay (due to wake-ups)    |
+| **Best For**           | Video, VoIP, gaming, real-time   | Background apps, IoT, sensors     |
+
+---
+
+## 🔧 When is CAM Used?
+
+- **Laptops and desktops** plugged into power
+- **Real-time communication apps** like Zoom or Teams
+- **Streaming** or **gaming**
+- When **power saving is turned off** in network settings
+
+---
+
+## ✅ Final Summary
+
+- **CAM (Constantly Awake Mode)** keeps the device ready for communication at all times.
+- Great for **performance**, not great for **battery life**.
+- Choose CAM when **speed and responsiveness** matter more than power savings.
+
+> ⚡ Always awake = always fast, but at a power cost!
+
+---
+## 🔀 Band Switching: From 2.4 GHz to 5 GHz in Wi-Fi
+
+Modern dual-band Wi-Fi networks operate on both:
+
+- **2.4 GHz** (longer range, lower speed)
+- **5 GHz** (shorter range, higher speed, less interference)
+
+---
+
+### 🧠 Why Switch from 2.4 GHz to 5 GHz?
+
+| **Reason**                  | **Explanation**                                                                 |
+|----------------------------|----------------------------------------------------------------------------------|
+| 🚀 **Faster Speeds**        | 5 GHz supports higher throughput (e.g., 802.11ac/ax), ideal for streaming, gaming |
+| 🤫 **Less Congestion**      | 2.4 GHz is crowded (Bluetooth, microwaves, neighbors), 5 GHz has more channels   |
+| 🎯 **Better QoS**           | APs may steer capable clients to 5 GHz for better load balancing                |
+
+---
+
+## 🔄 How Band Switching Happens (Client-Side)
+
+When your device connects to Wi-Fi, here's what can happen:
+
+### 1. **Initial Connection**
+- Device scans both 2.4 and 5 GHz.
+- If signal strength on 5 GHz is **too weak**, it may connect to **2.4 GHz** first.
+
+### 2. **Monitoring Signal Quality**
+- Device continuously monitors **RSSI**, **SNR**, **packet loss**, etc.
+- If 5 GHz becomes viable (e.g., you walk closer to AP), it considers switching.
+
+### 3. **Switch Triggered**
+- The device **disconnects from 2.4 GHz** and **reassociates with 5 GHz** on same SSID.
+- The AP may **assist** using **802.11k/v** to suggest a better band.
+
+---
+
+## 📡 AP-Assisted Band Steering
+
+Enterprise-grade or mesh APs use **band steering**:
+
+| **Technique**              | **What AP Does**                                                              |
+|----------------------------|--------------------------------------------------------------------------------|
+| 🔕 **Ignore 2.4 GHz requests** | If client supports 5 GHz, AP may delay or reject 2.4 GHz probes             |
+| 🧭 **802.11v BSS Transition** | AP suggests a 5 GHz BSSID via **BSS Transition Request**                   |
+| 📊 **Load Balancing**         | AP monitors client count and may steer clients for better performance       |
+
+> 🧠 Band steering is more like **“client suggestion”** — clients make the final roaming decision.
+
+---
+
+## 📶 Technical Example: iPhone Switches from 2.4 → 5 GHz
+
+1. Initially connects to 2.4 GHz due to strong signal at range
+2. As user moves closer, iPhone receives 5 GHz **beacon frames** with good RSSI
+3. AP may send **802.11v BSS Transition Request** to 5 GHz BSSID
+4. iPhone disconnects from 2.4 GHz and reassociates to 5 GHz using:
+   - **Same SSID**
+   - New **BSSID** on a 5 GHz channel
+5. **DHCP is not redone** (same L3 settings usually retained)
+
+---
+
+## 🛠️ Troubleshooting Tip
+
+| **Symptom**                       | **Possible Cause**                        | **Fix**                          |
+|----------------------------------|-------------------------------------------|----------------------------------|
+| Stuck on 2.4 GHz                 | Weak 5 GHz signal or client preference    | Adjust AP power/band steering   |
+| Flaky switching                  | Poor AP placement, no roaming support     | Enable 802.11k/v/r on AP        |
+| No switch even near AP          | Device roaming aggressiveness is low      | Tweak client-side roaming settings (if possible) |
+
+---
+
+## ✅ Summary: Band Switch Flow
+
+```mermaid
+graph TD
+A[Device connects on 2.4 GHz] --> B[AP sends 5 GHz beacons]
+B --> C[Client sees stronger 5 GHz signal]
+C --> D{Is BSS Transition enabled}
+D -- Yes --> E[Client roams to 5 GHz]
+D -- No --> F[Client may still roam on its own]
+
+```
+# 🔍 DFS Scan in Wi-Fi
+
+DFS Scan is a special type of **passive channel scan** that access points (APs) must perform **before** using any **DFS channel** (radar-sensitive) in the 5 GHz band.
+
+---
+
+## ⚙️ What is a DFS Scan?
+
+- Also known as **Channel Availability Check (CAC)**.
+- It is a **mandatory listening period** where the AP checks for radar signals **before transmitting** on a DFS channel.
+- The AP must stay **completely silent** during this scan.
+
+---
+
+## ⏱️ How Long Does It Take?
+
+| **Region** | **Scan Duration (CAC Time)** |
+|------------|------------------------------|
+| 🇺🇸 US (FCC) | **60 seconds**               |
+| 🇪🇺 EU (ETSI) | **60 – 600 seconds** depending on channel |
+| 🌏 Others     | **Usually 60 seconds**       |
+
+> 🛑 During this time, the AP **won’t broadcast SSID** or allow connections on that channel.
+
+---
+
+## 📶 When Does DFS Scan Happen?
+
+### 💡 Scenario 1: Initial Boot or Channel Change
+- AP boots up and selects a DFS channel → **must perform DFS scan first**.
+- No Wi-Fi service until the scan completes.
+
+### 💡 Scenario 2: DFS Radar Detected
+- AP already operating on a DFS channel.
+- Radar appears → AP **immediately switches** to a new channel (DFS or non-DFS).
+- If new channel is also DFS → another **DFS scan is triggered**.
+
+---
+
+## 🧠 What Happens During DFS Scan?
+
+```mermaid
+sequenceDiagram
+Client->>AP: Attempt to join network
+AP--xClient: No beacon / no SSID broadcast
+AP->>Itself: Listen silently for radar (60s)
+Note right of AP: DFS scan in progress
+AP->>All: Beacon starts on selected channel
+Client->>AP: Association begins
+```
 
 # 🔐 Advanced Wi-Fi Technologies: DPP, FTM/RTT, and Wi-Fi Sensing
 
