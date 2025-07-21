@@ -1812,7 +1812,7 @@ Let’s say you open a browser and go to `www.google.com`.
 1. Your device sends a **DNS request** to find Google’s IP.
 2. DNS server replies: `www.google.com` → `142.250.182.36`
 3. Your device sends a **data packet** to that IP address.
-4. The AP/router **receives the packet** and forwards it to your **internet provider (ISP)** via the modem.
+4. The AP/router **receives the packet** it replaces your private IP (192.168.1.5) with your public IP (from your ISP)and forwards it to your **internet provider (ISP)** via the modem.
 
 ---
 
