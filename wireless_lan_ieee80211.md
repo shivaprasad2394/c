@@ -19,7 +19,7 @@ The standard specifically addresses two key layers of the OSI model, each with d
 
 ## 📶 Wireless Services in IEEE 802.11
 The IEEE 802.11 standard defines two main types of service structures that organize how wireless networks operate:
-## 1. **BSS (Basic Service Set)**
+### 1. **BSS (Basic Service Set)**
 
 - A group/unit of wireless network devices communicating with the same **Access Point (AP)**.
 
@@ -39,64 +39,19 @@ The IEEE 802.11 standard defines two main types of service structures that organ
   - Operates at Layer 2 (Data Link Layer).
 - **SSID**: A unique string identifying a wireless network.
 
-# 📡 Wireless Network Modes
-
-Wlan can operate in several modes, each designed for specific purposes. Below are the common Wi-Fi modes:
-
-## **1. Infrastructure Mode**
-- **Most common mode** used in Wi-Fi networks.
-- Devices (stations) communicate through a central **Access Point (AP)**.
-- AP manages traffic and facilitates communication between devices and external networks (e.g., internet).
-
-## **2. Ad-Hoc Mode (IBSS - Independent Basic Service Set)**
-- Peer-to-peer communication **without** an Access Point.
-- Devices connect directly in a **decentralized** network.
-- Suitable for small or temporary networks.
-
-## **3. Monitor Mode (Promiscuous Mode)**
-- NIC listens to all wireless frames in the air, even if not addressed to it.
-- Used for:
-  - Packet sniffing
-  - Wireless troubleshooting
-  - Network analysis and security auditing
-- Unlike promiscuous mode in Ethernet, monitor mode works at the radio level.
-
-## **4. Master Mode**
-- Typically used by **Access Points**.
-- The device acts as a central controller allowing other devices (clients) to connect.
-
-## **5. Repeater Mode**
-- Extends the range of an existing wireless network.
-- Receives signal from an AP and rebroadcasts it.
-
-## **6. Bridge Mode**
-- Connects two different network segments, often wired and wireless.
-- Used to link two LANs using wireless communication.
-
-## **7. Mesh Mode**
-- Devices (nodes) act as both clients and routers.
-- Creates a **self-healing, self-configuring** wireless network.
-- Common in large area deployments like campuses or smart cities.
-
-## **8. Client Mode**
-- Standard mode where a device (e.g., laptop, phone) connects to an AP to access the network.
-
----
 
 # 🧩 Data Link Layer Details
 
 The **Data Link Layer** in the OSI model ensures reliable data transfer between two directly connected nodes. It is divided into two sublayers:
 
-## **Two Sublayers**
-
-### 1. Logical Link Control (LLC)
+## 1. Logical Link Control (LLC)
 - Provides an interface between the network layer and MAC sublayer.
 - Responsible for:
   - Frame synchronization
   - Flow control
   - Error checking
 
-### 2. Medium Access Control (MAC)
+## 2. Medium Access Control (MAC)
 - Controls access to the physical transmission medium.
 - Responsible for:
   - Addressing (MAC addresses)
@@ -118,8 +73,49 @@ In Mac we have two more layers
 
 - Poll-based / priority-based access mechanism.
 
----
+## 🧱 MPDU vs MSDU in Wi-Fi
 
+In Wi-Fi communication, data flows through several layers. Two key units involved in packaging and transmitting this data are:
+
+- **MSDU (MAC Service Data Unit)**
+- **MPDU (MAC Protocol Data Unit)**
+Understanding the difference between them helps in grasping how Wi-Fi handles data efficiency, error control, and speed.
+
+---
+### 📦 What is MSDU?
+
+### ➕ Full Form:**MAC Service Data Unit**
+An **MSDU** is a data packet received from the **upper layers** (like IP or TCP) and handed off to the **MAC layer** for transmission.
+
+### 🔄 Example:
+Think of it as a **customer's order** that needs to be packed before shipping.
+
+### ✅ Key Points:
+- Contains actual **payload** (user data)
+- Sits at the **interface between Layer 2 and Layer 3** (Data Link ↔ Network)
+- Before transmission, it's usually **converted into MPDU**
+
+---
+### 📡 What is MPDU?
+
+### ➕ Full Form:**MAC Protocol Data Unit**
+
+An **MPDU** is the **final packet** that is transmitted over the air by the Wi-Fi interface.
+
+### 🔄 Example:
+Think of it as the **shipping box** that actually leaves the warehouse.
+
+### ✅ Key Points:
+- Includes **MAC header**, **frame check sequence (FCS)**, and **possibly one or more MSDUs**
+- It’s what actually gets **transmitted on the wireless medium**
+- Can be aggregated (A-MPDU) for performance
+
+---
+### ⚙️ Flow of Data: From MSDU to MPDU
+```text
+App/Data → TCP/UDP → IP Packet → MSDU → MPDU → Wireless Transmission
+```
+---
 # 📡 CSMA/CA in Wi-Fi: Problems Explained
 
 ## 🧠 What is CSMA/CA?
@@ -294,7 +290,8 @@ When a station receives a frame, it performs the following check:
 - **Reduces unnecessary deferrals** in dense Wi-Fi environments.
 - **Improves channel reuse** and **overall efficiency**.
 - Especially useful in places with multiple APs (offices, apartments, campuses).
-## 📡 Wi-Fi MAC Frame Format (802.11)
+
+# 📡 Wi-Fi MAC Frame Format (802.11)
 
 | **Field** | **Duration** | **Address 1** | **Address 2** | **Address 3** | **Seq Ctrl** | **Address 4** | **Frame Body** | **FCS** |
 |-----------|--------------|---------------|---------------|---------------|---------------|----------------|----------------|----------|
@@ -527,6 +524,49 @@ Tag: WMM Parameter Element (WME)
 |---------------|----------------|----------------|--------------------|----------------------------------------------|
 | **Downlink**  | 802.11ac (Wave 2) | Access Point   | Multiple Devices   | Watching YouTube on multiple devices         |
 | **Uplink**    | 802.11ax          | Multiple Devices | Access Point       | Uploading files to Google Drive from phones  |
+
+---
+# 📡 Wireless Network Modes
+
+Wlan can operate in several modes, each designed for specific purposes. Below are the common Wi-Fi modes:
+
+## **1. Infrastructure Mode**
+- **Most common mode** used in Wi-Fi networks.
+- Devices (stations) communicate through a central **Access Point (AP)**.
+- AP manages traffic and facilitates communication between devices and external networks (e.g., internet).
+
+## **2. Ad-Hoc Mode (IBSS - Independent Basic Service Set)**
+- Peer-to-peer communication **without** an Access Point.
+- Devices connect directly in a **decentralized** network.
+- Suitable for small or temporary networks.
+
+## **3. Monitor Mode (Promiscuous Mode)**
+- NIC listens to all wireless frames in the air, even if not addressed to it.
+- Used for:
+  - Packet sniffing
+  - Wireless troubleshooting
+  - Network analysis and security auditing
+- Unlike promiscuous mode in Ethernet, monitor mode works at the radio level.
+
+## **4. Master Mode**
+- Typically used by **Access Points**.
+- The device acts as a central controller allowing other devices (clients) to connect.
+
+## **5. Repeater Mode**
+- Extends the range of an existing wireless network.
+- Receives signal from an AP and rebroadcasts it.
+
+## **6. Bridge Mode**
+- Connects two different network segments, often wired and wireless.
+- Used to link two LANs using wireless communication.
+
+## **7. Mesh Mode**
+- Devices (nodes) act as both clients and routers.
+- Creates a **self-healing, self-configuring** wireless network.
+- Common in large area deployments like campuses or smart cities.
+
+## **8. Client Mode**
+- Standard mode where a device (e.g., laptop, phone) connects to an AP to access the network.
 
 ---
 
@@ -1094,60 +1134,7 @@ In Wi-Fi, **performance** and **reliability** are affected by how data is packag
 - **Delay-sensitive** applications may suffer due to buffering before aggregation
 
 ---
-# 🧱 MPDU vs MSDU in Wi-Fi
 
-In Wi-Fi communication, data flows through several layers. Two key units involved in packaging and transmitting this data are:
-
-- **MSDU (MAC Service Data Unit)**
-- **MPDU (MAC Protocol Data Unit)**
-
-Understanding the difference between them helps in grasping how Wi-Fi handles data efficiency, error control, and speed.
-
----
-
-## 📦 What is MSDU?
-
-### ➕ Full Form:
-**MAC Service Data Unit**
-
-### 📍 Description:
-An **MSDU** is a data packet received from the **upper layers** (like IP or TCP) and handed off to the **MAC layer** for transmission.
-
-### 🔄 Example:
-Think of it as a **customer's order** that needs to be packed before shipping.
-
-### ✅ Key Points:
-
-- Contains actual **payload** (user data)
-- Sits at the **interface between Layer 2 and Layer 3** (Data Link ↔ Network)
-- Before transmission, it's usually **converted into MPDU**
-
----
-
-## 📡 What is MPDU?
-
-### ➕ Full Form:
-**MAC Protocol Data Unit**
-
-### 📍 Description:
-An **MPDU** is the **final packet** that is transmitted over the air by the Wi-Fi interface.
-
-### 🔄 Example:
-Think of it as the **shipping box** that actually leaves the warehouse.
-
-### ✅ Key Points:
-
-- Includes **MAC header**, **frame check sequence (FCS)**, and **possibly one or more MSDUs**
-- It’s what actually gets **transmitted on the wireless medium**
-- Can be aggregated (A-MPDU) for performance
-
----
-
-## ⚙️ Flow of Data: From MSDU to MPDU
-
-```text
-App/Data → TCP/UDP → IP Packet → MSDU → MPDU → Wireless Transmission
-```
 ## ⚖️ Fragmentation vs Aggregation
 
 |                | **Fragmentation**                          | **Aggregation**                             |
