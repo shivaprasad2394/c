@@ -2422,6 +2422,37 @@ When the client decides to authenticate, the access point forwards the authentic
 * Used in mobile devices (smartphones, tablets)
 * SIM card generates authentication tokens
 * RADIUS server forwards to **Mobile Core** or **HSS/HLR** to validate SIM
+## 🔐 What Happens After SIM Authentication Request?
+
+Once the RADIUS server forwards the SIM-based request to the HSS/HLR, the authentication proceeds as follows:
+
+### 1. HSS/HLR Generates Authentication Vectors
+- **RAND**: Random challenge
+- **AUTN**: Authentication token
+- **XRES**: Expected response
+- **Kc** (EAP-SIM) or **CK/IK** (EAP-AKA)
+
+### 2. Challenge Sent to Client
+- RADIUS forwards **RAND** and **AUTN** to the client via the AP.
+
+### 3. SIM Processes Challenge
+- Verifies **AUTN** for freshness.
+- Computes **RES** (Response) using internal keys and RAND.
+
+### 4. Client Sends EAP-Response
+- Sends **RES** back to the RADIUS server.
+
+### 5. RADIUS Validates
+- Compares RES with **XRES** from HSS.
+- If matched → sends **EAP-Success**.
+- If not → sends **EAP-Failure**.
+
+### 6. Secure Key Derivation
+- **MSK** derived and sent to the AP.
+- AP and client derive session keys (**PTK**) for encryption.
+
+> ✅ At this point, the device is fully authenticated and securely connected.
+  
 * Enables **seamless roaming** just like LTE/5G
 
 #### 🔐 Certificates (EAP-TLS)
