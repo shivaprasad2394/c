@@ -2404,29 +2404,6 @@ Each P2P IE follows this format:
 2. **Authentication**
 
    * If client has credentials for roaming consortium, it connects using EAP (e.g., EAP-SIM/TTLS/AKA)
-
-3. **Provisioning (if no credentials)**
-
-   * Client connects to **OSU SSID**
-   * HTTPS used to securely download a profile
-   * Device stores credentials for future use
-
-4. **Roaming**
-
-   * Once provisioned, user can roam between providers using same identity (SIM, certificate, username)
-
-### 📦 Hotspot 2.0 Information Elements
-
-| IE Name                 | Description                                                   |
-| ----------------------- | ------------------------------------------------------------- |
-| Interworking IE         | Advertises network type, access (emergency, chargeable, etc.) |
-| Roaming Consortium IE   | Lists OI (Organization Identifiers) for partner networks      |
-| HESSID                  | Identifies the extended network group (like cellular PLMN)    |
-| WAN Metrics IE          | Indicates network bandwidth, load, etc.                       |
-| Venue Name IE           | Human-readable venue description                              |
-| IP Address Availability | Shows whether IPv4/IPv6 is supported                          |
-| Connection Capability   | Lists accessible TCP/UDP ports                                |
-
 ### 🔧 Backend RADIUS + EAP (TTLS / SIM / AKA)
 
 When the client decides to authenticate, the access point forwards the authentication to a **RADIUS server**, which handles AAA (Authentication, Authorization, Accounting).
@@ -2461,6 +2438,57 @@ When the client decides to authenticate, the access point forwards the authentic
 * **Client decides:** Whether to authenticate or use OSU provisioning
 * **Authentication:** EAP-based (handled via RADIUS)
 
+3. **Provisioning (if no credentials)**
+
+   * Client connects to **OSU SSID**
+   * HTTPS used to securely download a profile
+   * Device stores credentials for future use
+## 🛠️ Post-OSU Behavior in Hotspot 2.0
+
+After the client completes OSU (Online Sign-Up), the next steps are critical for full connectivity.
+
+### 🔁 What Happens After OSU?
+
+1. **Connects to OSU SSID**
+   - A special open SSID, used only for provisioning (not regular internet access)
+
+2. **Secure Profile Download via HTTPS**
+   - Profile includes:
+     - Credentials (certificate, SIM ID, or user/pass)
+     - EAP method to use
+     - Provider and roaming info
+
+3. **Profile Installation**
+   - Client stores the downloaded Passpoint configuration securely
+
+4. **Disconnect from OSU SSID**
+   - OSU SSID is temporary — not used for data communication
+
+5. **Reconnect to Passpoint SSID**
+   - Client scans for Passpoint networks
+   - Matches a provider from the installed profile
+   - Authenticates using 802.1X (EAP method)
+   - Secures a full connection
+
+> ✅ Final connection is encrypted and authenticated — suitable for real internet usage.
+
+4. **Roaming**
+
+   * Once provisioned, user can roam between providers using same identity (SIM, certificate, username)
+
+### 📦 Hotspot 2.0 Information Elements
+
+| IE Name                 | Description                                                   |
+| ----------------------- | ------------------------------------------------------------- |
+| Interworking IE         | Advertises network type, access (emergency, chargeable, etc.) |
+| Roaming Consortium IE   | Lists OI (Organization Identifiers) for partner networks      |
+| HESSID                  | Identifies the extended network group (like cellular PLMN)    |
+| WAN Metrics IE          | Indicates network bandwidth, load, etc.                       |
+| Venue Name IE           | Human-readable venue description                              |
+| IP Address Availability | Shows whether IPv4/IPv6 is supported                          |
+| Connection Capability   | Lists accessible TCP/UDP ports                                |
+
+
 ### 🧪 Real-World Tools
 
 * `hostapd` with Hotspot 2.0 config
@@ -2480,8 +2508,6 @@ When the client decides to authenticate, the access point forwards the authentic
 | Profile Provisioning | ❌ Not supported | ✅ OSU                |
 
 ---
-
-
 
 # 📡 Wi-Fi Aware (NAN) and Advanced Wi-Fi Operation
 
