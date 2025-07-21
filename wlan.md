@@ -421,3 +421,106 @@ Wi-Fi Direct introduces specialized mechanisms to minimize energy consumption du
   - **Standard Wi-Fi STA** (Station) simultaneously
 
 ---
+Version 2
+## 🔍 Wi-Fi Direct: Search and Listen Behavior
+
+### 📡 During Search
+- The device is **actively looking** for nearby P2P peers.
+- It sends **Probe Requests** on the **social channels**:
+  - Channel 1
+  - Channel 6
+  - Channel 11
+
+### 👂 During Listen
+- The device **waits passively** for others to find it.
+- If it receives a **Probe Request**, it replies with a **Probe Response**.
+
+The response typically includes:
+- **P2P Information Element (P2P IE):**
+  - Device capabilities
+  - GO Intent value
+  - Supported channel list
+  - Intended P2P interface address
+
+- **WSC Information Element (WSC IE):**
+  - Security configuration (e.g., WPS method: Push Button / PIN)
+
+---
+
+### 🔁 Why Alternate Between Search and Listen?
+- Devices don't start discovery at the same time.
+- By **periodically switching states**, they **increase the chance** of discovering each other.
+- This **asynchronous scanning model** is key to enabling peer-to-peer discovery **without central coordination**.
+
+---
+
+## ✅ If Device is Found — What Happens Next?
+
+Once a device is discovered during the discovery phase, the next steps depend on the **group formation method** and **role negotiation status**.
+
+---
+
+### 1️⃣ Standard Group Formation
+
+- Even after Probe Request/Response, the devices still:
+  - **Negotiate roles** (GO vs. Client) via:
+    - GO Negotiation Request
+    - GO Negotiation Response
+    - GO Confirmation
+
+- After GO is selected:
+  - It **starts beaconing**.
+  - The client **sends an Association Request**.
+  - Then, both devices complete the **security setup** (usually via **WPS** or **WPA2-PSK**).
+
+> ✅ **Note:** No extra Probe Requests are needed **unless**:
+> - Discovery timed out
+> - The channel was changed
+> - The peer moved to another channel
+
+---
+
+### 2️⃣ Role Already Known (Autonomous or Persistent Group)
+
+#### 🛠 Autonomous GO
+- One device is pre-configured to act as **Group Owner** (e.g., printer, TV).
+- The other device:
+  - Skips GO negotiation
+  - Directly sends **Association Request**
+  - Completes **WPS/security exchange**
+
+#### ♻️ Persistent Group
+- A **Persistent Group** is a previously saved P2P group.
+- Both devices have:
+  - Stored roles (GO/client)
+  - Stored SSID and group info
+  - Security credentials (PSK or WPS method)
+
+> ✅ Only **lightweight discovery** is needed:
+> - One device sends a Probe Request **with Persistent Group Info**.
+> - The peer recognizes the group and allows **direct join** without role negotiation or security handshake.
+
+---
+
+## 📶 When Might Another Probe Request Be Sent?
+
+A second Probe Request may be needed if:
+- The first discovery happened on a **different channel**.
+- The peer **switched channels** and stopped beaconing.
+- The discovery state **timed out** before GO negotiation began.
+- The device is **actively re-syncing** during GO negotiation or association.
+
+---
+
+## ✅ Summary Table
+
+| Scenario                        | Next Step                                      | Additional Probe? |
+|---------------------------------|------------------------------------------------|-------------------|
+| Standard Group Formation        | GO Negotiation + Association + Security Setup | ❌ Not usually     |
+| Autonomous Group Owner (GO)     | Association + Security Setup                   | ❌                 |
+| Persistent Group Reconnection   | Direct Join (via stored info)                 | ❌                 |
+| Peer moved/timed out/switched   | Re-initiate discovery                         | ✅                 |
+
+---
+
+Let me know if you'd like a visual flow diagram (e.g., in Mermaid) to go with this!
