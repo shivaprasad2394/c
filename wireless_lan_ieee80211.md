@@ -2997,26 +2997,117 @@ DPP is a modern, secure, and flexible method to provision Wi-Fi devices without 
 
 ---
 
-### 🔄 DPP Operation Flow
+# 🔐 Wi-Fi Easy Connect (DPP) Walkthrough
 
-1. **Bootstrapping Phase**
+Wi-Fi Easy Connect, also known as **Device Provisioning Protocol (DPP)**, replaces insecure WPS with a **secure, public-key-based** method to onboard devices (Enrollees) onto a Wi-Fi network.
 
-   * Enrollee shares bootstrapping info (QR code, NFC tag, BLE, PKEX)
-   * Configurator captures and stores public key and bootstrapping info
+---
 
-2. **Authentication Phase**
+## 🧰 Roles
 
-   * Mutual authentication via authenticated Diffie-Hellman (Curve25519)
-   * Prevents MITM and impersonation
+| Role         | Description                                           |
+|--------------|-------------------------------------------------------|
+| **Enrollee** | The device that needs Wi-Fi credentials (e.g. IoT)   |
+| **Configurator** | The device that knows the Wi-Fi credentials (e.g. smartphone) |
 
-3. **Configuration Phase**
+---
 
-   * Configurator sends Connector (Wi-Fi SSID, password, AKMs, etc.) encrypted to Enrollee
-   * Enrollee applies credentials and connects to Wi-Fi
+## 📦 Phase 1: Bootstrapping
 
-4. **Acknowledgment**
+The goal here is to **safely share bootstrapping information** using an out-of-band (OOB) channel.
 
-   * Enrollee confirms successful provisioning
+### 🔁 Process:
+
+1. **Enrollee** creates a **bootstrapping object**:
+   - Contains its **public key**
+   - Encoded as a **QR code**, **NFC tag**, or shared over **Bluetooth LE** or **PKEX**
+
+2. **Configurator** reads this data via scanning, tap, or BLE.
+
+3. Configurator stores:
+   - The **Enrollee's public key**
+   - The bootstrapping method used
+
+> 📌 This phase sets up a secure foundation for the rest of the protocol.
+
+---
+
+## 🔐 Phase 2: Authentication
+
+This is a **mutual authentication** step using **authenticated Diffie-Hellman key exchange** (ECDH with Curve25519).
+
+### ✅ Goals:
+
+- **Verify each other’s identities**
+- **Prevent impersonation and MITM attacks**
+
+### 🔁 Process:
+
+1. Configurator and Enrollee both use:
+   - Their previously exchanged **public keys**
+   - To derive a shared secret securely
+
+2. Authentication occurs using:
+   - **Crypto binding**
+   - **Proof-of-possession** of private keys
+
+> 🔒 This ensures only trusted devices continue to the next phase.
+
+---
+
+## 📡 Phase 3: Configuration
+
+This is where the **Configurator sends Wi-Fi credentials** (SSID, password, security type) to the Enrollee.
+
+### 🔁 Process:
+
+1. The Configurator generates a secure object called the **Connector**:
+   - Contains:
+     - SSID
+     - Password
+     - AKMs (e.g., WPA3-SAE)
+     - Other network info
+   - Encrypted using the shared key from the Authentication Phase
+
+2. Enrollee receives and **decrypts** the Connector.
+
+3. It then applies the configuration and **connects to the Wi-Fi network**.
+
+> 🔐 This data is never sent in plaintext — it's securely encrypted end-to-end.
+
+---
+
+## ✅ Phase 4: Acknowledgment
+
+1. After successfully connecting to the Wi-Fi network:
+   - The Enrollee sends a **DPP Acknowledgment** message to the Configurator
+
+2. The Configurator receives confirmation that provisioning succeeded.
+
+> 🟢 Devices may also store the credentials for future connections.
+
+---
+
+## 🔄 Summary Flow
+
+```text
+[User Action]
+     |
+     v
+[Scan QR / Tap NFC / BLE]
+     |
+     v
+[Bootstrapping] ---> Exchange Public Keys
+     |
+     v
+[Authentication] ---> ECDH (Curve25519), verify identities
+     |
+     v
+[Configuration] ---> Encrypted credentials sent to Enrollee
+     |
+     v
+[Acknowledgment] ---> Enrollee confirms Wi-Fi connection success
+```
 
 ---
 
