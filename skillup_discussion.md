@@ -1045,7 +1045,33 @@ gives:
 	New string: abcdefabcdef
 
 1)Set a bit:-num|=(1<<nth pos)	
+#include <stdio.h>
+```c
+	int main() {
+	    int num = 0b00001010;  // 10
+	    int n = 1;
 	
+	    // Set bit
+	    num |= (1 << n);  // Bit 1 already set
+	    printf("Set bit %d: %d\n", n, num);
+	
+	    // Clear bit
+	    num &= ~(1 << n);
+	    printf("Clear bit %d: %d\n", n, num);
+	
+	    // Toggle bit
+	    num ^= (1 << n);
+	    printf("Toggle bit %d: %d\n", n, num);
+	
+	    // Check bit
+	    if (num & (1 << n))
+	        printf("Bit %d is set\n", n);
+	    else
+	        printf("Bit %d is not set\n", n);
+	
+	    return 0;
+	}
+```	
 Extra:-
 =======
 - **compiler** is a computer program that translates computer code written in one programming language (the source language) into another .
