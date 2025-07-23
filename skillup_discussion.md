@@ -1257,113 +1257,144 @@ Write your code in this editor and press "Run" button to compile and execute it.
 
 *******************************************************************************/
 ```c
-#include <stdio.h>
-#include <string.h>
+#include <stdio.h>   // For standard I/O functions like printf, fgets
+#include <string.h>  // For string manipulation functions like strlen, strcspn
 
-// Function to swap characters from index `first` to `last` in the string
+// -----------------------------------------------------
+// FUNCTION: swap
+// Swaps characters between index `first` and `last` in the given string `str`.
+// Uses an arithmetic trick to swap without a temporary variable.
+// -----------------------------------------------------
 void swap(char *str, int first, int last) {
     while (first < last) {
+        // Swap characters using: a = a + b - (b = a)
         str[first] = str[first] + str[last] - (str[last] = str[first]);
         first++;
         last--;
     }
 }
 
-// Custom pattern search: returns 1 if `buf` is found in `str`
+// -----------------------------------------------------
+// FUNCTION: pattern_search
+// Searches for the substring `buf` inside the string `str`.
+// Returns 1 if found, -1 otherwise.
+// -----------------------------------------------------
 int pattern_search(char *str, char *buf) {
     int a = 0, b = 0, c = 0;
 
+    // Loop through the main string character by character
     while (str[a] != '\0') {
+        // If characters match and `buf` isn't finished
         if ((buf[b] == str[c]) && (buf[b] != '\0')) {
-            c++;
-            b++;
+            c++;  // Move to next character in `str`
+            b++;  // Move to next character in `buf`
         } else {
+            // If full `buf` matched, return success
             if (buf[b] == '\0')
-                return 1; // Pattern found
+                return 1;
+
+            // Reset and try matching from the next position in `str`
             a++;
-            c = a;
-            b = 0;
+            c = a;  // Reset comparison index to new start
+            b = 0;  // Start matching from beginning of `buf`
         }
     }
 
-    return -1; // Pattern not found
+    // If loop ends, pattern was not found
+    return -1;
 }
 
-// Reverses the entire string
+// -----------------------------------------------------
+// FUNCTION: reverse_string
+// Reverses the entire string `str` in place.
+// -----------------------------------------------------
 void reverse_string(char *str) {
     int first = 0;
-    int len = strlen(str) - 1;
+    int len = strlen(str) - 1;  // Calculate last index
 
+    // Swap characters from ends toward the center
     while (first < len) {
         str[first] = str[first] + str[len] - (str[len] = str[first]);
         first++;
         len--;
     }
 
+    // Print the result
     printf("After full reverse: %s\n", str);
 }
 
-// Reverses each word in the string in-place
+// -----------------------------------------------------
+// FUNCTION: reverse_word
+// Reverses the words in the string (not characters in each word).
+// First, the whole string is reversed. Then, each word is reversed again.
+// Example: "hello world" -> "world hello"
+// -----------------------------------------------------
 void reverse_word(char *str) {
-    int f = 0, l = 0, flag = 0, j = 0;
+    int f = 0, l = 0;    // f = word start, l = word end
+    int flag = 0, j = 0; // flag: used to track word swaps, j = last space index
 
-    // Print and get length of string (excluding newline)
-    l = printf("%s", str);
-    l--;
+    // Print original string and calculate its length using printf
+    l = printf("%s", str);  // Also prints string
+    l--;                    // Adjust for newline
     printf("\nString length = %d\n", l);
 
-    // Reverse entire string
+    // Step 1: Reverse the entire string
     swap(str, f, l);
 
-    // Reset for word-wise processing
-    l = f = 0;
-
+    // Step 2: Reverse each word within the reversed string
+    l = f = 0; // Reset indexes
     while (str[l] != '\0') {
         if (str[l] == ' ') {
             if (flag > 0) {
-                f = j + 1;
+                f = j + 1; // Set new word start
             }
-            swap(str, f, l - 1);
-            flag = 1;
-            j = l;
+            swap(str, f, l - 1); // Reverse current word
+            flag = 1;            // Mark that we've done a word
+            j = l;               // Store last space position
         }
-        l++;
+        l++; // Move to next character
     }
 
-    // Reverse the final word
+    // Final word might not end with space, so reverse it now
     if (str[l] == '\0') {
         f = j + 1;
         swap(str, f, l - 1);
     }
 
+    // Output final result
     printf("After each word reverse: %s\n", str);
 }
 
-// Main function
+// -----------------------------------------------------
+// FUNCTION: main
+// The entry point of the program. Handles user input and calls functions.
+// -----------------------------------------------------
 int main() {
-    char str[25];   // First string
-    char str1[25];  // Second string (pattern to search)
+    char str[25];   // First input string
+    char str1[25];  // Second input string (used for pattern search)
 
+    // ----------- INPUT FIRST STRING -----------
     printf("Enter first string:\n");
-    fgets(str, sizeof(str), stdin);
-    str[strcspn(str, "\n")] = '\0';  // Remove newline
+    fgets(str, sizeof(str), stdin); // Safe alternative to gets
+    str[strcspn(str, "\n")] = '\0'; // Remove newline character
 
+    // ----------- INPUT SECOND STRING -----------
     printf("Enter second string:\n");
     fgets(str1, sizeof(str1), stdin);
-    str1[strcspn(str1, "\n")] = '\0';  // Remove newline
+    str1[strcspn(str1, "\n")] = '\0';
 
-    // Uncomment to test string reversal
-    // reverse_string(str);
+    // ----------- PATTERN SEARCH -----------
+    int found = pattern_search(str, str1);  // Check if str1 is a substring of str
 
-    // Uncomment to test word-by-word reversal
-    // reverse_word(str);
-
-    // Pattern search
-    int found = pattern_search(str, str1);
+    // ----------- OUTPUT RESULT -----------
     if (found == 1)
         printf("Pattern found\n");
     else
         printf("Pattern not found\n");
+
+    // ----------- OTHER FUNCTIONS (Uncomment to test) -----------
+    // reverse_string(str);     // Reverses entire string
+    // reverse_word(str);       // Reverses words in the sentence
 
     return 0;
 }
