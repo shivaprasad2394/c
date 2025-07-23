@@ -1257,92 +1257,117 @@ Write your code in this editor and press "Run" button to compile and execute it.
 
 *******************************************************************************/
 ```c
-#include<stdio.h> //word reverse code
-void swap (char * str,int first ,int last);
+#include <stdio.h>
+#include <string.h>
 
-int pattern_search(char *str,char *buf){
-int a=0,b=0,c=0;
-while(str[a]!='\0'){
-if((buf[b]==str[c]) && (buf[b]!='\0')){
-	c++;
-	b++;
-}
-else{
-	if(buf[b]=='\0')
-		return 1;
-a++;
-c=a;
-b=0;
-}
-}
-return -1;
+// Function to swap characters from index `first` to `last` in the string
+void swap(char *str, int first, int last) {
+    while (first < last) {
+        str[first] = str[first] + str[last] - (str[last] = str[first]);
+        first++;
+        last--;
+    }
 }
 
-void reverse_string(char *str){
-int first=0;
-int len=strlen(str);
-len--;
-while(first<len){
-//a=a+b-(b=a);
-str[first]=str[first]+str[len]-(str[len]=str[first]);
-first++;
-len--;
-}
-printf("after=%s\n",str);
-}
-void swap(char * str,int first ,int last){
-	while(first<last){
-		str[first]=str[first]+str[last]-(str[last]=str[first]);
-		first++;
-		last--;
-		printf("\nafter swap=%s",str);
-	}
-}
-void reverse_word(char *str){
-	int f=0;	//first position
-	int l=0;	//last position
-	int flag=0;	//indicates to swap word characters within word range/length
-	int j=0;	//f+1 position or next position of head
+// Custom pattern search: returns 1 if `buf` is found in `str`
+int pattern_search(char *str, char *buf) {
+    int a = 0, b = 0, c = 0;
 
-	l=printf("%s",str);//dont change it will affect
-	l--;
-	printf("\nstr len=%d\n",l);
-	swap(str,f,l);
+    while (str[a] != '\0') {
+        if ((buf[b] == str[c]) && (buf[b] != '\0')) {
+            c++;
+            b++;
+        } else {
+            if (buf[b] == '\0')
+                return 1; // Pattern found
+            a++;
+            c = a;
+            b = 0;
+        }
+    }
 
-	l=f=0;					//reset and start with individual word
-
-	while(str[l]!='\0'){	//keep swaping until end
-		if(str[l]==' '){	//if last is pointing to space dont swap skip
-			if(flag>0){		//probably an indication skip and move on
-				f=j+1;		//skip and move to next char in word
-			}
-			swap(str,f,(l-1));
-			flag=1;
-			j=l;
-		}
-		l++;//update last position to end of each word
-	}
-	if(str[l]=='\0'){//probably i am swaping internal char of word 
-	f=j+1;
-	swap(str,f,(l-1));//k=l-1;
-	}
-	printf("after each rev=%s\n",str);
+    return -1; // Pattern not found
 }
 
-void main(){
-	char str[25];//character array
-	char str1[25];
-	printf("enter:\n");
-	gets(str);
-    printf("enter:\n");
-	gets(str1);
-	//reverse_string(str);
-	//each_word_swapper();
-	int a=pattern_search(str,str1);
-	if(a==1)
-	printf("pattern");
-	printf("not pat");
+// Reverses the entire string
+void reverse_string(char *str) {
+    int first = 0;
+    int len = strlen(str) - 1;
+
+    while (first < len) {
+        str[first] = str[first] + str[len] - (str[len] = str[first]);
+        first++;
+        len--;
+    }
+
+    printf("After full reverse: %s\n", str);
 }
+
+// Reverses each word in the string in-place
+void reverse_word(char *str) {
+    int f = 0, l = 0, flag = 0, j = 0;
+
+    // Print and get length of string (excluding newline)
+    l = printf("%s", str);
+    l--;
+    printf("\nString length = %d\n", l);
+
+    // Reverse entire string
+    swap(str, f, l);
+
+    // Reset for word-wise processing
+    l = f = 0;
+
+    while (str[l] != '\0') {
+        if (str[l] == ' ') {
+            if (flag > 0) {
+                f = j + 1;
+            }
+            swap(str, f, l - 1);
+            flag = 1;
+            j = l;
+        }
+        l++;
+    }
+
+    // Reverse the final word
+    if (str[l] == '\0') {
+        f = j + 1;
+        swap(str, f, l - 1);
+    }
+
+    printf("After each word reverse: %s\n", str);
+}
+
+// Main function
+int main() {
+    char str[25];   // First string
+    char str1[25];  // Second string (pattern to search)
+
+    printf("Enter first string:\n");
+    fgets(str, sizeof(str), stdin);
+    str[strcspn(str, "\n")] = '\0';  // Remove newline
+
+    printf("Enter second string:\n");
+    fgets(str1, sizeof(str1), stdin);
+    str1[strcspn(str1, "\n")] = '\0';  // Remove newline
+
+    // Uncomment to test string reversal
+    // reverse_string(str);
+
+    // Uncomment to test word-by-word reversal
+    // reverse_word(str);
+
+    // Pattern search
+    int found = pattern_search(str, str1);
+    if (found == 1)
+        printf("Pattern found\n");
+    else
+        printf("Pattern not found\n");
+
+    return 0;
+}
+
 /*void remove_duplicate(char *str){ //remove duplicate
 	char dup[25];
 	char new[25];
