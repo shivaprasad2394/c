@@ -165,20 +165,21 @@ there are 4 types of storage class specifier:-
                  •informs compiler to store the variable in cpu registers.
 ```mermaid
 graph TB
-    High[High Memory Address]
+    HighAddr[High Memory Address]
     Stack[Stack]
     Heap[Heap]
-    BSS[Uninitialized Data (BSS)]
+    BSS[Uninitialized Data - BSS]
     Data[Initialized Data]
-    Text[Text Segment (Code)]
-    Low[Low Memory Address]
+    Text[Text Segment]
+    LowAddr[Low Memory Address]
 
-    High --> Stack
+    HighAddr --> Stack
     Stack --> Heap
     Heap --> BSS
     BSS --> Data
     Data --> Text
-    Text --> Low
+    Text --> LowAddr
+
 ```
 static extras:-
 
