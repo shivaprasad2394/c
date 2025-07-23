@@ -1256,149 +1256,181 @@ Let num is 00001000 00001100, after the above expression, it will be 00001100 00
 Write your code in this editor and press "Run" button to compile and execute it.
 
 *******************************************************************************/
+```c
+#include <stdio.h>
+#include <string.h>
 
-	#include<stdio.h> //word reverse code
-	void swap (char * str,int first ,int last);
+// ------------------- Bitwise Swap Function -------------------
+/**
+ * Swap characters at two positions in a string using XOR-like trick.
+ * Used to reverse a portion of the string in-place.
+ */
+void swap(char *str, int first, int last) {
+    while (first < last) {
+        // Swap using temp-less method: a = a + b - (b = a)
+        str[first] = str[first] + str[last] - (str[last] = str[first]);
+        first++;
+        last--;
+    }
+}
 
-	int pattern_search(char *str,char *buf){
-	int a=0,b=0,c=0;
-	while(str[a]!='\0'){
-	if((buf[b]==str[c]) && (buf[b]!='\0')){
-		c++;
-		b++;
-	}
-	else{
-		if(buf[b]=='\0')
-			return 1;
-	a++;
-	c=a;
-	b=0;
-	}
-	}
-	return -1;
-	}
+// ------------------- Pattern Search -------------------
+/**
+ * Returns 1 if 'buf' exists as a substring in 'str', else -1.
+ * Custom implementation (similar to strstr).
+ */
+int pattern_search(char *str, char *buf) {
+    int a = 0, b = 0, c = 0;
+    while (str[a] != '\0') {
+        if ((buf[b] == str[c]) && (buf[b] != '\0')) {
+            c++;
+            b++;
+        } else {
+            if (buf[b] == '\0')
+                return 1; // Match found
+            a++;
+            c = a;
+            b = 0;
+        }
+    }
+    return -1; // Match not found
+}
 
-	void reverse_string(char *str){
-	int first=0;
-	int len=strlen(str);
-	len--;
-	while(first<len){
-	//a=a+b-(b=a);
-	str[first]=str[first]+str[len]-(str[len]=str[first]);
-	first++;
-	len--;
-	}
-	printf("after=%s\n",str);
-	}
-	void swap(char * str,int first ,int last){
-		while(first<last){
-			str[first]=str[first]+str[last]-(str[last]=str[first]);
-			first++;
-			last--;
-			printf("\nafter swap=%s",str);
-		}
-	}
-	void reverse_word(char *str){
-		int f=0;	//first position
-		int l=0;	//last position
-		int flag=0;	//indicates to swap word characters within word range/length
-		int j=0;	//f+1 position or next position of head
+// ------------------- Reverse Entire String -------------------
+/**
+ * Reverses a string in-place using character swapping.
+ */
+void reverse_string(char *str) {
+    int first = 0;
+    int len = strlen(str) - 1;
 
-		l=printf("%s",str);//dont change it will affect
-		l--;
-		printf("\nstr len=%d\n",l);
-		swap(str,f,l);
+    while (first < len) {
+        str[first] = str[first] + str[len] - (str[len] = str[first]);
+        first++;
+        len--;
+    }
+    printf("after = %s\n", str);
+}
 
-		l=f=0;					//reset and start with individual word
+// ------------------- Reverse Words in String -------------------
+/**
+ * Reverses the words in a sentence in-place.
+ * Example: "hello world" becomes "world hello"
+ */
+void reverse_word(char *str) {
+    int f = 0, l = 0, flag = 0, j = 0;
 
-		while(str[l]!='\0'){	//keep swaping until end
-			if(str[l]==' '){	//if last is pointing to space dont swap skip
-				if(flag>0){		//probably an indication skip and move on
-					f=j+1;		//skip and move to next char in word
-				}
-				swap(str,f,(l-1));
-				flag=1;
-				j=l;
-			}
-			l++;//update last position to end of each word
-		}
-		if(str[l]=='\0'){//probably i am swaping internal char of word 
-		f=j+1;
-		swap(str,f,(l-1));//k=l-1;
-		}
-		printf("after each rev=%s\n",str);
-	}
+    // First, reverse the full string
+    l = printf("%s", str);
+    l--; // Correct the newline added by printf
+    printf("\nstr len = %d\n", l);
+    swap(str, f, l);
 
-	void main(){
-		char str[25];//character array
-		char str1[25];
-		printf("enter:\n");
-		gets(str);
-	    printf("enter:\n");
-		gets(str1);
-		//reverse_string(str);
-		//each_word_swapper();
-		int a=pattern_search(str,str1);
-		if(a==1)
-		printf("pattern");
-		printf("not pat");
-	}
-	/*void remove_duplicate(char *str){ //remove duplicate
-		char dup[25];
-		char new[25];
-		printf("\ndupped begin");
-		int l=printf("%s",str);
-		l--;
-		char table[255]={0};
-		int i=0,j=0,k=0;
-		while(str[i]!='\0'){
-			dup[i++]=str[l--];
-			printf("\n%d%d",i,l);
-		}
-		dup[i]='\0';
-		printf("ops=%s",dup);
-		i=0;
-		while(dup[i]!='\0'){
-			if(table[(dup[i])]==0){
-				table[(dup[i])]=1;
-				new[k]=dup[i];
-				k++;
-			}else{
-				printf("\n skipped %c",dup[i]);
-			}
-			i++;
-		}
-		printf("\ndupped str=%s",new);
-	}*/
+    // Now reverse each individual word
+    l = f = 0;
+    while (str[l] != '\0') {
+        if (str[l] == ' ') {
+            if (flag > 0)
+                f = j + 1;
+            swap(str, f, l - 1);
+            flag = 1;
+            j = l;
+        }
+        l++;
+    }
 
-	/*int myatoi(char *str){
-		int num=48,total=0,i=0,j=1,n=0,res[25]={0};
-		n=printf("%s",str);
-		while(str[i]!='\0'){
-			if(str[i]=='\0'){
-				res[i]='\0';
-				printf("\n null breaker");
-				break;
-			}
-			else if(str[i]>=num && str[i] <=(num+10)){
-				res[i]=str[i]-num;
-				printf("\nr%d i%d",res[i],i);
-			}else{
-			//here handle non numerics
-			}
-			i++;
-		}
-		for(i=0;res[i]!='\0';i++){
-			//total += res[i]*(j<<(n-i));
-			total*=10;
-			total+=res[i];
-			printf("\n t%d",total);
-		}
-		printf("\nanswer=%d",total);
-		return total;
-	}*/	
-					     
-					     
+    // Reverse the final word
+    if (str[l] == '\0') {
+        f = j + 1;
+        swap(str, f, l - 1);
+    }
+
+    printf("after each word rev = %s\n", str);
+}
+
+// ------------------- Remove Duplicates -------------------
+/**
+ * Reverses a string and removes duplicate characters.
+ * Uses a lookup table to track seen characters.
+ */
+void remove_duplicate(char *str) {
+    char dup[25], new[25];
+    int l = printf("%s", str);
+    l--;
+
+    char table[255] = {0}; // Lookup table
+    int i = 0, k = 0;
+
+    // Reverse the string into dup[]
+    while (str[i] != '\0') {
+        dup[i++] = str[l--];
+    }
+    dup[i] = '\0';
+
+    // Remove duplicates
+    i = 0;
+    while (dup[i] != '\0') {
+        if (table[(unsigned char)dup[i]] == 0) {
+            table[(unsigned char)dup[i]] = 1;
+            new[k++] = dup[i];
+        } else {
+            printf("\nSkipped %c", dup[i]);
+        }
+        i++;
+    }
+    new[k] = '\0';
+    printf("\nDupped str = %s\n", new);
+}
+
+// ------------------- My ATOI -------------------
+/**
+ * Converts numeric string to integer (like atoi), prints steps.
+ */
+int myatoi(char *str) {
+    int total = 0, i = 0;
+    int num = '0'; // ASCII value of '0'
+
+    printf("%s", str);
+
+    // Convert characters to digits
+    while (str[i] != '\0') {
+        if (str[i] >= num && str[i] <= (num + 9)) {
+            total = total * 10 + (str[i] - num);
+            printf("\nIntermediate total: %d", total);
+        } else {
+            printf("\nNon-numeric character ignored: %c", str[i]);
+        }
+        i++;
+    }
+
+    printf("\nFinal answer = %d\n", total);
+    return total;
+}
+
+// ------------------- Main Function -------------------
+int main() {
+    char str[25], str1[25];
+    printf("Enter first string:\n");
+    gets(str);
+    printf("Enter second string:\n");
+    gets(str1);
+
+    // Pattern search
+    int a = pattern_search(str, str1);
+    if (a == 1)
+        printf("Pattern found\n");
+    else
+        printf("Pattern not found\n");
+
+    // Uncomment to test other functionalities:
+    // reverse_string(str);
+    // reverse_word(str);
+    // remove_duplicate(str);
+    // myatoi(str);
+
+    return 0;
+}
+```
 =============================================================================================
 # Linux system programming
 
