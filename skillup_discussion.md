@@ -163,8 +163,41 @@ there are 4 types of storage class specifier:-
                  •indicates/informs compiler about offload declaration/definition of variable.
     4)register--->variable with register class have visibility Local to Function.
                  •informs compiler to store the variable in cpu registers.
+```mermaid
+graph TD
+    A[Memory Layout of a C Program]
 
+    A --> B[Text Segment (Code)]
+    A --> C[Initialized Data Segment]
+    A --> D[Uninitialized Data Segment (BSS)]
+    A --> E[Heap]
+    A --> F[Stack]
 
+    B:::segment
+    C:::segment
+    D:::segment
+    E:::segment
+    F:::segment
+
+    classDef segment fill:#f9f,stroke:#333,stroke-width:1px;
+
+    subgraph " "
+        direction TB
+        G1[High Address]
+        F
+        E
+        D
+        C
+        B
+        G2[Low Address]
+    end
+
+    click B href "https://en.wikipedia.org/wiki/.text" _blank "More about Text Segment"
+    click C href "https://en.wikipedia.org/wiki/Data_segment" _blank "More about Data Segment"
+    click D href "https://en.wikipedia.org/wiki/.bss" _blank "More about BSS Segment"
+    click E href "https://en.wikipedia.org/wiki/C_dynamic_memory_allocation" _blank "More about Heap"
+    click F href "https://en.wikipedia.org/wiki/Stack-based_memory_allocation" _blank "More about Stack"
+```
 static extras:-
 
     void func (void)
