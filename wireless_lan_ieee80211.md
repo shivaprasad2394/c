@@ -3128,10 +3128,17 @@ FTM allows accurate distance measurement using Wi-Fi by calculating the round-tr
 
 ### 🔧 How RTT Works
 
-1. **FTM Request / Response**
+### 🔁 Process:
 
-   * Initiator sends an FTM request to Responder (e.g., AP)
-   * Responder replies with timestamps (T1, T2)
+1. **Initiator** sends an **FTM Request** to an AP (Responder)
+2. **Responder** sends back an **FTM Response** containing:
+   - **Timestamps** of frame send/receive events:
+     - **T1**: Time when Initiator sends FTM Request
+     - **T2**: Time when Responder receives the FTM Request
+     - **T3**: Time when Responder sends FTM Response
+     - **T4**: Time when Initiator receives the FTM Response
+
+---
 
 2. **Timing Exchange**
 
