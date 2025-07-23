@@ -1988,12 +1988,120 @@ After the client completes OSU (Online Sign-Up), the next steps are critical for
 | Connection Capability   | Lists accessible TCP/UDP ports                                |
 
 
-### 🧪 Real-World Tools
+# Hotspot 2.0 (Passpoint) Connection Flow – Real-World Example: Starbucks in Seoul (KT)
 
-* `hostapd` with Hotspot 2.0 config
-* `wpa_supplicant` with Passpoint credentials
-* `wireshark` filters: `anqp`, `hs20`, `eap`
-* Supported in Android (>=4.4), iOS (>=7), Windows 10+
+## ☕ You walk into Starbucks in Seoul
+You’re carrying an Android phone with **Passpoint (Hotspot 2.0)** support.
+
+**Starbucks Wi-Fi** is managed by **KT (Korea Telecom)**, a Passpoint provider.
+
+---
+
+## 📶 Step 1: Device detects Passpoint SSID
+
+- The SSID might look like: `KT_WiFi_Passpoint` (or it may not be visible at all if it's hidden).
+- Android scans and sees this is a **Hotspot 2.0-capable** access point, based on **beacon frames** containing:
+  - `Interworking` element
+  - `Roaming Consortium`, `NAI Realm`, and `Venue Info` advertised
+
+➡️ This triggers the **ANQP (Access Network Query Protocol)** process.
+
+---
+
+## 🔍 Step 2: ANQP Query sent by device
+
+The device sends a **GAS (Generic Advertisement Service)** request to ask the AP:
+
+- “What **realms** do you support?”
+- “What **roaming partners** do you have?”
+- “What’s your **venue name**, **WAN status**, **OSU providers**?”
+
+> These are ANQP queries encapsulated in **802.11u** frames.
+
+---
+
+## 📬 Step 3: AP responds with ANQP Response
+
+The AP sends back the **ANQP advertisement**, containing:
+
+| Field | Value |
+|-------|-------|
+| **NAI Realm** | `kt.com` |
+| **Roaming Consortium OIs** | `50-6F-9A` (KT), `00-1B-2F` (Boingo) |
+| **WAN Metrics** | Up, 150Mbps DL / 40Mbps UL, unmetered |
+| **Venue Name** | `"Starbucks Korea"` |
+| **OSU Provider Info** | `"KT Wi-Fi Pass"` with `https://osuserver.kt.com/signup` |
+
+---
+
+## 🧠 Step 4: Phone matches ANQP info to its profiles
+
+### 📱 Case 1: KT SIM user
+
+- Device sees `NAI Realm: kt.com`
+- It checks its SIM and finds it belongs to `kt.com`
+- Auth method supported: **EAP-SIM**
+
+✅ **Decision**: Proceed with **EAP-SIM authentication** automatically.
+
+---
+
+### 📱 Case 2: Boingo Subscriber
+
+- SIM isn’t from KT
+- But device has a **provisioned profile** for **Boingo**
+- It compares **Roaming Consortium OI**: `00-1B-2F` matches
+- EAP-TTLS or EAP-TLS may be supported
+
+✅ **Decision**: Proceed with authentication using **Boingo credentials**
+
+---
+
+### 🚫 Case 3: No match
+
+- No SIM from KT
+- No roaming OI match
+- Device sees there's an **OSU (Online Sign-Up) Provider**
+
+✅ **Decision**: Show user a **signup screen** using OSU server:  
+`https://osuserver.kt.com/signup`
+
+---
+
+## 🔐 Step 5: Authentication (EAP)
+
+If a profile matches:
+
+| EAP Method | Use Case |
+|------------|----------|
+| **EAP-SIM / EAP-AKA** | Mobile operator SIM authentication |
+| **EAP-TTLS** | Username/password or tunneled auth |
+| **EAP-TLS** | Certificate-based authentication (OpenRoaming, Eduroam) |
+
+- The AP acts as an **EAP Authenticator**
+- It forwards credentials to a **RADIUS server** (typically run by KT or a federation partner)
+
+✅ If accepted → **Client joins the secure network**
+
+---
+
+## 🧾 Step 6: Online Sign-Up (OSU) – If No Auth Info
+
+If user has **no profile or roaming credentials**, but sees the **OSU provider**:
+
+1. Android shows: _“Sign up with KT Wi-Fi Pass”_
+2. User taps to launch **OSU provisioning**
+3. This opens a **web browser or app** using **SOAP-based OMA-DM** (behind the scenes)
+
+The client:
+
+- Retrieves provisioning info (EAP method, root CA, credential)
+- Installs a **Passpoint profile**
+- Reconnects and authenticates **automatically**
+
+✅ **Seamless onboarding!**
+
+---
 
 ### 🆚 Regular AP vs Passpoint AP
 
