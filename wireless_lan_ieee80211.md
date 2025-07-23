@@ -2279,16 +2279,127 @@ When devices participate in a Wi-Fi Aware (NAN) network, they go through the **D
 
 ---
 
-## 🧰 Developer Tools and Ecosystem
+# 📡 NAN (Wi-Fi Aware) Walkthrough: Discovery & Connection without Wi-Fi or Internet
 
-* **Android Wi-Fi Aware API** (since Android 8.0):
+## 🧠 What is NAN?
 
-  * `WifiAwareManager`
-  * Supports session callbacks, message exchange, and data paths
-* **Linux mac80211 + cfg80211 (nl80211 NAN commands)**
-* **Wireshark filters**: `nan`, `ndp`, `nan-action`, `nan-mgmt`
-* **chipset support**: QCA6174, QCA9377, and newer Intel/MediaTek chips
+**NAN (Neighbor Awareness Networking)** — also branded as **Wi-Fi Aware** — enables Android (and other devices) to:
 
+- **Discover nearby devices and services** _without internet or Wi-Fi connection_
+- **Establish peer-to-peer data links** directly using Wi-Fi (NDP)
+
+---
+
+## 🎯 Use Case Scenario: Peer Discovery in a Park
+
+Imagine you're at a park, and two Android users (Alice and Bob) open a multiplayer game app that supports **Wi-Fi Aware**:
+
+- No mobile data or Wi-Fi
+- Devices should discover each other automatically
+- Then communicate directly (e.g., to start a game or share a file)
+
+---
+
+## 📶 Step 1: NAN Synchronization (Sync Beacons)
+
+When NAN is enabled:
+
+- Each device periodically sends **NAN Sync Beacons**
+- These beacons contain timing and capability info
+- Devices synchronize their internal clocks using these beacons
+
+🛰 **Why?**  
+To ensure that nearby devices "wake up" and listen at the same time, saving battery and enabling coordinated discovery.
+
+> 💡 Devices can take on roles:
+> - **Anchor Master**: Sends Sync Beacons regularly
+> - **Master**: Follows Anchor Master timing
+> - **Slave**: Follows timing from nearby Masters
+
+---
+
+## 🛰 Step 2: Service Discovery (NAN SDF Frames)
+
+Once synchronized, devices can discover services:
+
+- Apps on Alice and Bob’s phones **publish** or **subscribe** to services
+- Example:  
+  - Alice publishes: `{"game": "BattleChess", "version": "1.0"}`
+  - Bob subscribes: `"game == BattleChess"`
+
+📡 Devices send/receive **NAN Service Discovery Frames (SDFs)** during discovery windows.
+
+| Type | Description |
+|------|-------------|
+| **Publish** | Advertise a service to nearby devices |
+| **Subscribe** | Listen for services of interest |
+| **Match** | When a publish matches a subscribe, both devices are notified |
+
+✅ **Result**:  
+Alice and Bob’s apps are notified: “A peer has been discovered!”
+
+---
+
+## 🤝 Step 3: Data Path Setup (NDP Negotiation)
+
+Once services are matched, apps can initiate **NDP (NAN Data Path)** setup:
+
+1. **Initiator (Bob)** sends **NDP Request Frame** to Alice
+   - Includes: security info, interface, QoS
+
+2. **Responder (Alice)** replies with **NDP Confirm Frame**
+   - May accept or reject the connection
+
+3. If accepted:
+   - Devices establish a **Wi-Fi peer-to-peer link** (not Wi-Fi Direct!)
+   - Operates at Layer 2 (MAC), fast and direct
+
+| Frame | Purpose |
+|-------|--------|
+| **NDP Request** | Start data session with peer |
+| **NDP Response** | Accept/Reject the request |
+| **NDP Confirm** | Finalize the data path |
+
+✅ Result: Alice and Bob now have a direct data path (like a virtual LAN)
+
+---
+
+## 🔐 Security Considerations
+
+- **MAC Randomization**: Devices use randomized MACs for privacy
+- **Encrypted Payloads**: NDP supports encrypted communication
+- **App permissions**: Apps must declare and request Wi-Fi Aware APIs
+
+---
+
+## 🔄 Session Lifecycle
+
+| Phase | Activity |
+|-------|----------|
+| **Sync** | NAN Sync Beacons exchanged |
+| **Discovery** | Service Publish/Subscribe + SDF |
+| **Match** | Match event delivered to both devices |
+| **NDP** | Request → Response → Confirm |
+| **Data** | Secure Wi-Fi communication begins |
+| **Teardown** | Either device can end session, resources released |
+
+---
+
+## 🧪 Developer APIs (Android)
+
+To use NAN on Android:
+
+- Use `WifiAwareManager` API
+- Declare `android.hardware.wifi.aware` in manifest
+- Request `ACCESS_FINE_LOCATION` permission
+
+Example logic:
+```java
+WifiAwareManager manager = (WifiAwareManager) getSystemService(Context.WIFI_AWARE_SERVICE);
+...
+manager.attach(...);
+session.publish(...);
+```
 ---
 
 ## ⚙️ Internal MAC/PHY Layer Flow
