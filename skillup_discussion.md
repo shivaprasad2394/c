@@ -2799,53 +2799,337 @@ OS
 Object files are intermediate files that represent an incomplete copy of the program: each
 source file only expresses a piece of the program, so when it is compiled into an object file,
 the object file has some markers in
-- What is a class in C++?
-- What is an object?
-- What is the difference between C and C++?
-- Why is the size of an empty class not zero in C++?
-  
-  this is because that would make it possible for two distinct objects to have the same memory location. 
-  This is the reason behind the concept that even an empty class must have a size at least 1.
-- Why use access modifiers in C++?
-- What are C++ access modifiers?
-- What are the differences between a C++ struct and C++ class?
-- What are the various OOPs concepts in C++?
-- What is polymorphism in C++?
-- What are the different types of polymorphism in C++?
-- What is encapsulation?
-- What Is Inheritance?
-- What are the advantages of inheritance?
-- What is an abstraction in C++? 
-- What is a constructor?
-- Is the default constructor exists in C++?
-- Can a constructor throw an exception? How to handle the error when the constructor fails?
-- What is the initializer list in C++?
-- When do we use the Initializer List in C++?
--if at all there scenarios where initialization are not possible wth constructors then we can use initializers. 
-- What is a copy constructor?
-- When are copy constructors called in C++?
-- Why copy constructor takes the parameter as a reference in C++?
-- Why copy constructor argument should be const in C++?
-- Can one constructor of a class call another constructor of the same class to initialize this object?
-- Can a copy constructor accept an object of the same class as a parameter, in place of reference of the object? If No, why not possible?
-- Are Constructors and destructors can declare as const?
-- Can we make a copy constructor private?
-- Can you explain the order of execution in the constructor initialization list?
-- What is the difference between constructor and destructor?
-- What is the conversion constructor?
-- What is the difference between a copy constructor and an overloaded assignment operator?
-- What is the conversion operator in C++?
-- What is destructor in C++?
-- When is the destructor called?
-- Is it possible to overload the destructor of the class?
-- Can I call the destructor explicitly?
-- How destructors are different from a normal member function.
-- When do we need to write a user-defined destructor?
-- Why a class has only one destructor?
-- Can we have a virtual destructor in C++?
-- When to use virtual destructors?
-- Can we have a virtual constructor in C++?
--  
+
+## ✅ What is a class in C++?
+
+A class in C++ is a user-defined data type that encapsulates data (members) and functions (methods) into a single unit.
+
+It defines a blueprint for creating objects and allows encapsulation, data abstraction, and modularity.
+
+```cpp
+class Student {
+private:
+    int id;
+    string name;
+
+public:
+    void setData(int i, string n) {
+        id = i;
+        name = n;
+    }
+
+    void display() {
+        cout << "ID: " << id << ", Name: " << name << endl;
+    }
+};
+✅ What is an object?
+An object is an instance of a class. Memory is allocated to an object, and it can access class members using the dot (.) operator.
+
+cpp
+Copy
+Edit
+Student s1;
+s1.setData(1, "Alice");
+s1.display();
+✅ What is the difference between C and C++?
+Feature	C	C++
+Paradigm	Procedural	Object-Oriented + Procedural
+Data Encapsulation	Not supported	Supported via classes
+Function Overloading	Not available	Available
+Templates	Not available	Available
+Namespaces	Not supported	Supported
+Exception Handling	Manual/Error codes	try-catch block supported
+
+✅ Why is the size of an empty class not zero in C++?
+An empty class has non-zero size (usually 1 byte) to ensure each object has a unique memory address.
+
+If the size were 0, multiple instances could occupy the same address:
+
+cpp
+Copy
+Edit
+class Empty {};
+Empty a, b;
+cout << &a << " " << &b; // Different addresses
+✅ Why use access modifiers in C++?
+Access modifiers control visibility and access of class members, enforcing encapsulation and security.
+
+✅ What are C++ access modifiers?
+public: Accessible from anywhere
+
+private: Accessible only within the class
+
+protected: Accessible in the class and derived classes
+
+✅ What are the differences between a C++ struct and class?
+Feature	struct (C++)	class
+Default access	public	private
+Inheritance	public	private
+Otherwise	Equivalent	Equivalent
+
+✅ What are the various OOPs concepts in C++?
+Encapsulation
+
+Abstraction
+
+Inheritance
+
+Polymorphism
+
+✅ What is polymorphism in C++?
+Polymorphism = "Many forms"
+
+It allows different behaviors for the same function call.
+
+✅ What are the types of polymorphism in C++?
+Compile-time (Static): Function overloading, Operator overloading
+
+Runtime (Dynamic): Virtual functions, Inheritance
+
+✅ What is encapsulation?
+It’s the wrapping of data and methods in a single unit (class). Access modifiers enforce encapsulation.
+
+✅ What is inheritance?
+Inheritance allows a class (derived) to inherit from another (base), promoting code reuse.
+
+cpp
+Copy
+Edit
+class Animal {
+public:
+    void speak() { cout << "Sound\n"; }
+};
+
+class Dog : public Animal {
+public:
+    void bark() { cout << "Woof\n"; }
+};
+✅ What are the advantages of inheritance?
+Code Reusability
+
+Extensibility
+
+Polymorphism Support
+
+✅ What is abstraction in C++?
+Abstraction means hiding implementation details and showing only the interface.
+
+Achieved via:
+
+Pure virtual functions
+
+Abstract classes
+
+cpp
+Copy
+Edit
+class Shape {
+public:
+    virtual void draw() = 0;
+};
+✅ What is a constructor?
+A constructor is a special method that is automatically called when an object is created.
+
+It has the same name as the class
+
+It has no return type
+
+✅ Does the default constructor exist in C++?
+Yes. If no constructor is defined, the compiler provides a default constructor automatically.
+
+✅ Can a constructor throw an exception?
+Yes. Use try-catch around object creation.
+
+cpp
+Copy
+Edit
+class A {
+public:
+    A() {
+        throw std::runtime_error("Constructor Failed");
+    }
+};
+Use RAII or exception-safe factories to handle this.
+
+✅ What is the initializer list in C++?
+It's used to initialize class members before the constructor body executes.
+
+cpp
+Copy
+Edit
+class A {
+    const int x;
+public:
+    A(int val) : x(val) {}
+};
+✅ When do we use the Initializer List?
+Use initializer lists when:
+
+Initializing const, reference, or base class members
+
+Better performance for non-trivial types
+
+✅ What is a copy constructor?
+A constructor that copies values from another object of the same class.
+
+cpp
+Copy
+Edit
+A(const A& other) { ... }
+✅ When are copy constructors called?
+When an object is passed by value
+
+Returned by value
+
+Initialized with another object
+
+✅ Why copy constructor takes the parameter as a reference?
+Because passing by value will invoke the copy constructor recursively, causing infinite recursion.
+
+✅ Why copy constructor argument should be const?
+To allow copying from const objects, and ensure that the source object isn't modified.
+
+✅ Can one constructor call another?
+Yes, via delegating constructors in C++11:
+
+cpp
+Copy
+Edit
+class A {
+public:
+    A() : A(0) {}
+    A(int x) { ... }
+};
+✅ Can copy constructor accept an object (not reference)?
+No. It will call itself recursively and never terminate (stack overflow).
+
+✅ Can constructors/destructors be const?
+No. They modify the object during creation/destruction, so can't be const.
+
+✅ Can we make a copy constructor private?
+Yes. Used in singleton pattern or to prevent copying.
+
+cpp
+Copy
+Edit
+class A {
+private:
+    A(const A&); // private
+};
+✅ Explain constructor initialization order
+Base class constructor
+
+Member initializer list (in order of declaration)
+
+Constructor body
+
+cpp
+Copy
+Edit
+class A {
+    int x;
+    string s;
+public:
+    A(int val) : s("Hello"), x(val) { }
+};
+✅ Constructor vs Destructor
+Feature	Constructor	Destructor
+Purpose	Allocate/init resources	Clean up resources
+Name	Same as class	~ClassName()
+Overloadable	Yes	No
+Parameters	Can have	None
+
+✅ What is a conversion constructor?
+A constructor with one parameter, used to convert types implicitly.
+
+cpp
+Copy
+Edit
+class A {
+public:
+    A(int x) { ... } // A a = 10;
+};
+✅ Difference: Copy Constructor vs Assignment Operator
+Copy Constructor	Assignment Operator
+Creates new object	Operates on existing object
+Called on declaration	Called on assignment
+Syntax: A(const A&)	Syntax: operator=
+
+✅ What is a conversion operator in C++?
+Operator that converts class type to built-in or other types.
+
+cpp
+Copy
+Edit
+class A {
+    int val;
+public:
+    operator int() const { return val; }
+};
+✅ What is a destructor in C++?
+A special function that cleans up resources when an object is destroyed.
+
+cpp
+Copy
+Edit
+~ClassName() { delete ptr; }
+✅ When is the destructor called?
+When an object goes out of scope
+
+When delete is called on a pointer
+
+✅ Can destructors be overloaded?
+No. A class can only have one destructor.
+
+✅ Can we call a destructor explicitly?
+Yes, but use with caution.
+
+cpp
+Copy
+Edit
+A obj;
+obj.~A(); // Dangerous
+✅ How destructors differ from member functions?
+No return value
+
+No parameters
+
+Automatically called
+
+✅ When to write a user-defined destructor?
+If the class allocates dynamic memory
+
+If it holds file handles, sockets, or other resources
+
+✅ Why only one destructor per class?
+Because destruction logic should be unambiguous and automatic. Overloading doesn't make sense.
+
+✅ Can we have virtual destructor?
+Yes. Needed for proper cleanup in polymorphic base classes.
+
+cpp
+Copy
+Edit
+class Base {
+public:
+    virtual ~Base() {}
+};
+✅ When to use virtual destructors?
+When deleting derived objects via base class pointers:
+
+cpp
+Copy
+Edit
+Base* b = new Derived();
+delete b; // Calls Derived's destructor only if ~Base() is virtual
+❌ Can we have virtual constructors?
+No. Constructors can't be virtual because:
+
+Object type must be known at compile time
+
+Construction happens before vtable is set up
+
+Use factory patterns for polymorphic object creation.
 
 --------------------------------------------------------------------------------------------------------------------------------------------------------------
 # WiFI
