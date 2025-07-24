@@ -2822,12 +2822,11 @@ public:
         cout << "ID: " << id << ", Name: " << name << endl;
     }
 };
+```
 ✅ What is an object?
 An object is an instance of a class. Memory is allocated to an object, and it can access class members using the dot (.) operator.
 
-cpp
-Copy
-Edit
+
 Student s1;
 s1.setData(1, "Alice");
 s1.display();
@@ -2845,12 +2844,11 @@ An empty class has non-zero size (usually 1 byte) to ensure each object has a un
 
 If the size were 0, multiple instances could occupy the same address:
 
-cpp
-Copy
-Edit
+
 class Empty {};
 Empty a, b;
 cout << &a << " " << &b; // Different addresses
+
 ✅ Why use access modifiers in C++?
 Access modifiers control visibility and access of class members, enforcing encapsulation and security.
 
@@ -2892,9 +2890,7 @@ It’s the wrapping of data and methods in a single unit (class). Access modifie
 ✅ What is inheritance?
 Inheritance allows a class (derived) to inherit from another (base), promoting code reuse.
 
-cpp
-Copy
-Edit
+
 class Animal {
 public:
     void speak() { cout << "Sound\n"; }
@@ -2920,9 +2916,7 @@ Pure virtual functions
 
 Abstract classes
 
-cpp
-Copy
-Edit
+
 class Shape {
 public:
     virtual void draw() = 0;
@@ -2940,9 +2934,7 @@ Yes. If no constructor is defined, the compiler provides a default constructor a
 ✅ Can a constructor throw an exception?
 Yes. Use try-catch around object creation.
 
-cpp
-Copy
-Edit
+
 class A {
 public:
     A() {
@@ -2954,9 +2946,7 @@ Use RAII or exception-safe factories to handle this.
 ✅ What is the initializer list in C++?
 It's used to initialize class members before the constructor body executes.
 
-cpp
-Copy
-Edit
+
 class A {
     const int x;
 public:
@@ -2972,9 +2962,7 @@ Better performance for non-trivial types
 ✅ What is a copy constructor?
 A constructor that copies values from another object of the same class.
 
-cpp
-Copy
-Edit
+
 A(const A& other) { ... }
 ✅ When are copy constructors called?
 When an object is passed by value
@@ -2992,9 +2980,7 @@ To allow copying from const objects, and ensure that the source object isn't mod
 ✅ Can one constructor call another?
 Yes, via delegating constructors in C++11:
 
-cpp
-Copy
-Edit
+
 class A {
 public:
     A() : A(0) {}
@@ -3009,9 +2995,7 @@ No. They modify the object during creation/destruction, so can't be const.
 ✅ Can we make a copy constructor private?
 Yes. Used in singleton pattern or to prevent copying.
 
-cpp
-Copy
-Edit
+
 class A {
 private:
     A(const A&); // private
@@ -3023,9 +3007,7 @@ Member initializer list (in order of declaration)
 
 Constructor body
 
-cpp
-Copy
-Edit
+
 class A {
     int x;
     string s;
@@ -3042,9 +3024,7 @@ Parameters	Can have	None
 ✅ What is a conversion constructor?
 A constructor with one parameter, used to convert types implicitly.
 
-cpp
-Copy
-Edit
+
 class A {
 public:
     A(int x) { ... } // A a = 10;
@@ -3058,9 +3038,7 @@ Syntax: A(const A&)	Syntax: operator=
 ✅ What is a conversion operator in C++?
 Operator that converts class type to built-in or other types.
 
-cpp
-Copy
-Edit
+
 class A {
     int val;
 public:
@@ -3069,9 +3047,7 @@ public:
 ✅ What is a destructor in C++?
 A special function that cleans up resources when an object is destroyed.
 
-cpp
-Copy
-Edit
+
 ~ClassName() { delete ptr; }
 ✅ When is the destructor called?
 When an object goes out of scope
@@ -3084,9 +3060,7 @@ No. A class can only have one destructor.
 ✅ Can we call a destructor explicitly?
 Yes, but use with caution.
 
-cpp
-Copy
-Edit
+
 A obj;
 obj.~A(); // Dangerous
 ✅ How destructors differ from member functions?
@@ -3107,9 +3081,7 @@ Because destruction logic should be unambiguous and automatic. Overloading doesn
 ✅ Can we have virtual destructor?
 Yes. Needed for proper cleanup in polymorphic base classes.
 
-cpp
-Copy
-Edit
+
 class Base {
 public:
     virtual ~Base() {}
@@ -3117,9 +3089,7 @@ public:
 ✅ When to use virtual destructors?
 When deleting derived objects via base class pointers:
 
-cpp
-Copy
-Edit
+
 Base* b = new Derived();
 delete b; // Calls Derived's destructor only if ~Base() is virtual
 ❌ Can we have virtual constructors?
