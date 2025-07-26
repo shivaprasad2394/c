@@ -109,6 +109,407 @@ int main() {
 ```
 **getline(cin, fullName)** reads the entire line including spaces until the newline character.
 
+# 🧩 General Strategy to Solve Any Pattern Problem in C++
+
+Understanding pattern-based questions is key to mastering loops, especially nested loops in C++.
+
+---
+
+## 🪜 Step 1: Understand the Pattern Visually
+
+Look at:
+
+- Total number of **rows** = `n`
+- What is printed in **each row**?
+- How many **columns per row**?
+- Is the pattern **symmetric**?
+- Is it **increasing or decreasing**?
+
+---
+
+## 🧮 Step 2: Find Relationships Between Row and Column
+
+Ask:
+
+- For each `i` (row number from 1 to `n`), how many items are printed?
+- What values are printed in those items?
+- Are they numbers, stars `*`, or letters?
+- Any **spaces** or **indents**?
+
+---
+
+## 🔁 Step 3: Setup the Outer and Inner Loops
+
+```cpp
+for (int i = 1; i <= n; i++) {         // Outer loop → rows
+    for (int j = 1; j <= ???; j++) {   // Inner loop → columns/items
+        // logic to print correct item
+    }
+    cout << endl; // New line after each row
+}
+```
+# 🧮 Deriving Loops in Pattern Problems
+
+---
+
+## 🔁 Loop Variables: Usually
+
+- `i` = row number (outer loop)
+- `j` = column index inside that row (inner loop)
+
+---
+
+## 📐 Common Patterns and Loop Formulas
+
+| Pattern Type            | Outer Loop (Rows) | Inner Loop (Columns)                      | Tips                       |
+|-------------------------|-------------------|-------------------------------------------|----------------------------|
+| Left-aligned triangle   | `i = 1 to n`       | `j = 1 to i`                               | `j` depends on `i`         |
+| Right-aligned triangle  | `i = 1 to n`       | Print spaces `n - i`, then stars `i`       | Use two inner loops        |
+| Inverted triangle       | `i = 1 to n`       | `j = 1 to n - i + 1`                       | Count decreases            |
+| Pyramid / Diamond       | `i = 1 to n`       | Spaces: `n - i`, Stars: `2i - 1`           | Symmetric patterns         |
+| Number patterns         | `i = 1 to n`       | Print `j`, `i`, or `j = n - i + 1`         | Use logic for values       |
+
+---
+
+## 🔍 Let's See Some Examples
+
+---
+
+# 🧩 Pattern Problems: Loop Formula Guide for Striver's 21 Patterns
+
+Based on: [Striver's A2Z DSA Pattern List](https://takeuforward.org/strivers-a2z-dsa-course/must-do-pattern-problems-before-starting-dsa/)
+
+---
+
+## 📐 General Loop Strategies
+
+| Pattern Type            | Outer Loop (Rows)  | Inner Loop (Columns)                     | Tips                         |   |      |   |            |
+| ----------------------- | ------------------ | ---------------------------------------- | ---------------------------- | - | ---- | - | ---------- |
+| Left-aligned triangle   | `i = 1 to n`       | `j = 1 to i`                             | `j` depends on `i`           |   |      |   |            |
+| Right-aligned triangle  | `i = 1 to n`       | Spaces: `n - i`, Stars: `i`              | Use two inner loops          |   |      |   |            |
+| Inverted triangle       | `i = 1 to n`       | `j = 1 to n - i + 1`                     | Count decreases              |   |      |   |            |
+| Pyramid / Diamond       | `i = 1 to n`       | Spaces: `n - i`, Stars: `2i - 1`         | Symmetric pattern            |   |      |   |            |
+| Number patterns         | `i = 1 to n`       | Print `j`, `i`, or `j = n - i + 1`       | Use logic for value printing |   |      |   |            |
+| Binary triangle         | `i = 1 to n`       | Print based on `(i + j) % 2`             | Alternate 1s and 0s          |   |      |   |            |
+| Mirror/Reverse patterns | `i = 1 to n`       | Use `n - i` or reverse logic             | Flip direction or values     |   |      |   |            |
+| Combined shapes         | `i = 1 to 2*n - 1` | Adjust inner loop using `min(i, 2n - i)` | Use min/max logic            |   |      |   |            |
+| Hollow patterns         | `i = 1 to n`       | Print only edges or boundaries           | Use \`if (i==1               |   | i==n |   | j==1...)\` |
+
+---
+
+## ✅ Loop Formulas for All 21 Patterns
+
+### 1. Left-Aligned Triangle
+
+```
+*  
+* *  
+* * *  
+* * * *  
+* * * * *
+```
+
+* Outer: `i = 1 to n`
+* Inner: `j = 1 to i`
+* Print: `* `
+
+---
+
+### 2. Right-Aligned Triangle
+
+```
+    *
+   * *
+  * * *
+ * * * *
+* * * * *
+```
+
+* Outer: `i = 1 to n`
+* Inner1: `j = 1 to n - i` → print spaces
+* Inner2: `j = 1 to i` → print stars
+
+---
+
+### 3. Inverted Left-Aligned Triangle
+
+```
+* * * * *
+* * * *
+* * *
+* *
+*
+```
+
+* Outer: `i = 1 to n`
+* Inner: `j = 1 to n - i + 1`
+
+---
+
+### 4. Inverted Right-Aligned Triangle
+
+```
+* * * * *
+ * * * *
+  * * *
+   * *
+    *
+```
+
+* Outer: `i = 1 to n`
+* Inner1: `j = 1 to i - 1` → spaces
+* Inner2: `j = 1 to n - i + 1` → stars
+
+---
+
+### 5. Pyramid (Centered Triangle)
+
+```
+    *
+   ***
+  *****
+ *******
+*********
+```
+
+* Outer: `i = 1 to n`
+* Inner1: `j = 1 to n - i` → spaces
+* Inner2: `j = 1 to 2*i - 1` → stars
+
+---
+
+### 6. Inverted Pyramid
+
+```
+*********
+ *******
+  *****
+   ***
+    *
+```
+
+* Outer: `i = 1 to n`
+* Inner1: `j = 1 to i - 1` → spaces
+* Inner2: `j = 1 to 2*(n - i) + 1` → stars
+
+---
+
+### 7. Diamond
+
+```
+    *
+   ***
+  *****
+   ***
+    *
+```
+
+* Outer: `i = 1 to 2n - 1`
+* Use: `stars = i <= n ? 2*i-1 : 2*(2n - i)-1`
+* Spaces: `abs(n - i)`
+
+---
+
+### 8. Half Diamond
+
+```
+*
+* *
+* * *
+* *
+*
+```
+
+* Outer: `i = 1 to 2n - 1`
+* Stars: `i <= n ? i : 2n - i`
+
+---
+
+### 9. Number Triangle
+
+```
+1
+1 2
+1 2 3
+1 2 3 4
+```
+
+* Outer: `i = 1 to n`
+* Inner: `j = 1 to i` → print `j`
+
+---
+
+### 10. Repeated Row Number
+
+```
+1
+2 2
+3 3 3
+4 4 4 4
+```
+
+* Outer: `i = 1 to n`
+* Inner: `j = 1 to i` → print `i`
+
+---
+
+### 11. Increasing Triangle Numbers
+
+```
+1
+2 3
+4 5 6
+7 8 9 10
+```
+
+* Use counter `num = 1`
+* Outer: `i = 1 to n`
+* Inner: `j = 1 to i` → print `num++`
+
+---
+
+### 12. Binary Triangle
+
+```
+1
+0 1
+1 0 1
+0 1 0 1
+```
+
+* Outer: `i = 1 to n`
+* Inner: `j = 1 to i` → print `(i + j) % 2`
+
+---
+
+### 13. Square Border (Hollow)
+
+```
+*****
+*   *
+*   *
+*****
+```
+
+* Outer: `i = 1 to n`
+* Inner: `j = 1 to n`
+* Print `*` if `i==1 || i==n || j==1 || j==n` else space
+
+---
+
+### 14. Right-Angle Triangle Numbers (Reverse)
+
+```
+1 2 3
+1 2
+1
+```
+
+* Outer: `i = n to 1`
+* Inner: `j = 1 to i` → print `j`
+
+---
+
+### 15. Alphabet Triangle
+
+```
+A
+A B
+A B C
+```
+
+* Outer: `i = 1 to n`
+* Inner: `j = 1 to i` → print `char('A' + j - 1)`
+
+---
+
+### 16. Repeated Alphabets by Row
+
+```
+A
+B B
+C C C
+```
+
+* Outer: `i = 1 to n`
+* Inner: `j = 1 to i` → print `char('A' + i - 1)`
+
+---
+
+### 17. Alphabet Pyramid
+
+```
+    A
+   ABA
+  ABCBA
+ ABCDCBA
+```
+
+* Outer: `i = 1 to n`
+* Inner1: `j = 1 to n - i` → spaces
+* Inner2: `j = 1 to i` → increasing chars
+* Inner3: `j = i-1 to 1` → decreasing chars
+
+---
+
+### 18. Symmetric Triangle with Numbers
+
+```
+1
+2 3
+4 5 6
+7 8 9 10
+```
+
+* Use `num = 1`
+* Outer: `i = 1 to n`
+* Inner: `j = 1 to i` → print `num++`
+
+---
+
+### 19. Reverse Pyramid of Numbers
+
+```
+1 2 3 4 5
+1 2 3 4
+1 2 3
+1 2
+1
+```
+
+* Outer: `i = 1 to n`
+* Inner: `j = 1 to n - i + 1`
+
+---
+
+### 20. Alphabet Diamond
+
+```
+    A
+   ABA
+  ABCBA
+   ABA
+    A
+```
+
+* Outer: `i = 1 to 2n - 1`
+* Use: `len = i <= n ? i : 2n - i`
+* Inner: same as alphabet pyramid
+
+---
+
+### 21. Number Mirror Diamond
+
+```
+1
+2 1
+3 2 1
+2 1
+1
+```
+
+* Outer: `i = 1 to 2n - 1`
+* Inner: `j = min(i, 2n - i) to 1` → print `j`
 
 ---
 
