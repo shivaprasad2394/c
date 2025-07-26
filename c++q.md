@@ -1211,6 +1211,103 @@ int main() {
 ---
 
 You now have a complete overview of `unordered_multiset` in STL!
+# C++ STL: multiset and unordered\_map
+
+---
+
+## 🔁 multiset in C++ STL
+
+A `multiset` allows **duplicate** elements and stores them in **sorted order** (ascending by default).
+
+### 🔧 Declaration & Initialization
+
+```cpp
+#include <iostream>
+#include <set>
+using namespace std;
+
+multiset<int> ms1;  // Empty multiset
+multiset<int> ms2 = {1, 2, 2, 3};  // Initialization with duplicates
+```
+
+### ⚙️ Functions with Examples
+
+```cpp
+// Insert elements
+ms1.insert(10);
+ms1.insert(5);
+ms1.insert(10); // Duplicates allowed
+
+// Count occurrences of an element
+cout << ms1.count(10); // Output: 2
+
+// Erase one instance or all
+ms1.erase(ms1.find(10));  // Erase only one occurrence
+ms1.erase(10);            // Erase all occurrences of 10
+
+// Find an element
+if (ms1.find(5) != ms1.end()) cout << "5 is present";
+
+// Size and empty
+ms1.size();
+ms1.empty();
+
+// Iterate over multiset
+for (auto val : ms1) cout << val << " ";
+```
+
+---
+
+## 📦 unordered\_map in C++ STL
+
+An `unordered_map` stores key-value pairs with **unique keys** and **unordered** storage (uses hashing).
+
+### 🔧 Declaration & Initialization
+
+```cpp
+#include <iostream>
+#include <unordered_map>
+using namespace std;
+
+unordered_map<string, int> mp;  // Empty map
+unordered_map<int, string> mp2 = {{1, "one"}, {2, "two"}};  // Init
+```
+
+### ⚙️ Functions with Examples
+
+```cpp
+// Insert elements
+mp["apple"] = 5;
+mp.insert({"banana", 3});
+
+// Access elements
+cout << mp["apple"];
+
+// Check existence
+if (mp.find("banana") != mp.end()) cout << "Found";
+
+// Erase
+mp.erase("banana");
+
+// Size and empty
+mp.size();
+mp.empty();
+
+// Iterate
+for (auto it : mp) cout << it.first << ": " << it.second << endl;
+
+// Count key existence (returns 0 or 1)
+if (mp.count("apple")) cout << "apple present";
+```
+
+---
+
+## 🧠 Key Notes
+
+* `multiset`: Sorted, duplicates allowed
+* `unordered_map`: Fast average-case operations (O(1)), but no order
+
+Let me know if you want the same style guide for `map`, `priority_queue`, or `deque` next!
 
 ---
 ### 1. Reverse a String
