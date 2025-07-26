@@ -1,4 +1,81 @@
-Absolutely! Here are the **step-by-step explanations** for each of the string problems you listed, with concise logic that you can use for implementation:
+
+| C Code | C++ Code |
+|--------|----------|
+|```c
+#include <stdio.h>
+
+int main() {
+    int arr[100];
+    int n = 0, x;
+
+    printf("Enter numbers (end input with newline): ");
+
+    // Read integers until newline (simulate dynamic input)
+    while (scanf("%d", &x) == 1) {
+        arr[n++] = x;
+
+        // Check for newline after number
+        if (getchar() == '\n')
+            break;
+    }
+
+    printf("You entered: ");
+    for (int i = 0; i < n; i++)
+        printf("%d ", arr[i]);
+    printf("\n");
+
+    return 0;
+}
+``` | ```cpp
+#include <iostream>
+#include <vector>
+#include <sstream>
+using namespace std;
+
+int main() {
+    vector<int> arr;
+    string line;
+    int x;
+
+    cout << "Enter numbers (space-separated): ";
+    getline(cin, line); // read full line
+
+    stringstream ss(line); // stream to extract integers
+
+    while (ss >> x) {
+        arr.push_back(x);
+    }
+
+    cout << "You entered: ";
+    for (int num : arr)
+        cout << num << " ";
+    cout << endl;
+
+    return 0;
+}
+``` |
+
+📝 **Key Difference:**
+- In C, array size must be predefined.
+- In C++, `vector` grows dynamically and `stringstream` helps split input.
+
+---
+
+## ✅ Summary
+
+| Feature | C | C++ |
+|--------|----|-----|
+| Read single word | `scanf("%s", str)` | `cin >> str` |
+| Read full line | `fgets(str, size, stdin)` | `getline(cin, str)` |
+| Read array of ints | Use `scanf` + `getchar` | Use `getline` + `stringstream` |
+| Dynamic arrays | Manual management | Use `std::vector` |
+
+---
+
+> 📌 **Tip:** Always clean the input buffer (e.g., `getchar()` or `cin.ignore()`) after reading with `scanf` or `cin` before switching to `fgets` or `getline`.
+
+
+Here are the **step-by-step explanations** for each of the string problems you listed, with concise logic that you can use for implementation:
 
 ---
 
