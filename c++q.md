@@ -512,7 +512,282 @@ C C C
 * Inner: `j = min(i, 2n - i) to 1` → print `j`
 
 ---
+# 📘 C++ STL `unordered_set` – Explained with Examples
 
+The `unordered_set` is a container that stores **unique elements** in **no particular order**, and provides **average constant time complexity (O(1))** for insertion, deletion, and lookup using hashing.
+
+---
+
+## 🧠 Key Characteristics
+
+* Stores **only unique elements**.
+* Elements are **not stored in any sorted order**.
+* **Hash Table** is used internally.
+* **Faster** than `set` (which uses BST) in average case.
+
+---
+
+## 📚 Syntax
+
+```cpp
+#include <unordered_set>
+std::unordered_set<int> uset;
+```
+
+---
+
+## ⚙️ Commonly Used Functions
+
+| Function            | Description                                         |
+| ------------------- | --------------------------------------------------- |
+| `insert(val)`       | Inserts an element into the set                     |
+| `find(val)`         | Returns iterator to element or `end()` if not found |
+| `erase(val)`        | Deletes element if present                          |
+| `count(val)`        | Returns 1 if element is present, else 0             |
+| `size()`            | Returns the number of elements                      |
+| `empty()`           | Checks if the set is empty                          |
+| `clear()`           | Removes all elements                                |
+| `begin()` / `end()` | Iterators for traversal                             |
+
+---
+
+## 🧪 Example: All Functions in Action
+
+```cpp
+#include <iostream>
+#include <unordered_set>
+using namespace std;
+
+int main() {
+    unordered_set<int> uset;
+
+    // Inserting elements
+    uset.insert(10);
+    uset.insert(20);
+    uset.insert(30);
+    uset.insert(20); // duplicate, will not be inserted
+
+    // Size
+    cout << "Size: " << uset.size() << endl;
+
+    // Checking if element exists
+    if (uset.find(20) != uset.end())
+        cout << "20 is present" << endl;
+    else
+        cout << "20 not found" << endl;
+
+    // Erasing an element
+    uset.erase(20);
+    cout << "After erasing 20, size: " << uset.size() << endl;
+
+    // Using count
+    cout << "Count of 30: " << uset.count(30) << endl;
+    cout << "Count of 40: " << uset.count(40) << endl;
+
+    // Traversing
+    cout << "Elements: ";
+    for (auto val : uset) cout << val << " ";
+    cout << endl;
+
+    // Empty check
+    cout << "Is set empty? " << (uset.empty() ? "Yes" : "No") << endl;
+
+    // Clear all elements
+    uset.clear();
+    cout << "Set cleared. Is it empty now? " << (uset.empty() ? "Yes" : "No") << endl;
+
+    return 0;
+}
+```
+
+---
+
+## ⚖️ `set` vs `unordered_set`
+
+| Feature         | `set`          | `unordered_set` |
+| --------------- | -------------- | --------------- |
+| Internals       | Red-Black Tree | Hash Table      |
+| Order           | Sorted         | No Order        |
+| Time Complexity | O(log n)       | O(1) avg        |
+| Duplicates      | ❌              | ❌               |
+
+---
+
+## 📌 Notes
+
+* **No duplicates allowed**.
+* Useful for **quick membership testing**.
+* **Order is unpredictable** due to hashing.
+* Avoid using `unordered_set` with complex keys unless a custom hash function is provided.
+
+---
+
+### ✅ Best Use Cases
+
+* Membership lookup
+* Removing duplicates from a list
+* Unique word or number counting
+
+---
+
+> 🔁 Prefer `unordered_set` when you need **fast access** and **don’t care about order**.
+# 📦 C++ STL Vector
+
+The `vector` in C++ STL is a dynamic array that can grow and shrink in size. It provides the ability to use arrays with the power of object-oriented programming.
+
+---
+
+## 🧠 Why Use Vectors?
+
+* Dynamic resizing
+* Random access (like arrays)
+* Predefined useful functions
+
+---
+
+## 🔧 Basic Syntax
+
+```cpp
+#include <iostream>
+#include <vector>
+using namespace std;
+
+int main() {
+    vector<int> v;  // empty vector
+    v.push_back(1);
+    v.push_back(2);
+    cout << v[0] << endl; // output: 1
+    return 0;
+}
+```
+
+---
+
+## 🔂 Common Functions with Examples
+
+### 1. `push_back()` – Add an element to the end
+
+```cpp
+vector<int> v;
+v.push_back(10);
+v.push_back(20); // v = [10, 20]
+```
+
+### 2. `pop_back()` – Remove last element
+
+```cpp
+v.pop_back(); // v = [10]
+```
+
+### 3. `size()` – Get current size
+
+```cpp
+cout << v.size(); // 1
+```
+
+### 4. `capacity()` – Current capacity of internal array
+
+```cpp
+cout << v.capacity();
+```
+
+### 5. `begin()` and `end()` – Iterators
+
+```cpp
+for (auto it = v.begin(); it != v.end(); it++)
+    cout << *it << " ";
+```
+
+### 6. `clear()` – Remove all elements
+
+```cpp
+v.clear();
+```
+
+### 7. `empty()` – Check if vector is empty
+
+```cpp
+cout << v.empty(); // 1 (true)
+```
+
+### 8. `at(index)` – Access with bounds checking
+
+```cpp
+cout << v.at(0); // safer than v[0]
+```
+
+### 9. `front()` and `back()` – First and last elements
+
+```cpp
+v.push_back(100);
+v.push_back(200);
+cout << v.front(); // 100
+cout << v.back();  // 200
+```
+
+### 10. `insert()` – Insert at position
+
+```cpp
+v.insert(v.begin() + 1, 150); // v = [100, 150, 200]
+```
+
+### 11. `erase()` – Erase by position or range
+
+```cpp
+v.erase(v.begin()); // v = [150, 200]
+```
+
+### 12. `resize()` – Change size
+
+```cpp
+v.resize(5); // Adds default 0s or removes elements
+```
+
+---
+
+## 🧪 Traversing a Vector
+
+```cpp
+// Index-based
+for (int i = 0; i < v.size(); i++) cout << v[i] << " ";
+
+// Iterator-based
+for (auto it = v.begin(); it != v.end(); it++) cout << *it << " ";
+
+// Range-based for loop
+for (auto x : v) cout << x << " ";
+```
+
+---
+
+## 🧵 2D Vector
+
+```cpp
+vector<vector<int>> mat(3, vector<int>(4, 0)); // 3x4 matrix of 0s
+```
+
+---
+
+## 🧠 Tips
+
+* Use `reserve()` to avoid multiple resizes
+* `vector` is contiguous in memory → can use with C-style arrays
+
+---
+
+## ✅ When to Use Vector?
+
+* When size may change dynamically
+* When you need array-like random access
+
+---
+
+## 📚 Related
+
+* `vector` vs `array`
+* `vector` vs `list`
+* Performance tuning with `reserve()`
+---
 ### 1. Reverse a String
 
 **Goal:** Reverse the characters in a string in-place or return a reversed copy.
