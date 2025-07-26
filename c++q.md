@@ -927,6 +927,141 @@ vector<vector<int>> mat(3, vector<int>(4, 0)); // 3x4 matrix of 0s
 * `vector` vs `list`
 * Performance tuning with `reserve()`
 ---
+# 🌿 C++ STL: `set`
+
+The `set` container in C++ STL stores **unique elements** in **sorted order** (by default ascending). It is usually implemented using **balanced binary search trees** (like Red-Black Tree).
+
+---
+
+## ✅ Basic Properties
+
+* Stores only **unique** values
+* Keeps values **sorted** automatically
+* Provides **log(n)** time complexity for insert, erase, search
+* Ordered using `<` comparator (can be customized)
+
+---
+
+## 🧱 Declaration & Initialization
+
+```cpp
+#include <set>
+
+std::set<int> s1;                     // Empty set
+std::set<int> s2 = {10, 20, 30};      // Set with values
+std::set<string> s3 = {"abc", "xyz"}; // Set of strings
+```
+
+---
+
+## ✨ Common Functions with Examples
+
+### 🔹 `insert()` – Adds element
+
+```cpp
+s1.insert(10);
+s1.insert(5);
+s1.insert(10); // duplicate, will not be added
+```
+
+### 🔹 `count()` – Checks presence
+
+```cpp
+if (s1.count(5)) cout << "5 found";
+else cout << "5 not found";
+```
+
+### 🔹 `erase()` – Remove element by value or iterator
+
+```cpp
+s1.erase(10);           // Remove by value
+s1.erase(s1.begin());   // Remove first element
+```
+
+### 🔹 `find()` – Returns iterator to value (or `end()` if not found)
+
+```cpp
+if (s1.find(10) != s1.end())
+    cout << "Found";
+```
+
+### 🔹 `begin()`, `end()` – Iterators
+
+```cpp
+for (auto it = s1.begin(); it != s1.end(); ++it)
+    cout << *it << " ";
+```
+
+### 🔹 `size()` – Returns number of elements
+
+```cpp
+cout << s1.size();
+```
+
+### 🔹 `clear()` – Removes all elements
+
+```cpp
+s1.clear();
+```
+
+### 🔹 `empty()` – Checks if set is empty
+
+```cpp
+if (s1.empty()) cout << "Set is empty";
+```
+
+---
+
+## 🔁 Example: Using all major functions
+
+```cpp
+#include <iostream>
+#include <set>
+using namespace std;
+
+int main() {
+    set<int> s;
+
+    s.insert(3);
+    s.insert(1);
+    s.insert(7);
+    s.insert(3); // ignored duplicate
+
+    cout << "Elements in set: ";
+    for (auto x : s) cout << x << " ";
+    cout << endl;
+
+    cout << "Count of 3: " << s.count(3) << endl;
+
+    s.erase(1);
+
+    if (s.find(7) != s.end()) cout << "7 found" << endl;
+
+    s.clear();
+    cout << "Set empty: " << s.empty() << endl;
+}
+```
+
+---
+
+## 🧠 Notes
+
+* `set` does not allow modifying elements directly since it breaks ordering
+* Internally implemented as **balanced BST** → insert/find in `O(log n)`
+* Use `unordered_set` for faster (average `O(1)`) if ordering is not needed
+
+---
+
+## 🚀 Use-Cases
+
+* Removing duplicates
+* Storing sorted data
+* Fast presence/absence checking
+
+---
+Let me know if you want to go over `multiset`, `unordered_set`, or some set-based interview problems!
+
+---
 ### 1. Reverse a String
 
 **Goal:** Reverse the characters in a string in-place or return a reversed copy.
