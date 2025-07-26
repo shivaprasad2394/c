@@ -645,7 +645,139 @@ The `vector` in C++ STL is a dynamic array that can grow and shrink in size. It 
 
 ---
 
-## 🔧 Basic Syntax
+## Declaration & Initialization
+
+```cpp
+#include <vector>
+using namespace std;
+
+// Empty vector of ints
+vector<int> v1;
+
+// Vector with initial size 5 (all values = 0)
+vector<int> v2(5);
+
+// Vector with size 5 and all values initialized to 10
+vector<int> v3(5, 10);
+
+// Initialize from array
+int arr[] = {1, 2, 3};
+vector<int> v4(arr, arr + 3);
+
+// Copy another vector
+vector<int> v5(v3);
+
+// Using initializer list
+vector<int> v6 = {1, 2, 3, 4};
+```
+
+---
+
+## � Common Functions with Examples
+
+### 1. `push_back()` – Add at end
+
+```cpp
+v1.push_back(10);
+v1.push_back(20); // v1 = {10, 20}
+```
+
+### 2. `emplace_back()` – More efficient insertion
+
+```cpp
+v1.emplace_back(30); // v1 = {10, 20, 30}
+```
+
+### 3. `size()` – Number of elements
+
+```cpp
+cout << v1.size(); // 3
+```
+
+### 4. `pop_back()` – Remove last element
+
+```cpp
+v1.pop_back(); // v1 = {10, 20}
+```
+
+### 5. `front()` and `back()`
+
+```cpp
+cout << v1.front(); // 10
+cout << v1.back();  // 20
+```
+
+### 6. `clear()` – Removes all elements
+
+```cpp
+v1.clear(); // v1 is now empty
+```
+
+### 7. `empty()` – Check if vector is empty
+
+```cpp
+if (v1.empty()) cout << "Empty!";
+```
+
+### 8. `at(index)` – Safe access
+
+```cpp
+v3.at(2); // 10
+```
+
+---
+
+## � Iterating Through a Vector
+
+### 1. Index-based
+
+```cpp
+for (int i = 0; i < v3.size(); i++) cout << v3[i] << " ";
+```
+
+### 2. Range-based loop
+
+```cpp
+for (int val : v3) cout << val << " ";
+```
+
+### 3. Using iterators
+
+```cpp
+for (vector<int>::iterator it = v3.begin(); it != v3.end(); ++it) cout << *it << " ";
+```
+
+### 4. Auto keyword with iterators
+
+```cpp
+for (auto it = v3.begin(); it != v3.end(); ++it) cout << *it << " ";
+```
+
+---
+
+## � Other Useful Functions
+
+### `insert()` – Insert at specific position
+
+```cpp
+v3.insert(v3.begin() + 1, 99); // Insert 99 at index 1
+```
+
+### `erase()` – Remove specific element or range
+
+```cpp
+v3.erase(v3.begin() + 1); // Erase element at index 1
+```
+
+### `swap()` – Exchange contents
+
+```cpp
+v3.swap(v4);
+```
+
+---
+
+## Sample Program
 
 ```cpp
 #include <iostream>
@@ -653,14 +785,21 @@ The `vector` in C++ STL is a dynamic array that can grow and shrink in size. It 
 using namespace std;
 
 int main() {
-    vector<int> v;  // empty vector
-    v.push_back(1);
-    v.push_back(2);
-    cout << v[0] << endl; // output: 1
+    vector<int> nums;
+
+    nums.push_back(1);
+    nums.emplace_back(2);
+    nums.push_back(3);
+
+    for (auto x : nums) cout << x << " ";
+    cout << "\nSize: " << nums.size();
+
+    nums.pop_back();
+    cout << "\nLast Element: " << nums.back();
+
     return 0;
 }
 ```
-
 ---
 
 ## 🔂 Common Functions with Examples
