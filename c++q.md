@@ -37,13 +37,14 @@ int main() {
     return 0;
 }
 ```
+```text
 Enter your first name: Shivaprasad
 Enter a sentence: Hey shivaprasad prasad
 how are you ?
 Name    : Shivaprasad
 Sentence: Hey shivaprasad prasad
 how are you ?
-
+```
 Basic Array I/O in C++
 ### Example 2: Reading and Printing Arrays
 ```cpp
