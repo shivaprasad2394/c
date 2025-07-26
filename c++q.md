@@ -12,90 +12,104 @@
 
 ---
 
-### Example 1: Reading a Full Line of Text
+# C++ Basic Input/Output – `cin` / `cout`
+
+Source: [Take U Forward - Basic I/O](https://takeuforward.org/c/c-basic-input-output/)
+
+## 📘 Objective
+
+Understand the basic input and output mechanisms in C++ using:
+- `cin` – for input
+- `cout` – for output
+
+These are part of the `<iostream>` library.
+
+---
+
+## 📥 Input in C++
+
+### 🔹 Syntax
 
 ```cpp
 #include <iostream>
-#include <string>
+using namespace std;
 
 int main() {
-    std::string name;
-    std::string sentence;
-
-    // Read a single word into 'name'
-    std::cout << "Enter your first name: ";
-    std::cin >> name;               // stops at the first space
-    // Clear the newline left in the input buffer
-    std::cin.ignore();              // ignore one character (the '\n')
-
-    // Read a full line (may include spaces) into 'sentence'
-    std::cout << "Enter a sentence: ";
-    std::getline(std::cin, sentence);
-
-    std::cout << "Name   : " << name << "\n";
-    std::cout << "Sentence: " << sentence << "\n";
+    int a;
+    cin >> a;
     return 0;
 }
 ```
-```text
-Enter your first name: Shivaprasad
-Enter a sentence: Hey shivaprasad prasad
-how are you ?
-Name    : Shivaprasad
-Sentence: Hey shivaprasad prasad
-how are you ?
-```
-Basic Array I/O in C++
-### Example 2: Reading and Printing Arrays
+cin stands for “character input”.
+
+The >> operator extracts the value from the input buffer and assigns it to the variable.
+
+📝 **Example**: Input Two Integers
 ```cpp
 #include <iostream>
-#include <vector>
+using namespace std;
 
 int main() {
-    int n;
+    int a, b;
+    cin >> a >> b;
+    cout << "The numbers are " << a << " and " << b << endl;
+    return 0;
+}
+```
+💡 You can chain inputs like cin >> a >> b.
 
-    // Read the size of the first row
-    std::cout << "Enter number of elements in row 1: ";
-    std::cin >> n;
-    std::vector<int> row1(n);
+📤 **Output in C++**
+🔹 Syntax
+```cpp
+cout << "Text to print";
+cout stands for “character output”.
+```
+The << operator sends data to the output stream.
 
-    std::cout << "Enter " << n << " integers: ";
-    for (int i = 0; i < n; i++) {
-        std::cin >> row1[i];        // read each integer into row1
-    }
+📝 **Example**: Print a Variable
+```cpp
+int x = 5;
+cout << "Value of x is: " << x << endl;
+```
+endl is used to move the output to the next line.
 
-    // Similarly for second row
-    std::cout << "\nEnter number of elements in row 2: ";
-    std::cin >> n;
-    std::vector<int> row2(n);
+🔄 **Example**: Full I/O Program
+```cpp
+#include <iostream>
+using namespace std;
 
-    std::cout << "Enter " << n << " integers: ";
-    for (int i = 0; i < n; i++) {
-        std::cin >> row2[i];
-    }
+int main() {
+    int age;
+    string name;
 
-    // And third row
-    std::cout << "\nEnter number of elements in row 3: ";
-    std::cin >> n;
-    std::vector<int> row3(n);
+    cout << "Enter your name: ";
+    cin >> name;
 
-    std::cout << "Enter " << n << " integers: ";
-    for (int i = 0; i < n; i++) {
-        std::cin >> row3[i];
-    }
+    cout << "Enter your age: ";
+    cin >> age;
 
-    // Print the arrays
-    std::cout << "\nYou entered:\n";
-    for (int x : row1) std::cout << x << " ";
-    std::cout << "\n";
-    for (int x : row2) std::cout << x << " ";
-    std::cout << "\n";
-    for (int x : row3) std::cout << x << " ";
-    std::cout << "\n";
+    cout << "Name: " << name << ", Age: " << age << endl;
 
     return 0;
 }
 ```
+⚠️ **Note**: cin >> name only reads up to the first space. To input full names with spaces, use getline().
+
+🧠 **Bonus**: getline() for Strings with Spaces
+```cpp
+#include <iostream>
+using namespace std;
+
+int main() {
+    string fullName;
+    getline(cin, fullName);
+    cout << "Hello, " << fullName << "!" << endl;
+    return 0;
+}
+```
+**getline(cin, fullName)** reads the entire line including spaces until the newline character.
+
+
 ---
 
 ### 1. Reverse a String
