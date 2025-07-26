@@ -1,43 +1,100 @@
 
-| C Code | C++ Code |
-|--------|----------|
-|```
-#include <stdio.h>
+## Basic String I/O in C++
 
-int main() {
-    // C code here
-}
-```|```
+### 1. `cin >>` vs. `getline`
+
+- **`cin >> str;`**  
+  - Reads a single “word” (up to the first whitespace).
+  - Stops at space, tab, or newline.
+- **`std::getline(cin, line);`**  
+  - Reads an entire line (including spaces) up to the newline character.
+  - Useful when your input may contain spaces.
+
+---
+
+### Example 1: Reading a Full Line of Text
+
+```cpp
 #include <iostream>
+#include <string>
 
 int main() {
-    // C++ code here
+    std::string name;
+    std::string sentence;
+
+    // Read a single word into 'name'
+    std::cout << "Enter your first name: ";
+    std::cin >> name;               // stops at the first space
+    // Clear the newline left in the input buffer
+    std::cin.ignore();              // ignore one character (the '\n')
+
+    // Read a full line (may include spaces) into 'sentence'
+    std::cout << "Enter a sentence: ";
+    std::getline(std::cin, sentence);
+
+    std::cout << "Name   : " << name << "\n";
+    std::cout << "Sentence: " << sentence << "\n";
+    return 0;
 }
-```|
+```
+Enter your first name: Shivaprasad
+Enter a sentence: Hey shivaprasad prasad
+how are you ?
+Name    : Shivaprasad
+Sentence: Hey shivaprasad prasad
+how are you ?
 
+Basic Array I/O in C++
+### Example 2: Reading and Printing Arrays
+```cpp
+#include <iostream>
+#include <vector>
 
-📝 **Key Difference:**
-- In C, array size must be predefined.
-- In C++, `vector` grows dynamically and `stringstream` helps split input.
+int main() {
+    int n;
 
----
+    // Read the size of the first row
+    std::cout << "Enter number of elements in row 1: ";
+    std::cin >> n;
+    std::vector<int> row1(n);
 
-## ✅ Summary
+    std::cout << "Enter " << n << " integers: ";
+    for (int i = 0; i < n; i++) {
+        std::cin >> row1[i];        // read each integer into row1
+    }
 
-| Feature | C | C++ |
-|--------|----|-----|
-| Read single word | `scanf("%s", str)` | `cin >> str` |
-| Read full line | `fgets(str, size, stdin)` | `getline(cin, str)` |
-| Read array of ints | Use `scanf` + `getchar` | Use `getline` + `stringstream` |
-| Dynamic arrays | Manual management | Use `std::vector` |
+    // Similarly for second row
+    std::cout << "\nEnter number of elements in row 2: ";
+    std::cin >> n;
+    std::vector<int> row2(n);
 
----
+    std::cout << "Enter " << n << " integers: ";
+    for (int i = 0; i < n; i++) {
+        std::cin >> row2[i];
+    }
 
-> 📌 **Tip:** Always clean the input buffer (e.g., `getchar()` or `cin.ignore()`) after reading with `scanf` or `cin` before switching to `fgets` or `getline`.
+    // And third row
+    std::cout << "\nEnter number of elements in row 3: ";
+    std::cin >> n;
+    std::vector<int> row3(n);
 
+    std::cout << "Enter " << n << " integers: ";
+    for (int i = 0; i < n; i++) {
+        std::cin >> row3[i];
+    }
 
-Here are the **step-by-step explanations** for each of the string problems you listed, with concise logic that you can use for implementation:
+    // Print the arrays
+    std::cout << "\nYou entered:\n";
+    for (int x : row1) std::cout << x << " ";
+    std::cout << "\n";
+    for (int x : row2) std::cout << x << " ";
+    std::cout << "\n";
+    for (int x : row3) std::cout << x << " ";
+    std::cout << "\n";
 
+    return 0;
+}
+```
 ---
 
 ### 1. Reverse a String
