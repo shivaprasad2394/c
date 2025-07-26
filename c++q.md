@@ -1,59 +1,20 @@
 
 | C Code | C++ Code |
 |--------|----------|
-|```c
+|```
 #include <stdio.h>
 
 int main() {
-    int arr[100];
-    int n = 0, x;
-
-    printf("Enter numbers (end input with newline): ");
-
-    // Read integers until newline (simulate dynamic input)
-    while (scanf("%d", &x) == 1) {
-        arr[n++] = x;
-
-        // Check for newline after number
-        if (getchar() == '\n')
-            break;
-    }
-
-    printf("You entered: ");
-    for (int i = 0; i < n; i++)
-        printf("%d ", arr[i]);
-    printf("\n");
-
-    return 0;
+    // C code here
 }
-``` | ```cpp
+```|```
 #include <iostream>
-#include <vector>
-#include <sstream>
-using namespace std;
 
 int main() {
-    vector<int> arr;
-    string line;
-    int x;
-
-    cout << "Enter numbers (space-separated): ";
-    getline(cin, line); // read full line
-
-    stringstream ss(line); // stream to extract integers
-
-    while (ss >> x) {
-        arr.push_back(x);
-    }
-
-    cout << "You entered: ";
-    for (int num : arr)
-        cout << num << " ";
-    cout << endl;
-
-    return 0;
+    // C++ code here
 }
-``` |
+```|
+
 
 📝 **Key Difference:**
 - In C, array size must be predefined.
