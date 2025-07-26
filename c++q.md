@@ -1060,6 +1060,157 @@ int main() {
 
 ---
 Let me know if you want to go over `multiset`, `unordered_set`, or some set-based interview problems!
+# Unordered Multiset in C++ STL
+
+An `unordered_multiset` in C++ is an associative container that allows **duplicate elements**, **does not maintain any specific order**, and provides **average constant-time complexity** for insertion, deletion, and search.
+
+---
+
+## 🧩 Features:
+
+* Stores elements in an **unordered fashion** (internally uses a hash table)
+* **Duplicates allowed** (unlike `unordered_set`)
+* **No indexing** (like all sets)
+* All operations like `insert`, `erase`, `find`, etc., are available.
+
+---
+
+## ✅ Header File
+
+```cpp
+#include <unordered_set>
+```
+
+---
+
+## 📥 Declaration & Initialization
+
+```cpp
+// Empty unordered_multiset of integers
+std::unordered_multiset<int> ms1;
+
+// Initialized with list
+std::unordered_multiset<int> ms2 = {1, 2, 3, 2, 1};
+
+// Copy constructor
+std::unordered_multiset<int> ms3(ms2);
+
+// Using iterators from another container
+std::vector<int> v = {5, 5, 6};
+std::unordered_multiset<int> ms4(v.begin(), v.end());
+```
+
+---
+
+## 🔧 Functions with Examples
+
+### 1. `insert()` – Add elements
+
+```cpp
+ms1.insert(10);
+ms1.insert(20);
+ms1.insert(10); // duplicates allowed
+```
+
+### 2. `count()` – Count occurrences of an element
+
+```cpp
+std::cout << ms1.count(10); // Outputs 2
+```
+
+### 3. `erase()` – Remove elements (all occurrences)
+
+```cpp
+ms1.erase(10); // Removes all instances of 10
+```
+
+### 4. `find()` – Search for an element (returns iterator)
+
+```cpp
+if (ms1.find(20) != ms1.end())
+    std::cout << "Found";
+```
+
+### 5. `clear()` – Remove all elements
+
+```cpp
+ms1.clear();
+```
+
+### 6. `size()` – Get number of elements
+
+```cpp
+std::cout << ms1.size();
+```
+
+### 7. `empty()` – Check if container is empty
+
+```cpp
+if (ms1.empty()) std::cout << "Empty";
+```
+
+### 8. `equal_range()` – Get range of equal elements
+
+```cpp
+auto range = ms2.equal_range(2);
+for (auto it = range.first; it != range.second; ++it) {
+    std::cout << *it << " ";
+}
+```
+
+---
+
+## 🔁 Traversing an Unordered Multiset
+
+```cpp
+for (auto &x : ms2) {
+    std::cout << x << " ";
+}
+```
+
+---
+
+## 📌 Sample Code
+
+```cpp
+#include <iostream>
+#include <unordered_set>
+
+int main() {
+    std::unordered_multiset<int> ums = {1, 2, 2, 3, 3, 3};
+
+    ums.insert(4);
+    ums.insert(2);
+
+    std::cout << "Count of 2: " << ums.count(2) << std::endl;
+
+    ums.erase(3); // Erases all 3s
+
+    std::cout << "Elements: ";
+    for (auto x : ums) std::cout << x << " ";
+
+    return 0;
+}
+```
+
+---
+
+## 📚 Summary
+
+| Function           | Description                       |
+| ------------------ | --------------------------------- |
+| `insert()`         | Adds a value (duplicates allowed) |
+| `erase(val)`       | Removes all instances of `val`    |
+| `count(val)`       | Number of times `val` appears     |
+| `find(val)`        | Returns iterator to `val`         |
+| `equal_range(val)` | Pair of iterators for duplicates  |
+| `clear()`          | Removes all elements              |
+| `size()`           | Returns size                      |
+| `empty()`          | Checks if container is empty      |
+
+---
+
+You now have a complete overview of `unordered_multiset` in STL!
 
 ---
 ### 1. Reverse a String
