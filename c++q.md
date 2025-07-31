@@ -2013,14 +2013,114 @@ for (auto p : v)
 * In `map`, `set`, or `priority_queue` where composite keys/values are needed
 
 ---
+```cpp
+// Number Problems in C++
+#include <iostream>
+#include <cmath>
+using namespace std;
 
+// 1. Digit Extraction
+void digitExtraction(int num) {
+    cout << "Digits: ";
+    while (num > 0) {
+        int digit = num % 10;
+        cout << digit << " ";
+        num /= 10;
+    }
+    cout << endl;
+}
 
+// 2. Reverse Number
+int reverseNumber(int num) {
+    int rev = 0;
+    while (num > 0) {
+        rev = rev * 10 + (num % 10);
+        num /= 10;
+    }
+    return rev;
+}
 
+// 3. Palindrome Number
+bool isPalindrome(int num) {
+    return num == reverseNumber(num);
+}
 
+// 4. Armstrong Number (3-digit only)
+bool isArmstrong(int num) {
+    int sum = 0, temp = num;
+    while (temp > 0) {
+        int digit = temp % 10;
+        sum += digit * digit * digit;
+        temp /= 10;
+    }
+    return sum == num;
+}
 
+// 5. Print All Divisors
+void printDivisors(int n) {
+    cout << "Divisors of " << n << ": ";
+    for (int i = 1; i <= sqrt(n); i++) {
+        if (n % i == 0) {
+            cout << i << " ";
+            if (i != n / i) cout << n / i << " ";
+        }
+    }
+    cout << endl;
+}
 
+// 6. Prime Number Check
+bool isPrime(int n) {
+    if (n < 2) return false;
+    for (int i = 2; i <= sqrt(n); i++) {
+        if (n % i == 0) return false;
+    }
+    return true;
+}
 
+// 7. Euclidean Algorithm for GCD
+int gcd(int a, int b) {
+    while (b != 0) {
+        int temp = b;
+        b = a % b;
+        a = temp;
+    }
+    return a;
+}
 
+// 8. Big Integer Addition (String Based)
+string addBigIntegers(string a, string b) {
+    if (a.length() < b.length()) swap(a, b);
+    
+    int carry = 0, sum;
+    string result = "";
+    int n1 = a.size(), n2 = b.size();
+
+    for (int i = 0; i < n1; i++) {
+        int digit1 = a[n1 - 1 - i] - '0';
+        int digit2 = i < n2 ? b[n2 - 1 - i] - '0' : 0;
+        sum = digit1 + digit2 + carry;
+        result = char(sum % 10 + '0') + result;
+        carry = sum / 10;
+    }
+    if (carry) result = char(carry + '0') + result;
+    return result;
+}
+
+// Main to test all functions
+int main() {
+    int num = 153;
+    digitExtraction(num);
+    cout << "Reversed: " << reverseNumber(num) << endl;
+    cout << "Palindrome? " << (isPalindrome(num) ? "Yes" : "No") << endl;
+    cout << "Armstrong? " << (isArmstrong(num) ? "Yes" : "No") << endl;
+    printDivisors(num);
+    cout << "Prime? " << (isPrime(num) ? "Yes" : "No") << endl;
+    cout << "GCD(153, 9): " << gcd(153, 9) << endl;
+    cout << "Big Int Sum: " << addBigIntegers("123456789", "987654321") << endl;
+
+    return 0;
+}
+```
 
 ---
 ### 1. Reverse a String
