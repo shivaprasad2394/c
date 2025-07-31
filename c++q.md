@@ -2014,109 +2014,118 @@ for (auto p : v)
 
 ---
 ```cpp
-// Number Problems in C++
+// Number Problems in C++ with Detailed Inline Comments
 #include <iostream>
 #include <cmath>
 using namespace std;
 
 // 1. Digit Extraction
+// Extract and print each digit from the number (from last to first)
 void digitExtraction(int num) {
     cout << "Digits: ";
     while (num > 0) {
-        int digit = num % 10;
-        cout << digit << " ";
-        num /= 10;
+        int digit = num % 10;     // Get the last digit
+        cout << digit << " ";     // Print the digit
+        num /= 10;                // Remove the last digit
     }
     cout << endl;
 }
 
 // 2. Reverse Number
+// Reverse the digits of the given number
 int reverseNumber(int num) {
     int rev = 0;
     while (num > 0) {
-        rev = rev * 10 + (num % 10);
-        num /= 10;
+        rev = rev * 10 + (num % 10); // Shift digits left and add new digit
+        num /= 10;                   // Remove the last digit
     }
     return rev;
 }
 
 // 3. Palindrome Number
+// Check if a number is a palindrome by comparing it to its reverse
 bool isPalindrome(int num) {
     return num == reverseNumber(num);
 }
 
 // 4. Armstrong Number (3-digit only)
+// Check if the number is equal to the sum of cubes of its digits
 bool isArmstrong(int num) {
     int sum = 0, temp = num;
     while (temp > 0) {
-        int digit = temp % 10;
-        sum += digit * digit * digit;
-        temp /= 10;
+        int digit = temp % 10;           // Get the last digit
+        sum += digit * digit * digit;   // Add cube of digit to sum
+        temp /= 10;                      // Remove the last digit
     }
     return sum == num;
 }
 
 // 5. Print All Divisors
+// Print all numbers that divide 'n' using square root optimization
 void printDivisors(int n) {
     cout << "Divisors of " << n << ": ";
     for (int i = 1; i <= sqrt(n); i++) {
         if (n % i == 0) {
-            cout << i << " ";
-            if (i != n / i) cout << n / i << " ";
+            cout << i << " ";             // i is a divisor
+            if (i != n / i) cout << n / i << " "; // n/i is also a divisor (distinct)
         }
     }
     cout << endl;
 }
 
 // 6. Prime Number Check
+// Determine if a number is prime using trial division up to sqrt(n)
 bool isPrime(int n) {
-    if (n < 2) return false;
+    if (n < 2) return false;              // 0 and 1 are not prime
     for (int i = 2; i <= sqrt(n); i++) {
-        if (n % i == 0) return false;
+        if (n % i == 0) return false;     // Found a divisor, not prime
     }
-    return true;
+    return true;                          // No divisors found, prime
 }
 
 // 7. Euclidean Algorithm for GCD
+// Efficient way to find greatest common divisor
 int gcd(int a, int b) {
     while (b != 0) {
-        int temp = b;
-        b = a % b;
-        a = temp;
+        int temp = b;    // Store current b
+        b = a % b;       // Set b as remainder of a/b
+        a = temp;        // Update a
     }
-    return a;
+    return a;            // When b becomes 0, a is the GCD
 }
 
 // 8. Big Integer Addition (String Based)
+// Add two large numbers represented as strings
 string addBigIntegers(string a, string b) {
-    if (a.length() < b.length()) swap(a, b);
-    
-    int carry = 0, sum;
+    if (a.length() < b.length()) swap(a, b); // Make sure 'a' is longer
+
+    int carry = 0;
     string result = "";
     int n1 = a.size(), n2 = b.size();
 
     for (int i = 0; i < n1; i++) {
-        int digit1 = a[n1 - 1 - i] - '0';
-        int digit2 = i < n2 ? b[n2 - 1 - i] - '0' : 0;
-        sum = digit1 + digit2 + carry;
-        result = char(sum % 10 + '0') + result;
-        carry = sum / 10;
+        int digit1 = a[n1 - 1 - i] - '0';               // Digit from 'a'
+        int digit2 = i < n2 ? b[n2 - 1 - i] - '0' : 0;   // Digit from 'b' or 0
+        int sum = digit1 + digit2 + carry;             // Sum with carry
+        result = char(sum % 10 + '0') + result;         // Append digit to result
+        carry = sum / 10;                               // Update carry
     }
-    if (carry) result = char(carry + '0') + result;
+    if (carry) result = char(carry + '0') + result;     // Add final carry if exists
     return result;
 }
 
-// Main to test all functions
+// Main function to test all the above number functions
 int main() {
     int num = 153;
-    digitExtraction(num);
-    cout << "Reversed: " << reverseNumber(num) << endl;
+
+    digitExtraction(num);                                  // Prints digits
+    cout << "Reversed: " << reverseNumber(num) << endl;    // Reversed number
     cout << "Palindrome? " << (isPalindrome(num) ? "Yes" : "No") << endl;
     cout << "Armstrong? " << (isArmstrong(num) ? "Yes" : "No") << endl;
-    printDivisors(num);
-    cout << "Prime? " << (isPrime(num) ? "Yes" : "No") << endl;
-    cout << "GCD(153, 9): " << gcd(153, 9) << endl;
-    cout << "Big Int Sum: " << addBigIntegers("123456789", "987654321") << endl;
+    printDivisors(num);                                    // List of divisors
+    cout << "Prime? " << (isPrime(num) ? "Yes" : "No") << endl; // Prime check
+    cout << "GCD(153, 9): " << gcd(153, 9) << endl;        // GCD using Euclidean algorithm
+    cout << "Big Int Sum: " << addBigIntegers("123456789", "987654321") << endl; // Big number sum
 
     return 0;
 }
