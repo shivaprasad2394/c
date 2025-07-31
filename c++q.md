@@ -1307,7 +1307,720 @@ if (mp.count("apple")) cout << "apple present";
 * `multiset`: Sorted, duplicates allowed
 * `unordered_map`: Fast average-case operations (O(1)), but no order
 
-Let me know if you want the same style guide for `map`, `priority_queue`, or `deque` next!
+# C++ STL: list
+
+---
+
+## 🔁 list in C++ STL
+
+A `list` is a **doubly linked list** implementation in STL. It allows fast insertions/deletions anywhere, but random access (like `[]`) is **not allowed**.
+
+### 🔧 Declaration & Initialization
+
+```cpp
+#include <iostream>
+#include <list>
+using namespace std;
+
+list<int> l1;  // Empty list
+list<int> l2 = {1, 2, 3};  // Initialization with elements
+list<int> l3(5, 100);  // 5 elements with value 100
+```
+
+### ⚙️ Functions with Examples
+
+```cpp
+// Add elements
+l1.push_back(10);     // Add at end
+l1.push_front(5);     // Add at front
+l1.emplace_back(15);  // Efficient push_back
+l1.emplace_front(3);  // Efficient push_front
+
+// Access front and back
+cout << l1.front();
+cout << l1.back();
+
+// Remove elements
+l1.pop_back();
+l1.pop_front();
+
+// Insert at specific position
+auto it = l1.begin();
+advance(it, 1);        // Move iterator forward
+l1.insert(it, 99);     // Insert 99 before position 1
+
+// Erase element at a position
+it = l1.begin();
+advance(it, 2);
+l1.erase(it);
+
+// Remove by value
+l1.remove(99);  // Remove all occurrences of 99
+
+// Clear list
+l1.clear();
+
+// Size and empty
+l1.size();
+l1.empty();
+
+// Reverse and sort
+l1.reverse();
+l1.sort();
+
+// Iterate
+for (auto x : l2) cout << x << " ";
+```
+
+---
+
+## 🧠 Key Notes
+
+* `list` is useful for operations involving frequent insertions/deletions in the middle.
+* No random access (i.e., no `list[i]`). Use iterators.
+* It’s a doubly linked list, so traversing forward and backward is efficient.
+
+---
+
+# C++ STL: deque
+
+---
+
+## 🚪 deque in C++ STL
+
+A `deque` (Double Ended Queue) allows insertion and deletion from both the front and back in constant time.
+
+### 🔧 Declaration & Initialization
+
+```cpp
+#include <iostream>
+#include <deque>
+using namespace std;
+
+// Empty deque
+deque<int> dq1;
+
+// Initialized deque
+deque<int> dq2 = {1, 2, 3};
+
+// Fill constructor
+deque<int> dq3(5, 10); // {10, 10, 10, 10, 10}
+```
+
+---
+
+## ⚙️ Common Functions with Examples
+
+```cpp
+// Push elements
+
+// Insert at back
+dq1.push_back(1);
+dq1.push_back(2);
+
+// Insert at front
+dq1.push_front(0);
+
+// Pop elements
+
+dq1.pop_back();   // Removes 2
+dq1.pop_front();  // Removes 0
+
+// Access elements
+cout << dq1.front();  // First element
+cout << dq1.back();   // Last element
+
+// Size & Check empty
+dq1.size();
+dq1.empty();
+
+// Insert using iterators
+dq1.insert(dq1.begin() + 1, 100);  // Insert 100 at index 1
+
+// Erase element at index 1
+dq1.erase(dq1.begin() + 1);
+
+// Clear entire deque
+dq1.clear();
+
+// Iterate over deque
+for (int x : dq2) cout << x << " ";
+```
+
+---
+
+## 📌 Summary Table
+
+| Operation           | Function              | Complexity |
+| ------------------- | --------------------- | ---------- |
+| Insert at front     | `push_front(val)`     | O(1)       |
+| Insert at back      | `push_back(val)`      | O(1)       |
+| Remove from front   | `pop_front()`         | O(1)       |
+| Remove from back    | `pop_back()`          | O(1)       |
+| Access front/back   | `front()`, `back()`   | O(1)       |
+| Insert/Erase middle | `insert()`, `erase()` | O(n)       |
+
+---
+
+## 🧠 Key Notes
+
+* `deque` combines features of both `vector` and `list`.
+* Prefer `deque` when you need fast insertions/removals at both ends.
+* Use `vector` when you mostly insert at the back.
+
+# C++ STL: `queue`
+
+---
+
+## 📦 What is `queue`?
+
+A **`queue`** is a linear **FIFO** (First In First Out) data structure. It supports:
+
+* Insertion at the **back**
+* Removal from the **front**
+
+Very useful when you need to process elements in the order they arrive.
+
+---
+
+## 🔧 Declaration & Initialization
+
+```cpp
+#include <iostream>
+#include <queue>
+using namespace std;
+
+queue<int> q1;         // Empty queue of integers
+queue<string> q2;      // Empty queue of strings
+```
+
+---
+
+## ⚙️ Common Functions with Examples
+
+### 🔹 Insertion
+
+```cpp
+q1.push(10);          // Insert at the back
+q1.push(20);
+```
+
+### 🔹 Removal
+
+```cpp
+q1.pop();             // Remove front element
+```
+
+### 🔹 Access Elements
+
+```cpp
+cout << q1.front();   // View front element
+cout << q1.back();    // View last inserted element
+```
+
+### 🔹 Other Operations
+
+```cpp
+q1.size();            // Number of elements
+q1.empty();           // Check if queue is empty
+```
+
+---
+
+## 🔄 Example
+
+```cpp
+#include <iostream>
+#include <queue>
+using namespace std;
+
+int main() {
+    queue<int> q;
+
+    q.push(1);
+    q.push(2);
+    q.push(3);
+
+    cout << "Front: " << q.front() << endl;  // Output: 1
+    cout << "Back: " << q.back() << endl;    // Output: 3
+
+    q.pop();  // Removes 1
+
+    cout << "New Front: " << q.front() << endl;  // Output: 2
+    cout << "Size: " << q.size() << endl;        // Output: 2
+
+    return 0;
+}
+```
+
+---
+
+## 🧠 Key Notes
+
+* Follows **FIFO** ordering.
+* You **cannot** iterate through a queue directly.
+* Useful for level order traversal, BFS, and real-world task scheduling.
+
+---
+
+## 🔄 Summary Table
+
+| Operation      | Function  | Complexity |
+| -------------- | --------- | ---------- |
+| Insert (rear)  | `push()`  | O(1)       |
+| Remove (front) | `pop()`   | O(1)       |
+| Access front   | `front()` | O(1)       |
+| Access back    | `back()`  | O(1)       |
+| Size           | `size()`  | O(1)       |
+| Check empty    | `empty()` | O(1)       |
+
+---
+
+# C++ STL: `priority_queue`
+
+---
+
+## 🚀 `priority_queue` in C++ STL
+
+A `priority_queue` is a type of container adapter that provides constant time lookup of the largest (by default) element.
+
+---
+
+## 🔧 Declaration & Initialization
+
+```cpp
+#include <iostream>
+#include <queue>
+using namespace std;
+
+priority_queue<int> pq1;                    // Max-heap (default)
+priority_queue<int, vector<int>, greater<int>> pq2; // Min-heap
+
+// Initialize from array
+vector<int> v = {5, 1, 10};
+priority_queue<int> pq3(v.begin(), v.end());
+```
+
+---
+
+## ⚙️ Common Functions with Examples
+
+### 🔹 Insertion
+
+```cpp
+pq1.push(10);         // Add element
+pq1.emplace(20);      // More efficient insertion
+```
+
+### 🔹 Access Top Element
+
+```cpp
+cout << pq1.top();    // Access highest priority (max by default)
+```
+
+### 🔹 Deletion
+
+```cpp
+pq1.pop();            // Removes the top element
+```
+
+### 🔹 Utility
+
+```cpp
+pq1.size();           // Number of elements
+pq1.empty();          // Check if empty
+```
+
+---
+
+## 📊 Min-Heap vs Max-Heap
+
+| Type     | Declaration                                      | Description         |
+| -------- | ------------------------------------------------ | ------------------- |
+| Max-Heap | `priority_queue<int>`                            | Default behavior    |
+| Min-Heap | `priority_queue<int, vector<int>, greater<int>>` | Smallest at the top |
+
+---
+
+## 🔁 Example: Max-Heap
+
+```cpp
+priority_queue<int> pq;
+pq.push(5);
+pq.push(10);
+pq.push(1);
+
+while (!pq.empty()) {
+    cout << pq.top() << " ";
+    pq.pop();
+}
+// Output: 10 5 1
+```
+
+## 🔁 Example: Min-Heap
+
+```cpp
+priority_queue<int, vector<int>, greater<int>> pq;
+pq.push(5);
+pq.push(10);
+pq.push(1);
+
+while (!pq.empty()) {
+    cout << pq.top() << " ";
+    pq.pop();
+}
+// Output: 1 5 10
+```
+
+---
+
+## 🧠 Key Notes
+
+* Underlying container is a `vector`.
+* Default is a **max-heap**.
+* To implement custom ordering, use comparator with struct or lambda.
+
+---
+
+## 📌 Summary Table
+
+| Operation      | Function  | Complexity |
+| -------------- | --------- | ---------- |
+| Insert         | `push()`  | O(log n)   |
+| Access top     | `top()`   | O(1)       |
+| Remove top     | `pop()`   | O(log n)   |
+| Size           | `size()`  | O(1)       |
+| Check if empty | `empty()` | O(1)       |
+
+---
+
+# C++ STL: `stack`
+
+---
+
+## 🧱 What is a `stack`?
+
+A **stack** is a linear data structure that follows the **Last In First Out (LIFO)** principle. The last element inserted is the first one to be removed.
+
+Used in:
+
+* Function call stacks
+* Expression parsing
+* Undo operations
+
+---
+
+## 🔧 Declaration & Initialization
+
+```cpp
+#include <iostream>
+#include <stack>
+using namespace std;
+
+stack<int> s1;                // Empty stack of integers
+stack<string> s2;             // Stack of strings
+```
+
+> Note: Stack is an adaptor over another container (default is `deque`).
+
+---
+
+## ⚙️ Stack Operations with Examples
+
+### 🔹 Pushing Elements
+
+```cpp
+s1.push(10);                 // Push 10
+s1.push(20);                 // Push 20
+s1.emplace(30);             // Efficient push
+```
+
+### 🔹 Popping Elements
+
+```cpp
+s1.pop();                   // Removes the top element
+```
+
+### 🔹 Access Top Element
+
+```cpp
+cout << s1.top();           // View the top element
+```
+
+### 🔹 Size and State
+
+```cpp
+cout << s1.size();          // Number of elements in stack
+cout << s1.empty();         // Returns true if stack is empty
+```
+
+> ⚠️ You cannot iterate through a `stack` directly like a vector or deque.
+
+---
+
+## 📌 Full Example
+
+```cpp
+#include <iostream>
+#include <stack>
+using namespace std;
+
+int main() {
+    stack<int> s;
+    s.push(5);
+    s.push(10);
+    s.push(15);
+
+    cout << "Top: " << s.top() << endl; // 15
+    s.pop();
+    cout << "After pop, Top: " << s.top() << endl; // 10
+
+    cout << "Size: " << s.size() << endl;
+    cout << (s.empty() ? "Empty" : "Not Empty") << endl;
+
+    return 0;
+}
+```
+
+---
+
+## 🧠 Key Notes
+
+* `stack` doesn’t support random access or iteration.
+* Elements are inserted and removed only from the **top**.
+* Underlying container can be `deque`, `vector`, or `list`.
+
+---
+
+## 🔄 Summary Table
+
+| Operation     | Function  | Time Complexity |
+| ------------- | --------- | --------------- |
+| Insert (push) | `push()`  | O(1)            |
+| Remove (pop)  | `pop()`   | O(1)            |
+| View top      | `top()`   | O(1)            |
+| Size          | `size()`  | O(1)            |
+| Check empty   | `empty()` | O(1)            |
+
+---
+
+# C++ STL: `map`
+
+---
+
+## 🗺️ What is `map` in C++ STL?
+
+A `map` is an **associative container** that stores elements in **key-value pairs** in sorted (ascending) order by default.
+
+* Each key is **unique**.
+* Internally implemented using **Red-Black Tree**.
+
+---
+
+## 📦 Declaration & Initialization
+
+```cpp
+#include <iostream>
+#include <map>
+using namespace std;
+
+map<int, string> m1;                         // Empty map
+map<int, string> m2 = {{1, "A"}, {2, "B"}}; // Initialized map
+```
+
+---
+
+## ⚙️ Common Functions with Examples
+
+### 🔹 Insertion
+
+```cpp
+m1[1] = "Apple";             // Inserts key 1 with value "Apple"
+m1.insert({2, "Banana"});    // Insert using pair
+m1.insert(make_pair(3, "Cat"));
+m1.emplace(4, "Dog");       // More efficient insertion
+```
+
+### 🔹 Access Elements
+
+```cpp
+cout << m1[1];               // Access value using key (inserts if key doesn't exist)
+cout << m1.at(2);            // Safer access (throws exception if key not found)
+```
+
+### 🔹 Iteration
+
+```cpp
+for (auto it : m1) {
+    cout << it.first << " -> " << it.second << endl;
+}
+
+// Using iterator
+for (map<int, string>::iterator it = m1.begin(); it != m1.end(); ++it) {
+    cout << it->first << " : " << it->second << endl;
+}
+```
+
+### 🔹 Search / Count
+
+```cpp
+if (m1.find(2) != m1.end()) cout << "Found";
+cout << m1.count(2);        // Returns 1 if exists, else 0
+```
+
+### 🔹 Deletion
+
+```cpp
+m1.erase(3);                // Removes key 3
+m1.erase(m1.begin());       // Erase by iterator
+m1.clear();                 // Clears entire map
+```
+
+### 🔹 Size / Empty
+
+```cpp
+cout << m1.size();          // Number of key-value pairs
+cout << m1.empty();         // 1 if empty, 0 otherwise
+```
+
+---
+
+## 🧠 Key Notes
+
+* Keys are always **sorted in ascending** order.
+* Time Complexity:
+
+  * Insertion: **O(log n)**
+  * Deletion: **O(log n)**
+  * Search: **O(log n)**
+* Duplicate keys are **not allowed** (use `multimap` if needed).
+
+---
+
+## 🔄 Summary Table
+
+| Operation    | Function                  | Time Complexity |
+| ------------ | ------------------------- | --------------- |
+| Insert       | `insert`, `[]`, `emplace` | O(log n)        |
+| Access       | `[]`, `at()`              | O(log n)        |
+| Delete       | `erase()`                 | O(log n)        |
+| Search       | `find()`, `count()`       | O(log n)        |
+| Iterate      | `begin()`, `end()`        | O(n)            |
+| Size / Empty | `size()`, `empty()`       | O(1)            |
+| Clear        | `clear()`                 | O(n)            |
+
+---
+
+# C++ STL: `pair`
+
+---
+
+## 📁 Overview of `pair`
+
+A `pair` is a simple container in C++ STL that holds two values (first and second) which may be of different data types. It is useful for storing tuples of two related values, such as key-value pairs.
+
+---
+
+## 🔧 Declaration & Initialization
+
+```cpp
+#include <iostream>
+#include <utility>
+using namespace std;
+
+pair<int, int> p1 = {1, 2};
+pair<string, int> p2("Alice", 100);
+pair<char, float> p3 = make_pair('A', 3.14);
+```
+
+You can also nest pairs:
+
+```cpp
+pair<int, pair<int, int>> nested = {1, {2, 3}};
+```
+
+---
+
+## 🔢 Accessing Elements
+
+```cpp
+cout << p1.first;   // 1
+cout << p1.second;  // 2
+```
+
+Access nested pair:
+
+```cpp
+cout << nested.first;             // 1
+cout << nested.second.first;      // 2
+cout << nested.second.second;     // 3
+```
+
+---
+
+## ✨ Common Usages
+
+### ✅ Swapping Two Pairs
+
+```cpp
+pair<int, int> a = {1, 2}, b = {3, 4};
+swap(a, b);
+```
+
+### ✅ Using in Arrays or Vectors
+
+```cpp
+pair<int, int> arr[] = {{1, 2}, {3, 4}, {5, 6}};
+
+vector<pair<string, int>> students;
+students.push_back({"Alice", 90});
+students.emplace_back("Bob", 85);
+```
+
+---
+
+## ⚡ Features Summary
+
+| Feature        | Details                          |
+| -------------- | -------------------------------- |
+| Header         | `<utility>`                      |
+| First element  | `.first`                         |
+| Second element | `.second`                        |
+| Initialization | `make_pair()` or `{}`            |
+| Nested pairs   | Supported                        |
+| STL containers | Commonly used in `map`, `vector` |
+| Use-case       | Store 2 associated values        |
+
+---
+
+## 🔍 Quick Use Case: Sorting by Pair
+
+```cpp
+vector<pair<int, int>> v = {{3, 10}, {1, 20}, {2, 15}};
+sort(v.begin(), v.end());  // sorts by first, then second
+
+for (auto p : v)
+    cout << p.first << " " << p.second << endl;
+```
+
+---
+
+## 📊 When to Use `pair`
+
+* When you need to return two values from a function
+* Storing key-value pairs
+* Working with 2D coordinates, intervals, or relationships
+* In `map`, `set`, or `priority_queue` where composite keys/values are needed
+
+---
+
+
+
+
+
+
+
+
 
 ---
 ### 1. Reverse a String
