@@ -647,30 +647,6 @@ The `vector` in C++ STL is a dynamic array that can grow and shrink in size. It 
 
 ## Declaration & Initialization
 
-```cpp
-#include <vector>
-using namespace std;
-
-// Empty vector of ints
-vector<int> v1;
-
-// Vector with initial size 5 (all values = 0)
-vector<int> v2(5);
-
-// Vector with size 5 and all values initialized to 10
-vector<int> v3(5, 10);
-
-// Initialize from array
-int arr[] = {1, 2, 3};
-vector<int> v4(arr, arr + 3);
-
-// Copy another vector
-vector<int> v5(v3);
-
-// Using initializer list
-vector<int> v6 = {1, 2, 3, 4};
-```
-
 ---
 
 ## � Common Functions with Examples
@@ -774,108 +750,6 @@ v3.erase(v3.begin() + 1); // Erase element at index 1
 ```cpp
 v3.swap(v4);
 ```
-
----
-
-## Sample Program
-
-```cpp
-#include <iostream>
-#include <vector>
-using namespace std;
-
-int main() {
-    vector<int> nums;
-
-    nums.push_back(1);
-    nums.emplace_back(2);
-    nums.push_back(3);
-
-    for (auto x : nums) cout << x << " ";
-    cout << "\nSize: " << nums.size();
-
-    nums.pop_back();
-    cout << "\nLast Element: " << nums.back();
-
-    return 0;
-}
-```
----
-
-## 🔂 Common Functions with Examples
-
-### 1. `push_back()` – Add an element to the end
-
-```cpp
-vector<int> v;
-v.push_back(10);
-v.push_back(20); // v = [10, 20]
-```
-
-### 2. `pop_back()` – Remove last element
-
-```cpp
-v.pop_back(); // v = [10]
-```
-
-### 3. `size()` – Get current size
-
-```cpp
-cout << v.size(); // 1
-```
-
-### 4. `capacity()` – Current capacity of internal array
-
-```cpp
-cout << v.capacity();
-```
-
-### 5. `begin()` and `end()` – Iterators
-
-```cpp
-for (auto it = v.begin(); it != v.end(); it++)
-    cout << *it << " ";
-```
-
-### 6. `clear()` – Remove all elements
-
-```cpp
-v.clear();
-```
-
-### 7. `empty()` – Check if vector is empty
-
-```cpp
-cout << v.empty(); // 1 (true)
-```
-
-### 8. `at(index)` – Access with bounds checking
-
-```cpp
-cout << v.at(0); // safer than v[0]
-```
-
-### 9. `front()` and `back()` – First and last elements
-
-```cpp
-v.push_back(100);
-v.push_back(200);
-cout << v.front(); // 100
-cout << v.back();  // 200
-```
-
-### 10. `insert()` – Insert at position
-
-```cpp
-v.insert(v.begin() + 1, 150); // v = [100, 150, 200]
-```
-
-### 11. `erase()` – Erase by position or range
-
-```cpp
-v.erase(v.begin()); // v = [150, 200]
-```
-
 ### 12. `resize()` – Change size
 
 ```cpp
@@ -904,6 +778,215 @@ for (auto x : v) cout << x << " ";
 ```cpp
 vector<vector<int>> mat(3, vector<int>(4, 0)); // 3x4 matrix of 0s
 ```
+
+---
+
+```cpp
+#include <iostream>
+#include <vector>
+#include <string>     // For std::string
+#include <algorithm>  // For sort, find, binary_search, etc.
+
+using namespace std;
+
+int main() {
+    // ======= Basic Integer Vectors Initialization =======
+    vector<int> v1;                       // Empty vector
+    vector<int> v2(5);                    // Size 5, all elements initialized to 0
+    vector<int> v3(5, 10);                // Size 5, all elements initialized to 10
+    int arr[] = {1, 2, 3};
+    vector<int> v4(arr, arr + 3);         // Initialize from an array
+    vector<int> v5(v3);                   // Copy constructor: v5 is a copy of v3
+    vector<int> v6 = {1, 2, 3, 4};        // Initializer list
+
+    // Print vectors
+    cout << "v3: ";
+    for(int n : v3) cout << n << ' ';
+    cout << "\nv4: ";
+    for(int n : v4) cout << n << ' ';
+    cout << "\nv6: ";
+    for(int n : v6) cout << n << ' ';
+    cout << "\n\n";
+
+    // ======= Basic Modifications =======
+    v1.push_back(10);      // Add element at the end
+    v1.push_back(20);
+    v1.emplace_back(30);   // Similar to push_back, but more efficient for complex objects
+
+    cout << "v1 after push/emplace_back: ";
+    for(int x : v1) cout << x << " ";
+    cout << endl;
+
+    v1.pop_back();         // Removes last element
+    cout << "v1 after pop_back: ";
+    for(int x : v1) cout << x << " ";
+    cout << endl;
+
+    if (!v1.empty()) {
+        cout << "Front: " << v1.front() << ", Back: " << v1.back() << endl;
+    }
+
+    cout << "Size of v1: " << v1.size() << endl;
+
+    v1.clear();            // Clears all elements
+    cout << "v1 after clear, size: " << v1.size() << endl;
+
+    if (v1.empty()) cout << "v1 is now empty!" << endl;
+
+    // Access with bounds checking
+    cout << "v3.at(2): " << v3.at(2) << endl;
+
+    // ======= Iteration Techniques =======
+    cout << "Index-based loop (v3): ";
+    for (int i = 0; i < (int)v3.size(); ++i)
+        cout << v3[i] << " ";
+
+    cout << "\nRange-based loop (v3): ";
+    for (int val : v3) cout << val << " ";
+
+    cout << "\nIterator loop (v3): ";
+    for (auto it = v3.begin(); it != v3.end(); ++it)
+        cout << *it << " ";
+
+    cout << "\nAuto iterator loop (v3): ";
+    for (auto it = v3.begin(); it != v3.end(); ++it)
+        cout << *it << " ";
+    cout << "\n\n";
+
+    // ======= Insert and Erase =======
+    v3.insert(v3.begin() + 1, 99); // Insert 99 at index 1
+    cout << "v3 after insert: ";
+    for (int x : v3) cout << x << " ";
+
+    v3.erase(v3.begin() + 1);     // Erase element at index 1
+    cout << "\nv3 after erase at position 1: ";
+    for (int x : v3) cout << x << " ";
+    cout << "\n";
+
+    // ======= Swapping Vectors =======
+    cout << "Before swap\nv3: ";
+    for(int x : v3) cout << x << " ";
+    cout << "\nv4: ";
+    for(int x : v4) cout << x << " ";
+    cout << endl;
+
+    v3.swap(v4);  // Efficiently swap contents
+
+    cout << "After swap\nv3: ";
+    for(int x : v3) cout << x << " ";
+    cout << "\nv4: ";
+    for(int x : v4) cout << x << " ";
+    cout << "\n\n";
+
+    // ======= Vector of Strings =======
+    vector<string> vs = {"apple", "banana", "cherry"};
+    cout << "Vector of strings: ";
+    for (const auto& s : vs) cout << s << " ";
+
+    vs.push_back("date");
+    cout << "\nAfter push_back(\"date\"): ";
+    for (const auto& s : vs) cout << s << " ";
+
+    vs.insert(vs.begin() + 1, "blueberry");
+    cout << "\nAfter insert at pos 1 (\"blueberry\"): ";
+    for (const auto& s : vs) cout << s << " ";
+
+    vs.erase(vs.begin() + 2);
+    cout << "\nAfter erase at pos 2: ";
+    for (const auto& s : vs) cout << s << " ";
+    cout << "\n\n";
+
+    // ======= Vector of Pairs (int, string) =======
+    vector<pair<int, string>> vp;
+    vp.emplace_back(1, "one");
+    vp.emplace_back(2, "two");
+    vp.push_back({3, "three"}); // Using initializer list
+
+    cout << "Vector of pairs:\n";
+    for (const auto& p : vp)
+        cout << p.first << " -> " << p.second << "\n";
+
+    vp[1].second = "dos";  // Modify specific element
+    cout << "After modifying vp[1].second:\n";
+    for (const auto& p : vp)
+        cout << p.first << " -> " << p.second << "\n";
+
+    vp.insert(vp.begin(), make_pair(0, "zero"));
+    cout << "After insert at beginning:\n";
+    for (const auto& p : vp)
+        cout << p.first << " -> " << p.second << "\n";
+
+    cout << "\n";
+
+    // ======= 2D Vectors (Matrix) =======
+    int rows = 3, cols = 4;
+    vector<vector<int>> matrix(rows, vector<int>(cols, 0)); // 3x4 matrix filled with 0
+
+    // Fill with values: matrix[i][j] = row * cols + col + 1
+    for (int i = 0; i < rows; ++i)
+        for (int j = 0; j < cols; ++j)
+            matrix[i][j] = i * cols + j + 1;
+
+    cout << "2D vector (matrix):\n";
+    for (const auto& row : matrix) {
+        for (int val : row)
+            cout << val << " ";
+        cout << "\n";
+    }
+    cout << "\n";
+
+    // ======= Capacity Management =======
+    vector<int> largeVec;
+    largeVec.reserve(1000); // Prevents multiple memory reallocations
+
+    cout << "Reserved capacity: " << largeVec.capacity() << "\n";
+
+    for (int i = 0; i < 1000; ++i)
+        largeVec.push_back(i);
+
+    cout << "Size after insertions: " << largeVec.size()
+         << ", Capacity: " << largeVec.capacity() << "\n\n";
+
+    // ======= std::move: Efficient Transfer =======
+    vector<int> src = {1, 2, 3, 4, 5};
+    vector<int> dest;
+
+    dest = std::move(src); // Moves contents (src is now empty)
+
+    cout << "After std::move, dest: ";
+    for (int x : dest) cout << x << " ";
+    cout << "\nsrc size after move: " << src.size() << " (empty)\n\n";
+
+    // ======= Sorting and Searching =======
+    vector<int> unsorted = {5, 3, 8, 1, 2};
+    cout << "Unsorted vector: ";
+    for(int x : unsorted) cout << x << " ";
+
+    sort(unsorted.begin(), unsorted.end()); // Ascending sort
+    cout << "\nSorted vector: ";
+    for(int x : unsorted) cout << x << " ";
+
+    // Linear search
+    int to_find = 3;
+    auto it = find(unsorted.begin(), unsorted.end(), to_find);
+    if(it != unsorted.end())
+        cout << "\nFound " << to_find << " at position " << distance(unsorted.begin(), it);
+    else
+        cout << "\n" << to_find << " not found";
+
+    // Binary search (vector must be sorted)
+    if (binary_search(unsorted.begin(), unsorted.end(), 4))
+        cout << "\n4 exists in vector\n";
+    else
+        cout << "\n4 does not exist in vector\n";
+
+    return 0;
+}
+
+```
+---
+
+
 
 ---
 
