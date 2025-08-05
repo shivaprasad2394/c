@@ -2096,6 +2096,7 @@ for (auto p : v)
 * In `map`, `set`, or `priority_queue` where composite keys/values are needed
 
 ---
+## Numbers coding
 ```cpp
 // Number Problems in C++ with Detailed Inline Comments
 #include <iostream>
@@ -2765,6 +2766,172 @@ int main() {
     return 0;
 }
 ```
+## string operation basic
+```cpp
+// 1. Reverse a string in place
+void reverseString(std::string &str) {
+    int left = 0, right = str.length() - 1;
+    while (left < right) {
+        std::swap(str[left++], str[right--]); // Swap characters from both ends
+    }
+}
+
+// 2. Print duplicate characters
+void printDuplicates(const std::string &str) {
+    int count[256] = {0};
+    for (char ch : str) count[(unsigned char)ch]++; // Count frequency
+    for (int i = 0; i < 256; ++i)
+        if (count[i] > 1)
+            std::cout << (char)i << " "; // Print if duplicate
+}
+
+// 3. Check if two strings are anagrams
+bool areAnagrams(const std::string &s1, const std::string &s2) {
+    if (s1.length() != s2.length()) return false; // Different lengths
+    int count[256] = {0};
+    for (char ch : s1) count[(unsigned char)ch]++; // Count characters in s1
+    for (char ch : s2) if (--count[(unsigned char)ch] < 0) return false; // Decrease for s2
+    return true;
+}
+
+// 4. Find all permutations of a string
+void permute(std::string str, int l, int r) {
+    if (l == r) std::cout << str << "\n"; // Print when all positions fixed
+    else {
+        for (int i = l; i <= r; i++) {
+            std::swap(str[l], str[i]); // Fix character at l
+            permute(str, l + 1, r);     // Recur for remaining
+            std::swap(str[l], str[i]); // Backtrack
+        }
+    }
+}
+
+// 5. Reverse a string using recursion
+void reverseRecursion(std::string &str, int l, int r) {
+    if (l >= r) return;                  // Base case
+    std::swap(str[l], str[r]);          // Swap characters
+    reverseRecursion(str, l + 1, r - 1); // Recur inward
+}
+
+// 6. Check if string contains only digits
+bool isAllDigits(const std::string &str) {
+    for (char ch : str)
+        if (!isdigit(ch)) return false; // Return false on non-digit
+    return true;
+}
+
+// 7. Count vowels and consonants
+void countVowelsConsonants(const std::string &str, int &vowels, int &consonants) {
+    vowels = consonants = 0;
+    for (char ch : str) {
+        if (isalpha(ch)) {
+            ch = tolower(ch); // Normalize case
+            if (ch == 'a' || ch == 'e' || ch == 'i' || ch == 'o' || ch == 'u')
+                vowels++;
+            else
+                consonants++;
+        }
+    }
+}
+
+// 8. Count occurrence of a given character
+int countChar(const std::string &str, char target) {
+    int count = 0;
+    for (char ch : str)
+        if (ch == target) count++; // Count matches
+    return count;
+}
+
+// 9. First non-repeated character
+char firstNonRepeated(const std::string &str) {
+    int count[256] = {0};
+    for (char ch : str) count[(unsigned char)ch]++; // Count frequency
+    for (char ch : str)
+        if (count[(unsigned char)ch] == 1)
+            return ch; // Return first non-repeated
+    return '\0'; // Return null char if none
+}
+
+// 10. Convert string to integer (atoi)
+int stringToInt(const std::string &str) {
+    int num = 0, sign = 1, i = 0;
+    while (str[i] == ' ') i++; // Skip whitespaces
+    if (str[i] == '-' || str[i] == '+')
+        sign = (str[i++] == '-') ? -1 : 1; // Handle sign
+    while (isdigit(str[i]))
+        num = num * 10 + (str[i++] - '0'); // Build number
+    return num * sign;
+}
+
+// 11. Reverse words in a sentence
+std::string reverseWords(const std::string &sentence) {
+    std::string word, result;
+    for (int i = sentence.length() - 1; i >= 0; i--) {
+        if (sentence[i] != ' ')
+            word = sentence[i] + word; // Build word backwards
+        else {
+            if (!word.empty()) result += word + " ";
+            word.clear();
+        }
+    }
+    if (!word.empty()) result += word; // Append last word
+    return result;
+}
+
+// 12. Check if two strings are rotations of each other
+bool areRotations(const std::string &s1, const std::string &s2) {
+    return (s1.length() == s2.length()) && ((s1 + s1).find(s2) != std::string::npos); // s2 in s1s1
+}
+
+// 13. Check if a string is a palindrome
+bool isPalindrome(const std::string &str) {
+    int l = 0, r = str.length() - 1;
+    while (l < r)
+        if (str[l++] != str[r--]) return false; // Compare ends
+    return true;
+}
+
+// 14. Length of longest substring without repeating characters
+int longestUniqueSubstring(const std::string &str) {
+    int maxLen = 0, start = 0;
+    std::unordered_map<char, int> seen; // Store last seen index
+    for (int i = 0; i < str.length(); i++) {
+        if (seen.count(str[i]))
+            start = std::max(seen[str[i]] + 1, start); // Move start if repeated
+        seen[str[i]] = i; // Update index
+        maxLen = std::max(maxLen, i - start + 1); // Update max length
+    }
+    return maxLen;
+}
+
+// 15. Longest palindromic substring
+std::string longestPalindrome(const std::string &s) {
+    int start = 0, maxLen = 1;
+    for (int i = 0; i < s.length(); ++i) {
+        // Odd length palindrome centered at i
+        int l = i, r = i;
+        while (l >= 0 && r < s.length() && s[l] == s[r]) {
+            if (r - l + 1 > maxLen) {
+                start = l;
+                maxLen = r - l + 1;
+            }
+            l--, r++;
+        }
+        // Even length palindrome centered at i and i+1
+        l = i, r = i + 1;
+        while (l >= 0 && r < s.length() && s[l] == s[r]) {
+            if (r - l + 1 > maxLen) {
+                start = l;
+                maxLen = r - l + 1;
+            }
+            l--, r++;
+        }
+    }
+    return s.substr(start, maxLen); // Return longest found
+}
+
+```
+
 Absolutely! Below are the **step-by-step solutions** for the 10 commonly asked **array problems**, suitable for interviews and platforms like HackerRank.
 
 ---
