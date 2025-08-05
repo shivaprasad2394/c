@@ -2929,9 +2929,171 @@ std::string longestPalindrome(const std::string &s) {
     }
     return s.substr(start, maxLen); // Return longest found
 }
-
 ```
+## Arrays operation
+```cpp
+// 1. Find second largest element in an array
+int secondLargest(const std::vector<int>& arr) {
+    int first = INT_MIN, second = INT_MIN;
+    for (int num : arr) {
+        if (num > first) {
+            second = first; // update second before updating first
+            first = num;
+        } else if (num > second && num != first) {
+            second = num; // update second only if it's not equal to first
+        }
+    }
+    return second;
+}
 
+// 2. Move all zeros to the end
+void moveZerosToEnd(std::vector<int>& arr) {
+    int index = 0; // index to place non-zero elements
+    for (int num : arr)
+        if (num != 0) arr[index++] = num; // move non-zero forward
+    while (index < arr.size()) arr[index++] = 0; // fill remaining with zeros
+}
+
+// 3. Rotate array left by d positions
+void rotateLeft(std::vector<int>& arr, int d) {
+    std::rotate(arr.begin(), arr.begin() + (d % arr.size()), arr.end());
+    // uses STL rotate to shift the array
+}
+
+// 4. Kadane's Algorithm - Maximum subarray sum
+int maxSubarraySum(const std::vector<int>& arr) {
+    int maxSoFar = arr[0], currMax = arr[0];
+    for (size_t i = 1; i < arr.size(); i++) {
+        currMax = std::max(arr[i], currMax + arr[i]); // continue or start new subarray
+        maxSoFar = std::max(maxSoFar, currMax);
+    }
+    return maxSoFar;
+}
+
+// 5. Remove duplicates from sorted array
+int removeDuplicates(std::vector<int>& arr) {
+    if (arr.empty()) return 0;
+    int index = 1; // position to place unique element
+    for (size_t i = 1; i < arr.size(); i++) {
+        if (arr[i] != arr[i - 1]) arr[index++] = arr[i];
+    }
+    return index; // new length without duplicates
+}
+
+// 6. Find majority element using Boyer-Moore Voting Algorithm
+int majorityElement(const std::vector<int>& arr) {
+    int count = 0, candidate = 0;
+    for (int num : arr) {
+        if (count == 0) candidate = num; // new candidate
+        count += (num == candidate) ? 1 : -1;
+    }
+    return candidate;
+}
+
+// 7. Find missing number in sequence 0 to n
+int findMissingNumber(const std::vector<int>& arr) {
+    int n = arr.size();
+    int total = n * (n + 1) / 2; // sum of 0 to n
+    int sum = std::accumulate(arr.begin(), arr.end(), 0);
+    return total - sum;
+}
+
+// 8. Reverse array in groups of size k
+void reverseInGroups(std::vector<int>& arr, int k) {
+    for (int i = 0; i < arr.size(); i += k) {
+        int left = i, right = std::min(i + k - 1, (int)arr.size() - 1);
+        while (left < right) std::swap(arr[left++], arr[right--]);
+    }
+}
+
+// 9. Find minimum in rotated sorted array using binary search
+int findMinInRotatedSorted(const std::vector<int>& arr) {
+    int left = 0, right = arr.size() - 1;
+    while (left < right) {
+        int mid = left + (right - left) / 2;
+        if (arr[mid] > arr[right]) left = mid + 1; // min must be on right
+        else right = mid; // min is at mid or to the left
+    }
+    return arr[left];
+}
+
+// 10. Check if array contains duplicates
+bool containsDuplicates(std::vector<int>& arr) {
+    std::unordered_set<int> seen;
+    for (int num : arr) {
+        if (seen.count(num)) return true; // duplicate found
+        seen.insert(num);
+    }
+    return false;
+}
+
+// 11. Partition array (used in quicksort)
+int partition(std::vector<int>& arr, int low, int high) {
+    int pivot = arr[high]; // pivot is last element
+    int i = low - 1; // index of smaller element
+    for (int j = low; j < high; j++) {
+        if (arr[j] <= pivot) std::swap(arr[++i], arr[j]);
+    }
+    std::swap(arr[i + 1], arr[high]);
+    return i + 1; // pivot position
+}
+
+// 12. Maximum product subarray
+int maxProductSubarray(const std::vector<int>& arr) {
+    int maxProd = arr[0], minProd = arr[0], result = arr[0];
+    for (size_t i = 1; i < arr.size(); i++) {
+        if (arr[i] < 0) std::swap(maxProd, minProd); // flip max/min on negative
+        maxProd = std::max(arr[i], maxProd * arr[i]);
+        minProd = std::min(arr[i], minProd * arr[i]);
+        result = std::max(result, maxProd); // update max
+    }
+    return result;
+}
+
+// 13. Max length of subarray with equal number of 0s and 1s
+int maxLengthEqual0s1s(std::vector<int>& arr) {
+    std::unordered_map<int, int> map; // stores sum to index
+    int maxLen = 0, sum = 0;
+    for (int i = 0; i < arr.size(); i++) {
+        sum += (arr[i] == 0) ? -1 : 1; // convert 0 to -1
+        if (sum == 0) maxLen = i + 1; // whole array balanced
+        else if (map.count(sum)) maxLen = std::max(maxLen, i - map[sum]);
+        else map[sum] = i; // first occurrence of this sum
+    }
+    return maxLen;
+}
+
+// 14. Merge two sorted arrays without extra space (Shell Sort based idea)
+void mergeSortedArrays(std::vector<int>& a, std::vector<int>& b) {
+    int m = a.size(), n = b.size();
+    for (int i = n - 1; i >= 0; i--) {
+        int last = a[m - 1], j = m - 2;
+        // Shift elements in a[] if greater than b[i]
+        while (j >= 0 && a[j] > b[i]) {
+            a[j + 1] = a[j];
+            j--;
+        }
+        // Insert b[i] in correct position
+        if (j != m - 2 || last > b[i]) {
+            a[j + 1] = b[i];
+            b[i] = last;
+        }
+    }
+}
+
+// 15. First missing positive integer (cycle sort approach)
+int firstMissingPositive(std::vector<int>& nums) {
+    int n = nums.size();
+    for (int i = 0; i < n; ++i) {
+        // Place nums[i] at its correct position if possible
+        while (nums[i] > 0 && nums[i] <= n && nums[nums[i] - 1] != nums[i])
+            std::swap(nums[i], nums[nums[i] - 1]);
+    }
+    for (int i = 0; i < n; ++i)
+        if (nums[i] != i + 1) return i + 1; // first index where value is incorrect
+    return n + 1;
+}
+```
 Absolutely! Below are the **step-by-step solutions** for the 10 commonly asked **array problems**, suitable for interviews and platforms like HackerRank.
 
 ---
@@ -3290,7 +3452,7 @@ int main() {
 
     return 0;
 }
-
+```
 
 ---
 
