@@ -183,17 +183,17 @@ Based on: [Striver's A2Z DSA Pattern List](https://takeuforward.org/strivers-a2z
 
 ## 📐 General Loop Strategies
 
-| Pattern Type            | Outer Loop (Rows)  | Inner Loop (Columns)                     | Tips                         |   |      |   |            |
-| ----------------------- | ------------------ | ---------------------------------------- | ---------------------------- | - | ---- | - | ---------- |
-| Left-aligned triangle   | `i = 1 to n`       | `j = 1 to i`                             | `j` depends on `i`           |   |      |   |            |
-| Right-aligned triangle  | `i = 1 to n`       | Spaces: `n - i`, Stars: `i`              | Use two inner loops          |   |      |   |            |
-| Inverted triangle       | `i = 1 to n`       | `j = 1 to n - i + 1`                     | Count decreases              |   |      |   |            |
-| Pyramid / Diamond       | `i = 1 to n`       | Spaces: `n - i`, Stars: `2i - 1`         | Symmetric pattern            |   |      |   |            |
-| Number patterns         | `i = 1 to n`       | Print `j`, `i`, or `j = n - i + 1`       | Use logic for value printing |   |      |   |            |
-| Binary triangle         | `i = 1 to n`       | Print based on `(i + j) % 2`             | Alternate 1s and 0s          |   |      |   |            |
-| Mirror/Reverse patterns | `i = 1 to n`       | Use `n - i` or reverse logic             | Flip direction or values     |   |      |   |            |
-| Combined shapes         | `i = 1 to 2*n - 1` | Adjust inner loop using `min(i, 2n - i)` | Use min/max logic            |   |      |   |            |
-| Hollow patterns         | `i = 1 to n`       | Print only edges or boundaries           | Use \`if (i==1               |   | i==n |   | j==1...)\` |
+| Pattern Type            | Outer Loop (Rows)  | Inner Loop (Columns)                     | Tips                         |  
+| ----------------------- | ------------------ | ---------------------------------------- | ---------------------------- | 
+| Left-aligned triangle   | `i = 1 to n`       | `j = 1 to i`                             | `j` depends on `i`           |  
+| Right-aligned triangle  | `i = 1 to n`       | Spaces: `n - i`, Stars: `i`              | Use two inner loops          |  
+| Inverted triangle       | `i = 1 to n`       | `j = 1 to n - i + 1`                     | Count decreases              |  
+| Pyramid / Diamond       | `i = 1 to n`       | Spaces: `n - i`, Stars: `2i - 1`         | Symmetric pattern            |   
+| Number patterns         | `i = 1 to n`       | Print `j`, `i`, or `j = n - i + 1`       | Use logic for value printing | 
+| Binary triangle         | `i = 1 to n`       | Print based on `(i + j) % 2`             | Alternate 1s and 0s          | 
+| Mirror/Reverse patterns | `i = 1 to n`       | Use `n - i` or reverse logic             | Flip direction or values     |  
+| Combined shapes         | `i = 1 to 2*n - 1` | Adjust inner loop using `min(i, 2n - i)` | Use min/max logic            | 
+| Hollow patterns         | `i = 1 to n`       | Print only edges or boundaries           | Use`if (i==1 || i==n || j==1 || j==n)`|   
 
 ---
 
