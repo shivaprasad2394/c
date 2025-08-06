@@ -3094,6 +3094,149 @@ int firstMissingPositive(std::vector<int>& nums) {
     return n + 1;
 }
 ```
+## popular sort code
+```cpp
+/*
+ * Binary Search
+ * step1: Define low and high pointers as bounds of the array.
+ * step2: Calculate mid index = (low + high) / 2
+ * step3: If target equals arr[mid], return mid
+ * step4: If target < arr[mid], move high to mid - 1
+ * step5: Else, move low to mid + 1
+ * step6: Repeat until low > high
+ * step7: If not found, return -1
+ */
+int binarySearch(vector<int>& arr, int target) {
+    int low = 0, high = arr.size() - 1;
+    while (low <= high) {
+        int mid = low + (high - low) / 2; // Avoids overflow compared to (low + high)/2
+        cout << "Searching at index: " << mid << " with value: " << arr[mid] << endl;
+        if (arr[mid] == target) {
+            cout << "Target found at index: " << mid << endl;
+            return mid; // Target found
+        }
+        else if (arr[mid] < target) {
+            cout << "Target greater than value at index " << mid << ". Moving right." << endl;
+            low = mid + 1; // Move right
+        }
+        else {
+            cout << "Target less than value at index " << mid << ". Moving left." << endl;
+            high = mid - 1; // Move left
+        }
+    }
+    cout << "Target not found in array." << endl;
+    return -1; // Target not found
+}
+
+/*
+ * Heap Sort
+ * step1: Build a max heap from the array.
+ * step2: Swap root (max) with last element.
+ * step3: Reduce heap size by 1.
+ * step4: Heapify the root.
+ * step5: Repeat step2 to step4 until heap size = 1
+ */
+void heapify(vector<int>& arr, int n, int i) {
+    int largest = i; // Initialize largest as root
+    int l = 2*i + 1; // Left child index
+    int r = 2*i + 2; // Right child index
+
+    if (l < n && arr[l] > arr[largest]) {
+        cout << "Left child " << arr[l] << " is greater than root " << arr[largest] << endl;
+        largest = l;
+    }
+
+    if (r < n && arr[r] > arr[largest]) {
+        cout << "Right child " << arr[r] << " is greater than current largest " << arr[largest] << endl;
+        largest = r;
+    }
+
+    if (largest != i) {
+        cout << "Swapping " << arr[i] << " with " << arr[largest] << endl;
+        swap(arr[i], arr[largest]);
+        heapify(arr, n, largest); // Recursively heapify the affected sub-tree
+    }
+}
+
+void heapSort(vector<int>& arr) {
+    int n = arr.size();
+    cout << "Building max heap..." << endl;
+    for (int i = n/2 - 1; i >= 0; i--) heapify(arr, n, i);
+
+    cout << "Sorting array using heap sort..." << endl;
+    for (int i = n - 1; i >= 0; i--) {
+        cout << "Swapping root " << arr[0] << " with end element " << arr[i] << endl;
+        swap(arr[0], arr[i]);
+        heapify(arr, i, 0);
+    }
+}
+
+/*
+ * Merge Sort
+ * step1: Recursively divide array into two halves.
+ * step2: Sort each half.
+ * step3: Merge sorted halves.
+ */
+void merge(vector<int>& arr, int l, int m, int r) {
+    vector<int> left(arr.begin() + l, arr.begin() + m + 1);
+    vector<int> right(arr.begin() + m + 1, arr.begin() + r + 1);
+    int i = 0, j = 0, k = l;
+    cout << "Merging arrays from index " << l << " to " << r << endl;
+
+    while (i < left.size() && j < right.size()) {
+        if (left[i] <= right[j]) {
+            arr[k++] = left[i++];
+        } else {
+            arr[k++] = right[j++];
+        }
+    }
+
+    while (i < left.size()) arr[k++] = left[i++];
+    while (j < right.size()) arr[k++] = right[j++];
+}
+
+void mergeSort(vector<int>& arr, int l, int r) {
+    if (l < r) {
+        int m = l + (r - l)/2;
+        cout << "Sorting left half: " << l << " to " << m << endl;
+        mergeSort(arr, l, m);
+        cout << "Sorting right half: " << m+1 << " to " << r << endl;
+        mergeSort(arr, m + 1, r);
+        merge(arr, l, m, r);
+    }
+}
+
+/*
+ * Binary Search Tree (BST) - Insertion
+ * step1: Start from root
+ * step2: If root is null, create node and return
+ * step3: If value < root->data, insert in left subtree
+ * step4: Else insert in right subtree
+ * step5: Return root after insertion
+ */
+struct TreeNode {
+    int data;
+    TreeNode* left;
+    TreeNode* right;
+    TreeNode(int val) : data(val), left(NULL), right(NULL) {}
+};
+
+TreeNode* insertBST(TreeNode* root, int val) {
+    if (!root) {
+        cout << "Inserting new node with value: " << val << endl;
+        return new TreeNode(val);
+    }
+    if (val < root->data) {
+        cout << "Inserting " << val << " to the left of " << root->data << endl;
+        root->left = insertBST(root->left, val);
+    } else {
+        cout << "Inserting " << val << " to the right of " << root->data << endl;
+        root->right = insertBST(root->right, val);
+    }
+    return root;
+}
+
+```
 Absolutely! Below are the **step-by-step solutions** for the 10 commonly asked **array problems**, suitable for interviews and platforms like HackerRank.
 
 ---
