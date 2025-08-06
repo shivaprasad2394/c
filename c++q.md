@@ -2277,36 +2277,52 @@ Use a character count array of size 26.
 #include <vector>
 using namespace std;
 
+// Function to check if two strings are anagrams
 bool isAnagram(string s, string t) {
     cout << "Comparing: \"" << s << "\" and \"" << t << "\"" << endl;
+
+    // Step 1: Check if lengths are different
     if (s.size() != t.size()) {
         cout << "Strings have different lengths. Not anagrams." << endl;
         return false;
     }
+
+    // Step 2: Initialize a count array for 26 lowercase English letters
     vector<int> count(26, 0);
+
     cout << "Counting characters in first string..." << endl;
     for (char c : s) {
+        // Increment the count for the character
         count[c - 'a']++;
         cout << "  Incrementing count for '" << c << "' to " << count[c - 'a'] << endl;
     }
+
     cout << "Subtracting characters using second string..." << endl;
     for (char c : t) {
+        // Decrement the count for the character
         count[c - 'a']--;
         cout << "  Decrementing count for '" << c << "' to " << count[c - 'a'] << endl;
     }
+
     cout << "Checking final counts for all characters:" << endl;
     for (int i = 0; i < 26; ++i) {
+        // Print character and its count after both operations
         cout << "  Character '" << char('a' + i) << "' count: " << count[i] << endl;
+
+        // If any character count is not zero, strings are not anagrams
         if (count[i] != 0) {
             cout << "Mismatch found for '" << char('a' + i) << "'. Not anagrams." << endl;
             return false;
         }
     }
+
+    // All character counts matched
     cout << "All counts zero. Strings are anagrams." << endl;
     return true;
 }
 
 int main() {
+    // Test the function with sample input
     cout << "Result: " << isAnagram("listen", "silent") << endl;
     return 0;
 }
