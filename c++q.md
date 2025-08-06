@@ -3108,20 +3108,22 @@ int firstMissingPositive(std::vector<int>& nums) {
  */
 int binarySearch(vector<int>& arr, int target) {
     int low = 0, high = arr.size() - 1;
+    // Run binary search loop until low pointer crosses high
     while (low <= high) {
         int mid = low + (high - low) / 2; // Avoids overflow compared to (low + high)/2
         cout << "Searching at index: " << mid << " with value: " << arr[mid] << endl;
+
         if (arr[mid] == target) {
             cout << "Target found at index: " << mid << endl;
             return mid; // Target found
         }
         else if (arr[mid] < target) {
             cout << "Target greater than value at index " << mid << ". Moving right." << endl;
-            low = mid + 1; // Move right
+            low = mid + 1; // Narrow search to right half
         }
         else {
             cout << "Target less than value at index " << mid << ". Moving left." << endl;
-            high = mid - 1; // Move left
+            high = mid - 1; // Narrow search to left half
         }
     }
     cout << "Target not found in array." << endl;
@@ -3137,20 +3139,23 @@ int binarySearch(vector<int>& arr, int target) {
  * step5: Repeat step2 to step4 until heap size = 1
  */
 void heapify(vector<int>& arr, int n, int i) {
-    int largest = i; // Initialize largest as root
+    int largest = i; // Assume current node is largest
     int l = 2*i + 1; // Left child index
     int r = 2*i + 2; // Right child index
 
+    // Check if left child is larger than current largest
     if (l < n && arr[l] > arr[largest]) {
         cout << "Left child " << arr[l] << " is greater than root " << arr[largest] << endl;
         largest = l;
     }
 
+    // Check if right child is larger than current largest
     if (r < n && arr[r] > arr[largest]) {
         cout << "Right child " << arr[r] << " is greater than current largest " << arr[largest] << endl;
         largest = r;
     }
 
+    // If root is not the largest, swap and heapify again
     if (largest != i) {
         cout << "Swapping " << arr[i] << " with " << arr[largest] << endl;
         swap(arr[i], arr[largest]);
@@ -3160,14 +3165,17 @@ void heapify(vector<int>& arr, int n, int i) {
 
 void heapSort(vector<int>& arr) {
     int n = arr.size();
+
     cout << "Building max heap..." << endl;
+    // Build max heap from bottom up
     for (int i = n/2 - 1; i >= 0; i--) heapify(arr, n, i);
 
     cout << "Sorting array using heap sort..." << endl;
+    // Move max element to end and heapify remaining elements
     for (int i = n - 1; i >= 0; i--) {
         cout << "Swapping root " << arr[0] << " with end element " << arr[i] << endl;
-        swap(arr[0], arr[i]);
-        heapify(arr, i, 0);
+        swap(arr[0], arr[i]); // Move max to end
+        heapify(arr, i, 0); // Restore heap property
     }
 }
 
@@ -3178,11 +3186,13 @@ void heapSort(vector<int>& arr) {
  * step3: Merge sorted halves.
  */
 void merge(vector<int>& arr, int l, int m, int r) {
+    // Create subarrays for merging
     vector<int> left(arr.begin() + l, arr.begin() + m + 1);
     vector<int> right(arr.begin() + m + 1, arr.begin() + r + 1);
     int i = 0, j = 0, k = l;
     cout << "Merging arrays from index " << l << " to " << r << endl;
 
+    // Merge elements while comparing from left and right
     while (i < left.size() && j < right.size()) {
         if (left[i] <= right[j]) {
             arr[k++] = left[i++];
@@ -3191,18 +3201,19 @@ void merge(vector<int>& arr, int l, int m, int r) {
         }
     }
 
+    // Copy any remaining elements
     while (i < left.size()) arr[k++] = left[i++];
     while (j < right.size()) arr[k++] = right[j++];
 }
 
 void mergeSort(vector<int>& arr, int l, int r) {
     if (l < r) {
-        int m = l + (r - l)/2;
+        int m = l + (r - l)/2; // Find mid-point to divide array
         cout << "Sorting left half: " << l << " to " << m << endl;
         mergeSort(arr, l, m);
         cout << "Sorting right half: " << m+1 << " to " << r << endl;
         mergeSort(arr, m + 1, r);
-        merge(arr, l, m, r);
+        merge(arr, l, m, r); // Merge the two sorted halves
     }
 }
 
@@ -3224,17 +3235,18 @@ struct TreeNode {
 TreeNode* insertBST(TreeNode* root, int val) {
     if (!root) {
         cout << "Inserting new node with value: " << val << endl;
-        return new TreeNode(val);
+        return new TreeNode(val); // Create new node if root is null
     }
     if (val < root->data) {
         cout << "Inserting " << val << " to the left of " << root->data << endl;
-        root->left = insertBST(root->left, val);
+        root->left = insertBST(root->left, val); // Recur on left
     } else {
         cout << "Inserting " << val << " to the right of " << root->data << endl;
-        root->right = insertBST(root->right, val);
+        root->right = insertBST(root->right, val); // Recur on right
     }
-    return root;
+    return root; // Return updated root
 }
+
 
 ```
 Absolutely! Below are the **step-by-step solutions** for the 10 commonly asked **array problems**, suitable for interviews and platforms like HackerRank.
