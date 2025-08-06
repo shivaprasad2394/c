@@ -3898,6 +3898,109 @@ int main() {
     return 0;
 }
 ```
+## 5 popular dp code
+```cpp
+/*
+ * 1. Fibonacci Number (Top-down Memoization)
+ * step1: Base cases -> fib(0) = 0, fib(1) = 1
+ * step2: For any n, fib(n) = fib(n-1) + fib(n-2)
+ * step3: Use memoization to avoid recomputation
+ */
+int fib(int n, vector<int>& dp) {
+    if (n <= 1) return n; // base cases
+    if (dp[n] != -1) return dp[n]; // return cached result if available
+    cout << "Computing fib(" << n << ")\n";
+    dp[n] = fib(n-1, dp) + fib(n-2, dp); // store and return result
+    return dp[n];
+}
+
+/*
+ * 2. Climbing Stairs
+ * step1: At each stair, you can climb 1 or 2 steps
+ * step2: ways(n) = ways(n-1) + ways(n-2)
+ * step3: Bottom-up DP solution
+ */
+int climbStairs(int n) {
+    if (n <= 2) return n;
+    vector<int> dp(n + 1);
+    dp[1] = 1;
+    dp[2] = 2;
+    for (int i = 3; i <= n; i++) {
+        dp[i] = dp[i - 1] + dp[i - 2];
+        cout << "Ways to climb " << i << " steps = " << dp[i] << endl;
+    }
+    return dp[n];
+}
+
+/*
+ * 3. Longest Common Subsequence (LCS)
+ * step1: Create a DP table of size (m+1) x (n+1)
+ * step2: If s1[i-1] == s2[j-1], dp[i][j] = 1 + dp[i-1][j-1]
+ * step3: Else, dp[i][j] = max(dp[i-1][j], dp[i][j-1])
+ */
+int longestCommonSubsequence(string text1, string text2) {
+    int m = text1.size(), n = text2.size();
+    vector<vector<int>> dp(m+1, vector<int>(n+1, 0));
+
+    for (int i = 1; i <= m; i++) {
+        for (int j = 1; j <= n; j++) {
+            if (text1[i-1] == text2[j-1]) {
+                dp[i][j] = 1 + dp[i-1][j-1];
+            } else {
+                dp[i][j] = max(dp[i-1][j], dp[i][j-1]);
+            }
+            cout << "dp[" << i << "][" << j << "] = " << dp[i][j] << endl;
+        }
+    }
+    return dp[m][n];
+}
+
+/*
+ * 4. 0/1 Knapsack Problem
+ * step1: Create dp[n+1][W+1], where n = items, W = capacity
+ * step2: If weight[i-1] <= w, dp[i][w] = max(dp[i-1][w], dp[i-1][w - wt[i-1]] + val[i-1])
+ * step3: Else, dp[i][w] = dp[i-1][w]
+ */
+int knapsack(int W, vector<int>& wt, vector<int>& val, int n) {
+    vector<vector<int>> dp(n+1, vector<int>(W+1, 0));
+    for (int i = 1; i <= n; i++) {
+        for (int w = 1; w <= W; w++) {
+            if (wt[i-1] <= w) {
+                dp[i][w] = max(dp[i-1][w], val[i-1] + dp[i-1][w - wt[i-1]]);
+            } else {
+                dp[i][w] = dp[i-1][w];
+            }
+            cout << "dp[" << i << "][" << w << "] = " << dp[i][w] << endl;
+        }
+    }
+    return dp[n][W];
+}
+
+/*
+ * 5. Minimum Path Sum (Grid DP)
+ * step1: Create dp matrix same size as grid
+ * step2: dp[i][j] = grid[i][j] + min(dp[i-1][j], dp[i][j-1])
+ * step3: Initialize first row and column separately
+ */
+int minPathSum(vector<vector<int>>& grid) {
+    int m = grid.size(), n = grid[0].size();
+    vector<vector<int>> dp(m, vector<int>(n));
+
+    dp[0][0] = grid[0][0]; // Starting point
+    for (int i = 1; i < m; i++) dp[i][0] = dp[i-1][0] + grid[i][0];
+    for (int j = 1; j < n; j++) dp[0][j] = dp[0][j-1] + grid[0][j];
+
+    for (int i = 1; i < m; i++) {
+        for (int j = 1; j < n; j++) {
+            dp[i][j] = grid[i][j] + min(dp[i-1][j], dp[i][j-1]);
+            cout << "dp[" << i << "][" << j << "] = " << dp[i][j] << endl;
+        }
+    }
+    return dp[m-1][n-1];
+}
+
+```
+
 Certainly! Below are **highlighted step-by-step solutions** for each of the 10 graph problems in your document. This will help clarify the logic behind each approach.
 
 ---
