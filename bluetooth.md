@@ -606,3 +606,380 @@ I’ll expand what each side and the controller do for each step.
 - On many systems you must be root (or give capabilities) to open HCI and raw Bluetooth sockets.
 - Compile with `-lbluetooth`. Example:  
   `gcc -o hci_discover hci_discover.c -lbluetooth`
+
+
+ ## A— Discovery (HCI) — hci_discover.c
+ ```cpp
+/* hci_discover.c
+   Simple device inquiry using BlueZ hci library.
+   Compile: gcc -o hci_discover hci_discover.c -lbluetooth
+   Run as root: sudo ./hci_discover
+*/
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <string.h>
+#include <errno.h>
+
+#include <bluetooth/bluetooth.h>
+#include <bluetooth/hci.h>
+#include <bluetooth/hci_lib.h>
+
+int main() {
+    int dev_id = hci_get_route(NULL);           // find first available adapter (e.g., hci0)
+    if (dev_id < 0) { perror("hci_get_route"); return 1; }
+
+    int sock = hci_open_dev(dev_id);
+    if (sock < 0) { perror("hci_open_dev"); return 1; }
+
+    int len = 8;            // inquiry time = 1.28 * len seconds
+    int max_rsp = 255;
+    inquiry_info *ii = NULL;
+    int num_rsp = hci_inquiry(dev_id, len, max_rsp, NULL, &ii, IREQ_CACHE_FLUSH);
+    if (num_rsp < 0) { perror("hci_inquiry"); close(sock); return 1; }
+
+    char addr[19] = {0};
+    char name[248] = {0};
+
+    printf("Found %d devices:\n", num_rsp);
+    for (int i = 0; i < num_rsp; i++) {
+        ba2str(&(ii+i)->bdaddr, addr);
+        memset(name, 0, sizeof(name));
+        if (hci_read_remote_name(sock, &(ii+i)->bdaddr, sizeof(name), name, 0) < 0)
+            strncpy(name, "[unknown]", sizeof(name)-1);
+        printf("%d: %s  %s\n", i+1, addr, name);
+    }
+
+    free(ii);
+    close(sock);
+    return 0;
+}
+
+```
+This gives you the list of BD_ADDRs you can use for SDP / RFCOMM.
+
+## B— RFCOMM server (Device A) — rfcomm_server.c
+```cpp
+/* rfcomm_server.c
+   Minimal RFCOMM server that accepts one connection and echoes data.
+   Compile: gcc -o rfcomm_server rfcomm_server.c -lbluetooth
+   Run as root: sudo ./rfcomm_server
+*/
+
+#include <stdio.h>
+#include <unistd.h>
+#include <sys/socket.h>
+#include <bluetooth/bluetooth.h>
+#include <bluetooth/rfcomm.h>
+#include <string.h>
+
+int main(int argc, char **argv) {
+    int sock, client, bytes_read;
+    struct sockaddr_rc local = { 0 }, rem = { 0 };
+    char buf[1024] = { 0 };
+    socklen_t opt = sizeof(rem);
+
+    // 1) create RFCOMM socket
+    sock = socket(AF_BLUETOOTH, SOCK_STREAM, BTPROTO_RFCOMM);
+    if (sock < 0) { perror("socket"); return 1; }
+
+    // 2) bind to local bluetooth adapter, channel 3 (choose a channel > 0)
+    local.rc_family = AF_BLUETOOTH;
+    local.rc_bdaddr = *BDADDR_ANY;   // any local adapter
+    local.rc_channel = (uint8_t) 3;
+
+    if (bind(sock, (struct sockaddr *)&local, sizeof(local)) < 0) {
+        perror("bind");
+        close(sock);
+        return 1;
+    }
+
+    // 3) listen & accept
+    listen(sock, 1);
+    printf("RFCOMM server listening on channel %d ...\n", local.rc_channel);
+
+    client = accept(sock, (struct sockaddr *)&rem, &opt);
+    if (client < 0) { perror("accept"); close(sock); return 1; }
+
+    char remote_addr[19] = {0};
+    ba2str(&rem.rc_bdaddr, remote_addr);
+    printf("Accepted connection from %s\n", remote_addr);
+
+    // 4) echo loop
+    while ((bytes_read = read(client, buf, sizeof(buf))) > 0) {
+        printf("Received %d bytes: %.*s\n", bytes_read, bytes_read, buf);
+        // echo back
+        if (write(client, buf, bytes_read) < 0) {
+            perror("write");
+            break;
+        }
+        memset(buf, 0, sizeof(buf));
+    }
+
+    close(client);
+    close(sock);
+    return 0;
+}
+
+```
+If your service needs to be discoverable via SDP you usually register a service record (via sdptool add or using BlueZ D‑Bus/RegisterProfile) — otherwise a client that learns the channel via SDP won’t find it. For quick tests you can set the client to connect to a fixed channel if you know it.
+
+## — RFCOMM client (Device B) — rfcomm_client.c
+```cpp
+/* rfcomm_client.c
+   Minimal RFCOMM client: connect and send a message.
+   Compile: gcc -o rfcomm_client rfcomm_client.c -lbluetooth
+   Usage: sudo ./rfcomm_client XX:XX:XX:XX:XX:XX [channel]
+*/
+
+#include <stdio.h>
+#include <unistd.h>
+#include <sys/socket.h>
+#include <bluetooth/bluetooth.h>
+#include <bluetooth/rfcomm.h>
+#include <string.h>
+#include <stdlib.h>
+
+int main(int argc, char **argv) {
+    if (argc < 2) {
+        printf("Usage: %s <bdaddr> [channel]\n", argv[0]);
+        return 1;
+    }
+
+    const char *dest = argv[1];
+    int channel = (argc >= 3) ? atoi(argv[2]) : 3; // default channel 3
+    struct sockaddr_rc addr = { 0 };
+    int s;
+    char buf[1024] = "Hello from client!\n";
+
+    s = socket(AF_BLUETOOTH, SOCK_STREAM, BTPROTO_RFCOMM);
+    if (s < 0) { perror("socket"); return 1; }
+
+    addr.rc_family = AF_BLUETOOTH;
+    str2ba(dest, &addr.rc_bdaddr);  // convert "XX:XX:..." to bdaddr struct
+    addr.rc_channel = (uint8_t) channel;
+
+    printf("Connecting to %s channel %d ...\n", dest, channel);
+    if (connect(s, (struct sockaddr *)&addr, sizeof(addr)) < 0) {
+        perror("connect");
+        close(s);
+        return 1;
+    }
+    printf("Connected; sending message...\n");
+    write(s, buf, strlen(buf));
+
+    // read echo
+    int bytes = read(s, buf, sizeof(buf));
+    if (bytes > 0) {
+        printf("Server replied: %.*s\n", bytes, buf);
+    }
+
+    close(s);
+    return 0;
+}
+
+```
+### Workflow with raw code:
+
+1. Run `rfcomm_server` on Device A (or register an RFCOMM server via BlueZ).
+
+2. On Device B run `hci_discover` to get Device A's BD_ADDR.
+
+3. If Device A requires pairing, pair first (a D-Bus method example will be shown next).
+
+4. Run `rfcomm_client <BDADDR> <channel>` (use the channel from SDP or the channel you bound in the server).
+
+---
+
+### 4) SDP: How the client finds the RFCOMM channel
+
+SDP (Service Discovery Protocol) is how the client learns the RFCOMM channel for SPP.
+
+BlueZ provides C API headers `<bluetooth/sdp.h>` and `<bluetooth/sdp_lib.h>` to:
+
+- Open an SDP session, e.g.,  
+```cpp
+sdp_session_t *session = sdp_connect(...);
+```
+- Search for a service with the Serial Port UUID (`0x1101`) and request attributes.
+- Parse the `ProtocolDescriptorList` to extract the RFCOMM channel number.
+
+The SDP code involves verbose parsing with `sdp_list_t` structures.
+
+For easier debugging or testing, you can use the command-line tool:  
+```cpp
+sdptool browse <BDADDR>
+```
+to view service records on the remote device.
+
+(If you want, a ready-to-run SDP C function can be provided—it is longer and detailed.)
+
+---
+
+### 5) D-Bus (BlueZ) approach in C — Pair & Connect (Device B)
+
+Most modern Linux applications prefer using BlueZ’s D-Bus API instead of raw HCI/SDP calls for pairing and connecting.
+
+Below is a compact GDBus C snippet example that performs:
+
+- `Pair()` method call, and
+- `Connect()` method call
+
+on a `org.bluez.Device1` D-Bus object. This requires the device's D-Bus object path (e.g., `/org/bluez/hci0/dev_XX_XX_...`) after discovering BD_ADDR.
+
+To compile the example, use:  
+```cpp
+pkg-config --cflags --libs gio-2.0
+```
+
+(The snippet itself was not provided here but typically involves creating a GDBus proxy for the device object and invoking methods `Pair` and `Connect` asynchronously or synchronously.)
+
+---
+
+This workflow reflects how Device B discovers, pairs, and connects to Device A using RFCOMM over Bluetooth with explicit SDP lookup or via BlueZ’s higher-level D-Bus APIs.
+## pair_connect
+```cpp
+/* pair_connect.c
+   Simple example that calls Pair() and Connect() on org.bluez.Device1 via GDBus.
+   Compile:
+     gcc -o pair_connect pair_connect.c $(pkg-config --cflags --libs gio-2.0)
+   Run:
+     sudo ./pair_connect XX:XX:XX:XX:XX:XX
+   Note: If BlueZ expects agent interaction (PIN/SSP), you must register an agent (or use bluetoothctl beforehand).
+*/
+
+#include <gio/gio.h>
+#include <stdio.h>
+#include <string.h>
+
+static char *device_path_from_addr(const char *addr) {
+    // Replace ':' with '_' and build "/org/bluez/hci0/dev_XX_XX_..."
+    char tmp[64];
+    snprintf(tmp, sizeof(tmp), "%s", addr);
+    for (char *p = tmp; *p; ++p) if (*p == ':') *p = '_';
+    char *path = g_strdup_printf("/org/bluez/hci0/dev_%s", tmp);
+    return path;
+}
+
+int main(int argc, char **argv) {
+    if (argc < 2) {
+        fprintf(stderr, "Usage: %s <BDADDR>\n", argv[0]);
+        return 1;
+    }
+
+    GError *error = NULL;
+    GDBusProxy *proxy;
+    char *dev_path = device_path_from_addr(argv[1]);
+
+    proxy = g_dbus_proxy_new_for_bus_sync(G_BUS_TYPE_SYSTEM,
+                    G_DBUS_PROXY_FLAGS_NONE,
+                    NULL,                // GDBusInterfaceInfo
+                    "org.bluez",         // name
+                    dev_path,            // object path
+                    "org.bluez.Device1", // interface
+                    NULL,
+                    &error);
+    if (!proxy) {
+        fprintf(stderr, "Failed to create proxy: %s\n", error ? error->message : "unknown");
+        g_clear_error(&error);
+        g_free(dev_path);
+        return 1;
+    }
+
+    // Pair() - may trigger agent requests (passkey/pin). Provide an agent or do this manually.
+    g_dbus_proxy_call_sync(proxy, "Pair", NULL, G_DBUS_CALL_FLAGS_NONE, -1, NULL, &error);
+    if (error) {
+        fprintf(stderr, "Pair() failed: %s\n", error->message);
+        g_clear_error(&error);
+        // continue; maybe already paired
+    } else {
+        printf("Pair() success (or already paired)\n");
+    }
+
+    // Connect()
+    g_dbus_proxy_call_sync(proxy, "Connect", NULL, G_DBUS_CALL_FLAGS_NONE, -1, NULL, &error);
+    if (error) {
+        fprintf(stderr, "Connect() failed: %s\n", error->message);
+        g_clear_error(&error);
+        g_object_unref(proxy);
+        g_free(dev_path);
+        return 1;
+    }
+    printf("Connect() success\n");
+
+    g_object_unref(proxy);
+    g_free(dev_path);
+    return 0;
+}
+```
+### Notes about D‑Bus approach
+
+- **Pairing and agents:**  
+  Pairing often needs an agent to supply a PIN or confirmation.  
+  - You can register an agent via `org.bluez.AgentManager1`.  
+  - Alternatively, use `bluetoothctl` (it registers an agent automatically).  
+
+- **Post-connection behavior:**  
+  After `Connect()` returns successfully, the RFCOMM service (SPP) on the remote should accept the connection.  
+  - You can then open a raw RFCOMM socket locally (the raw socket connect still works), **or**  
+  - Use D‑Bus Profile APIs to bind a profile for higher-level handling.
+
+---
+
+### 6) Registering a server/profile via D‑Bus (outline)
+
+If you want **BlueZ** to own the server side — so it handles incoming connections and forwards them to your program via the `org.bluez.Profile1` interface — the general steps are:
+
+1. **Implement a D‑Bus object** that implements `org.bluez.Profile1` methods:  
+   - `NewConnection` (called when a remote connects, provides you an FD to read/write)  
+   - `RequestDisconnection`  
+   - `Release` (optional for cleanup)
+
+2. **Register the profile** with BlueZ:  
+   - Call `org.bluez.ProfileManager1.RegisterProfile(object_path, uuid, options)` on the system D‑Bus.  
+   - Include options such as:
+     ```
+     {
+       "Channel": <uint16>,
+       "Name": "<string>",
+       "RequireAuthentication": <bool>
+     }
+     ```
+
+3. **Connection handling:**  
+   - BlueZ performs SDP, L2CAP, and RFCOMM setup internally.  
+   - When a remote client connects, BlueZ calls your `NewConnection` method and passes a file descriptor (FD) that you can `read()`/`write()`.
+
+This is the preferred way to let **BlueZ** handle SDP advertisement and lower-layer details, then hand over the connected socket to your application.
+
+*(If needed, a complete "Profile server" C example using GDBus can be provided — it is verbose but fully idiomatic.)*
+
+---
+
+### 7) Debugging tips & interview talking points
+
+**Tools:**
+- `btmon` — packet-level logger for HCI + ACL frames (essential for debugging protocol-level issues)  
+- `bluetoothctl` — interactive control and pairing tool  
+- `sdptool` — inspect SDP service records  
+- `hcitool` (older) — device discovery, connection commands (deprecated in newer distros)  
+- `hciconfig` — bring adapter up/down, inspect status  
+
+**Common problems:**
+- Device not discoverable
+- No pairing agent registered
+- RFCOMM channel mismatch (SDP inconsistency)
+- Missing privileges (root or `CAP_NET_RAW`)
+- Adapter down (`hciconfig hci0 up`)
+- Another process already bound to the RFCOMM channel
+
+**Interview key points to remember:**
+- **SPP stack layering:**  
+  `App → RFCOMM → L2CAP → HCI → Controller`  
+- **SDP:** Used by client to discover RFCOMM channel number for a profile.  
+- **Pairing:** Uses HCI/LMP and requires an agent to provide PIN/confirmation.  
+- **Sockets:** Understand `socket(AF_BLUETOOTH, SOCK_STREAM, BTPROTO_RFCOMM)` with `bind()` / `connect()` / `accept()` flow.  
+- **D‑Bus APIs:** Know `org.bluez.Device1.Pair()` for pairing and `ProfileManager1.RegisterProfile()` for server profile registration.
+
+Being able to **sketch the connection flow** and **name key Bluetooth layers** is a strong plus in interviews.
