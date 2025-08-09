@@ -497,6 +497,8 @@ This guide walks through a **Classic Bluetooth Serial Port Profile (SPP) connect
 ---
 
 > **Tip:** The flow above is how most SPP applications (e.g., wireless serial bridges, robot controllers) are established on Linux using BlueZ and the D-Bus API.  
+# profiles and underlying protocol
+<img width="1024" height="1536" alt="image" src="https://github.com/user-attachments/assets/1a2b962d-4afe-42da-989b-ac6439d5701c" />
 
 # Part 4 – Learning Roadmap
 
