@@ -1,3 +1,92 @@
+# Bluetooth Classic (BR/EDR) Overview
+
+---
+
+## **Step 1: What Bluetooth Classic Is**
+
+**Bluetooth Classic** (also called **BR/EDR — Basic Rate / Enhanced Data Rate**) is designed for **continuous data streaming** between devices.
+
+**Common use cases:**
+- **Wireless audio** (A2DP, HFP)
+- **File transfer** (OBEX)
+- **Serial cable replacement** (SPP)
+- **Tethering** (PAN)
+
+**Key characteristics:**
+- Operates in the **2.4 GHz ISM band**
+- Uses **frequency hopping** (1600 hops/sec) to minimize interference  
+- Optimized for higher throughput compared to BLE
+
+---
+
+## **Step 2: Bluetooth Stack Architecture**
+
+Bluetooth is divided into **two main parts**:
+
+### **1. Controller** *(hardware side — on the chip)*
+Responsible for physical wireless communication and low-level protocols.
+
+- **Radio** — Transmits/receives bits over the air.
+- **Baseband** — Manages packet timing, frequency hopping, and low-level link control.
+- **Link Manager Protocol (LMP)** — Link setup, authentication, encryption.
+- **HCI firmware** — Implements the standardized **Host Controller Interface** for communication with the host.
+
+### **2. Host** *(software side — in the OS)*
+Runs higher-level connection management and application profiles.
+
+- **HCI Driver** — Sends/receives commands and events to the controller hardware.
+- **L2CAP** — Logical Link Control and Adaptation Protocol; multiplexes multiple channels over one physical connection.
+- **RFCOMM** — Serial port emulation for SPP and other profiles.
+- **Profiles** — Define app-level behavior (A2DP for audio streaming, SPP for serial, OBEX for file transfer, etc.).
+
+---
+
+## **Step 3: Where BlueZ Fits (Linux)**
+
+On **Linux**, the flow looks like:
+
+Controller (Bluetooth chip: USB dongle, internal module)
+↓
+HCI driver (kernel: hci_usb, hci_uart, etc.)
+↓
+BlueZ (user-space Bluetooth stack)
+↓
+Your application (C, Python, etc.)
+
+**BlueZ provides:**
+- Device discovery (inquiry scan)
+- Pairing & bonding
+- Service connections (RFCOMM, L2CAP)
+- Profile daemons (audio/HID support for A2DP, HSP, HID)
+
+---
+
+## **Step 4: BR/EDR Link Types**
+
+In Bluetooth Classic, there are **two primary link types**:
+
+| Link Type              | Purpose                                              | Used By                          |
+|------------------------|------------------------------------------------------|-----------------------------------|
+| **ACL** (Asynchronous Connection-Less) | General, packet-based data transfer          | RFCOMM, OBEX, PAN                 |
+| **SCO / eSCO** (Synchronous Connection-Oriented / extended SCO) | Constant bit rate audio streaming | HFP (Hands-Free Profile), HSP     |
+
+---
+
+## **Step 5: Key Terminology**
+
+| Term           | Description |
+|----------------|-------------|
+| **Device Address (BD_ADDR)** | 48-bit unique hardware identifier for a Bluetooth device |
+| **Piconet**    | One *master* device connected to up to 7 *active* slave devices |
+| **Inquiry**    | Process of discovering nearby Bluetooth devices |
+| **Paging**     | Connecting to a specific known device |
+| **Pairing**    | Exchanging link keys for authentication & encryption |
+| **Bonding**    | Storing link keys for future reconnection without re-pairing |
+
+---
+
+This breakdown gives you the **functional overview of Bluetooth Classic**, the **stack layers**, how **BlueZ fits in Linux**, and the **link types and terminology** you’ll encounter when working with BR/EDR.
+
 # Part 1 – Classic Bluetooth vs BLE
 
 You already know **BLE** is:
