@@ -201,6 +201,80 @@ Both **BLE GATT** and **Classic Bluetooth SPP** enable device-to-device communic
 This breakdown shows how **BLE GATT prioritizes structure and efficiency**, while **SPP prioritizes simplicity and continuous throughput**.
 <img width="1580" height="1180" alt="image" src="https://github.com/user-attachments/assets/296f18df-5080-4bb5-9a34-d86f78548242" />
 
+# Real-World Classic Bluetooth SPP Flow on BlueZ (C / D-Bus)
+
+This guide walks through a **Classic Bluetooth Serial Port Profile (SPP) connection** using BlueZ, the official Linux Bluetooth stack, via the C / D-Bus API approach. Each step below describes the API call as well as the kind of information you will typically see or need.
+
+---
+
+## 1. **Inquiry Scan (Discovery)**
+
+- **Purpose:** Find nearby Bluetooth Classic (BR/EDR) devices.
+- **How:** Uses the Bluetooth inquiry procedure.
+- **Returns:**  
+  - **MAC Address** (e.g., `00:1A:7D:DA:71:13`)
+  - **Class of Device** (CoD, e.g., `0x1F00` = wearable)
+  - **RSSI** (signal strength)
+  - Sometimes **device name** (if the remote responds)
+- **D-Bus method:**  
+  `org.bluez.Adapter1.StartDiscovery()`  
+  - Starts device discovery and populates properties for each discovered device[6][11].
+
+---
+
+## 2. **Pairing (Bonding)**
+
+- **Purpose:** Secure the link with encryption/authentication by exchanging keys.
+- **How:** Initiate bonding, potentially requiring a PIN/passkey depending on device capabilities.
+- **Returns:**  
+  - Pairing **success or failure**.
+  - If successful, the device is added to `/var/lib/bluetooth/<adapter>/<device>/info` and marked as trusted.
+- **D-Bus method:**  
+  `org.bluez.Device1.Pair()`  
+  - Handles the pairing exchange and stores credentials in BlueZ[7][8][17].
+
+---
+
+## 3. **Service Discovery (SDP)**
+
+- **Purpose:** Discover supported profiles/services on the remote device.
+- **How:** Query the device's Service Discovery Protocol records for available UUIDs.
+- **For SPP:**
+  - **Service UUID:** `00001101-0000-1000-8000-00805f9b34fb`
+  - Find the corresponding **RFCOMM channel** (e.g., Channel 1).
+- **D-Bus method:**  
+  - Connect a specific profile using `org.bluez.Device1.ConnectProfile(UUID)`
+  - You can also use tools like `sdptool` to browse service records and identify the RFCOMM channel[7][8][14].
+
+---
+
+## 4. **RFCOMM Connect**
+
+- **Purpose:** Open a virtual serial port for unstructured byte stream communication.
+- **How:**  
+  - Bind an **RFCOMM** device such as `/dev/rfcomm0`, which acts like a classic serial port.
+  - You can now `read()`/`write()` bytes similar to UART.
+- **D-Bus API:**  
+  - Not directly exposed for the raw socket; you typically open the RFCOMM connection in C via 
+    ```
+    socket(AF_BLUETOOTH, SOCK_STREAM, BTPROTO_RFCOMM)
+    ```
+  - Client-side applications use the known RFCOMM channel from SDP to connect[8][14].
+
+---
+
+## **Summary Table: SPP Flow with BlueZ**
+
+| Step                | D-Bus API Call / Tool                      | Info Returned / Used                      |
+|---------------------|--------------------------------------------|--------------------------------------------|
+| **Scan/Discovery**  | Adapter1.StartDiscovery()                  | MAC, CoD, RSSI, Name                      |
+| **Pairing**         | Device1.Pair()                             | Paired status, trust info                 |
+| **Service Discovery**| Device1.ConnectProfile(UUID) / sdptool    | Service UUID, RFCOMM channel              |
+| **RFCOMM Connect**  | socket(), /dev/rfcomm0                     | Virtual serial port, read/write byte stream|
+
+---
+
+> **Tip:** The flow above is how most SPP applications (e.g., wireless serial bridges, robot controllers) are established on Linux using BlueZ and the D-Bus API.  
 
 # Part 4 – Learning Roadmap
 
