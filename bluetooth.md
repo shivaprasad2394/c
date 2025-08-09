@@ -504,115 +504,105 @@ This guide walks through a **Classic Bluetooth Serial Port Profile (SPP) connect
 
 We’ll start with SPP (Serial Port Profile) because it’s the simplest to reason about and implement, then I’ll show:
 
-a clear step‑by‑step sequence (what Device A and Device B each do, and what happens inside the controller + host), and
-
-working C examples:
-
-discovery with raw HCI calls,
-
-RFCOMM server (Device A) and RFCOMM client (Device B) using raw sockets, and
-
-a compact D‑Bus (GDBus) C snippet showing how to call Pair() and Connect() via BlueZ.
+- A clear step‑by‑step sequence (what Device A and Device B each do, and what happens inside the controller + host), and
+- Working C examples:
+  - Discovery with raw HCI calls,
+  - RFCOMM server (Device A) and RFCOMM client (Device B) using raw sockets, and
+  - A compact D‑Bus (GDBus) C snippet showing how to call Pair() and Connect() via BlueZ.
 
 If that looks good I’ll move on to the next profile (HFP / A2DP / HID / etc.) the same way.
 
-1) Real-world scenario (SPP)
-Assume:
+---
 
-Device A = embedded device running an RFCOMM SPP server (will bind() to RFCOMM channel 3 and listen()).
+### Real-world scenario (SPP) Assume:
 
-Device B = PC or phone acting as RFCOMM client (will discover Device A, query for SPP service, pair if needed, then open RFCOMM and exchange bytes).
+- **Device A** = embedded device running an RFCOMM SPP server (will `bind()` to RFCOMM channel 3 and `listen()`).
+- **Device B** = PC or phone acting as RFCOMM client (will discover Device A, query for SPP service, pair if needed, then open RFCOMM and exchange bytes).
 
-High-level sequence (6 steps)
-Inquiry / Discovery
+---
 
-Service Discovery (SDP) to find SPP’s RFCOMM channel
+### High-level sequence (6 steps)
 
-Pairing / Authentication (if security required)
-
-Connection (L2CAP → RFCOMM) — RFCOMM open on channel from SDP
-
-Data exchange (read/write over RFCOMM socket)
-
-Disconnect / optional bonding (store link keys)
+1. Inquiry / Discovery  
+2. Service Discovery (SDP) to find SPP’s RFCOMM channel  
+3. Pairing / Authentication (if security required)  
+4. Connection (L2CAP → RFCOMM) — RFCOMM open on channel from SDP  
+5. Data exchange (read/write over RFCOMM socket)  
+6. Disconnect / optional bonding (store link keys)
 
 I’ll expand what each side and the controller do for each step.
 
-2) Step‑by‑step internals — what happens on Device A and Device B
-Step 0 — prerequisites
-Device A must have an RFCOMM server running or BlueZ profile registered.
+---
 
-Both devices must have Bluetooth controllers up (e.g. hci0 up).
+### Step-by-step internals — what happens on Device A and Device B
 
-Step 1 — Inquiry / Discovery
-Device B (initiator / scanner):
+#### Step 0 — prerequisites
+- Device A must have an RFCOMM server running or BlueZ profile registered.
+- Both devices must have Bluetooth controllers up (e.g. `hci0 up`).
 
-Host opens an HCI socket and issues an HCI_Inquiry (library call hci_inquiry() or equivalent HCI command).
+#### Step 1 — Inquiry / Discovery
 
-The controller radio performs inquiry (hops frequencies, listens for / sends inquiry packets).
+**Device B (initiator / scanner):**
 
-Controllers of nearby devices (Device A) that are discoverable respond with FHS (inquiry response) including BD_ADDR.
+- Host opens an HCI socket and issues an `HCI_Inquiry` (library call `hci_inquiry()` or equivalent HCI command).
+- The controller radio performs inquiry (hops frequencies, listens for / sends inquiry packets).
+- Controllers of nearby devices (Device A) that are discoverable respond with FHS (inquiry response) including BD_ADDR.
+- Controller on Device B receives inquiry responses and delivers them to host as HCI events.
+- Host shows Device A address + RSSI; higher-level stack (BlueZ or your program) may attempt to read remote name (HCI read remote name request).
 
-Controller on Device B receives inquiry responses and delivers them to host as HCI events.
+**Device A (responder):**
 
-Host shows Device A address + RSSI; higher-level stack (BlueZ or your program) may attempt to read remote name (HCI read remote name request).
+- Its controller automatically responds to inquiry if it’s set to be discoverable.
+- Link Manager and baseband handle the low‑level timing and hopping.
 
-Device A (responder):
+#### Step 2 — SDP (Service Discovery Protocol)
 
-Its controller automatically responds to inquiry if it’s set to be discoverable.
+**Device B:**
 
-Link Manager and baseband handle the low‑level timing and hopping.
+- To find which channel SPP is on, Device B opens an SDP connection (SDP uses L2CAP internally) to Device A and requests service records for the Serial Port class UUID (`0x1101`).
+- The SDP server on Device A returns a service record containing the RFCOMM channel number (e.g., channel 3).
+- Host parses the returned ProtocolDescriptorList to find the RFCOMM port.
 
-Step 2 — SDP (Service Discovery Protocol)
-Device B:
+**Device A:**
 
-To find which channel SPP is on, Device B opens an SDP connection (SDP uses L2CAP internally) to Device A and requests service records for the Serial Port class UUID (0x1101).
+- SDP server (part of BlueZ or user app if implemented) replies with the stored service record.
 
-The SDP server on Device A returns a service record containing the RFCOMM channel number (e.g., channel 3).
+#### Step 3 — Pairing / Authentication (if needed)
 
-Host parses the returned ProtocolDescriptorList to find the RFCOMM port.
+- Either device may initiate pairing (most often Device B after SDP if the device requires pairing).
+- Pairing uses HCI and Link Manager Protocol (LMP) flows: IO Capability exchange, authentication, link key generation (PIN / SSP).
+- Controller handles encryption setup; host receives HCI events for passkey / confirmation and notifies agent (BlueZ agent or your agent via D‑Bus) to provide PIN or confirm.
+- After successful pairing, link keys may be stored (bonding) so next time they can reconnect without pairing.
 
-Device A:
+#### Step 4 — Connection (L2CAP → RFCOMM)
 
-SDP server (part of BlueZ or user app if implemented) replies with the stored service record.
+**Device B (client):**
 
-Step 3 — Pairing / Authentication (if needed)
-Either device may initiate pairing (most often Device B after SDP if the device requires pairing).
+- Opens an RFCOMM socket (`AF_BLUETOOTH` / `BTPROTO_RFCOMM`) and `connect()` to Device A using BD_ADDR and RFCOMM channel discovered from SDP.
+- The host stack will set up an L2CAP bearer under the hood and the controller will create ACL link if needed. HCI messages for connection are exchanged.
 
-Pairing uses HCI and Link Manager Protocol (LMP) flows: IO Capability exchange, authentication, link key generation (PIN / SSP).
+**Device A (server):**
 
-Controller handles encryption setup; host receives HCI events for passkey / confirmation and notifies agent (BlueZ agent or your agent via D‑Bus) to provide PIN or confirm.
+- If server uses raw RFCOMM socket it has `bind()`ed to the chosen channel and is `listen()`/`accept()`ing. `accept()` unblocks when client connects.
+- Alternatively, if BlueZ handles the profile, BlueZ will route the received connection to the registered profile via D‑Bus ProfileManager.
 
-After successful pairing, link keys may be stored (bonding) so next time they can reconnect without pairing.
+#### Step 5 — Data exchange
 
-Step 4 — Connection (L2CAP → RFCOMM)
-Device B (client):
+- After `accept`/`connect`, both sides read/write on the RFCOMM stream (like a TCP-ish serial stream).
+- RFCOMM does framing and multiplexer logic, L2CAP segments/assembles, HCI transports ACL data frames to/from controller, controller sends bytes over the air.
 
-Opens an RFCOMM socket (AF_BLUETOOTH / BTPROTO_RFCOMM) and connect() to Device A using BD_ADDR and RFCOMM channel discovered from SDP.
+#### Step 6 — Disconnect & Bonding
 
-The host stack will set up an L2CAP bearer under the hood and the controller will create ACL link if needed. HCI messages for connection are exchanged.
+- Either side closes the socket. HCI link teardown occurs, controllers free resources.
+- If bonded, link keys stay stored; next session may skip pairing.
 
-Device A (server):
+---
 
-If server uses raw RFCOMM socket it has bind()ed to the chosen channel and is listen()/accept()ing. accept() unblocks when client connects.
+### Raw C examples (tested patterns you can compile)
 
-Alternatively, if BlueZ handles the profile, BlueZ will route the received connection to the registered profile via D‑Bus ProfileManager.
+**Notes before running:**
 
-Step 5 — Data exchange
-After accept/connect, both sides read/write on the RFCOMM stream (like a TCP-ish serial stream). RFCOMM does framing and multiplexer logic, L2CAP segments/assembles, HCI transports ACL data frames to/from controller, controller sends bytes over the air.
-
-Step 6 — Disconnect & Bonding
-Either side closes the socket. HCI link teardown occurs, controllers free resources.
-
-If bonded, link keys stay stored; next session may skip pairing.
-
-3) Raw C examples (tested patterns you can compile)
-Notes before running:
-
-These programs require Bluetooth dev headers and BlueZ libraries (libbluetooth).
-
-On many systems you must be root (or give capabilities) to open HCI and raw Bluetooth sockets.
-
-Compile with -lbluetooth. Example: gcc -o hci_discover hci_discover.c -lbluetooth
-
-
+- These programs require Bluetooth dev headers and BlueZ libraries (`libbluetooth`).
+- On many systems you must be root (or give capabilities) to open HCI and raw Bluetooth sockets.
+- Compile with `-lbluetooth`. Example:  
+  `gcc -o hci_discover hci_discover.c -lbluetooth`
