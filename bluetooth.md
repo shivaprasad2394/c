@@ -86,6 +86,39 @@ In Bluetooth Classic, there are **two primary link types**:
 ---
 
 This breakdown gives you the **functional overview of Bluetooth Classic**, the **stack layers**, how **BlueZ fits in Linux**, and the **link types and terminology** you’ll encounter when working with BR/EDR.
+          ┌───────────────────────────────┐
+          │        Application Layer       │
+          │  (Profiles: SPP, A2DP, HFP...) │
+          └───────────────┬───────────────┘
+                          │
+          ┌───────────────▼───────────────┐
+          │   RFCOMM (Serial Port Emu.)   │
+          │  - Virtual serial connection  │
+          │  - Uses L2CAP for transport   │
+          └───────────────┬───────────────┘
+                          │
+          ┌───────────────▼───────────────┐
+          │   L2CAP (Multiplexing Layer)  │
+          │  - Multiple channels over ACL │
+          │  - Segmentation/Reassembly    │
+          └───────────────┬───────────────┘
+                          │
+          ┌───────────────▼───────────────┐
+          │       HCI (Command/Event)     │
+          │  - Host ↔ Controller bridge   │
+          │  - ACL/SCO packet transport   │
+          └───────────────┬───────────────┘
+                          │
+          ┌───────────────▼───────────────┐
+          │ Controller (Baseband + LMP)   │
+          │  - Link setup, encryption     │
+          │  - Frequency hopping, timing  │
+          └───────────────┬───────────────┘
+                          │
+          ┌───────────────▼───────────────┐
+          │       Physical Radio Layer    │
+          │  - 2.4 GHz transmission       │
+          └───────────────────────────────┘
 
 # Part 1 – Classic Bluetooth vs BLE
 
