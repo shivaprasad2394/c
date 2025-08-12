@@ -305,8 +305,141 @@ BlueZ automatically enables AFH; you can query channel map via `hcitool afh hci0
 | **TSEP** | Terminal/Service Endpoint Type (AVDTP) |
 
 ---
+Section 1: Document Title & Basic Introduction
+text
+# Bluetooth Classic (BR/EDR) Overview
+Section 2: Foundation - What Bluetooth Classic Is
+text
+## **Step 1: What Bluetooth Classic Is**
 
+**Bluetooth Classic** (also called **BR/EDR — Basic Rate / Enhanced Data Rate**) is designed for **continuous data streaming** between devices.
+
+**Common use cases:**
+- **Wireless audio** (A2DP, HFP)
+- **File transfer** (OBEX)
+- **Serial cable replacement** (SPP)
+- **Tethering** (PAN)
+
+**Key characteristics:**
+- Operates in the **2.4 GHz ISM band**
+- Uses **frequency hopping** (1600 hops/sec) to minimize interference  
+- Optimized for higher throughput compared to BLE
+
+Section 3: Stack Architecture - The Two-Part System
+text
+## **Step 2: Bluetooth Stack Architecture**
+
+Bluetooth is divided into **two main parts**:
+
+### **1. Controller** *(hardware side — on the chip)*
+Responsible for physical wireless communication and low-level protocols.
+
+- **Radio** — Transmits/receives bits over the air.
+- **Baseband** — Manages packet timing, frequency hopping, and low-level link control.
+- **Link Manager Protocol (LMP)** — Link setup, authentication, encryption.
+- **HCI firmware** — Implements the standardized **Host Controller Interface** for communication with the host.
+
+### **2. Host** *(software side — in the OS)*
+Runs higher-level connection management and application profiles.
+
+- **HCI Driver** — Sends/receives commands and events to the controller hardware.
+- **L2CAP** — Logical Link Control and Adaptation Protocol; multiplexes multiple channels over one physical connection.
+- **RFCOMM** — Serial port emulation for SPP and other profiles.
+- **Profiles** — Define app-level behavior (A2DP for audio streaming, SPP for serial, OBEX for file transfer, etc.).
+
+Section 4:
+## **Step 3: Where BlueZ Fits (Linux)**
+
+On **Linux**, the flow looks like:
+
+Controller (Bluetooth chip: USB dongle, internal module)
+↓
+HCI driver (kernel: hci_usb, hci_uart, etc.)
+↓
+BlueZ (user-space Bluetooth stack)
+↓
+Your application (C, Python, etc.)
+
+**BlueZ provides:**
+- Device discovery (inquiry scan)
+- Pairing & bonding
+- Service connections (RFCOMM, L2CAP)
+- Profile daemons (audio/HID support for A2DP, HSP, HID)
 This is a very comprehensive section with complete C code examples. Here it is broken down:
+Section 5A: BR/EDR Link Types - The Data Highways
+text
+## **Step 4: BR/EDR Link Types**
+
+In Bluetooth Classic, there are **two primary link types**:
+
+| Link Type              | Purpose                                              | Used By                          |
+|------------------------|------------------------------------------------------|-----------------------------------|
+| **ACL** (Asynchronous Connection-Less) | General, packet-based data transfer          | RFCOMM, OBEX, PAN                 |
+| **SCO / eSCO** (Synchronous Connection-Oriented / extended SCO) | Constant bit rate audio streaming | HFP (Hands-Free Profile), HSP     |
+🎯 Learning Focus: ACL = your typical data (like TCP), SCO/eSCO = real-time audio (like UDP but with timing guarantees)
+
+💡 Key Insight: Think highways - ACL is like a flexible lane that can carry any cargo, SCO/eSCO is like a dedicated express lane for time-sensitive audio!
+
+Section 5B: Essential Terminology - Your Bluetooth Vocabulary
+text
+## **Step 5: Key Terminology**
+
+| Term           | Description |
+|----------------|-------------|
+| **Device Address (BD_ADDR)** | 48-bit unique hardware identifier for a Bluetooth device |
+| **Piconet**    | One *master* device connected to up to 7 *active* slave devices |
+| **Inquiry**    | Process of discovering nearby Bluetooth devices |
+| **Paging**     | Connecting to a specific known device |
+| **Pairing**    | Exchanging link keys for authentication & encryption |
+| **Bonding**    | Storing link keys for future reconnection without re-pairing |
+🎯 Learning Focus:
+
+BD_ADDR = like MAC address for Bluetooth
+
+Piconet = 1 master, max 7 slaves (think star topology)
+
+Inquiry vs Paging = "Who's there?" vs "Connect to John's phone"
+
+Pairing vs Bonding = handshake vs remembering the handshake
+
+Section 6: Complete Bluetooth Classic Stack Diagram
+text
+# Complete Bluetooth Classic Stack Architecture
+
+text
+      ┌───────────────────────────────┐
+      │        Application Layer       │
+      │  (Profiles: SPP, A2DP, HFP...) │
+      └───────────────┬───────────────┘
+                      │
+      ┌───────────────▼───────────────┐
+      │   RFCOMM (Serial Port Emu.)   │
+      │  - Virtual serial connection  │
+      │  - Uses L2CAP for transport   │
+      └───────────────┬───────────────┘
+                      │
+      ┌───────────────▼───────────────┐
+      │   L2CAP (Multiplexing Layer)  │
+      │  - Multiple channels over ACL │
+      │  - Segmentation/Reassembly    │
+      └───────────────┬───────────────┘
+                      │
+      ┌───────────────▼───────────────┐
+      │       HCI (Command/Event)     │
+      │  - Host ↔ Controller bridge   │
+      │  - ACL/SCO packet transport   │
+      └───────────────┬───────────────┘
+                      │
+      ┌───────────────▼───────────────┐
+      │ Controller (Baseband + LMP)   │
+      │  - Link setup, encryption     │
+      │  - Frequency hopping, timing  │
+      └───────────────┬───────────────┘
+                      │
+      ┌───────────────▼───────────────┐
+      │       Physical Radio Layer    │
+      │  - 2.4 GHz transmission       │
+      └───────────────────────────────┘
 
 text
 # Part 4 – Learning Roadmap
