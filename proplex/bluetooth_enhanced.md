@@ -984,6 +984,90 @@ I'd start by drawing two columns, "DEVICE A (Server)" and "DEVICE B (Client)," a
 **Expert-Level Answer:**
 I'd propose a hierarchical architecture. At the **Device Tier**, simple sensors would use SPP for data streaming. These would connect in a **star topology** to a **Gateway** device. The Gateway would act as a central hub, managing multiple simultaneous connections within a piconet and handling communication with the cloud via Wi-Fi or Ethernet. Security would be handled through **bonding** for fast, secure reconnections. To ensure **reliability**, I'd implement heartbeat messages and automatic reconnection logic. For **scaling**, I'd deploy multiple gateways to overcome the 7-device piconet limit and use a central coordinator for inter-piconet communication.
 
+
+### Section 11A: A2DP - Advanced Audio Distribution Profile (The Audio Beast)
+
+**A2DP** is the Bluetooth profile that enables high-quality wireless stereo audio streaming, commonly used by headphones and speakers. Unlike SPP, which uses ACL for all data, A2DP uses both ACL for control signals and specialized audio streaming.
+
+#### A2DP Stack Layers:
+The A2DP stack is more complex than SPP to handle real-time audio. It includes an **Application** (e.g., a music player), the **A2DP Profile Layer**, **AVDTP** (Audio/Video Distribution Transport Protocol) for stream setup, and an **Audio Codec** (SBC, AAC, aptX, etc.) to compress the audio. This all runs over L2CAP, HCI, and the Radio layer.
+
+**A2DP Connection Flow:**
+1.  **SDP Discovery:** The client uses `sdptool` to find the `AudioSource` service on the server.
+2.  **AVDTP Stream Setup:** The client and server negotiate which audio codec (e.g., SBC, AAC) and settings (e.g., sample rate) to use.
+3.  **Audio Data Flow:** Once the stream is set up, PCM audio is encoded by the chosen codec, packaged into RTP packets, and sent over L2CAP.
+
+**A2DP Audio Codecs:**
+| Codec | Quality | Bitrate | Latency |
+| :--- | :--- | :--- | :--- |
+| **SBC** | Good | 328 kbps | ~200ms |
+| **AAC** | Better | 256 kbps | ~150ms |
+| **aptX** | Excellent | 352 kbps | ~40ms |
+| **LDAC** | Best | 990 kbps | ~20ms |
+
+**SBC is mandatory** for all A2DP devices, serving as a universal fallback.
+
+***
+
+### Section 11B: HFP - Hands-Free Profile (The Voice Champion)
+
+**HFP** is the profile for voice calls, used in car systems and wireless headsets. It differs from A2DP by using two separate channels:
+* **RFCOMM** for call control using **AT commands** (like `AT+ATA` to answer a call).
+* **SCO/eSCO** for the low-quality, mono voice audio.
+
+#### HFP Technical Architecture:
+The stack includes the **HFP Profile Layer** and **AT Commands** over **RFCOMM** for call control. For audio, it uses a separate path with **SCO/eSCO** packets. The audio itself is typically compressed with the **CVSD codec**.
+
+| Feature | SCO | eSCO |
+| :--- | :--- | :--- |
+| **Audio Quality** | 64 kbps CVSD | 64 kbps CVSD + error correction |
+| **Latency** | ~100ms | ~50ms |
+| **Reliability** | Basic | Supports retransmissions |
+
+***
+
+### Section 11C: HID - Human Interface Device Profile (The Input Master)
+
+**HID** is the profile for input devices such as keyboards, mice, and game controllers. It essentially runs the **USB HID protocol** over Bluetooth.
+
+#### HID Technical Architecture:
+HID uses two **L2CAP channels**:
+* **Control (PSM 0x11):** For connection management.
+* **Interrupt (PSM 0x13):** A high-priority channel for real-time input data (e.g., key presses).
+
+Data is sent in **HID Reports**, which are structured packets containing button presses, mouse movements, or keystrokes.
+
+***
+
+### Section 11D: OBEX - Object Exchange Profile (The File Transfer King)
+
+**OBEX** is the profile for transferring files and data objects. It's an **HTTP-like protocol** that runs over RFCOMM, using operations like `PUT`, `GET`, and `DELETE` to manage files on a remote device. Common use cases include transferring photos, contacts, and calendar entries.
+
+***
+
+### Section 11E: PAN - Personal Area Network Profile (The Internet Sharing Hero)
+
+**PAN** allows devices to form a small network for internet sharing. A phone acting as a **Network Access Point (NAP)** can share its internet connection with a laptop acting as a **PAN User (PANU)**. This networking is handled by **BNEP (Bluetooth Network Encapsulation Protocol)**, which encapsulates network packets over RFCOMM.
+
+***
+
+### Section 11F: Profile Comparison - The Ultimate Guide
+
+| Profile | Transport | Data Type | Use Case | Complexity |
+| :--- | :--- | :--- | :--- | :--- |
+| **SPP** | RFCOMM/ACL | Raw bytes | Serial replacement | ⭐⭐ |
+| **A2DP** | L2CAP/ACL + Audio | Stereo audio | Music streaming | ⭐⭐⭐⭐⭐ |
+| **HFP** | RFCOMM + SCO | Voice + AT | Phone calls | ⭐⭐⭐⭐ |
+| **HID** | L2CAP/ACL | Input reports | Keyboard/mouse | ⭐⭐⭐ |
+| **OBEX** | RFCOMM/ACL | Files/objects | File transfer | ⭐⭐⭐ |
+| **PAN** | BNEP/RFCOMM | Network packets | Internet sharing | ⭐⭐⭐⭐ |
+
+***
+
+### Section 11G: Multi-Profile Connections - The Advanced Scenario
+
+Modern Bluetooth devices often run multiple profiles simultaneously over a single physical connection. A common example is a **phone connected to a car stereo**. In this scenario, the devices can use **A2DP** for music streaming, **HFP** for hands-free calls, and **HID** for steering wheel controls, all at the same time. `btmon` can show these different profiles running on separate logical channels (e.g., different ACL handles) over the same physical Bluetooth link.
+
 text
 # Part 4 – Learning Roadmap
 
