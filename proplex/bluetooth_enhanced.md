@@ -527,158 +527,117 @@ text
     - Controller radios it across the air to the paired device.
 🎯 Learning Focus: This is the COMPLETE END-TO-END JOURNEY of your data! Let's trace ONE BYTE through every single layer!
 
-Section 8A: The Byte Journey - Transmit Side (Device B → Device A)
-Your App writes: write(rfcomm_socket, "Hello!", 6);
+Here's a breakdown of the Bluetooth data transmission and reception process, from an application's perspective, formatted as a markdown document.
 
-📍 Layer 7 - Application:
+# Section 8A: The Byte Journey - Transmit Side (Device B → Device A)
 
-Bytes: H e l l o ! (6 bytes)
+Your application initiates a data transfer by calling `write(rfcomm_socket, "Hello!", 6);`. This simple command triggers a complex series of events as the data travels down the Bluetooth protocol stack.
 
-Action: App calls write() on RFCOMM socket
+---
 
-📍 Layer 6 - RFCOMM:
+### **📍 Layer 7 - Application**
+- **Bytes:** "Hello!" (6 bytes)
+- **Action:** Your app calls `write()` on the RFCOMM socket, handing over the raw data to the Bluetooth stack.
 
-Adds RFCOMM header (channel info, control bits)
+### **📍 Layer 6 - RFCOMM**
+- **Adds:** An RFCOMM header containing channel information and control bits.
+- **Packet:** `[RFCOMM_HDR][H e l l o !]`
+- **Action:** RFCOMM is a protocol for serial port emulation. It frames your data to make it look like it's coming from a serial port.
 
-Packet: [RFCOMM_HDR][H e l l o !]
+### **📍 Layer 5 - L2CAP**
+- **Adds:** An L2CAP header with a channel ID and length.
+- **Packet:** `[L2CAP_HDR][RFCOMM_HDR][H e l l o !]`
+- **Action:** L2CAP (Logical Link Control and Adaptation Protocol) multiplexes data from multiple protocols (like RFCOMM) onto a single ACL (Asynchronous Connection-less) channel.
 
-Action: Frames data for serial emulation
+### **📍 Layer 4 - HCI**
+- **Adds:** An HCI ACL header containing a handle and flags.
+- **Packet:** `[HCI_ACL_HDR][L2CAP_HDR][RFCOMM_HDR][H e l l o !]`
+- **Action:** The Host Controller Interface (HCI) layer queues the packet for transmission by the Bluetooth controller.
 
-📍 Layer 5 - L2CAP:
+### **📍 Layer 3 - Controller (Baseband)**
+- **Adds:** A Bluetooth packet header and applies encryption.
+- **Action:** This is where the magic happens. The controller manages frequency hopping and timing, preparing the data for the physical radio layer.
 
-Adds L2CAP header (channel ID, length)
+### **📍 Layer 2 - Radio**
+- **Action:** The controller converts the digital data into an RF (radio frequency) signal at 2.4 GHz and **TRANSMITS IT OVER THE AIR**.
 
-Packet: [L2CAP_HDR][RFCOMM_HDR][H e l l o !]
+---
 
-Action: Multiplexes onto ACL channel
+# Section 8B: The Byte Journey - Receive Side (Device A receives from Device B)
 
-📍 Layer 4 - HCI:
+The RF signal is received by Device A's antenna and begins its journey up the protocol stack.
 
-Adds HCI ACL header (handle, flags)
+---
 
-Packet: [HCI_ACL_HDR][L2CAP_HDR][RFCOMM_HDR][H e l l o !]
+### **📍 Layer 2 - Radio (Device A)**
+- **RF Signal Received:** 2.4 GHz electromagnetic waves hit the antenna.
+- **Signal Processing:** The signal is processed and converted from analog to digital.
+- **Bit Recovery:** The raw RF signal is converted back into a digital bitstream.
+- **Action:** The bitstream is passed to the Baseband layer.
 
-Action: Queues for controller transmission
+### **📍 Layer 3 - Controller Baseband (Device A)**
+- **Frequency Sync:** The controller synchronizes with Device B's hopping sequence.
+- **Packet Detection:** It recognizes the Bluetooth packet headers in the bitstream.
+- **Error Correction:** Forward Error Correction (FEC) and ARQ (Automatic Repeat Request) are used to correct any transmission errors.
+- **Decryption:** If the link is encrypted, the data is decrypted using the stored link key.
+- **Packet Assembly:** The controller reconstructs the full packet: `[HCI_ACL_HDR][L2CAP_HDR][RFCOMM_HDR][H e l l o !]`.
+- **Action:** The complete packet is delivered to the HCI layer.
 
-📍 Layer 3 - Controller (Baseband):
+### **📍 Layer 4 - HCI (Device A)**
+- **Packet Classification:** The HCI layer identifies the packet as ACL data.
+- **Handle Lookup:** It uses the connection handle to identify Device B's unique address (BD_ADDR).
+- **Header Stripping:** The HCI ACL header is removed, leaving: `[L2CAP_HDR][RFCOMM_HDR][H e l l o !]`.
+- **Action:** The packet is passed to the L2CAP layer via the HCI driver.
 
-Adds Bluetooth packet header, applies encryption
+### **📍 Layer 5 - L2CAP (Device A)**
+- **Channel Demultiplexing:** The L2CAP channel ID is read to identify the correct RFCOMM channel.
+- **Header Stripping:** The L2CAP header is removed, leaving: `[RFCOMM_HDR][H e l l o !]`.
+- **Action:** The data is routed to the correct RFCOMM channel.
 
-Action: Frequency hopping, timing control
+### **📍 Layer 6 - RFCOMM (Device A)**
+- **Channel Mapping:** The RFCOMM channel is mapped to the application's socket.
+- **Header Stripping:** The RFCOMM header is removed, leaving: `[H e l l o !]`.
+- **Action:** The raw bytes are delivered to the application's socket buffer.
 
-📍 Layer 2 - Radio:
+### **📍 Layer 7 - Application (Device A)**
+- **Data Arrives:** The "Hello!" data is now in the application's socket receive buffer.
+- **System Call:** Your app calls `read(client_socket, buffer, 1024)`, retrieving the data.
+- **Data Delivered:** Your app finally receives "Hello!" (6 bytes).
+- **Echo Response:** Your app can then write back a response, starting the whole process over again.
 
-Converts to RF signal at 2.4 GHz
+---
 
-Action: TRANSMITS OVER THE AIR
+# Section 8C: The Complete Round Trip - Technical Details
 
+Here's a closer look at the packet headers added at each layer.
 
-Section 8B: The Byte Journey - Receive Side (Device A receives from Device B)
-📡 SIGNAL ARRIVES AT DEVICE A
+---
 
-📍 Layer 2 - Radio (Device A):
+### **Application Data**
+- **Data:** "Hello!" (6 bytes)
+- **ASCII:** `48 65 6C 6C 6F 21`
 
-RF Signal Received: 2.4 GHz electromagnetic waves hit Device A's antenna
+### **RFCOMM Layer Adds**
+- `[ADDR][CTRL][LEN]` + `[48 65 6C 6C 6F 21]`
+    - **ADDR:** RFCOMM address, including the channel and direction.
+    - **CTRL:** Control field, for data or commands.
+    - **LEN:** The length of the payload.
 
-Signal Processing: Analog-to-digital conversion, frequency demodulation
+### **L2CAP Layer Adds**
+- `[LEN][CID]` + `[RFCOMM_FRAME]`
+    - **LEN:** L2CAP payload length (2 bytes).
+    - **CID:** Channel Identifier (2 bytes), which identifies the RFCOMM channel.
 
-Bit Recovery: Raw RF converted back to digital bits
-
-Action: Passes bit stream to Baseband
-
-📍 Layer 3 - Controller Baseband (Device A):
-
-Frequency Sync: Matches Device B's hopping sequence (1600 hops/sec)
-
-Packet Detection: Recognizes Bluetooth packet headers in bit stream
-
-Error Correction: Forward Error Correction (FEC) and ARQ if needed
-
-Decryption: If link is encrypted, decrypt using stored link key
-
-Packet Assembly: Reconstructs: [HCI_ACL_HDR][L2CAP_HDR][RFCOMM_HDR][H e l l o !]
-
-Action: Delivers complete packet to HCI layer
-
-📍 Layer 4 - HCI (Device A):
-
-Packet Classification: Identifies this as ACL data (not SCO audio)
-
-Handle Lookup: Maps connection handle to Device B's BD_ADDR
-
-HCI Event Generation: May generate HCI events for higher layers
-
-Header Stripping: Removes HCI ACL header: [L2CAP_HDR][RFCOMM_HDR][H e l l o !]
-
-Action: Passes to L2CAP via HCI driver
-
-📍 Layer 5 - L2CAP (Device A):
-
-Channel Demultiplexing: Reads L2CAP channel ID (identifies RFCOMM channel)
-
-Reassembly: If packet was segmented, reassembles fragments
-
-Flow Control: Updates L2CAP flow control windows
-
-Header Stripping: Removes L2CAP header: [RFCOMM_HDR][H e l l o !]
-
-Action: Routes to correct RFCOMM channel
-
-📍 Layer 6 - RFCOMM (Device A):
-
-Channel Mapping: Maps to correct RFCOMM channel (e.g., channel 3)
-
-Serial Framing: Processes RFCOMM control information
-
-Flow Control: RFCOMM-level flow control (like RTS/CTS on real serial)
-
-Header Stripping: Removes RFCOMM header: [H e l l o !]
-
-Action: Delivers raw bytes to application socket buffer
-
-📍 Layer 7 - Application (Device A):
-
-Socket Buffer: Data arrives in application's socket receive buffer
-
-System Call: App calls read(client_socket, buffer, 1024)
-
-Data Delivered: App receives: "Hello!" (6 bytes)
-
-Echo Response: App writes back: write(client_socket, buffer, 6)
-
-Section 8C: The Complete Round Trip - Technical Details
-🎯 DETAILED PACKET HEADERS AT EACH LAYER:
-
-Application Data: "Hello!" (6 bytes)
-
-text
-48 65 6C 6C 6F 21 (ASCII: H e l l o !)
-RFCOMM Layer Adds:
-
-text
-[ADDR][CTRL][LEN] + [48 65 6C 6C 6F 21]
-- ADDR: RFCOMM address (channel + direction)
-- CTRL: Control field (data/command)
-- LEN: Length field
-L2CAP Layer Adds:
-
-text
-[LEN][CID] + [RFCOMM_FRAME]
-- LEN: L2CAP payload length (2 bytes)
-- CID: Channel Identifier (2 bytes, identifies RFCOMM)
-HCI ACL Layer Adds:
-
-text
-[HANDLE][FLAGS][LEN] + [L2CAP_FRAME]
-- HANDLE: Connection handle (12 bits) + PB flags (2 bits) + BC flags (2 bits)
-- LEN: HCI payload length (2 bytes)
-Controller Baseband Adds:
-
-text
-[ACCESS_CODE][HEADER][PAYLOAD][CRC]
-- ACCESS_CODE: 72-bit synchronization + device identification
-- HEADER: 18-bit packet type, flow control, sequence numbers
-- CRC: 16-bit error detection
+### **HCI ACL Layer Adds**
+- `[HANDLE][FLAGS][LEN]` + `[L2CAP_FRAME]`
+    - **HANDLE:** A 12-bit connection handle, with flags for packet boundary (PB) and broadcast (BC).
+    - **LEN:** HCI payload length (2 bytes).
+
+### **Controller Baseband Adds**
+- `[ACCESS_CODE][HEADER][PAYLOAD][CRC]`
+    - **ACCESS_CODE:** A 72-bit code for synchronization and device identification.
+    - **HEADER:** An 18-bit header containing packet type, flow control, and sequence numbers.
+    - **CRC:** A 16-bit Cyclic Redundancy Check for error detection.
 
 text
 # Part 4 – Learning Roadmap
