@@ -406,7 +406,7 @@ Section 6: Complete Bluetooth Classic Stack Diagram
 text
 # Complete Bluetooth Classic Stack Architecture
 
-text
+```text
       ┌───────────────────────────────┐
       │        Application Layer       │
       │  (Profiles: SPP, A2DP, HFP...) │
@@ -440,7 +440,7 @@ text
       │       Physical Radio Layer    │
       │  - 2.4 GHz transmission       │
       └───────────────────────────────┘
-
+```
 text
 # Part 4 – Learning Roadmap
 
