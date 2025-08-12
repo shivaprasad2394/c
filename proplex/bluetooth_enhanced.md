@@ -572,6 +572,114 @@ Converts to RF signal at 2.4 GHz
 
 Action: TRANSMITS OVER THE AIR
 
+
+Section 8B: The Byte Journey - Receive Side (Device A receives from Device B)
+📡 SIGNAL ARRIVES AT DEVICE A
+
+📍 Layer 2 - Radio (Device A):
+
+RF Signal Received: 2.4 GHz electromagnetic waves hit Device A's antenna
+
+Signal Processing: Analog-to-digital conversion, frequency demodulation
+
+Bit Recovery: Raw RF converted back to digital bits
+
+Action: Passes bit stream to Baseband
+
+📍 Layer 3 - Controller Baseband (Device A):
+
+Frequency Sync: Matches Device B's hopping sequence (1600 hops/sec)
+
+Packet Detection: Recognizes Bluetooth packet headers in bit stream
+
+Error Correction: Forward Error Correction (FEC) and ARQ if needed
+
+Decryption: If link is encrypted, decrypt using stored link key
+
+Packet Assembly: Reconstructs: [HCI_ACL_HDR][L2CAP_HDR][RFCOMM_HDR][H e l l o !]
+
+Action: Delivers complete packet to HCI layer
+
+📍 Layer 4 - HCI (Device A):
+
+Packet Classification: Identifies this as ACL data (not SCO audio)
+
+Handle Lookup: Maps connection handle to Device B's BD_ADDR
+
+HCI Event Generation: May generate HCI events for higher layers
+
+Header Stripping: Removes HCI ACL header: [L2CAP_HDR][RFCOMM_HDR][H e l l o !]
+
+Action: Passes to L2CAP via HCI driver
+
+📍 Layer 5 - L2CAP (Device A):
+
+Channel Demultiplexing: Reads L2CAP channel ID (identifies RFCOMM channel)
+
+Reassembly: If packet was segmented, reassembles fragments
+
+Flow Control: Updates L2CAP flow control windows
+
+Header Stripping: Removes L2CAP header: [RFCOMM_HDR][H e l l o !]
+
+Action: Routes to correct RFCOMM channel
+
+📍 Layer 6 - RFCOMM (Device A):
+
+Channel Mapping: Maps to correct RFCOMM channel (e.g., channel 3)
+
+Serial Framing: Processes RFCOMM control information
+
+Flow Control: RFCOMM-level flow control (like RTS/CTS on real serial)
+
+Header Stripping: Removes RFCOMM header: [H e l l o !]
+
+Action: Delivers raw bytes to application socket buffer
+
+📍 Layer 7 - Application (Device A):
+
+Socket Buffer: Data arrives in application's socket receive buffer
+
+System Call: App calls read(client_socket, buffer, 1024)
+
+Data Delivered: App receives: "Hello!" (6 bytes)
+
+Echo Response: App writes back: write(client_socket, buffer, 6)
+
+Section 8C: The Complete Round Trip - Technical Details
+🎯 DETAILED PACKET HEADERS AT EACH LAYER:
+
+Application Data: "Hello!" (6 bytes)
+
+text
+48 65 6C 6C 6F 21 (ASCII: H e l l o !)
+RFCOMM Layer Adds:
+
+text
+[ADDR][CTRL][LEN] + [48 65 6C 6C 6F 21]
+- ADDR: RFCOMM address (channel + direction)
+- CTRL: Control field (data/command)
+- LEN: Length field
+L2CAP Layer Adds:
+
+text
+[LEN][CID] + [RFCOMM_FRAME]
+- LEN: L2CAP payload length (2 bytes)
+- CID: Channel Identifier (2 bytes, identifies RFCOMM)
+HCI ACL Layer Adds:
+
+text
+[HANDLE][FLAGS][LEN] + [L2CAP_FRAME]
+- HANDLE: Connection handle (12 bits) + PB flags (2 bits) + BC flags (2 bits)
+- LEN: HCI payload length (2 bytes)
+Controller Baseband Adds:
+
+text
+[ACCESS_CODE][HEADER][PAYLOAD][CRC]
+- ACCESS_CODE: 72-bit synchronization + device identification
+- HEADER: 18-bit packet type, flow control, sequence numbers
+- CRC: 16-bit error detection
+
 text
 # Part 4 – Learning Roadmap
 
