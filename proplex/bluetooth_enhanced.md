@@ -441,6 +441,137 @@ text
       │  - 2.4 GHz transmission       │
       └───────────────────────────────┘
 ```
+Section 7A: HCI Layer - The Hardware/Software Bridge
+text
+## **Layer 1: HCI (Host Controller Interface)**
+
+- **Role:**  
+  Acts as the bridge between the host software (e.g., Linux BlueZ stack) and the Bluetooth controller hardware (chip).
+- **Location:**  
+  Split between the operating system kernel (HCI driver) and controller firmware.
+- **Functions:**  
+  - **Host → Controller:** Sends HCI Command Packets (e.g., start scan, connect, disconnect).
+  - **Controller → Host:** Receives HCI Event Packets (e.g., device found, connection success, error).
+  - Transfers ACL (Asynchronous Connection-Less) and SCO (Synchronous Connection-Oriented) data between the host stack and controller.
+- **Analogy:**  
+  Like an **airport control tower**—the host tells the controller which "flights" (connections) to handle, the controller reports back real-time events.
+🎯 Learning Focus: HCI is the MOST CRITICAL interface! Commands go down, Events come up, Data flows both ways.
+
+💡 Key Insight: This is where software meets hardware. Everything above HCI = your responsibility, everything below = chip manufacturer's responsibility!
+
+Section 7B: L2CAP Layer - The Packet Manager
+text
+## **Layer 2: L2CAP (Logical Link Control and Adaptation Protocol)**
+
+- **Role:**  
+  Handles multiplexing multiple higher-level protocols and manages packet segmentation/reassembly.
+- **Location:**  
+  On the host side (inside the BlueZ stack).
+- **Functions:**  
+  - Aggregates data from multiple protocols and sends them over a single ACL link.
+  - Segments large packets into smaller frames for transport; reassembles on receive.
+  - Manages Quality of Service (QoS), supports connection-oriented and connectionless channels.
+- **Analogy:**  
+  Like a **post office**—letters from different sources (protocols) share the same delivery route (ACL link) but are labeled with different addresses (Channel IDs).
+
+Section 7C: RFCOMM Layer - The Virtual Serial Cable
+text
+## **Layer 3: RFCOMM**
+
+- **Role:**  
+  Provides virtual serial port emulation over Bluetooth.
+- **Location:**  
+  Host side (BlueZ user space or kernel modules).
+- **Functions:**  
+  - Makes Bluetooth behave like a standard RS-232 serial cable.
+  - Used heavily for Serial Port Profile (SPP) and other related profiles.
+  - Supports multiple RFCOMM channels over a single L2CAP connection.
+- **Analogy:**  
+  Like a **virtual USB cable** running over the air.
+🎯 Learning Focus: RFCOMM = "RS-232 over Bluetooth"! It's the magic that makes wireless look exactly like a wired serial connection.
+
+💡 Key Insight: Multiple RFCOMM channels can run over ONE L2CAP connection - think of it like multiple serial ports over one USB hub!
+
+Section 7D: SDP Layer - The Service Menu
+text
+## **Layer 4: SDP (Service Discovery Protocol)**
+
+- **Role:**  
+  Allows devices to discover which services (profiles/features) are offered by a peer.
+- **Location:**  
+  Host side.
+- **Functions:**  
+  - Queries remote devices: "What services do you support?"
+  - Retrieves attribute details: UUIDs, supported features, connection parameters, etc.
+  - Service discovery is generally required before connecting to most profiles.
+- **Analogy:**  
+  Like **checking a restaurant's menu** before placing your order.
+
+Section 8: Complete Data Flow Example - SPP Byte Journey
+text
+## **How These Layers Work Together: SPP Example Flow**
+
+**Scenario:** Connecting to a Bluetooth Serial Port Profile (SPP) device.
+
+1. **HCI**
+    - Host initiates an Inquiry (scan) via HCI, controller finds nearby devices, host receives BD_ADDR (Bluetooth Device Address).
+2. **SDP**
+    - Host asks, "Do you support SPP?" via SDP.  
+      Remote device replies with corresponding RFCOMM channel number for SPP.
+3. **RFCOMM over L2CAP**
+    - Host opens an L2CAP channel to peer, negotiates an RFCOMM session over that channel, and establishes the virtual serial link.
+4. **Data Flow**
+    - Your application writes bytes to an RFCOMM socket.
+    - RFCOMM data is multiplexed and segmented by L2CAP.
+    - HCI transmits the data via ACL packets to the controller.
+    - Controller radios it across the air to the paired device.
+🎯 Learning Focus: This is the COMPLETE END-TO-END JOURNEY of your data! Let's trace ONE BYTE through every single layer!
+
+Section 8A: The Byte Journey - Transmit Side (Device B → Device A)
+Your App writes: write(rfcomm_socket, "Hello!", 6);
+
+📍 Layer 7 - Application:
+
+Bytes: H e l l o ! (6 bytes)
+
+Action: App calls write() on RFCOMM socket
+
+📍 Layer 6 - RFCOMM:
+
+Adds RFCOMM header (channel info, control bits)
+
+Packet: [RFCOMM_HDR][H e l l o !]
+
+Action: Frames data for serial emulation
+
+📍 Layer 5 - L2CAP:
+
+Adds L2CAP header (channel ID, length)
+
+Packet: [L2CAP_HDR][RFCOMM_HDR][H e l l o !]
+
+Action: Multiplexes onto ACL channel
+
+📍 Layer 4 - HCI:
+
+Adds HCI ACL header (handle, flags)
+
+Packet: [HCI_ACL_HDR][L2CAP_HDR][RFCOMM_HDR][H e l l o !]
+
+Action: Queues for controller transmission
+
+📍 Layer 3 - Controller (Baseband):
+
+Adds Bluetooth packet header, applies encryption
+
+Action: Frequency hopping, timing control
+
+📍 Layer 2 - Radio:
+
+Converts to RF signal at 2.4 GHz
+
+Action: TRANSMITS OVER THE AIR
+
 text
 # Part 4 – Learning Roadmap
 
