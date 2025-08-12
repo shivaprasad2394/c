@@ -409,6 +409,7 @@ I'll expand what each side and the controller do for each step.
   `gcc -o hci_discover hci_discover.c -lbluetooth`
 
 ## A— Discovery (HCI) — hci_discover.c
+```cpp
 /* hci_discover.c
 Simple device inquiry using BlueZ hci library.
 Compile: gcc -o hci_discover hci_discover.c -lbluetooth
@@ -455,12 +456,13 @@ free(ii);
 close(sock);
 return 0;
 }
-
+```
 text
 
 This gives you the list of BD_ADDRs you can use for SDP / RFCOMM.
 
 ## B— RFCOMM server (Device A) — rfcomm_server.c
+```cpp
 /* rfcomm_server.c
 Minimal RFCOMM server that accepts one connection and echoes data.
 Compile: gcc -o rfcomm_server rfcomm_server.c -lbluetooth
@@ -522,12 +524,13 @@ close(client);
 close(sock);
 return 0;
 }
-
+```
 text
 
 If your service needs to be discoverable via SDP you usually register a service record (via sdptool add or using BlueZ D‑Bus/RegisterProfile) — otherwise a client that learns the channel via SDP won't find it. For quick tests you can set the client to connect to a fixed channel if you know it.
 
 ## C— RFCOMM client (Device B) — rfcomm_client.c
+```cpp
 /* rfcomm_client.c
 Minimal RFCOMM client: connect and send a message.
 Compile: gcc -o rfcomm_client rfcomm_client.c -lbluetooth
@@ -580,7 +583,7 @@ if (bytes > 0) {
 close(s);
 return 0;
 }
-
+```
 text
 
 ### Workflow with raw code:
@@ -632,6 +635,7 @@ text
 This workflow reflects how Device B discovers, pairs, and connects to Device A using RFCOMM over Bluetooth with explicit SDP lookup or via BlueZ's higher-level D-Bus APIs.
 
 ## pair_connect
+```cpp
 /* pair_connect.c
 Simple example that calls Pair() and Connect() on org.bluez.Device1 via GDBus.
 Compile:
@@ -705,7 +709,7 @@ g_object_unref(proxy);
 g_free(dev_path);
 return 0;
 }
-
+```
 text
 
 ### Notes about D‑Bus approach
