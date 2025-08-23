@@ -74,10 +74,21 @@ shivaprasad@anonymous:~/chandu/husband/interview_coding_practice$ ./program
 1. Reverse a String
 Algorithm Steps:
 1.Use two pointers: left (start) and right (end)
-
 2.Swap characters at these positions
-
 3.Move pointers towards center until they meet
+
+String: "hello"
+Indexes: 0 1 2 3 4
+
+Step 1: swap 'h' and 'o' → "oellh"
+left = 1, right = 3
+
+Step 2: swap 'e' and 'l' → "olleh"
+left = 2, right = 2
+
+Pointers meet, stop.
+Result: "olleh"
+
 */
 #if C_CODE1
 #include <stdio.h>
