@@ -386,11 +386,6 @@ void testBitOperations() {
     printf("\n");
 }
 
-int main() {
-    testBitOperations();
-    return 0;
-}
-
 // ============================================================================
 // PROBLEM 6: Find Two Non-Repeating Elements
 // ============================================================================
