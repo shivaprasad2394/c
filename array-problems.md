@@ -246,6 +246,34 @@ Algorithm/Logic Steps:
 2. Method 2 (Temp Array): Store first d elements, shift rest left, place stored elements at end
 3. Handle d > n by using d = d % n
 4. Time Complexity: O(n), Space Complexity: O(1) for reversal method
+Example:
+
+arr = [1, 2, 3, 4, 5, 6, 7]
+d = 2
+Result = [3, 4, 5, 6, 7, 1, 2]
+✅ Handle d > n
+Always normalize d:
+d = d % n;
+This ensures you don't rotate more than necessary.
+
+⚙️ Method 1: Reversal Algorithm
+🧠 Logic Steps:
+
+- Reverse the first d elements
+- Reverse the remaining n - d elements
+- Reverse the entire array
+🧪 Example:
+arr = [1, 2, 3, 4, 5, 6, 7]
+d = 2
+
+🔧 Step-by-Step:
+Reverse first d=2 elements: [1, 2] → [2, 1]
+→ [2, 1, 3, 4, 5, 6, 7]
+Reverse the rest: [3, 4, 5, 6, 7] → [7, 6, 5, 4, 3]
+→ [2, 1, 7, 6, 5, 4, 3]
+Reverse entire array:
+→ [3, 4, 5, 6, 7, 1, 2]
+✅ Done!
 */
 
 #if C_CODE3
