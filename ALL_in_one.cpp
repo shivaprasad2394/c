@@ -167,10 +167,23 @@ int main() {
 /*2. Check for Anagram
 Algorithm Steps:
 Check if lengths are equal (if not, can't be anagrams)
-
 Count frequency of each character in both strings
+Compare frequency arrays .
 
-Compare frequency arrays */
+str1 = "listen"
+str2 = "silent"
+Lengths are equal (6).
+Count frequency:
+| Character | str1 Count | str2 Count |
+| --------- | ---------- | ---------- |
+| l         | 1          | 1          |
+| i         | 1          | 1          |
+| s         | 1          | 1          |
+| t         | 1          | 1          |
+| e         | 1          | 1          |
+| n         | 1          | 1          |
+| --------- | ---------- | ---------- |
+*/
 #include <stdio.h>
 #include <string.h>
 #define CHAR_SIZE 256
@@ -277,10 +290,24 @@ int main() {
 3. Longest Palindromic Substring
 Algorithm Steps:
 For each character, expand around it as center
-
 Check for both odd-length (center = i) and even-length (center = i, i+1) palindromes
-
 Keep track of longest palindrome found
+
+String: "babad"
+
+Center at i = 0 (char 'b'):
+Odd length palindrome: "b"
+Even length palindrome: "" (no match)
+
+Center at i = 1 (char 'a'):
+Odd length palindrome: "bab"
+Even length palindrome: ""
+
+Center at i = 2 (char 'b'):
+Odd length palindrome: "aba"
+Even length palindrome: ""
+
+Longest palindrome is "bab" or "aba" (length 3).
 */
 #if C_CODE3
 #include <stdio.h>
@@ -406,9 +433,20 @@ int main() {
 ============4. Remove All Duplicates===============
 Algorithm Steps:
 Use a boolean array to track seen characters
-
 Iterate through string, only keep first occurrence of each character
 
+Input: "banana"
+Seen: {}
+
+Iterate:
+'b': not seen, keep → "b"
+'a': not seen, keep → "ba"
+'n': not seen, keep → "ban"
+'a': seen, skip
+'n': seen, skip
+'a': seen, skip
+
+Output: "ban"
 */
 #if C_CODE4
 #include <stdio.h>
