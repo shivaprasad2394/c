@@ -1009,10 +1009,33 @@ int main() {
 9. Count and Say
 Algorithm Steps:
 Start with "1"
-
 For each iteration, read the previous term and describe it
-
 Count consecutive digits and say the count followed by the digit
+
+🧠 Algorithm Logic:
+Start with the string "1" (this is the 1st term).
+For each iteration from 2 to n:
+Read the previous term digit by digit.
+Count consecutive identical digits.
+Construct the new string by saying the count followed by the digit.
+Repeat until the n-th term is built.
+
+🔧 Example (First 5 terms):
+| Term | Sequence   | Explanation          |
+| ---- | ---------- | -------------------- |
+| 1    | `"1"`      | starting point       |
+| 2    | `"11"`     | one 1                |
+| 3    | `"21"`     | two 1s               |
+| 4    | `"1211"`   | one 2, one 1         |
+| 5    | `"111221"` | one 1, one 2, two 1s |
+| ---- | ---------- | -------------------- |
+🧾 Detailed Breakdown: From "21" → "1211"
+Start with "21"
+Read left to right:
+One 2 → "12"
+One 1 → "11"
+
+Result: "1211"
 */
 #if C_CODE9
 #include <stdio.h>
@@ -1234,10 +1257,28 @@ int main() {
 11. Reverse Words in a String
 Algorithm Steps:
 Split string into words (by spaces)
-
 Store words in array/vector
-
 Print/concatenate words in reverse order
+
+🧠 Algorithm Steps:
+Split the string into individual words:
+Use space ' ' as the delimiter.
+Store the words in an array or vector.
+Reverse the array/vector of words.
+Concatenate the reversed words into a new string:
+Add a space between words (but not after the last one).
+
+🔧 Example:
+Input:
+"the sky is blue"
+
+Step-by-step:
+Split → ["the", "sky", "is", "blue"]
+Reverse → ["blue", "is", "sky", "the"]
+Join → "blue is sky the"
+
+Output:
+"blue is sky the"
 */
 #if C_CODE11
 #include <stdio.h>
