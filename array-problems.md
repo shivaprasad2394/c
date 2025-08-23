@@ -1208,6 +1208,47 @@ Quick Sort Algorithm:
 3. Recursively sort left and right subarrays
 4. Time Complexity: O(n log n) average, O(n²) worst case
 
+Choose a pivot:
+Typically the last element in the current subarray.
+
+Partition the array:
+Rearrange elements such that:
+Elements less than or equal to pivot go to the left
+Elements greater than pivot go to the right
+Pivot is then placed at its correct sorted position.
+
+Recursively apply the above steps to the left and right subarrays (excluding the pivot).
+arr = [10, 7, 8, 9, 1, 5]
+First Call: quickSort(arr, 0, 5)
+Pivot = 5
+
+Partition:
+After rearrangement: [1, 5, 10, 7, 8, 9]
+Pivot 5 placed at index 1
+
+Recursive calls:
+quickSort(arr, 0, 0) → base case
+quickSort(arr, 2, 5)
+Second Call: quickSort(arr, 2, 5)
+Pivot = 9
+
+Partition:
+After rearrangement: [1, 5, 8, 7, 9, 10]
+Pivot 9 placed at index 4
+
+Recursive calls:
+quickSort(arr, 2, 3)
+quickSort(arr, 5, 5)
+| Index | arr[i] | i (smaller boundary) | j (current) | Swap?         | Array State           |
+|-------|--------|----------------------|-------------|----------------|------------------------|
+|       | Pivot = 5                     |              |                |                        |
+| 0     | 10     | -1                   | 0           | No             | [10, 7, 8, 9, 1, 5]    |
+| 1     | 7      | -1                   | 1           | No             | [10, 7, 8, 9, 1, 5]    |
+| 2     | 8      | -1                   | 2           | No             | [10, 7, 8, 9, 1, 5]    |
+| 3     | 9      | -1                   | 3           | No             | [10, 7, 8, 9, 1, 5]    |
+| 4     | 1      | 0                    | 4           | Yes (swap 10,1)| [1, 7, 8, 9, 10, 5]    |
+|       |        |                      |             | Swap pivot 7,5 | [1, 5, 8, 9, 10, 7]    |
+|-------|--------|----------------------|-------------|----------------|------------------------|
 Binary Search Algorithm:
 1. Array must be sorted
 2. Compare target with middle element
