@@ -537,6 +537,24 @@ Algorithm Steps:
 Count consecutive occurrences of each character
 
 Append character followed by its count
+🧠 Algorithm Steps:
+Initialize a count = 1 for the first character.
+Iterate through the string from the second character onward:
+If current character == previous character, increment count.
+
+Else:
+Append previous character and count to output.
+Reset count = 1 for current character.
+After the loop, append the last character and its count.
+
+🔧 Example:
+
+Input: "aaabbc"
+'a' repeated 3 times → "a3"
+'b' repeated 2 times → "b2"
+'c' repeated 1 time → "c1"
+
+Output: "a3b2c1"
 */
 #if C_CODE5
 #include <stdio.h>
@@ -644,10 +662,17 @@ int main() {
 ============6. Check String Rotation=========================
 Algorithm Steps:
 Check if lengths are equal
-
 Concatenate second string with itself
-
 Check if first string is substring of concatenated string
+
+str1 = "erbottlewat"
+str2 = "waterbottle"
+
+Concat str2 with itself:
+"waterbottlewaterbottle"
+
+Check if "erbottlewat" is substring:
+Yes → str1 is rotation of str2.
 */
 #if C_CODE6
 #include <stdio.h>
