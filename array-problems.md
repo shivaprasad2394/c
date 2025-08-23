@@ -348,6 +348,28 @@ Algorithm/Logic Steps:
    - maxSoFar = max(maxSoFar, maxEndingHere)
 3. Return maxSoFar
 4. Time Complexity: O(n), Space Complexity: O(1)
+
+🧠 Kadane’s Algorithm Logic
+
+maxSoFar: Tracks the overall maximum sum found so far.
+maxEndingHere: Tracks the maximum sum ending at the current position (can reset if current number is better than extending previous subarray).
+ex:-
+arr = [−2, 1, −3, 4, −1, 2, 1, −5, 4]
+We want the maximum sum of a contiguous subarray.
+| i | arr[i] | maxEndingHere = max(arr[i], maxEndingHere + arr[i]) | maxSoFar = max(maxSoFar, maxEndingHere) |
+|---|--------|------------------------------------------------------|-------------------------------------------|
+| 1 |   1    | max(1, -2 + 1) = 1                                   | max(-2, 1) = 1                            |
+| 2 |  -3    | max(-3, 1 + -3) = -2                                 | max(1, -2) = 1                            |
+| 3 |   4    | max(4, -2 + 4) = 4                                   | max(1, 4) = 4                             |
+| 4 |  -1    | max(-1, 4 + -1) = 3                                  | max(4, 3) = 4                             |
+| 5 |   2    | max(2, 3 + 2) = 5                                    | max(4, 5) = 5                             |
+| 6 |   1    | max(1, 5 + 1) = 6                                    | max(5, 6) = 6                             |
+| 7 |  -5    | max(-5, 6 + -5) = 1                                  | max(6, 1) = 6                             |
+| 8 |   4    | max(4, 1 + 4) = 5                                    | max(6, 5) = 6                             |
+|---|--------|------------------------------------------------------|-------------------------------------------|
+🎯 Final Result:
+Maximum subarray sum = 6
+The subarray is [4, -1, 2, 1]
 */
 
 #if C_CODE4
