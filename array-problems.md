@@ -1084,6 +1084,30 @@ Algorithm/Logic Steps:
 3. Else, minimum is in left half (including mid)
 4. Continue until left == right
 5. Time Complexity: O(log n), Space Complexity: O(1)
+
+Rotated version: [4, 5, 6, 7, 1, 2, 3]
+n = 7
+Minimum: 1
+
+🔍 Binary Search Algorithm Steps
+Initialize two pointers:
+left = 0, right = n - 1
+
+While left < right:
+Compute mid = (left + right) / 2
+If arr[mid] > arr[right]:
+Minimum is to the right of mid → left = mid + 1
+
+Else:
+Minimum is at mid or to its left → right = mid
+When loop ends, left == right, pointing to the minimum element.
+| left | mid | right | arr[mid] | arr[right] | Action                    |
+|------|-----|-------|----------|------------|---------------------------|
+| 0    | 3   | 6     | 7        | 2          | 7 > 2 → min in right half |
+| 4    | 5   | 6     | 1        | 2          | 1 < 2 → min in left half  |
+| 4    | 4   | 5     | 0        | 1          | 0 < 1 → min in left half  |
+| 4    |     | 4     |          |            | left == right → found `0` |
+|------|-----|-------|----------|------------|---------------------------|
 */
 
 #if C_CODE9
