@@ -1249,6 +1249,8 @@ quickSort(arr, 5, 5)
 | 4     | 1      | 0                    | 4           | Yes (swap 10,1)| [1, 7, 8, 9, 10, 5]    |
 |       |        |                      |             | Swap pivot 7,5 | [1, 5, 8, 9, 10, 7]    |
 |-------|--------|----------------------|-------------|----------------|------------------------|
+Pivot 5 placed at index 1
+
 Binary Search Algorithm:
 1. Array must be sorted
 2. Compare target with middle element
