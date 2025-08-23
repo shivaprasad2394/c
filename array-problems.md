@@ -274,6 +274,31 @@ Reverse the rest: [3, 4, 5, 6, 7] → [7, 6, 5, 4, 3]
 Reverse entire array:
 → [3, 4, 5, 6, 7, 1, 2]
 ✅ Done!
+
+🗂 Method 2: Temp Array Method
+🧠 Logic Steps:
+
+- Store first d elements in a temp array
+- Shift remaining elements left by d
+- Copy stored d elements to the end
+
+🧪 Example:
+arr = [1, 2, 3, 4, 5, 6, 7]
+d = 2
+
+🔧 Step-by-Step:
+Temp = [1, 2]
+Shift elements left:
+arr[0] = arr[2] = 3  
+arr[1] = arr[3] = 4  
+...
+arr[4] = arr[6] = 7  
+Array becomes: [3, 4, 5, 6, 7, 6, 7]
+Copy temp:
+arr[5] = temp[0] = 1  
+arr[6] = temp[1] = 2  
+Final array: [3, 4, 5, 6, 7, 1, 2]
+✅ Done!
 */
 
 #if C_CODE3
