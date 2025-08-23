@@ -276,60 +276,80 @@ Time Complexity: O(1) for each operation
 Space Complexity: O(1)
 */
 
+#include <stdio.h>
+#include <stdbool.h>
+
+// Function to check if the bit at position 'pos' is set (1) or not (0)
 bool checkBit(int n, int pos) {
     printf("Debug: Checking bit at position %d in number %d\n", pos, n);
-    
+
+    // Step 1: Create mask by shifting 1 to the left by 'pos' bits
     int mask = 1 << pos;
-    printf("Debug: Mask = 1 << %d = %d\n", pos, mask);
-    
+    // E.g., pos = 1 -> 1 << 1 = 00000010 (binary) = 2 (decimal)
+    printf("Debug: Mask = 1 << %d = %d (binary: %08b)\n", pos, mask, mask);
+
+    // Step 2: AND operation to check if bit at 'pos' is set
     int result = n & mask;
-    printf("Debug: %d & %d = %d\n", n, mask, result);
-    
+    // E.g., n = 12 (00001100), mask = 2 (00000010)
+    // 00001100 & 00000010 = 00000000 → bit is NOT set
+    printf("Debug: %d & %d = %d (binary: %08b)\n", n, mask, result, result);
+
     bool isSet = (result != 0);
     printf("Debug: Bit at position %d is %s\n", pos, isSet ? "SET" : "NOT SET");
-    
+
     return isSet;
 }
 
+// Function to set (turn ON) the bit at position 'pos'
 int setBit(int n, int pos) {
     printf("Debug: Setting bit at position %d in number %d\n", pos, n);
-    
+
     int mask = 1 << pos;
-    printf("Debug: Mask = 1 << %d = %d\n", pos, mask);
-    
+    // E.g., pos = 1 -> mask = 00000010
+    printf("Debug: Mask = 1 << %d = %d (binary: %08b)\n", pos, mask, mask);
+
     int result = n | mask;
-    printf("Debug: %d | %d = %d\n", n, mask, result);
-    
+    // OR sets the bit at 'pos' → 00001100 | 00000010 = 00001110
+    printf("Debug: %d | %d = %d (binary: %08b)\n", n, mask, result, result);
+
     return result;
 }
 
+// Function to clear (turn OFF) the bit at position 'pos'
 int clearBit(int n, int pos) {
     printf("Debug: Clearing bit at position %d in number %d\n", pos, n);
-    
+
     int mask = 1 << pos;
-    printf("Debug: Mask = 1 << %d = %d\n", pos, mask);
-    
+    // E.g., pos = 2 -> mask = 00000100
+    printf("Debug: Mask = 1 << %d = %d (binary: %08b)\n", pos, mask, mask);
+
     int invMask = ~mask;
-    printf("Debug: ~mask = ~%d = %d\n", mask, invMask);
-    
+    // Invert mask: ~00000100 = 11111011
+    printf("Debug: ~mask = ~%d = %d (binary: %08b)\n", mask, invMask, invMask);
+
     int result = n & invMask;
-    printf("Debug: %d & %d = %d\n", n, invMask, result);
-    
+    // AND with inverse mask to clear bit: 00001100 & 11111011 = 00001000
+    printf("Debug: %d & %d = %d (binary: %08b)\n", n, invMask, result, result);
+
     return result;
 }
 
+// Function to toggle (flip) the bit at position 'pos'
 int toggleBit(int n, int pos) {
     printf("Debug: Toggling bit at position %d in number %d\n", pos, n);
-    
+
     int mask = 1 << pos;
-    printf("Debug: Mask = 1 << %d = %d\n", pos, mask);
-    
+    // E.g., pos = 1 -> mask = 00000010
+    printf("Debug: Mask = 1 << %d = %d (binary: %08b)\n", pos, mask, mask);
+
     int result = n ^ mask;
-    printf("Debug: %d ^ %d = %d\n", n, mask, result);
-    
+    // XOR flips bit: 00001100 ^ 00000010 = 00001110
+    printf("Debug: %d ^ %d = %d (binary: %08b)\n", n, mask, result, result);
+
     return result;
 }
 
+// Function to print an 8-bit binary representation of a number
 void printBinary(int n, char* label) {
     printf("%s: ", label);
     for (int i = 7; i >= 0; i--) {
@@ -338,31 +358,37 @@ void printBinary(int n, char* label) {
     printf(" (%d)\n", n);
 }
 
+// Test function to demonstrate each bit manipulation
 void testBitOperations() {
     printf("=== PROBLEM 5: Bit Operations ===\n");
-    
+
     int n = 12;  // Binary: 00001100
     int pos = 1;
-    
+
     printBinary(n, "Original");
-    
+
     printf("\n--- Check Bit ---\n");
-    bool isSet = checkBit(n, pos);
+    bool isSet = checkBit(n, pos);  // Check bit at position 1
     printf("Bit at position %d: %s\n", pos, isSet ? "SET" : "NOT SET");
-    
+
     printf("\n--- Set Bit ---\n");
-    int afterSet = setBit(n, pos);
+    int afterSet = setBit(n, pos);  // Set bit at position 1
     printBinary(afterSet, "After SET");
-    
+
     printf("\n--- Clear Bit ---\n");
     int afterClear = clearBit(n, 2);  // Clear bit at position 2
     printBinary(afterClear, "After CLEAR");
-    
+
     printf("\n--- Toggle Bit ---\n");
-    int afterToggle = toggleBit(n, pos);
+    int afterToggle = toggleBit(n, pos);  // Toggle bit at position 1
     printBinary(afterToggle, "After TOGGLE");
-    
+
     printf("\n");
+}
+
+int main() {
+    testBitOperations();
+    return 0;
 }
 
 // ============================================================================
