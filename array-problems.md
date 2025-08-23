@@ -530,6 +530,30 @@ Algorithm/Logic Steps:
 2. If arr[fast] != arr[slow], move arr[fast] to arr[slow+1] and increment slow
 3. Return slow+1 (length of unique elements)
 4. Time Complexity: O(n), Space Complexity: O(1)
+Algorithm Steps:
+
+Use two pointers:
+slow: tracks the position of the last unique element
+fast: traverses the array
+
+For each fast from index 1 to n-1:
+If arr[fast] != arr[slow], then:
+slow++
+arr[slow] = arr[fast] → Move the unique element forward
+After loop, return slow + 1 → this is the count of unique elements
+ex:-arr = [1, 1, 2, 2, 3, 4, 4]
+| Index (fast) | arr[fast] | arr[slow] | Action                              | Updated Array          |
+|--------------|-----------|-----------|-------------------------------------|------------------------|
+| 1            | 1         | 1         | Duplicate → do nothing              | [1, 1, 2, 2, 3, 4, 4]  |
+| 2            | 2         | 1         | New value → slow++, arr[slow]=2     | [1, 2, 2, 2, 3, 4, 4]  |
+| 3            | 2         | 2         | Duplicate → do nothing              | [1, 2, 2, 2, 3, 4, 4]  |
+| 4            | 3         | 2         | New value → slow++, arr[slow]=3     | [1, 2, 3, 2, 3, 4, 4]  |
+| 5            | 4         | 3         | New value → slow++, arr[slow]=4     | [1, 2, 3, 4, 3, 4, 4]  |
+| 6            | 4         | 4         | Duplicate → do nothing              | [1, 2, 3, 4, 3, 4, 4]  |
+|--------------|-----------|-----------|-------------------------------------|------------------------|
+🎯 Result:
+New length: slow + 1 = 4
+Array after removing duplicates: [1, 2, 3, 4]
 */
 
 #if C_CODE5
