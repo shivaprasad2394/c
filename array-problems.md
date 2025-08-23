@@ -655,6 +655,43 @@ Algorithm/Logic Steps (Boyer-Moore Voting Algorithm):
    - If current == candidate, increment count; else decrement count
 3. Verify if candidate appears > n/2 times
 4. Time Complexity: O(n), Space Complexity: O(1)
+
+Phase 1: Find a Candidate
+Initialize:
+candidate = 0
+count = 0
+
+For each element num in array:
+If count == 0:
+→ candidate = num
+
+If num == candidate:
+→ count++
+
+Else:
+→ count--
+🔁 This ensures that if a majority element exists, it survives as the candidate.
+
+Phase 2: Verify the Candidate
+Count the occurrences of candidate in the array.
+If it appears more than n/2 times → return it.
+Else → return "no majority element".
+ex:-
+arr = [2, 2, 1, 1, 2, 2, 2]
+n = 7
+| i | arr[i] | count | candidate | Action                             |
+|---|--------|--------|-----------|------------------------------------|
+| 0 |   2    |  0     | -         | count = 0 → candidate = 2, count=1 |
+| 1 |   2    |  1     | 2         | 2 == 2 → count = 2                 |
+| 2 |   1    |  2     | 2         | 1 != 2 → count = 1                 |
+| 3 |   1    |  1     | 2         | 1 != 2 → count = 0                 |
+| 4 |   2    |  0     | -         | count = 0 → candidate = 2, count=1 |
+| 5 |   2    |  1     | 2         | 2 == 2 → count = 2                 |
+| 6 |   2    |  2     | 2         | 2 == 2 → count = 3                 |
+|---|--------|--------|-----------|------------------------------------|
+✅ Phase 2: Verify
+Count how many times 2 appears: 5 times
+5 > 7/2 → Yes, it is the majority.
 */
 
 #if C_CODE6
