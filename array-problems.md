@@ -965,6 +965,19 @@ Algorithm/Logic Steps:
 2. For each chunk, reverse elements within that chunk
 3. Handle last group which might have < k elements
 4. Time Complexity: O(n), Space Complexity: O(1)
+arr = [1, 2, 3, 4, 5, 6, 7, 8, 9]
+k = 3
+
+note:-If n % k != 0, the last group may have fewer than k elements — still reverse it.
+This works for any k ≥ 1.
+
+| Group Start | Group End | Original Subarray | Reversed Subarray |
+|-------------|-----------|-------------------|--------------------|
+| 0           | 2         | [1, 2, 3]         | [3, 2, 1]          |
+| 3           | 5         | [4, 5, 6]         | [6, 5, 4]          |
+| 6           | 8         | [7, 8, 9]         | [9, 8, 7]          |
+
+final result:-[3, 2, 1, 6, 5, 4, 9, 8, 7]
 */
 
 #if C_CODE8
