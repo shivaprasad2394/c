@@ -1646,8 +1646,10 @@ int main() {
 
 /*
 Algorithm/Logic Steps:
-1. Build max heap from unsorted array
+1. Build max heap from unsorted array->Arrange the array so that the parent node is always greater than its children.
 2. Extract maximum (root), place at end
+- Swap the root with the last element of the heap.
+- Reduce the heap size by one (exclude last element which is sorted).
 3. Heapify remaining elements
 4. Repeat until heap is empty
 5. Time Complexity: O(n log n), Space Complexity: O(1)
@@ -1656,6 +1658,60 @@ Heapify Steps:
 1. Compare parent with children
 2. If parent < largest child, swap
 3. Recursively heapify affected subtree
+
+🔧 Visual Example
+Array: [4, 10, 3, 5, 1]
+Step 1: Build max heap
+        10
+       /  \
+      5    3
+     / \
+    4   1
+
+Heapified array: [10, 5, 3, 4, 1]
+
+Step 2: Extract max and heapify
+Swap root (10) with last element (1): [1, 5, 3, 4, 10]
+Reduce heap size to 4
+Heapify root:
+
+        5
+       /  \
+      4    3
+     /
+    1
+
+Array after heapify: [5, 4, 3, 1, 10]
+
+Step 3: Repeat
+Swap root (5) with element at index 3 (1): [1, 4, 3, 5, 10]
+Reduce heap size to 3
+Heapify root:
+
+       4
+      /  \
+     1    3
+
+Array after heapify: [4, 1, 3, 5, 10]
+
+Step 4: Repeat
+Swap root (4) with element at index 2 (3): [3, 1, 4, 5, 10]
+Reduce heap size to 2
+Heapify root:
+
+      3
+     /
+    1
+
+Array after heapify: [3, 1, 4, 5, 10]
+
+Step 5: Repeat
+Swap root (3) with element at index 1 (1): [1, 3, 4, 5, 10]
+Reduce heap size to 1
+Heapify is not needed
+
+Final Sorted Array:
+[1, 3, 4, 5, 10]
 */
 
 #if C_CODE12
