@@ -1472,6 +1472,45 @@ Algorithm/Logic Steps:
 3. Advance corresponding pointer and result pointer
 4. Copy remaining elements from non-empty array
 5. Time Complexity: O(m + n), Space Complexity: O(m + n)
+🧠 Algorithm Steps:
+
+Initialize three pointers:
+
+i = 0 for arr1[]
+
+j = 0 for arr2[]
+
+k = 0 for result[]
+
+While both arrays have elements:
+
+If arr1[i] <= arr2[j]:
+
+result[k++] = arr1[i++]
+
+Else:
+
+result[k++] = arr2[j++]
+
+After loop:
+
+Copy any remaining elements from arr1 to result
+
+Copy any remaining elements from arr2 to result
+arr1 = [1, 3, 5]
+arr2 = [2, 4, 6]
+
+result = [1, 2, 3, 4, 5, 6]
+| i | j | arr1[i] | arr2[j] | result[k] | Action                     |
+|---|---|---------|---------|-----------|----------------------------|
+| 0 | 0 |   1     |   2     |    1      | arr1[i] < arr2[j] → take 1|
+| 1 | 0 |   3     |   2     |    2      | arr1[i] > arr2[j] → take 2|
+| 1 | 1 |   3     |   4     |    3      | arr1[i] < arr2[j] → take 3|
+| 2 | 1 |   5     |   4     |    4      | arr1[i] > arr2[j] → take 4|
+| 2 | 2 |   5     |   6     |    5      | arr1[i] < arr2[j] → take 5|
+| 3 | 2 |   -     |   6     |    6      | arr1 done → take from arr2|
+|---|---|---------|---------|-----------|----------------------------|
+Where n = size of arr1 and m = size of arr2.
 */
 
 #if C_CODE11
