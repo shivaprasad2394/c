@@ -1371,4 +1371,99 @@ int main() {
 #endif
 /*==============c main function=====================*/
 /*==============c++ main function===================*/
+#if C_CODE12
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
 
+// ---------- Longest Common Substring (Brute-force) ----------
+char* lcs_substring(char* str, char* str1) {
+    int m = strlen(str);     // Length of first string
+    int n = strlen(str1);    // Length of second string
+    int maxLen = 0;          // To store max length of common substring found
+    int startIndex = 0;      // To store starting index of the longest common substring in str
+
+    // Loop through each character in str
+    for (int i = 0; i < m; i++) {
+        // Loop through each character in str1
+        for (int j = 0; j < n; j++) {
+            int len = 0;
+
+            // Compare characters starting from str[i] and str1[j]
+            while ((i + len < m) && (j + len < n) && (str[i + len] == str1[j + len])) {
+                len++;  // Increase length while characters are matching
+            }
+
+            // If a longer common substring is found, update maxLen and starting index
+            if (len > maxLen) {
+                maxLen = len;
+                startIndex = i;
+            }
+        }
+    }
+
+    // Allocate memory for result and copy the longest common substring
+    char* result = (char*)malloc((maxLen + 1) * sizeof(char));
+    strncpy(result, &str[startIndex], maxLen);
+    result[maxLen] = '\0';  // Null-terminate the string
+
+    return result;
+}
+
+// ---------- Longest Common Subsequence (Greedy/Brute-force) ----------
+char* lcs_subsequence(char* str1, char* str2) {
+    int m = strlen(str1);  // Length of str1
+    int n = strlen(str2);  // Length of str2
+
+    // Allocate enough space for the result (at most min(m, n))
+    char* result = (char*)malloc((m < n ? m : n) + 1);
+    int index = 0;  // Index to track result array
+
+    int i = 0, j = 0;
+
+    // Loop through both strings to find common characters in order
+    while (i < m && j < n) {
+        if (str1[i] == str2[j]) {
+            // If characters match, store in result and move both pointers
+            result[index++] = str1[i];
+            i++;
+            j++;
+        } else {
+            // If no match, move str2 pointer
+            j++;
+        }
+
+        // If end of str2 is reached but str1 still has characters
+        if (j == n && i < m) {
+            i++;     // Move to next character in str1
+            j = 0;   // Restart comparison from beginning of str2
+        }
+    }
+
+    result[index] = '\0';  // Null-terminate the result string
+    return result;
+}
+
+// ---------- Main ----------
+int main() {
+    // Sample input strings
+    char str[] = "abcdfgh";
+    char str1[] = "zcdemgh";
+
+    // Print input strings
+    printf("Input 1: %s\n", str);
+    printf("Input 2: %s\n", str1);
+
+    // Call Longest Common Substring function
+    char* lcsStr = lcs_substring(str, str1);
+    printf("Longest Common Substring: %s\n", lcsStr);
+    free(lcsStr);  // Free allocated memory
+
+    // Call Longest Common Subsequence function
+    char* lcsSeq = lcs_subsequence(str, str1);
+    printf("Longest Common Subsequence: %s\n", lcsSeq);
+    free(lcsSeq);  // Free allocated memory
+
+    return 0;
+}
+#endif
