@@ -164,7 +164,7 @@ int main() {
 #endif
 /*================anagram======================*/
 #if C_CODE2
-/*2. Check for Anagram
+/*2. Check for Anagram:-An anagram is a word or phrase formed by rearranging the letters of another word or phrase.
 Algorithm Steps:
 Check if lengths are equal (if not, can't be anagrams)
 Count frequency of each character in both strings
