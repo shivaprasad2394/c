@@ -1,4 +1,4 @@
-# Capgemini Bit Manipulation Problems - Complete Solutions
+# Bit Manipulation Problems - Complete Solutions
 
 ```c
 #include <stdio.h>
