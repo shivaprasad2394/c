@@ -1508,7 +1508,34 @@ int main() {
     }
 }
 ```
+2. Context Switch
+❓ Question
 
+What is context switching in an RTOS?
+
+✅ Answer
+
+Context switch is the process of saving the state of the currently running task and restoring the state of the next task to run. This allows multitasking.
+
+🔧 Involves:
+
+Saving CPU registers, stack pointer, program counter of current task.
+
+Loading these from the next scheduled task.
+
+Triggered by:
+
+Timer interrupts (preemptive)
+
+Manual yields (cooperative)
+
+3. Mutex vs Semaphore
+❓ Difference Between Mutex and Semaphore
+Feature	Mutex	Semaphore
+Ownership	Has owner	No ownership
+Value range	Binary (0 or 1)	Counting (>=0)
+Used for	Mutual exclusion	Signaling or resource counting
+Recursive use	Sometimes allowed	Not allowed
 =============================================================================================
 # Linux system programming
 
