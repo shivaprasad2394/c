@@ -1283,6 +1283,55 @@ Output:
 #if C_CODE11
 #include <stdio.h>
 #include <string.h>
+#include <ctype.h>
+
+// Helper function to reverse a portion of a string in-place
+void reverse(char* str, int start, int end) {
+    while (start < end) {
+        char temp = str[start];
+        str[start] = str[end];
+        str[end] = temp;
+        start++;
+        end--;
+    }
+}
+
+// Function to reverse the words in a string
+void reverseWords(char* str) {
+    int len = strlen(str);
+
+    // Step 1: Reverse the entire string
+    reverse(str, 0, len - 1);
+
+    // Step 2: Reverse each word in place
+    int start = 0;
+    for (int i = 0; i <= len; i++) {
+        // On space or end of string, reverse the word
+        if (str[i] == ' ' || str[i] == '\0') {
+            reverse(str, start, i - 1);
+            start = i + 1;  // Move to start of next word
+        }
+    }
+}
+
+int main() {
+    char str[100];
+
+    printf("Enter a sentence: ");
+    fgets(str, sizeof(str), stdin);
+
+    // Remove newline character if any
+    size_t len = strlen(str);
+    if (len > 0 && str[len - 1] == '\n')
+        str[len - 1] = '\0';
+
+    reverseWords(str);
+
+    printf("Reversed words: %s\n", str);
+    return 0;
+}
+/*#include <stdio.h>
+#include <string.h>
 
 void reverseWords(char* str) {
     char words[100][100];  // Array to store words
@@ -1321,7 +1370,7 @@ int main() {
     printf("Original: %s\n", str);
     reverseWords(str);
     return 0;
-}
+}*/
 #endif
 #if CPP_CODE11
 #include <iostream>
