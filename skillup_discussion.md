@@ -1464,6 +1464,51 @@ int main() {
 	return total;
 }*/
 ```
+# Embedded Systems: Core Concepts with Examples
+
+---
+
+## 1. Interrupt & ISR
+
+### ❓ Question  
+Explain the interrupt handling process and write an example ISR.
+
+### ✅ Answer  
+When an interrupt occurs:
+
+1. Hardware issues an IRQ (Interrupt Request).
+2. CPU acknowledges the IRQ.
+3. CPU saves current context (registers, program counter).
+4. CPU uses the interrupt vector table to find and jump to the ISR.
+5. ISR (Interrupt Service Routine) runs.
+6. ISR ends (e.g., using `RETI`) and context is restored.
+7. Main program resumes.
+
+### 🧪 Example (AVR - Embedded C)
+
+```c
+#include <avr/io.h>
+#include <avr/interrupt.h>
+
+ISR(TIMER1_COMPA_vect) {
+    // Timer1 Compare Match ISR
+    PORTB ^= (1 << PB0); // Toggle pin PB0
+}
+
+int main() {
+    DDRB |= (1 << PB0); // Set PB0 as output
+
+    TCCR1B |= (1 << WGM12); // CTC Mode
+    OCR1A = 15624; // Compare value
+    TIMSK1 |= (1 << OCIE1A); // Enable Timer1 Compare interrupt
+    sei(); // Enable global interrupts
+
+    while (1) {
+        // main loop
+    }
+}
+```
+
 =============================================================================================
 # Linux system programming
 
