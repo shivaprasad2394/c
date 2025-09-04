@@ -47,6 +47,16 @@ This phase include:
     - Conditional compilation
 Ex:-**#include**
 an external File containing the a macro definition /Function will be included before the main(), if **#include** directive is found.
+#include <filename>-->Used for system or standard library headers (e.g., <stdio.h>, <iostream>).
+
+The compiler searches only in system directories, such as:
+
+- /usr/include on Linux
+- Built-in standard library paths
+
+#include "filename" --> Used for user-defined or project-specific headers.
+
+The compiler:First looks in the current directory (or the directory of the including file),
 
 2)Compilation
 
