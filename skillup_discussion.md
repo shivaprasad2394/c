@@ -1529,13 +1529,17 @@ Timer interrupts (preemptive)
 
 Manual yields (cooperative)
 
-3. Mutex vs Semaphore
-❓ Difference Between Mutex and Semaphore
-Feature	Mutex	Semaphore
-Ownership	Has owner	No ownership
-Value range	Binary (0 or 1)	Counting (>=0)
-Used for	Mutual exclusion	Signaling or resource counting
-Recursive use	Sometimes allowed	Not allowed
+
+## 3. Mutex vs Semaphore
+
+### ❓ Difference Between Mutex and Semaphore
+
+| Feature        | Mutex               | Semaphore                      |
+|----------------|---------------------|--------------------------------|
+| Ownership      | Has owner           | No ownership                   |
+| Value range    | Binary (0 or 1)     | Counting (≥ 0)                 |
+| Used for       | Mutual exclusion    | Signaling or resource counting |
+| Recursive use  | Sometimes allowed   | Not allowed                    |
 
 
 =============================================================================================
