@@ -192,6 +192,39 @@ sequenceDiagram
     Note over Node C: C waits until transmission is done
 ```
 ---
+# HT and VHT Explained
+
+## HT (High Throughput) - IEEE 802.11n (Wi-Fi 4)
+- Introduced to increase data rates significantly over earlier 802.11 standards by using wider channels (up to 40 MHz) and MIMO (Multiple Input Multiple Output) technology.
+- Typical max speeds up to 600 Mbps.
+- **User scenario:** Suitable for homes or small offices with multiple devices streaming HD video, video conferencing, and moderate file transfers.
+- Helps provide better coverage, reliability, and speed on 2.4 GHz and 5 GHz bands.
+- Operates in mixed environments to coexist with legacy devices by using protection mechanisms like CTS-to-Self.
+
+## VHT (Very High Throughput) - IEEE 802.11ac (Wi-Fi 5)
+- Builds on 802.11n by expanding channel widths up to 160 MHz, supporting more MIMO streams (up to 8), and using higher modulation (256-QAM) for much higher throughput.
+- Typical max speeds range from 500 Mbps to multiple Gbps (theoretical max ~6.9 Gbps).
+- **User scenario:** Better suited for dense environments such as large homes, enterprises, and public spaces needing high-speed streams, 4K/8K video streaming, and fast file transfers.
+- Focused on improved bandwidth and efficiency in the 5 GHz band.
+- Enables multi-user MIMO, allowing simultaneous communication with multiple clients.
+
+## Summary
+- **HT (802.11n)** improved Wi-Fi speeds and reliability for everyday users with multiple devices.
+- **VHT (802.11ac)** advanced capabilities for demanding applications requiring more speed, capacity, and efficiency, especially in modern homes and businesses with many concurrent users and high-bandwidth needs.
+- These standards reflect evolutionary steps in Wi-Fi technology to meet higher user demands for speed and efficiency over time.
+
+---
+
+# How AP Detects Non-HT STAs That Trigger CTS-to-Self Protection
+
+- The Access Point (AP) detects non-HT (non-High Throughput) STAs—that is, legacy or older devices that do not support 802.11n HT rates and frame formats—by using information in management frames and beacon/probe responses:
+  - The AP monitors **association requests** and **management frames** from STAs. If a STA supports only legacy rates (e.g., 802.11b/g) and lacks HT capabilities, it is marked as non-HT.
+  - The AP sets the **NonERP_Present** bit in its beacon frames to indicate the presence of such legacy STAs in its BSS.
+  - The **HT Information Element (IE)** in beacons and probe responses contains fields like **“OBSS Non-HT STAs Present”** and **“Non-greenfield STAs Present”** that reflect whether non-HT or non-greenfield (legacy) devices are detected.
+  - If the AP detects a non-HT STA associated or overlapping BSSs with non-HT STAs (via beacon detection), it updates these fields and enables protection mechanisms like CTS-to-Self to avoid collisions.
+  - Nearby APs also parse these bits in received beacons to decide if they should enable protection in overlapping BSSs.
+- So, the AP decides to trigger CTS-to-Self protection when it knows non-HT STAs exist in its BSS or interference range, based on the legacy rate sets supported by STAs, management frame content, and beacon information.
+
 # What is "CTS-to-Self"?
 
 ▶️ **CTS-to-Self** is a protection mechanism used in wireless networks (Wi-Fi) to reserve the medium without using RTS (Request to Send).  
