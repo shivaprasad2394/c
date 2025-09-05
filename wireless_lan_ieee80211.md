@@ -3372,6 +3372,28 @@ Wi-Fi Sensing uses variations in RF signals (amplitude, phase, Doppler shifts) t
 * Max theoretical rate: **>46 Gbps**
 * Depends on channel conditions, MLO, QAM, and stream count
 
+## preamble puncturing flow
+
+- Preamble puncturing is a Wi-Fi technology that allows an access point (AP) to "carve out" or disable specific subchannels within a wider frequency band that are affected by interference. 
+- The "flow" refers to the process by which an AP and client negotiate and use this technology to maintain a wider, more stable connection despite the interference.
+
+This prevents the AP from having to fall back to a much narrower, slower channel, as was the case in previous Wi-Fi standards. 
+
+### How preamble puncturing works
+
+- Interference detection: An AP capable of Wi-Fi 6 or 7 detects interference on one or more of its non-primary 20 MHz subchannels. This interference could come from other networks, radar signals, or other radio sources.
+- Puncturing announcement: The AP informs all Wi-Fi 7-compatible client devices within its network about the interference by using a "Disabled Subchannel Bitmap".
+        - This bitmap is included in standard management frames, such as beacons, which are regularly sent by the AP.
+        - Each bit in the bitmap corresponds to a 20 MHz subchannel, and a set bit indicates that the subchannel is punctured (disabled).
+
+- Frame modification: For subsequent transmissions, the AP and client modify the Physical Layer Convergence Protocol (PLCP) Preamble and data frame. The preamble, which is used for synchronization, is transmitted on all unpunctured subchannels, and the data is then sent across the remaining, usable bandwidth. The primary 20 MHz channel cannot be punctured for downlink transmissions.
+
+- Client adaptation: When receiving the frames, the Wi-Fi 7 client reads the bitmap and knows not to expect the preamble or data on the punctured subchannel. It can then process the remaining signal efficiently.
+
+- Bandwidth utilization: This flow allows the AP and client to continue transmitting over a wider, though slightly reduced, channel. For example, if one 20 MHz subchannel is punctured in an 80 MHz channel, they can still communicate over the remaining 60 MHz. In older standards, the AP would have been forced to drop down to a narrow 20 MHz channel.
+
+- Legacy client handling: Older Wi-Fi clients (Wi-Fi 6 and earlier) do not support preamble puncturing. When a Wi-Fi 7 AP uses puncturing, it can inform legacy clients via a Channel Switch Announcement that they must operate on a lower bandwidth to avoid the interference. 
+
 ---
 
 ## 🎯 QoS in Wi-Fi: WMM and TSPEC
