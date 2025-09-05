@@ -496,6 +496,44 @@ These mechanisms allow wireless networks to adapt dynamically for security, comp
 **Overall**, dynamic rate and bandwidth adjustments allow an AP to optimize connectivity and performance adaptively, balancing speed and reliability in real-world Wi-Fi usage scenarios.
 
 
+# Wi-Fi Throughput Improvement Scenarios and Mitigations
+
+## Scenario 1: Optimizing AP Transmission Power
+- In a dense office with many APs, high transmission power can cause co-channel interference, degrading throughput.
+- The AP optimizes its transmission power dynamically to maximize the signal-to-interference ratio (SIR) by either lowering or increasing power.
+- This optimization reduces interference while maintaining coverage, resulting in higher network throughput.
+
+---
+
+## Scenario 2: Channel Bonding and Non-Channel Bonding Selection
+- APs select between channel bonding (e.g., 40/80/160 MHz channels) and non-channel bonded narrower channels to maximize throughput.
+- In some dense deployments, using non-bonded channels reduces interference among neighboring APs, improving individual AP throughput.
+- The AP dynamically chooses the best channel setup for current interference conditions.
+
+---
+
+## Scenario 3: Dynamic Channel Selection
+- The AP scans the spectrum for the least congested channels periodically or on demand.
+- By switching to cleaner channels suffering less interference, throughput is maximized.
+- This is especially beneficial in high-density environments or where neighboring networks are using overlapping channels.
+
+---
+
+## Scenario 4: Quality of Service (QoS) Prioritization
+- The AP prioritizes latency-sensitive and high-bandwidth applications (video conferencing, VoIP, streaming) using QoS.
+- This ensures critical traffic is served faster and with better reliability, improving the perceived throughput for important applications.
+
+---
+
+## Scenario 5: Multi-User MIMO (MU-MIMO) Utilization
+- The AP uses MU-MIMO to simultaneously communicate with multiple clients instead of sequentially.
+- This parallel transmission increases aggregate throughput and reduces latency in networks with multiple devices.
+
+---
+
+These approaches enable APs to dynamically adapt to evolving network conditions and client demands to boost overall Wi-Fi throughput and user experience.
+
+
 ## 🌐 Final Thought
 
 CSMA/CA is **essential** for wireless networking, but it comes with **challenges**, especially in **crowded** or **large** networks. Understanding these problems helps in designing **better Wi-Fi** systems and troubleshooting **connectivity issues**.
