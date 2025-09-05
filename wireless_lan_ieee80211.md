@@ -381,6 +381,61 @@ sequenceDiagram
     AP-->>OBSS: ✅ No interference due to BSS Coloring
 ```
 ---
+# AP Protection Mechanisms in Mixed or Challenging Wi-Fi Environments
+
+## 1. CTS-to-Self Protection Trigger
+- When the AP detects legacy or non-HT devices in the BSS, it performs CTS-to-Self to reserve the medium and protect ongoing transmissions from collisions.
+
+## 2. RTS/CTS Handshake Use
+- In very congested or high-interference environments, the AP or client devices may initiate the RTS/CTS handshake to avoid collisions before sending data, especially for longer packets.
+
+## 3. Protected Management Frames (PMF) Enforcement
+- To prevent deauthentication attacks or frame spoofing, the AP enables PMF (as part of WPA3 or optional WPA2) which protects certain management frames and improves network security.
+
+**User Scenario:**  
+A user is connected to a Wi-Fi network in a busy café. An attacker attempts a deauthentication attack by sending fake deauthentication frames to disconnect the user from the network, causing service disruption.
+
+**How the AP detects this:**  
+- The AP and client support PMF (802.11w), which encrypts and authenticates key management frames like deauthentication and disassociation frames.  
+- When an attacker sends fake deauth frames, the client or AP checks the integrity using Message Integrity Check (MIC). If the frame is invalid or spoofed, it is discarded.
+
+**Mitigation:**  
+- PMF prevents clients from being disconnected by spoofed frames, ensuring users remain connected securely.  
+- Both client and AP must support PMF to establish this protection.  
+- PMF is mandatory in WPA3 and can be optionally enabled in WPA2.
+
+## 4. Dual CTS for Mixed STBC and Non-STBC Devices
+- The AP can send dual CTS frames when operating with both STBC-capable and non-STBC STAs to ensure all stations correctly update their NAV.
+
+**User Scenario:**  
+In a corporate network, some devices use STBC (Space-Time Block Coding) to improve signal robustness, while older devices do not support STBC.
+
+**Condition:**  
+- The AP wants to send data without collisions but must ensure all devices—STBC-capable and non-STBC—correctly recognize the medium reservation.  
+- Sending a single CTS might not be understood by all clients due to differing capabilities.
+
+**Mitigation:**  
+- The AP sends dual CTS frames: one CTS for STBC-capable devices and another CTS for non-STBC devices.  
+- This guarantees that all devices update their NAV correctly and avoid interfering, enabling smooth transmission.
+
+## 5. Dynamic Rate and Bandwidth Adjustment
+- The AP dynamically downgrades rates and adjusts channel bandwidth when interacting with legacy devices or due to radio conditions, to maintain connectivity and reduce packet loss.
+
+**User Scenario:**  
+A user walks through a large office using a legacy device while connecting to a modern AP supporting 802.11ac. The device is at the edge of AP coverage with weak signal strength.
+
+**Condition:**  
+- The AP detects the device's limited capabilities and the reduced signal quality.  
+- Using high data rates or wide channels leads to frequent packet loss and retransmissions, causing poor experience.
+
+**Mitigation:**  
+- The AP dynamically downgrades the data rate to a more robust, lower speed suitable for the current conditions.  
+- It also narrows channel bandwidth (e.g., from 80 MHz to 40 MHz or 20 MHz) to improve reliability.  
+- These adjustments optimize connectivity, reduce packet loss, and maintain user experience despite challenging conditions.
+
+---
+
+These mechanisms allow wireless networks to adapt dynamically for security, compatibility, and performance based on real-world scenarios.
 
 ## 🌐 Final Thought
 
