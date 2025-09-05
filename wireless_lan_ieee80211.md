@@ -73,6 +73,11 @@ In Mac we have two more layers
 
 - Poll-based / priority-based access mechanism.
 
+# Extra
+- CF is the fundamental, best-effort access method where all devices are treated equally.
+- PCF is a centralized, polling-based method that provides collision-free access but is rarely used in practice due to its complexity.
+- EDCA is an extension of DCF that adds Quality of Service (QoS) by creating prioritized traffic queues. It is the standard for modern Wi-Fi networks (802.11e and later). 
+
 ## 🧱 MPDU vs MSDU in Wi-Fi
 
 In Wi-Fi communication, data flows through several layers. Two key units involved in packaging and transmitting this data are:
