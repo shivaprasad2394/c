@@ -192,6 +192,47 @@ sequenceDiagram
     Note over Node C: C waits until transmission is done
 ```
 ---
+# What is "CTS-to-Self"?
+
+▶️ **CTS-to-Self** is a protection mechanism used in wireless networks (Wi-Fi) to reserve the medium without using RTS (Request to Send).  
+Instead of sending an RTS and waiting for CTS, the device just sends a **CTS frame to itself** to reserve the channel.
+
+---
+
+## 🧩 Why Use CTS-to-Self?
+CTS-to-Self is useful to prevent collisions when:
+- Mixed **802.11b/g/n** devices exist.  
+- Legacy clients don’t understand newer frame types (like **HT** or **VHT**).  
+- A device wants to announce to others:  
+  *"I’m going to transmit — please don’t interfere."*
+
+---
+
+## 🔄 How It Works
+1. Device sends a **CTS frame to itself**, with a **Duration field** indicating how long the channel will be in use.  
+2. All nearby devices update their **NAV (Network Allocation Vector)** and remain silent for that duration.  
+3. The device then transmits its data safely.
+
+---
+
+## 🆚 RTS/CTS vs CTS-to-Self
+
+| Feature       | RTS/CTS                  | CTS-to-Self            |
+|---------------|--------------------------|------------------------|
+| **Frames Used** | RTS → CTS → Data        | CTS (to self) → Data   |
+| **Overhead**   | Higher (2 extra frames) | Lower (1 extra frame)  |
+| **Usage**      | More robust              | Faster but less reliable |
+| **Common Use** | Congested or large networks | 802.11n protection / mixed-mode |
+
+---
+
+## 🔐 Use Case in 802.11n
+When operating in **802.11n mixed mode** (b/g/n devices), CTS-to-Self helps prevent collisions with legacy devices that don’t understand the new **802.11n frames**.
+
+---
+
+## ✅ Interview-Friendly Answer
+"**CTS-to-Self** is a WLAN protection mechanism where a device sends a *Clear-to-Send (CTS)* frame to itself to reserve the wireless medium. It’s a simpler, faster alternative to the RTS/CTS handshake, and it’s commonly used in 802.11 networks to avoid collisions, especially in mixed environments with legacy devices."
 
 ### 2. 📡 Exposed Node Problem
 
