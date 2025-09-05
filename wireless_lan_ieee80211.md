@@ -228,7 +228,13 @@ CTS-to-Self is useful to prevent collisions when:
 
 ## 🔐 Use Case in 802.11n
 When operating in **802.11n mixed mode** (b/g/n devices), CTS-to-Self helps prevent collisions with legacy devices that don’t understand the new **802.11n frames**.
-
+```mermaid
+graph TD
+    A[CTS Initiator] -->|Request CTS| B[CTS Engine]
+    B -->|Process Transfer| C[Self Account]
+    C -->|Update Status| D[(Confirmation)]
+    D -->|Notify| E[CTS Initiator]
+```
 ---
 
 ## ✅ Interview-Friendly Answer
