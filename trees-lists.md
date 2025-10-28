@@ -29,425 +29,126 @@ Common Operations:
 #include <stdio.h>
 #include <stdlib.h>
 
-// BST Node structure
-struct BST_Node {
-    int data;
-    struct BST_Node* left;
-    struct BST_Node* right;
-};
+// Node structure for BST
+typedef struct Node {
+    int id;              // Data member 'id'
+    struct Node* left;   // Pointer to left child
+    struct Node* right;  // Pointer to right child
+} Node;
 
-// Create new BST node
-struct BST_Node* createBSTNode(int data) {
-    struct BST_Node* newNode = (struct BST_Node*)malloc(sizeof(struct BST_Node));
-    newNode->data = data;
-    newNode->left = NULL;
-    newNode->right = NULL;
-    printf("Debug: Created new BST node with data %d\n", data);
-    return newNode;
-}
-
-// Insert into BST
-struct BST_Node* insertBST(struct BST_Node* root, int data) {
-    printf("Debug: Inserting %d into BST\n", data);
-    
-    // Base case: empty tree or leaf position found
-    if (root == NULL) {
-        printf("Debug: Found insertion point, creating new node\n");
-        return createBSTNode(data);
-    }
-    
-    // Recursive case: traverse left or right
-    if (data < root->data) {
-        printf("Debug: %d < %d, going left\n", data, root->data);
-        root->left = insertBST(root->left, data);
-    }
-    else if (data > root->data) {
-        printf("Debug: %d > %d, going right\n", data, root->data);
-        root->right = insertBST(root->right, data);
-    }
-    else {
-        printf("Debug: %d already exists in BST\n", data);
-    }
-    
-    return root;
-}
-
-// Search in BST
-struct BST_Node* searchBST(struct BST_Node* root, int key) {
-    printf("Debug: Searching for %d\n", key);
-    
-    // Base case: empty tree or key found
-    if (root == NULL) {
-        printf("Debug: Reached NULL, key %d not found\n", key);
+/* createNode:
+ * step1: allocate new memory using malloc and assign to newNode pointer
+ * step2: store 'id' in newNode's data member
+ * step3: initialize left and right pointers to NULL
+ * step4: return pointer to the new node
+ */
+Node* createNode(int id) {
+    Node* newNode = (Node*) malloc(sizeof(Node));  // step1
+    if (newNode == NULL) {
+        printf("Memory allocation failed\n");
         return NULL;
     }
-    
-    if (key == root->data) {
-        printf("Debug: Found key %d at current node\n", key);
-        return root;
-    }
-    
-    // Recursive search
-    if (key < root->data) {
-        printf("Debug: %d < %d, searching left subtree\n", key, root->data);
-        return searchBST(root->left, key);
-    } else {
-        printf("Debug: %d > %d, searching right subtree\n", key, root->data);
-        return searchBST(root->right, key);
-    }
+    newNode->id = id;       // step2
+    newNode->left = NULL;   // step3
+    newNode->right = NULL;  // step3
+    return newNode;         // step4
 }
 
-// Find minimum node (leftmost node)
-struct BST_Node* findMinBST(struct BST_Node* root) {
-    if (root == NULL) return NULL;
-    
-    printf("Debug: Finding minimum, current node = %d\n", root->data);
-    
-    while (root->left != NULL) {
-        root = root->left;
-        printf("Debug: Moving left to node = %d\n", root->data);
+/* insertNode:
+ * Insert 'id' in correct place in BST
+ * step1: If root is NULL, create and return new node
+ * step2: If 'id' is less than root's id, insert in left subtree
+ * step3: If 'id' is greater than root's id, insert in right subtree
+ * step4: Return the root pointer unchanged if id equals root->id (no duplicates)
+ */
+Node* insertNode(Node* root, int id) {
+    if (root == NULL) {                // step1
+        return createNode(id);
     }
-    
-    printf("Debug: Minimum found = %d\n", root->data);
+    if (id < root->id) {              // step2
+        root->left = insertNode(root->left, id);
+    } else if (id > root->id) {       // step3
+        root->right = insertNode(root->right, id);
+    }
+    // step4: equal id, do nothing for duplicates
     return root;
 }
 
-// Delete from BST
-struct BST_Node* deleteBST(struct BST_Node* root, int key) {
-    printf("Debug: Deleting %d from BST\n", key);
-    
-    if (root == NULL) {
-        printf("Debug: Key %d not found for deletion\n", key);
+/* searchNode:
+ * Search for key in BST
+ * step1: If root NULL or root->id == key, return root found/not found
+ * step2: If key < root->id, recurse to left subtree
+ * step3: Else recurse to right subtree
+ */
+Node* searchNode(Node* root, int key) {
+    if (root == NULL || root->id == key) {   // step1
         return root;
     }
-    
-    if (key < root->data) {
-        printf("Debug: %d < %d, deleting from left subtree\n", key, root->data);
-        root->left = deleteBST(root->left, key);
+    if (key < root->id) {                     // step2
+        return searchNode(root->left, key);
+    } else {                                  // step3
+        return searchNode(root->right, key);
     }
-    else if (key > root->data) {
-        printf("Debug: %d > %d, deleting from right subtree\n", key, root->data);
-        root->right = deleteBST(root->right, key);
-    }
-    else {
-        printf("Debug: Found node to delete: %d\n", key);
-        
-        // Node with only one child or no child
-        if (root->left == NULL) {
-            printf("Debug: Node has no left child, replacing with right child\n");
-            struct BST_Node* temp = root->right;
-            free(root);
-            return temp;
-        }
-        else if (root->right == NULL) {
-            printf("Debug: Node has no right child, replacing with left child\n");
-            struct BST_Node* temp = root->left;
-            free(root);
-            return temp;
-        }
-        
-        // Node with two children: get inorder successor
-        printf("Debug: Node has two children, finding inorder successor\n");
-        struct BST_Node* temp = findMinBST(root->right);
-        
-        // Copy successor's data to this node
-        printf("Debug: Replacing %d with successor %d\n", root->data, temp->data);
-        root->data = temp->data;
-        
-        // Delete the successor
-        root->right = deleteBST(root->right, temp->data);
-    }
-    
-    return root;
 }
 
-// Inorder traversal (Left, Root, Right)
-void inorderBST(struct BST_Node* root) {
+/* inorderTraversal:
+ * Inorder traversal => left, root, right
+ * step1: Recursively traverse left subtree if exists
+ * step2: Print current node's id
+ * step3: Recursively traverse right subtree if exists
+ */
+void inorderTraversal(Node* root) {
     if (root != NULL) {
-        printf("Debug: Visiting left subtree of %d\n", root->data);
-        inorderBST(root->left);
-        
-        printf("%d ", root->data);  // Process current node
-        
-        printf("Debug: Visiting right subtree of %d\n", root->data);
-        inorderBST(root->right);
+        inorderTraversal(root->left);   // step1
+        printf("%d ", root->id);        // step2
+        inorderTraversal(root->right);  // step3
     }
 }
 
-// Preorder traversal (Root, Left, Right)
-void preorderBST(struct BST_Node* root) {
+/* freeTree:
+ * Postorder traversal to free nodes: left, right, root
+ */
+void freeTree(Node* root) {
     if (root != NULL) {
-        printf("%d ", root->data);  // Process current node first
-        printf("Debug: Processing node %d, now visiting left\n", root->data);
-        preorderBST(root->left);
-        
-        printf("Debug: Back to %d, now visiting right\n", root->data);
-        preorderBST(root->right);
+        freeTree(root->left);
+        freeTree(root->right);
+        free(root);
     }
 }
 
-// Calculate height of BST
-int heightBST(struct BST_Node* root) {
-    if (root == NULL) {
-        printf("Debug: Reached NULL, height = -1\n");
-        return -1;
-    }
-    
-    int leftHeight = heightBST(root->left);
-    int rightHeight = heightBST(root->right);
-    
-    int maxHeight = (leftHeight > rightHeight) ? leftHeight : rightHeight;
-    int nodeHeight = 1 + maxHeight;
-    
-    printf("Debug: Node %d has height %d (left: %d, right: %d)\n", 
-           root->data, nodeHeight, leftHeight, rightHeight);
-    
-    return nodeHeight;
-}
+/* Main function to demonstrate */
+int main() {
+    Node* root = NULL;
 
-// BST Main function
-void bst_main() {
-    printf("=== BINARY SEARCH TREE OPERATIONS ===\n\n");
-    
-    struct BST_Node* root = NULL;
-    
     // Insert nodes
-    printf("--- INSERTION ---\n");
-    root = insertBST(root, 50);
-    root = insertBST(root, 30);
-    root = insertBST(root, 70);
-    root = insertBST(root, 20);
-    root = insertBST(root, 40);
-    root = insertBST(root, 60);
-    root = insertBST(root, 80);
-    
-    printf("\n--- TRAVERSALS ---\n");
+    root = insertNode(root, 50);
+    insertNode(root, 30);
+    insertNode(root, 20);
+    insertNode(root, 40);
+    insertNode(root, 70);
+    insertNode(root, 60);
+    insertNode(root, 80);
+
     printf("Inorder traversal: ");
-    inorderBST(root);
+    inorderTraversal(root);
     printf("\n");
-    
-    printf("Preorder traversal: ");
-    preorderBST(root);
-    printf("\n\n");
-    
-    // Search operations
-    printf("--- SEARCH ---\n");
-    struct BST_Node* found = searchBST(root, 40);
-    if (found) printf("Found: %d\n", found->data);
-    
-    found = searchBST(root, 90);
-    if (found) printf("Found: %d\n", found->data);
-    else printf("90 not found in BST\n");
-    
-    // Height calculation
-    printf("\n--- HEIGHT ---\n");
-    int height = heightBST(root);
-    printf("BST height: %d\n", height);
-    
-    // Deletion
-    printf("\n--- DELETION ---\n");
-    root = deleteBST(root, 20);  // Delete leaf node
-    printf("After deleting 20, inorder: ");
-    inorderBST(root);
-    printf("\n");
-    
-    root = deleteBST(root, 30);  // Delete node with two children
-    printf("After deleting 30, inorder: ");
-    inorderBST(root);
-    printf("\n");
+
+    // Search for a node
+    int key = 60;
+    Node* found = searchNode(root, key);
+    if (found != NULL)
+        printf("%d found in BST\n", key);
+    else
+        printf("%d not found in BST\n", key);
+
+    // Free all allocated memory
+    freeTree(root);
+    return 0;
 }
+
 #endif
 
 #if CPP_BST_CODE
-#include <iostream>
-using namespace std;
-
-class BST {
-private:
-    struct Node {
-        int data;
-        Node* left;
-        Node* right;
-        
-        Node(int val) : data(val), left(nullptr), right(nullptr) {
-            cout << "Debug: Created BST node with data " << val << endl;
-        }
-    };
-    
-    Node* root;
-    
-    Node* insert(Node* node, int data) {
-        cout << "Debug: Inserting " << data << " into BST" << endl;
-        
-        if (node == nullptr) {
-            cout << "Debug: Found insertion point, creating new node" << endl;
-            return new Node(data);
-        }
-        
-        if (data < node->data) {
-            cout << "Debug: " << data << " < " << node->data << ", going left" << endl;
-            node->left = insert(node->left, data);
-        }
-        else if (data > node->data) {
-            cout << "Debug: " << data << " > " << node->data << ", going right" << endl;
-            node->right = insert(node->right, data);
-        }
-        else {
-            cout << "Debug: " << data << " already exists in BST" << endl;
-        }
-        
-        return node;
-    }
-    
-    Node* search(Node* node, int key) {
-        cout << "Debug: Searching for " << key << endl;
-        
-        if (node == nullptr) {
-            cout << "Debug: Reached NULL, key " << key << " not found" << endl;
-            return nullptr;
-        }
-        
-        if (key == node->data) {
-            cout << "Debug: Found key " << key << " at current node" << endl;
-            return node;
-        }
-        
-        if (key < node->data) {
-            cout << "Debug: " << key << " < " << node->data << ", searching left" << endl;
-            return search(node->left, key);
-        } else {
-            cout << "Debug: " << key << " > " << node->data << ", searching right" << endl;
-            return search(node->right, key);
-        }
-    }
-    
-    Node* findMin(Node* node) {
-        if (node == nullptr) return nullptr;
-        
-        cout << "Debug: Finding minimum, current node = " << node->data << endl;
-        
-        while (node->left != nullptr) {
-            node = node->left;
-            cout << "Debug: Moving left to node = " << node->data << endl;
-        }
-        
-        cout << "Debug: Minimum found = " << node->data << endl;
-        return node;
-    }
-    
-    Node* deleteNode(Node* node, int key) {
-        cout << "Debug: Deleting " << key << " from BST" << endl;
-        
-        if (node == nullptr) {
-            cout << "Debug: Key " << key << " not found for deletion" << endl;
-            return node;
-        }
-        
-        if (key < node->data) {
-            cout << "Debug: " << key << " < " << node->data << ", deleting from left" << endl;
-            node->left = deleteNode(node->left, key);
-        }
-        else if (key > node->data) {
-            cout << "Debug: " << key << " > " << node->data << ", deleting from right" << endl;
-            node->right = deleteNode(node->right, key);
-        }
-        else {
-            cout << "Debug: Found node to delete: " << key << endl;
-            
-            if (node->left == nullptr) {
-                cout << "Debug: Node has no left child" << endl;
-                Node* temp = node->right;
-                delete node;
-                return temp;
-            }
-            else if (node->right == nullptr) {
-                cout << "Debug: Node has no right child" << endl;
-                Node* temp = node->left;
-                delete node;
-                return temp;
-            }
-            
-            cout << "Debug: Node has two children, finding successor" << endl;
-            Node* temp = findMin(node->right);
-            
-            cout << "Debug: Replacing " << node->data << " with " << temp->data << endl;
-            node->data = temp->data;
-            
-            node->right = deleteNode(node->right, temp->data);
-        }
-        
-        return node;
-    }
-    
-    void inorder(Node* node) {
-        if (node != nullptr) {
-            cout << "Debug: Visiting left subtree of " << node->data << endl;
-            inorder(node->left);
-            
-            cout << node->data << " ";
-            
-            cout << "Debug: Visiting right subtree of " << node->data << endl;
-            inorder(node->right);
-        }
-    }
-    
-    int height(Node* node) {
-        if (node == nullptr) {
-            cout << "Debug: Reached NULL, height = -1" << endl;
-            return -1;
-        }
-        
-        int leftHeight = height(node->left);
-        int rightHeight = height(node->right);
-        
-        int nodeHeight = 1 + max(leftHeight, rightHeight);
-        
-        cout << "Debug: Node " << node->data << " has height " << nodeHeight 
-             << " (left: " << leftHeight << ", right: " << rightHeight << ")" << endl;
-        
-        return nodeHeight;
-    }
-
-public:
-    BST() : root(nullptr) {}
-    
-    void insert(int data) { root = insert(root, data); }
-    bool search(int key) { return search(root, key) != nullptr; }
-    void remove(int key) { root = deleteNode(root, key); }
-    void displayInorder() { inorder(root); }
-    int getHeight() { return height(root); }
-};
-
-void bst_cpp_main() {
-    cout << "=== BINARY SEARCH TREE OPERATIONS (C++) ===" << endl << endl;
-    
-    BST bst;
-    
-    cout << "--- INSERTION ---" << endl;
-    bst.insert(50);
-    bst.insert(30);
-    bst.insert(70);
-    bst.insert(20);
-    bst.insert(40);
-    
-    cout << "\n--- TRAVERSAL ---" << endl;
-    cout << "Inorder: ";
-    bst.displayInorder();
-    cout << endl;
-    
-    cout << "\n--- SEARCH ---" << endl;
-    cout << "Search 40: " << (bst.search(40) ? "Found" : "Not Found") << endl;
-    cout << "Search 90: " << (bst.search(90) ? "Found" : "Not Found") << endl;
-    
-    cout << "\n--- HEIGHT ---" << endl;
-    cout << "BST Height: " << bst.getHeight() << endl;
-    
-    cout << "\n--- DELETION ---" << endl;
-    bst.remove(30);
-    cout << "After deleting 30: ";
-    bst.displayInorder();
-    cout << endl;
-}
 #endif
 
 // ============================================================================
