@@ -1,5 +1,7 @@
 ﻿C
 =============================================================================================================================
+https://www.perplexity.ai/search/hi-can-you-help-me-prepare-for-yHgZLnxQTQajXibAnOcG8w
+
 c practice perpose
 http://cse.unl.edu/~cbourke/searchingSorting.pdf
 
