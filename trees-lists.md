@@ -1000,271 +1000,107 @@ Time Complexity:
 #include <stdio.h>
 #include <stdlib.h>
 
-#define MAX_SIZE 100
+// Node structure (each node is a memory block with data and forward link)
+typedef struct Node {
+    int id;              // Data member 'id'
+    struct Node* next;   // Forward link pointer
+} Node;
 
-// Array-based Queue
-struct ArrayQueue {
-    int data[MAX_SIZE];
-    int front;
-    int rear;
-    int size;
-};
+// Queue structure to keep track of front and rear
+typedef struct {
+    Node* front;  // Points to the first node in queue
+    Node* rear;   // Points to the last node in queue
+} Queue;
 
-// Initialize queue
-void initArrayQueue(struct ArrayQueue* queue) {
-    queue->front = 0;
-    queue->rear = -1;
-    queue->size = 0;
-    printf("Debug: Array queue initialized\n");
+// Create and initialize a new queue
+Queue* createQueue() {
+    Queue* q = (Queue*)malloc(sizeof(Queue));
+    q->front = q->rear = NULL;
+    return q;
 }
 
-// Check if queue is empty
-int isArrayQueueEmpty(struct ArrayQueue* queue) {
-    int empty = (queue->size == 0);
-    printf("Debug: Queue is %s\n", empty ? "empty" : "not empty");
-    return empty;
-}
-
-// Check if queue is full
-int isArrayQueueFull(struct ArrayQueue* queue) {
-    int full = (queue->size == MAX_SIZE);
-    printf("Debug: Queue is %s\n", full ? "full" : "not full");
-    return full;
-}
-
-// Enqueue (add element)
-void enqueueArray(struct ArrayQueue* queue, int data) {
-    printf("Debug: Enqueuing %d\n", data);
-    
-    if (isArrayQueueFull(queue)) {
-        printf("Debug: Queue overflow! Cannot enqueue\n");
-        return;
-    }
-    
-    queue->rear = (queue->rear + 1) % MAX_SIZE;  // Circular increment
-    queue->data[queue->rear] = data;
-    queue->size++;
-    
-    printf("Debug: Enqueued at position %d, size now %d\n", queue->rear, queue->size);
-}
-
-// Dequeue (remove element)
-int dequeueArray(struct ArrayQueue* queue) {
-    printf("Debug: Dequeuing element\n");
-    
-    if (isArrayQueueEmpty(queue)) {
-        printf("Debug: Queue underflow! Cannot dequeue\n");
-        return -1;  // Error value
-    }
-    
-    int data = queue->data[queue->front];
-    queue->front = (queue->front + 1) % MAX_SIZE;  // Circular increment
-    queue->size--;
-    
-    printf("Debug: Dequeued %d, front now at %d, size = %d\n", 
-           data, queue->front, queue->size);
-    
-    return data;
-}
-
-// Peek front element
-int peekArrayQueue(struct ArrayQueue* queue) {
-    printf("Debug: Peeking front element\n");
-    
-    if (isArrayQueueEmpty(queue)) {
-        printf("Debug: Queue is empty, nothing to peek\n");
-        return -1;
-    }
-    
-    int frontData = queue->data[queue->front];
-    printf("Debug: Front element is %d\n", frontData);
-    return frontData;
-}
-
-// Display queue
-void displayArrayQueue(struct ArrayQueue* queue) {
-    printf("Queue: [");
-    
-    if (queue->size == 0) {
-        printf("empty]\n");
-        return;
-    }
-    
-    for (int i = 0; i < queue->size; i++) {
-        int index = (queue->front + i) % MAX_SIZE;
-        printf("%d", queue->data[index]);
-        if (i < queue->size - 1) printf(", ");
-    }
-    
-    printf("] (front=%d, rear=%d, size=%d)\n", 
-           queue->front, queue->rear, queue->size);
-}
-
-// Linked List-based Queue
-struct QueueNode {
-    int data;
-    struct QueueNode* next;
-};
-
-struct LinkedQueue {
-    struct QueueNode* front;
-    struct QueueNode* rear;
-    int size;
-};
-
-// Initialize linked queue
-void initLinkedQueue(struct LinkedQueue* queue) {
-    queue->front = NULL;
-    queue->rear = NULL;
-    queue->size = 0;
-    printf("Debug: Linked queue initialized\n");
-}
-
-// Check if linked queue is empty
-int isLinkedQueueEmpty(struct LinkedQueue* queue) {
-    int empty = (queue->front == NULL);
-    printf("Debug: Linked queue is %s\n", empty ? "empty" : "not empty");
-    return empty;
-}
-
-// Enqueue in linked queue
-void enqueueLinked(struct LinkedQueue* queue, int data) {
-    printf("Debug: Enqueuing %d to linked queue\n", data);
-    
-    struct QueueNode* newNode = (struct QueueNode*)malloc(sizeof(struct QueueNode));
-    newNode->data = data;
+/* Enqueue function:
+ * step1: create a new memory block using malloc and point to new address returned by malloc
+ * step2: 
+ *       + if it is the first node to be created then 
+ *           - point new block as both front and rear start references.
+ *           - store "NULL" in the forward link of new block and "data" in 'id'.
+ *       + if the queue already has nodes then
+ *           - store NULL in forward link of new block.
+ *           - link the current rear block's forward link to new block.
+ *           - store data in new block's 'id'.
+ *           - update rear pointer to new block.
+ * step3: no return required.
+ */
+void enqueue(Queue* q, int data) {
+    Node* newNode = (Node*)malloc(sizeof(Node)); // Step 1
+    newNode->id = data;
     newNode->next = NULL;
-    
-    if (queue->rear == NULL) {
-        printf("Debug: Queue is empty, new node becomes both front and rear\n");
-        queue->front = newNode;
-        queue->rear = newNode;
-    } else {
-        printf("Debug: Adding to rear, linking with previous rear\n");
-        queue->rear->next = newNode;
-        queue->rear = newNode;
+
+    if (q->rear == NULL) {  // Step 2: first node to be created
+        q->front = q->rear = newNode;
+    } else {                // Step 2: queue has existing nodes
+        q->rear->next = newNode;
+        q->rear = newNode;
     }
-    
-    queue->size++;
-    printf("Debug: Enqueued successfully, size now %d\n", queue->size);
 }
 
-// Dequeue from linked queue
-int dequeueLinked(struct LinkedQueue* queue) {
-    printf("Debug: Dequeuing from linked queue\n");
-    
-    if (isLinkedQueueEmpty(queue)) {
-        printf("Debug: Queue is empty, cannot dequeue\n");
+/* Dequeue function:
+ * step1: check if queue is empty (front == NULL),
+ *         if yes, print empty message and return -1.
+ * step2: create a temp pointer to front node.
+ * step3: move front pointer to next node.
+ * step4: if after moving, front becomes NULL, set rear to NULL.
+ * step5: store data from temp node, free temp memory.
+ * step6: return stored data.
+ */
+int dequeue(Queue* q) {
+    if (q->front == NULL) {
+        printf("Queue is empty\n");
+        return -1;   // indicate underflow
+    }
+    Node* temp = q->front;  // Step 2
+    int data = temp->id;    // Step 5
+    q->front = q->front->next;  // Step 3
+
+    if (q->front == NULL) {   // Step 4
+        q->rear = NULL;
+    }
+    free(temp);             // Step 5
+    return data;            // Step 6
+}
+
+/* Peek function:
+ * step1: Check if queue is empty (front == NULL).
+ *         If yes, print message and return -1.
+ * step2: Return the 'id' of the front node without removing.
+ */
+int peek(Queue* q) {
+    if (q->front == NULL) {
+        printf("Queue is empty\n");
         return -1;
     }
-    
-    struct QueueNode* temp = queue->front;
-    int data = temp->data;
-    
-    queue->front = queue->front->next;
-    
-    // If queue becomes empty
-    if (queue->front == NULL) {
-        printf("Debug: Queue becomes empty after dequeue\n");
-        queue->rear = NULL;
-    }
-    
-    free(temp);
-    queue->size--;
-    
-    printf("Debug: Dequeued %d, size now %d\n", data, queue->size);
-    return data;
+    return q->front->id;
 }
 
-// Peek front of linked queue
-int peekLinkedQueue(struct LinkedQueue* queue) {
-    printf("Debug: Peeking linked queue front\n");
-    
-    if (isLinkedQueueEmpty(queue)) {
-        printf("Debug: Queue is empty\n");
-        return -1;
-    }
-    
-    printf("Debug: Front element is %d\n", queue->front->data);
-    return queue->front->data;
+// Test the queue with sample code
+int main() {
+    Queue* q = createQueue();
+
+    enqueue(q, 100);
+    enqueue(q, 200);
+    enqueue(q, 300);
+
+    printf("Peek front element: %d\n", peek(q));  // Should print 100
+    printf("Dequeued: %d\n", dequeue(q));         // Removes 100
+    printf("Peek front element: %d\n", peek(q));  // Now 200
+    printf("Dequeued: %d\n", dequeue(q));         // Removes 200
+    printf("Dequeued: %d\n", dequeue(q));         // Removes 300
+    printf("Dequeued from empty queue: %d\n", dequeue(q)); // -1 with message
+
+    return 0;
 }
 
-// Display linked queue
-void displayLinkedQueue(struct LinkedQueue* queue) {
-    printf("Linked Queue: [");
-    
-    if (queue->front == NULL) {
-        printf("empty]\n");
-        return;
-    }
-    
-    struct QueueNode* current = queue->front;
-    while (current != NULL) {
-        printf("%d", current->data);
-        if (current->next != NULL) printf(", ");
-        current = current->next;
-    }
-    
-    printf("] (size=%d)\n", queue->size);
-}
-
-// Queue Main function
-void queue_main() {
-    printf("=== QUEUE OPERATIONS ===\n\n");
-    
-    // Array-based queue demo
-    printf("--- ARRAY-BASED QUEUE ---\n");
-    struct ArrayQueue arrayQueue;
-    initArrayQueue(&arrayQueue);
-    
-    // Enqueue operations
-    enqueueArray(&arrayQueue, 10);
-    displayArrayQueue(&arrayQueue);
-    
-    enqueueArray(&arrayQueue, 20);
-    displayArrayQueue(&arrayQueue);
-    
-    enqueueArray(&arrayQueue, 30);
-    displayArrayQueue(&arrayQueue);
-    
-    // Peek operation
-    printf("Front element: %d\n", peekArrayQueue(&arrayQueue));
-    
-    // Dequeue operations
-    printf("Dequeued: %d\n", dequeueArray(&arrayQueue));
-    displayArrayQueue(&arrayQueue);
-    
-    printf("Dequeued: %d\n", dequeueArray(&arrayQueue));
-    displayArrayQueue(&arrayQueue);
-    
-    // Linked list-based queue demo
-    printf("\n--- LINKED LIST-BASED QUEUE ---\n");
-    struct LinkedQueue linkedQueue;
-    initLinkedQueue(&linkedQueue);
-    
-    // Enqueue operations
-    enqueueLinked(&linkedQueue, 100);
-    displayLinkedQueue(&linkedQueue);
-    
-    enqueueLinked(&linkedQueue, 200);
-    displayLinkedQueue(&linkedQueue);
-    
-    enqueueLinked(&linkedQueue, 300);
-    displayLinkedQueue(&linkedQueue);
-    
-    // Peek operation
-    printf("Front element: %d\n", peekLinkedQueue(&linkedQueue));
-    
-    // Dequeue operations
-    printf("Dequeued: %d\n", dequeueLinked(&linkedQueue));
-    displayLinkedQueue(&linkedQueue);
-    
-    printf("Dequeued: %d\n", dequeueLinked(&linkedQueue));
-    displayLinkedQueue(&linkedQueue);
-    
-    printf("Dequeued: %d\n", dequeueLinked(&linkedQueue));
-    displayLinkedQueue(&linkedQueue);
-}
 #endif
 
 #if CPP_QUEUE_CODE
