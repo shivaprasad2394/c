@@ -172,509 +172,121 @@ Common Operations:
 #include <stdio.h>
 #include <stdlib.h>
 
-// Linked List Node structure
-struct ListNode {
-    int data;
-    struct ListNode* next;
-};
+// Node structure representing each linked list element
+typedef struct Node {
+    int id;            // Data member 'id'
+    struct Node* next; // Pointer to next node
+} Node;
 
-// Create new node
-struct ListNode* createListNode(int data) {
-    struct ListNode* newNode = (struct ListNode*)malloc(sizeof(struct ListNode));
-    newNode->data = data;
-    newNode->next = NULL;
-    printf("Debug: Created new node with data %d\n", data);
-    return newNode;
+/* createNode:
+ * Step1: Allocate new memory using malloc and assign to newNode pointer
+ * Step2: Store 'id' in newNode's data member
+ * Step3: Initialize 'next' pointer of newNode to NULL
+ * Step4: Return pointer to newNode
+ */
+Node* createNode(int id) {
+    Node* newNode = (Node*)malloc(sizeof(Node)); // Step1
+    if (newNode == NULL) {
+        printf("Memory allocation failed\n");
+        return NULL;
+    }
+    newNode->id = id;       // Step2
+    newNode->next = NULL;   // Step3
+    return newNode;         // Step4
 }
 
-// Insert at beginning
-struct ListNode* insertAtBeginning(struct ListNode* head, int data) {
-    printf("Debug: Inserting %d at beginning\n", data);
-    
-    struct ListNode* newNode = createListNode(data);
-    newNode->next = head;
-    
-    printf("Debug: New node points to old head, new node becomes head\n");
-    return newNode;  // New head
+/* insertAtEnd:
+ * Inserts a node with given 'id' at the end of the linked list
+ * Step1: Create new node
+ * Step2: If list is empty (head == NULL), new node becomes the head
+ * Step3: Else traverse to last node and link new node there
+ */
+void insertAtEnd(Node** head, int id) {
+    Node* newNode = createNode(id); // Step1
+    if (*head == NULL) {             // Step2
+        *head = newNode;
+        return;
+    }
+    Node* temp = *head;
+    while (temp->next != NULL) {     // Step3
+        temp = temp->next;
+    }
+    temp->next = newNode;
 }
 
-// Insert at end
-struct ListNode* insertAtEnd(struct ListNode* head, int data) {
-    printf("Debug: Inserting %d at end\n", data);
-    
-    struct ListNode* newNode = createListNode(data);
-    
-    if (head == NULL) {
-        printf("Debug: List is empty, new node becomes head\n");
-        return newNode;
+/* deleteNode:
+ * Deletes the first node with given 'key' from list
+ * Step1: If list empty, do nothing
+ * Step2: If head node has key, remove head
+ * Step3: Else traverse to find node with key, link around it and free
+ */
+void deleteNode(Node** head, int key) {
+    if (*head == NULL) return;            // Step1
+
+    Node* temp = *head;
+    Node* prev = NULL;
+
+    if (temp != NULL && temp->id == key) { // Step2
+        *head = temp->next;
+        free(temp);
+        return;
     }
-    
-    // Traverse to end
-    struct ListNode* current = head;
-    while (current->next != NULL) {
-        printf("Debug: Traversing, current node = %d\n", current->data);
-        current = current->next;
+
+    while (temp != NULL && temp->id != key) { // Step3
+        prev = temp;
+        temp = temp->next;
     }
-    
-    printf("Debug: Reached end at node %d, linking new node\n", current->data);
-    current->next = newNode;
-    
-    return head;
+    if (temp == NULL) return;  // key not found
+
+    prev->next = temp->next;
+    free(temp);
 }
 
-// Insert at specific position (0-indexed)
-struct ListNode* insertAtPosition(struct ListNode* head, int data, int position) {
-    printf("Debug: Inserting %d at position %d\n", data, position);
-    
-    if (position == 0) {
-        return insertAtBeginning(head, data);
+/* printList:
+ * Prints all node ids in the list
+ */
+void printList(Node* head) {
+    while (head != NULL) {
+        printf("%d -> ", head->id);
+        head = head->next;
     }
-    
-    struct ListNode* newNode = createListNode(data);
-    struct ListNode* current = head;
-    
-    // Traverse to position-1
-    for (int i = 0; i < position - 1 && current != NULL; i++) {
-        printf("Debug: Traversing to position, current = %d\n", current->data);
-        current = current->next;
-    }
-    
-    if (current == NULL) {
-        printf("Debug: Position out of bounds\n");
-        free(newNode);
-        return head;
-    }
-    
-    printf("Debug: Inserting after node %d\n", current->data);
-    newNode->next = current->next;
-    current->next = newNode;
-    
-    return head;
+    printf("NULL\n");
 }
 
-// Delete node with specific value
-struct ListNode* deleteByValue(struct ListNode* head, int value) {
-    printf("Debug: Deleting node with value %d\n", value);
-    
-    if (head == NULL) {
-        printf("Debug: List is empty\n");
-        return head;
-    }
-    
-    // If head node contains the value
-    if (head->data == value) {
-        printf("Debug: Head node contains value, removing head\n");
-        struct ListNode* temp = head;
+/* freeList:
+ * Frees the whole list memory
+ */
+void freeList(Node* head) {
+    Node* temp;
+    while (head != NULL) {
+        temp = head;
         head = head->next;
         free(temp);
-        return head;
     }
-    
-    // Search for node to delete
-    struct ListNode* current = head;
-    while (current->next != NULL && current->next->data != value) {
-        printf("Debug: Searching, current = %d, next = %d\n", 
-               current->data, current->next->data);
-        current = current->next;
-    }
-    
-    if (current->next == NULL) {
-        printf("Debug: Value %d not found in list\n", value);
-        return head;
-    }
-    
-    printf("Debug: Found node to delete after %d\n", current->data);
-    struct ListNode* nodeToDelete = current->next;
-    current->next = nodeToDelete->next;
-    free(nodeToDelete);
-    
-    return head;
 }
 
-// Search for value
-struct ListNode* searchList(struct ListNode* head, int value) {
-    printf("Debug: Searching for value %d\n", value);
-    
-    struct ListNode* current = head;
-    int position = 0;
-    
-    while (current != NULL) {
-        printf("Debug: Checking position %d, value = %d\n", position, current->data);
-        
-        if (current->data == value) {
-            printf("Debug: Found value %d at position %d\n", value, position);
-            return current;
-        }
-        
-        current = current->next;
-        position++;
-    }
-    
-    printf("Debug: Value %d not found\n", value);
-    return NULL;
-}
+// Main function to test the linked list operations
+int main() {
+    Node* head = NULL;
 
-// Reverse linked list
-struct ListNode* reverseList(struct ListNode* head) {
-    printf("Debug: Reversing linked list\n");
-    
-    struct ListNode* prev = NULL;
-    struct ListNode* current = head;
-    struct ListNode* next = NULL;
-    
-    while (current != NULL) {
-        printf("Debug: Current = %d, reversing link\n", 
-               current ? current->data : -1);
-        
-        next = current->next;    // Store next
-        current->next = prev;    // Reverse current link
-        prev = current;          // Move pointers one position ahead
-        current = next;
-    }
-    
-    printf("Debug: Reversal complete, new head = %d\n", 
-           prev ? prev->data : -1);
-    return prev;  // New head
-}
+    insertAtEnd(&head, 10);
+    insertAtEnd(&head, 20);
+    insertAtEnd(&head, 30);
 
-// Find middle element (slow-fast pointer technique)
-struct ListNode* findMiddle(struct ListNode* head) {
-    printf("Debug: Finding middle element using slow-fast pointers\n");
-    
-    if (head == NULL) return NULL;
-    
-    struct ListNode* slow = head;
-    struct ListNode* fast = head;
-    
-    while (fast != NULL && fast->next != NULL) {
-        printf("Debug: Slow at %d, Fast at %d\n", slow->data, fast->data);
-        slow = slow->next;        // Move slow by 1
-        fast = fast->next->next;  // Move fast by 2
-    }
-    
-    printf("Debug: Middle element found: %d\n", slow->data);
-    return slow;
-}
+    printf("Linked List: ");
+    printList(head);
 
-// Detect cycle in linked list
-int hasCycle(struct ListNode* head) {
-    printf("Debug: Checking for cycle using Floyd's algorithm\n");
-    
-    if (head == NULL || head->next == NULL) return 0;
-    
-    struct ListNode* slow = head;
-    struct ListNode* fast = head;
-    
-    while (fast != NULL && fast->next != NULL) {
-        slow = slow->next;
-        fast = fast->next->next;
-        
-        printf("Debug: Slow at %d, Fast at %d\n", slow->data, fast->data);
-        
-        if (slow == fast) {
-            printf("Debug: Cycle detected!\n");
-            return 1;
-        }
-    }
-    
-    printf("Debug: No cycle found\n");
+    deleteNode(&head, 20);
+    printf("After deleting 20: ");
+    printList(head);
+
+    freeList(head);
     return 0;
 }
 
-// Display linked list
-void displayList(struct ListNode* head) {
-    printf("List: ");
-    struct ListNode* current = head;
-    
-    while (current != NULL) {
-        printf("%d", current->data);
-        if (current->next != NULL) printf(" -> ");
-        current = current->next;
-    }
-    printf(" -> NULL\n");
-}
-
-// Get list length
-int getLength(struct ListNode* head) {
-    int length = 0;
-    struct ListNode* current = head;
-    
-    while (current != NULL) {
-        length++;
-        current = current->next;
-    }
-    
-    printf("Debug: List length = %d\n", length);
-    return length;
-}
-
-// Linked List Main function
-void linkedlist_main() {
-    printf("=== LINKED LIST OPERATIONS ===\n\n");
-    
-    struct ListNode* head = NULL;
-    
-    // Insert operations
-    printf("--- INSERTION ---\n");
-    head = insertAtBeginning(head, 10);
-    displayList(head);
-    
-    head = insertAtBeginning(head, 5);
-    displayList(head);
-    
-    head = insertAtEnd(head, 20);
-    displayList(head);
-    
-    head = insertAtEnd(head, 30);
-    displayList(head);
-    
-    head = insertAtPosition(head, 15, 2);
-    displayList(head);
-    
-    // Search operations
-    printf("\n--- SEARCH ---\n");
-    struct ListNode* found = searchList(head, 15);
-    if (found) printf("Found: %d\n", found->data);
-    
-    found = searchList(head, 100);
-    
-    // Find middle
-    printf("\n--- FIND MIDDLE ---\n");
-    struct ListNode* middle = findMiddle(head);
-    if (middle) printf("Middle element: %d\n", middle->data);
-    
-    // Length
-    printf("\n--- LENGTH ---\n");
-    int length = getLength(head);
-    printf("Length: %d\n", length);
-    
-    // Reverse
-    printf("\n--- REVERSE ---\n");
-    printf("Before reverse: ");
-    displayList(head);
-    head = reverseList(head);
-    printf("After reverse: ");
-    displayList(head);
-    
-    // Delete operations
-    printf("\n--- DELETION ---\n");
-    head = deleteByValue(head, 15);
-    printf("After deleting 15: ");
-    displayList(head);
-    
-    head = deleteByValue(head, 30);  // Delete head
-    printf("After deleting 30: ");
-    displayList(head);
-}
 #endif
 
 #if CPP_LIST_CODE
-#include <iostream>
-using namespace std;
-
-class LinkedList {
-private:
-    struct Node {
-        int data;
-        Node* next;
-        
-        Node(int val) : data(val), next(nullptr) {
-            cout << "Debug: Created node with data " << val << endl;
-        }
-    };
-    
-    Node* head;
-
-public:
-    LinkedList() : head(nullptr) {}
-    
-    void insertAtBeginning(int data) {
-        cout << "Debug: Inserting " << data << " at beginning" << endl;
-        
-        Node* newNode = new Node(data);
-        newNode->next = head;
-        head = newNode;
-        
-        cout << "Debug: New node becomes head" << endl;
-    }
-    
-    void insertAtEnd(int data) {
-        cout << "Debug: Inserting " << data << " at end" << endl;
-        
-        Node* newNode = new Node(data);
-        
-        if (head == nullptr) {
-            cout << "Debug: List empty, new node becomes head" << endl;
-            head = newNode;
-            return;
-        }
-        
-        Node* current = head;
-        while (current->next != nullptr) {
-            cout << "Debug: Traversing, current = " << current->data << endl;
-            current = current->next;
-        }
-        
-        cout << "Debug: Reached end, linking new node" << endl;
-        current->next = newNode;
-    }
-    
-    void deleteByValue(int value) {
-        cout << "Debug: Deleting node with value " << value << endl;
-        
-        if (head == nullptr) {
-            cout << "Debug: List is empty" << endl;
-            return;
-        }
-        
-        if (head->data == value) {
-            cout << "Debug: Deleting head node" << endl;
-            Node* temp = head;
-            head = head->next;
-            delete temp;
-            return;
-        }
-        
-        Node* current = head;
-        while (current->next != nullptr && current->next->data != value) {
-            cout << "Debug: Searching, current = " << current->data << endl;
-            current = current->next;
-        }
-        
-        if (current->next == nullptr) {
-            cout << "Debug: Value " << value << " not found" << endl;
-            return;
-        }
-        
-        cout << "Debug: Found node to delete" << endl;
-        Node* nodeToDelete = current->next;
-        current->next = nodeToDelete->next;
-        delete nodeToDelete;
-    }
-    
-    bool search(int value) {
-        cout << "Debug: Searching for " << value << endl;
-        
-        Node* current = head;
-        int position = 0;
-        
-        while (current != nullptr) {
-            cout << "Debug: Position " << position << ", value = " << current->data << endl;
-            
-            if (current->data == value) {
-                cout << "Debug: Found at position " << position << endl;
-                return true;
-            }
-            
-            current = current->next;
-            position++;
-        }
-        
-        cout << "Debug: Value not found" << endl;
-        return false;
-    }
-    
-    void reverse() {
-        cout << "Debug: Reversing linked list" << endl;
-        
-        Node* prev = nullptr;
-        Node* current = head;
-        Node* next = nullptr;
-        
-        while (current != nullptr) {
-            cout << "Debug: Reversing node " << current->data << endl;
-            
-            next = current->next;
-            current->next = prev;
-            prev = current;
-            current = next;
-        }
-        
-        head = prev;
-        cout << "Debug: Reversal complete" << endl;
-    }
-    
-    Node* findMiddle() {
-        cout << "Debug: Finding middle using slow-fast pointers" << endl;
-        
-        if (head == nullptr) return nullptr;
-        
-        Node* slow = head;
-        Node* fast = head;
-        
-        while (fast != nullptr && fast->next != nullptr) {
-            cout << "Debug: Slow at " << slow->data << ", Fast at " << fast->data << endl;
-            slow = slow->next;
-            fast = fast->next->next;
-        }
-        
-        cout << "Debug: Middle found: " << slow->data << endl;
-        return slow;
-    }
-    
-    void display() {
-        cout << "List: ";
-        Node* current = head;
-        
-        while (current != nullptr) {
-            cout << current->data;
-            if (current->next != nullptr) cout << " -> ";
-            current = current->next;
-        }
-        cout << " -> NULL" << endl;
-    }
-    
-    int getLength() {
-        int length = 0;
-        Node* current = head;
-        
-        while (current != nullptr) {
-            length++;
-            current = current->next;
-        }
-        
-        cout << "Debug: List length = " << length << endl;
-        return length;
-    }
-};
-
-void linkedlist_cpp_main() {
-    cout << "=== LINKED LIST OPERATIONS (C++) ===" << endl << endl;
-    
-    LinkedList list;
-    
-    cout << "--- INSERTION ---" << endl;
-    list.insertAtBeginning(10);
-    list.display();
-    
-    list.insertAtEnd(20);
-    list.display();
-    
-    list.insertAtBeginning(5);
-    list.display();
-    
-    cout << "\n--- SEARCH ---" << endl;
-    cout << "Search 20: " << (list.search(20) ? "Found" : "Not Found") << endl;
-    cout << "Search 100: " << (list.search(100) ? "Found" : "Not Found") << endl;
-    
-    cout << "\n--- MIDDLE ELEMENT ---" << endl;
-    auto middle = list.findMiddle();
-    if (middle) cout << "Middle: " << middle->data << endl;
-    
-    cout << "\n--- LENGTH ---" << endl;
-    cout << "Length: " << list.getLength() << endl;
-    
-    cout << "\n--- REVERSE ---" << endl;
-    cout << "Before: ";
-    list.display();
-    list.reverse();
-    cout << "After: ";
-    list.display();
-    
-    cout << "\n--- DELETION ---" << endl;
-    list.deleteByValue(10);
-    list.display();
-}
 #endif
 
 // ============================================================================
