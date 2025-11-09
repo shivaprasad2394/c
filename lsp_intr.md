@@ -329,23 +329,27 @@ int main() {
     */
     // Set socket options (allow reuse)
     int opt = 1;
+    //configure options for a socket at runtime.SO_REUSEADDR → Allows reusing a port immediately after a previous socket on the same port is closed
     setsockopt(server_fd, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt));
     
     // Bind socket to address and port
+    //tell the OS which IP address and port your server will listen on
     struct sockaddr_in address;
     address.sin_family = AF_INET;
-    address.sin_addr.s_addr = INADDR_ANY;
-    address.sin_port = htons(8080);
-    
+    address.sin_addr.s_addr = INADDR_ANY;//INADDR_ANY means listen on all available interfaces. Could also be inet_addr("192.168.1.2") for a specific IP.
+    address.sin_port = htons(8080);//htons(8080) converts 8080 to network byte order (big-endian).Network protocols expect big-endian order.
+
+    //Associate this socket (server_fd) with this IP address and port.”
     bind(server_fd, (struct sockaddr*)&address, sizeof(address));
     
     // Listen for connections (backlog = 3)
-    listen(server_fd, 3);
+    //When a client tries to connect:TCP handshake starts.
+    listen(server_fd, 3);//If server_fd is in listening mode, the kernel queues the connection in a pending queue.
     
     // Accept connection from client
     struct sockaddr_in client_addr;
     socklen_t addrlen = sizeof(client_addr);
-    int client_socket = accept(server_fd, (struct sockaddr*)&client_addr, &addrlen);
+    int client_socket = accept(server_fd, (struct sockaddr*)&client_addr, &addrlen);//call accept() to take the connection off the queue
     
     // Send/Receive data
     char buffer[1024] = {0};
