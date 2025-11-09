@@ -13,10 +13,10 @@ This guide contains practical C examples for every concept you need to master.
 **Analogy**: Think of it like a postal mailbox. Process A leaves a letter (message) in the mailbox, and Process B picks it up later. They don't need to meet or synchronize - the mailbox stores the message until someone needs it.
 
 **Key Features**:
-- FIFO ordering
-- Messages can be typed (retrieved by type, not just order)
-- Kernel-managed buffer
-- Asynchronous communication
+- FIFO ordering :-messages are handled in the order in which they are placed in the queue. The first message that arrives will be the first to be picked up.
+- Messages can be typed (retrieved by type, not just order):-Messages can have types (e.g., "email", "notification", "warning"). Process B can choose to only retrieve messages of a certain type if desired, making it easier to filter out unnecessary messages.
+- Kernel-managed buffer:-it manages the message queue, ensuring that messages are stored safely and that processes can interact with it efficiently. it knows when a letter arrives and keeps track of when it gets picked up.
+- Asynchronous communication:-sending and receiving processes do not need to be synchronized or communicate directly. Process A doesn’t need to know when Process B will pick up the message
 
 **C Code Example**:
 
