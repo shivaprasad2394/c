@@ -407,7 +407,114 @@ int main() {
     return 0;
 }
 ```
+### Socket (BLE)
 
+**C Code Example - hci Socket (BLE)**:
+```c
+/*
+1)Open HCI socket (hci_open_dev()).
+2)Power on controller (hciconfig hci0 up).
+
+3)Enable LE scan:
+
+uint8_t scan_enable = 0x01;  // 0x01 = enable scanning
+hci_send_cmd(sock, OGF_LE_CTL, 0x000C, 1, &scan_enable);
+
+4)Now the controller internally receives BLE advertisements.
+5)Events are reported to your program via HCI events (EVT_LE_ADVERTISING_REPORT).
+6)Read scan results in your program (loop on read() from HCI socket).
+*/
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <stdint.h>
+#include <string.h>
+#include <sys/socket.h>
+#include <bluetooth/bluetooth.h>
+#include <bluetooth/hci.h>
+#include <bluetooth/hci_lib.h>
+
+int main() {
+    int dev_id, sock;
+    struct hci_filter old_filter;
+    socklen_t old_filter_len;
+
+    // 1️⃣ Open HCI device (hci0)
+    dev_id = hci_get_route(NULL);
+    if (dev_id < 0) {
+        perror("No Bluetooth adapter found");
+        exit(1);
+    }
+
+    sock = hci_open_dev(dev_id);
+    if (sock < 0) {
+        perror("Failed to open HCI device");
+        exit(1);
+    }
+
+    // Save current socket filter
+    old_filter_len = sizeof(old_filter);
+    getsockopt(sock, SOL_HCI, HCI_FILTER, &old_filter, &old_filter_len);
+
+    // 2️⃣ Power on controller
+    if (hci_test_bit(HCI_UP, &hci_devba(dev_id)) == 0) {
+        if (hci_up(dev_id) < 0) {
+            perror("Failed to power on controller");
+            close(sock);
+            exit(1);
+        }
+    }
+
+    // 3️⃣ Enable LE scan
+    uint8_t scan_type = 0x01; // active scanning
+    uint16_t interval = htobs(0x0010);  // 10 ms
+    uint16_t window   = htobs(0x0010);  // 10 ms
+    uint8_t own_type  = 0x00; // Public Device Address
+    uint8_t filter_policy = 0x00;
+
+    if (hci_le_set_scan_parameters(sock, scan_type, interval, window,
+                                   own_type, filter_policy, 1000) < 0) {
+        perror("Failed to set scan parameters");
+        close(sock);
+        exit(1);
+    }
+
+    if (hci_le_set_scan_enable(sock, 0x01, 0x00, 1000) < 0) { // enable scanning
+        perror("Failed to enable LE scan");
+        close(sock);
+        exit(1);
+    }
+
+    printf("Scanning for BLE devices...\n");
+
+    // 4️⃣ Read scan results via HCI events
+    struct hci_filter new_filter;
+    hci_filter_clear(&new_filter);
+    hci_filter_set_ptype(HCI_EVENT_PKT, &new_filter);
+    hci_filter_set_event(EVT_LE_META_EVENT, &new_filter);
+    setsockopt(sock, SOL_HCI, HCI_FILTER, &new_filter, sizeof(new_filter));
+
+    unsigned char buf[HCI_MAX_EVENT_SIZE];
+    while (1) {
+        int len = read(sock, buf, sizeof(buf));
+        if (len < 0) continue;
+
+        evt_le_meta_event *meta = (evt_le_meta_event *)(buf + (1 + HCI_EVENT_HDR_SIZE));
+        if (meta->subevent != EVT_LE_ADVERTISING_REPORT) continue;
+
+        le_advertising_info *info = (le_advertising_info *)(meta->data + 1);
+        char addr[18];
+        ba2str(&info->bdaddr, addr);
+        printf("Found device: %s, RSSI: %d\n", addr, (char)info->data[info->length]);
+    }
+
+    // Cleanup (never reached in this loop)
+    setsockopt(sock, SOL_HCI, HCI_FILTER, &old_filter, sizeof(old_filter));
+    close(sock);
+    return 0;
+}
+
+```
 ---
 
 ## 5. PROCESS, CHILD PROCESS, and FORK
