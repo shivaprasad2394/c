@@ -614,7 +614,9 @@ int main() {
 
 ## 10. RACE CONDITION
 
-**Concept**: When multiple threads access shared data without synchronization, and at least one modifies it, the result depends on execution order.
+**Concept**: A race condition occurs when two or more processes or threads access shared data (like shared memory, a file, or a variable) concurrently, and the final result depends on the timing of how those accesses happen.
+
+Because the CPU schedules processes unpredictably, this can cause inconsistent or corrupted data.
 
 **Analogy**: Two people adding money to a shared bank account simultaneously without coordination. Both read the balance as $100, add $50, and write back $150. Result: $150 instead of $200.
 
@@ -647,6 +649,42 @@ int main() {
     
     return 0;
 }
+//fix
+#include <stdio.h>
+#include <pthread.h>
+
+int counter = 0;                  // Shared resource
+pthread_mutex_t lock;             // Mutex for synchronization
+
+void* increment(void* arg) {
+    for (int i = 0; i < 1000000; i++) {
+        pthread_mutex_lock(&lock);   // Enter critical section
+        counter++;
+        pthread_mutex_unlock(&lock); // Exit critical section
+    }
+    return NULL;
+}
+
+int main() {
+    pthread_t t1, t2;
+
+    // Initialize the mutex
+    pthread_mutex_init(&lock, NULL);
+
+    pthread_create(&t1, NULL, increment, NULL);
+    pthread_create(&t2, NULL, increment, NULL);
+
+    pthread_join(t1, NULL);
+    pthread_join(t2, NULL);
+
+    printf("Final counter value: %d\n", counter);
+
+    // Destroy the mutex
+    pthread_mutex_destroy(&lock);
+
+    return 0;
+}
+
 ```
 
 **How `counter++` causes race condition**:
