@@ -267,7 +267,16 @@ int main() {
 
 ---
 
-## 4. SOCKETS - L2 and L3 Explanation
+## 4. SOCKETS  Explanation:-
+The socket() function creates a new socket in the operating system. A socket is essentially a communication endpoint that allows processes to send and receive data, either over the network or locally.
+```c
+int socket(int domain, int type, int protocol);
+```
+- domain → What kind of addresses the socket can communicate with.
+
+- type → What type of communication you want (stream vs datagram).
+
+- protocol → Which protocol to use; 0 usually means “choose default for this type.”
 
 **OSI Layers**:
 - **Layer 2 (Data Link)**: MAC addresses, physical network addressing, Ethernet frames
@@ -292,7 +301,32 @@ int main() {
 int main() {
     // Create socket (AF_INET = IPv4, SOCK_STREAM = TCP)
     int server_fd = socket(AF_INET, SOCK_STREAM, 0);
-    
+    /*
+    AF_INET (Address Family Internet):
+    This tells the OS we want an IPv4 socket.
+    IPv6 would be AF_INET6.
+    There are also AF_UNIX (local IPC), AF_PACKET (raw packets), etc.
+
+    SOCK_STREAM:
+    This tells the OS we want a stream-oriented socket.
+    Stream = TCP: reliable, ordered, connection-based.
+    Other common type: SOCK_DGRAM → UDP (datagram, connectionless, unreliable).
+
+    Protocol = 0:
+    OS chooses the default protocol for this combination of domain and type.
+    For AF_INET + SOCK_STREAM, that’s TCP.
+    For AF_INET + SOCK_DGRAM, that’s UDP.
+
+    Allocates a file descriptor in the kernel.
+    Creates a socket data structure in kernel memory to track:
+    Address family (AF_INET)
+    Type (SOCK_STREAM)
+    Protocol (TCP)
+    Buffers for sending/receiving
+    State (for TCP: LISTEN, ESTABLISHED, etc.)
+    Returns the file descriptor (server_fd) to your program.
+    You can now use this descriptor with bind(), listen(), accept(), read(), write(), etc.
+    */
     // Set socket options (allow reuse)
     int opt = 1;
     setsockopt(server_fd, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt));
