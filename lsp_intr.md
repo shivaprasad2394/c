@@ -902,40 +902,40 @@ Memory Address    Interrupt Type
 13. **Interrupt**: Hardware signal; saves context, runs ISR, restores context
 14. **Multiple Interrupts**: Prioritized; higher priority can preempt lower; same priority is FIFO
 
-1) What is Preemption?
-Preemption is the OS forcefully interrupting a running process and removing it from the CPU to give CPU time to another process (usually a higher-priority one). The preempted process is moved back to the Ready queue and can resume later.​
+# System-Level Programming: Preemption and Interrupt Handling
 
-Analogy: Think of a teacher calling on a student to answer a question. If another student raises their hand with a more urgent question, the teacher might interrupt the first student mid-sentence and address the urgent question first. The first student then waits their turn to finish.
+## 1. What is Preemption?
 
-Preemptive vs Non-Preemptive Scheduling​
-Aspect	Preemptive	Non-Preemptive
-Interruption	OS can interrupt a running process	Process runs until it finishes or blocks
-Triggers	Time slice expires, higher priority arrives	Process completion or I/O block only
-Context Switching	Frequent (overhead)	Less frequent (lower overhead)
-Responsiveness	Better for real-time systems	Less responsive, may cause delays
-Fairness	Better - all processes get turns	Can starve low-priority/short processes
-Best For	Multitasking, real-time OS, time-sharing	Batch processing, simple systems
-Visual Timeline - Preemption in Action
-Preemptive vs Non-Preemptive Scheduling Timeline
-What Actually Happens During Preemption:​
+Preemption is the OS forcefully interrupting a running process and removing it from the CPU to give CPU time to another process (usually a higher-priority one). The preempted process is moved back to the Ready queue and can resume later.
 
-OS timer interrupt occurs (time slice expired)
+### Analogy
 
-CPU saves current process context (registers, program counter, stack pointer)
+Think of a teacher calling on a student to answer a question. If another student raises their hand with a more urgent question, the teacher might interrupt the first student mid-sentence and address the urgent question first. The first student then waits their turn to finish.
 
-Process state changes from Running → Ready
+### Preemptive vs Non-Preemptive Scheduling
 
-Next process from Ready queue is selected
+| Aspect | Preemptive | Non-Preemptive |
+|--------|-----------|----------------|
+| Interruption | OS can interrupt a running process | Process runs until it finishes or blocks |
+| Triggers | Time slice expires, higher priority arrives | Process completion or I/O block only |
+| Context Switching | Frequent (overhead) | Less frequent (lower overhead) |
+| Responsiveness | Better for real-time systems | Less responsive, may cause delays |
+| Fairness | Better - all processes get turns | Can starve low-priority/short processes |
+| Best For | Multitasking, real-time OS, time-sharing | Batch processing, simple systems |
 
-New process context is loaded from memory
+### What Actually Happens During Preemption
 
-CPU resumes executing the new process
+1. **OS timer interrupt occurs** (time slice expired)
+2. **CPU saves current process context** (registers, program counter, stack pointer)
+3. **Process state changes** from Running → Ready
+4. **Next process from Ready queue is selected**
+5. **New process context is loaded** from memory
+6. **CPU resumes** executing the new process
+7. **Later**, the preempted process may be scheduled again
 
-Later, the preempted process may be scheduled again
+### Example in C (Conceptual - OS handles this)
 
-Example in C (Conceptual - OS handles this):
-
-c
+```c
 // Pseudocode showing context switch during preemption
 struct Context {
     uint32_t registers[32];
@@ -955,75 +955,66 @@ void preemption_handler(Process *current_process, Process *next_process) {
     // CPU continues with next process
     // Later, current_process may be scheduled again
 }
-2) What Happens When Two Interrupts with Same Priority Occur at Exact Same Time?
-When two interrupts of identical priority occur simultaneously, the system cannot serve both at once. Here's what happens:​
+```
 
-The Arbitration Process
-Same Priority Interrupts Arbitration and Handling Process
-Detailed Breakdown​
-Step 1: Both Interrupts Arrive
+---
 
-Interrupt A (IRQ5) and Interrupt B (IRQ7) both have priority level 3
+## 2. What Happens When Two Interrupts with Same Priority Occur at Exact Same Time?
 
-Both signals reach the interrupt controller at virtually the same time
+When two interrupts of identical priority occur simultaneously, the system cannot serve both at once. Here's what happens:
 
-Step 2: Interrupt Controller Arbitration
+### The Arbitration Process
+
+**Step 1: Both Interrupts Arrive**
+
+- Interrupt A (IRQ5) and Interrupt B (IRQ7) both have priority level 3
+- Both signals reach the interrupt controller at virtually the same time
+
+**Step 2: Interrupt Controller Arbitration**
+
 The hardware uses an internal polling/arbitration sequence to break the tie:
 
-Primary Tiebreaker - Hardware Priority / IRQ Number​
+#### Primary Tiebreaker - Hardware Priority / IRQ Number
 
-Lower IRQ numbers have inherent hardware priority
+- Lower IRQ numbers have inherent hardware priority
+- If both IRQ5 and IRQ7 arrive with same priority: **IRQ5 is serviced first**
+- This is the default mechanism
 
-If both IRQ5 and IRQ7 arrive with same priority: IRQ5 is serviced first
+#### Secondary Tiebreaker - Subpriority (if configured)
 
-This is the default mechanism
+- Some systems allow sub-priorities within a priority level
+- Example: IRQ5 has subpriority 2, IRQ7 has subpriority 5
+- Lower subpriority value is serviced first
+- Only matters when main priority is identical
 
-Secondary Tiebreaker - Subpriority (if configured)​
+#### Tertiary Tiebreaker - First-Come-First-Served
 
-Some systems allow sub-priorities within a priority level
+- If both priority AND subpriority are identical
+- Whichever interrupt was triggered first is served
+- The second becomes PENDING
 
-Example: IRQ5 has subpriority 2, IRQ7 has subpriority 5
+**Step 3: First Interrupt Handler Executes**
 
-Lower subpriority value is serviced first
+- Interrupt A handler runs to completion
+- CPU in interrupt mode, lower priority interrupts masked
+- Same-priority interrupts CANNOT preempt the current handler
 
-Only matters when main priority is identical
+**Step 4: Second Interrupt Goes to Pending State**
 
-Tertiary Tiebreaker - First-Come-First-Served​
+- Interrupt B is marked as PENDING
+- NOT lost or missed (this is crucial)
+- Waiting for Interrupt A handler to complete
 
-If both priority AND subpriority are identical
+**Step 5: After First Handler Completes**
 
-Whichever interrupt was triggered first is served
+- CPU acknowledges completion
+- Checks for pending interrupts
+- Interrupt B handler immediately starts
+- Returns to original code
 
-The second becomes PENDING
+### Critical C Example - Same Priority Interrupts
 
-Step 3: First Interrupt Handler Executes
-
-Interrupt A handler runs to completion
-
-CPU in interrupt mode, lower priority interrupts masked
-
-Same-priority interrupts CANNOT preempt the current handler
-
-Step 4: Second Interrupt Goes to Pending State​
-
-Interrupt B is marked as PENDING
-
-NOT lost or missed (this is crucial)
-
-Waiting for Interrupt A handler to complete
-
-Step 5: After First Handler Completes
-
-CPU acknowledges completion
-
-Checks for pending interrupts
-
-Interrupt B handler immediately starts
-
-Returns to original code
-
-Critical C Example - Same Priority Interrupts​
-c
+```c
 // Two interrupts with same priority
 volatile int interrupt_a_count = 0;
 volatile int interrupt_b_count = 0;
@@ -1085,38 +1076,35 @@ int main() {
     while(1);
     return 0;
 }
-What If They're Different Priorities?​
+```
+
+### What If They're Different Priorities?
+
 If Interrupt A is priority 2 (higher) and Interrupt B is priority 3 (lower):
 
-Interrupt A handler starts immediately
-
-Interrupt B is marked PENDING (cannot interrupt A)
-
-Interrupt A completes
-
-Interrupt B handler runs
+1. Interrupt A handler starts immediately
+2. Interrupt B is marked PENDING (cannot interrupt A)
+3. Interrupt A completes
+4. Interrupt B handler runs
 
 This also prevents loss of Interrupt B
 
-Key Points for Interview​
-Neither interrupt is lost - pending interrupts are queued, not discarded
+### Key Points for Interview
 
-Hardware decides the order - not software (unless subpriorities configured)
+- **Neither interrupt is lost** - pending interrupts are queued, not discarded
+- **Hardware decides the order** - not software (unless subpriorities configured)
+- **Lower IRQ numbers win ties** - This is the default hardware tiebreaker
+- **Same priority ≠ preemption** - Handler of same-priority interrupt cannot be preempted
+- **Pending interrupts execute immediately after** - Not delayed significantly
+- **Subpriorities can be configured** - For fine-grained control within a priority level
+- **Order is deterministic** - Not random; always follows the same rule
 
-Lower IRQ numbers win ties - This is the default hardware tiebreaker
+### Comparison: Same Priority vs Different Priority Interrupts
 
-Same priority ≠ preemption - Handler of same-priority interrupt cannot be preempted
-
-Pending interrupts execute immediately after - Not delayed significantly
-
-Subpriorities can be configured - For fine-grained control within a priority level
-
-Order is deterministic - Not random; always follows the same rule
-
-Comparison: Same Priority vs Different Priority Interrupts
-Scenario	Behavior
-Both arrive at exactly same time, same priority	Arbiter uses IRQ number/hardware priority to decide
-IRQ5 (priority 2) and IRQ7 (priority 2) simultaneously	IRQ5 served first (lower number)
-IRQ5 (priority 2) and IRQ7 (priority 3) simultaneously	IRQ5 served first (higher priority), IRQ7 becomes pending
-One arrives while other is executing, same priority	New interrupt becomes pending, doesn't preempt
-One arrives while other is executing, higher priority	New interrupt PREEMPTS (if higher priority)
+| Scenario | Behavior |
+|----------|----------|
+| Both arrive at exactly same time, same priority | Arbiter uses IRQ number/hardware priority to decide |
+| IRQ5 (priority 2) and IRQ7 (priority 2) simultaneously | IRQ5 served first (lower number) |
+| IRQ5 (priority 2) and IRQ7 (priority 3) simultaneously | IRQ5 served first (higher priority), IRQ7 becomes pending |
+| One arrives while other is executing, same priority | New interrupt becomes pending, doesn't preempt |
+| One arrives while other is executing, higher priority | New interrupt PREEMPTS (if higher priority) |
