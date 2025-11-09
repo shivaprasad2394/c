@@ -564,6 +564,89 @@ int main() {
 ```
 
 ---
+# Zombie Process
+
+**Definition:**  
+A zombie is a process that has finished execution (terminated) but still has an entry in the process table.
+
+**Why it exists:**  
+The process’s parent hasn’t yet called `wait()` (or `waitpid()`) to read its exit status.
+
+**Characteristics:**
+- It has a PID, but no memory or CPU resources are used.
+- Can be seen in `ps aux` as `<defunct>`.
+
+**Problem:**  
+If many zombies accumulate, they can exhaust process table slots, preventing new processes from starting.
+
+**Example:**
+
+```c
+#include <stdio.h>
+#include <unistd.h>
+#include <sys/wait.h>
+
+int main() {
+    pid_t pid = fork();
+    if (pid == 0) {
+        // Child process
+        printf("Child exiting\n");
+        return 0;
+    } else {
+        // Parent sleeps, does not wait
+        sleep(10);  // During this time, child becomes zombie
+        printf("Parent exiting\n");
+        wait(NULL); // Now child is reaped
+    }
+}
+```
+During the 10 seconds, ps aux will show the child as a zombie (<defunct>).
+# Orphan Process
+
+**Definition**:
+An orphan is a process whose parent has terminated before it.
+
+**What happens**:
+The init process (PID 1) automatically adopts the orphan.
+
+**Characteristics**:
+
+The process continues running normally.
+
+No special state like zombie — it’s alive, just reparented.
+
+**Problem**:
+Usually none, as init will take care of reaping the process when it exits.
+```c
+#include <stdio.h>
+#include <unistd.h>
+
+int main() {
+    pid_t pid = fork();
+    if (pid > 0) {
+        // Parent exits immediately
+        printf("Parent exiting\n");
+        return 0;
+    } else {
+        // Child sleeps for a while
+        sleep(5);
+        printf("Child running as orphan now, PID=%d, PPID=%d\n", getpid(), getppid());
+    }
+}
+```
+After parent exits, getppid() will return 1 (adopted by init).
+| Feature        | Zombie                         | Orphan                     |
+| -------------- | ------------------------------ | -------------------------- |
+| Process state  | Terminated, waiting for parent | Running, parent terminated |
+| Parent action  | Has not `wait()`ed             | Parent already gone        |
+| Reaper         | Parent must `wait()`           | Adopted by `init`          |
+| Resource usage | Minimal (process table entry)  | Normal (memory, CPU used)  |
+| Visible in ps  | Yes, as `<defunct>`            | Yes, running normally      |
+
+Memory aid:
+
+**Zombie** = dead child waiting for parent.
+**Orphan** = alive child whose parent is dead.
 
 ## 6. CONTEXT SWITCHING
 
