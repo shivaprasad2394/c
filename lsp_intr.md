@@ -793,6 +793,11 @@ void* thread2_fixed(void* arg) {
 ```
 
 ---
+| Concept            | Analogy                                                       | Problem                         | Solution                                              |
+| ------------------ | ------------------------------------------------------------- | ------------------------------- | ----------------------------------------------------- |
+| **Race Condition** | Two people updating a bank balance at the same time           | Lost update (inconsistent data) | Synchronization (mutex)                               |
+| **Deadlock**       | Two people each holding one account and waiting for the other | Both stuck forever              | Consistent lock order / timeout / avoid circular wait |
+
 
 ## 12. SEGMENTATION FAULT
 
