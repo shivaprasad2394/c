@@ -48,6 +48,96 @@ int main() {
     
     return 0;
 }
+//lately using posix
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <mqueue.h>
+#include <pthread.h>
+#include <unistd.h>
+
+#define QUEUE_NAME "/typed_message_queue"
+#define MAX_MSG_SIZE sizeof(struct message)
+#define QUEUE_SIZE 10
+
+// Define a message structure with ID and type
+struct message {
+    int msg_id;       // unique message ID
+    int msg_type;     // message type (can be used for filtering)
+    char data[80];    // actual message text
+};
+
+// Message queue descriptor
+mqd_t mq;
+
+// Sender thread
+void *senderTask(void *param) {
+    struct message msg;
+
+    msg.msg_id = 1;
+    msg.msg_type = 42;
+    strcpy(msg.data, "Hello from Process A");
+
+    while (1) {
+        // Use msg_type as POSIX priority (0–31)
+        if (mq_send(mq, (const char *)&msg, sizeof(msg), msg.msg_type) == -1) {
+            perror("mq_send failed");
+        } else {
+            printf("Sent: [ID=%d, Type=%d] %s\n", msg.msg_id, msg.msg_type, msg.data);
+        }
+
+        sleep(1); // 1s delay
+    }
+    return NULL;
+}
+
+// Receiver thread
+void *receiverTask(void *param) {
+    struct message recv_msg;
+    unsigned int priority;
+
+    while (1) {
+        ssize_t bytes_read = mq_receive(mq, (char *)&recv_msg, sizeof(recv_msg), &priority);
+        if (bytes_read >= 0) {
+            printf("Received: [ID=%d, Type=%d, Priority=%u] %s\n",
+                   recv_msg.msg_id, recv_msg.msg_type, priority, recv_msg.data);
+        } else {
+            perror("mq_receive failed");
+        }
+    }
+    return NULL;
+}
+
+int main(void) {
+    // Queue attributes
+    struct mq_attr attr = {
+        .mq_flags = 0,
+        .mq_maxmsg = QUEUE_SIZE,
+        .mq_msgsize = MAX_MSG_SIZE,
+        .mq_curmsgs = 0
+    };
+
+    // Create/open the message queue
+    mq = mq_open(QUEUE_NAME, O_CREAT | O_RDWR, 0644, &attr);
+    if (mq == (mqd_t)-1) {
+        perror("Failed to create/open message queue");
+        return 1;
+    }
+
+    // Create sender & receiver threads
+    pthread_t senderThread, receiverThread;
+    pthread_create(&senderThread, NULL, senderTask, NULL);
+    pthread_create(&receiverThread, NULL, receiverTask, NULL);
+
+    pthread_join(senderThread, NULL);
+    pthread_join(receiverThread, NULL);
+
+    // Cleanup
+    mq_close(mq);
+    mq_unlink(QUEUE_NAME);
+    return 0;
+}
+
 ```
 
 ---
