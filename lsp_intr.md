@@ -698,13 +698,15 @@ Result: 6 (should be 7)
 
 ## 11. DEADLOCK
 
-**Concept**: Two or more threads/processes are blocked forever, each waiting for the other to release a resource.
+**Concept**:A deadlock happens when two or more threads (or people) are each waiting for the other to release a resource, and none can proceed — they’re stuck forever..
 
 **Four Conditions Required**:
 1. **Mutual Exclusion**: Only one thread can hold a resource
 2. **Hold and Wait**: Thread holds a resource while waiting for another
 3. **No Preemption**: Resources cannot be forcibly taken
 4. **Circular Wait**: Thread 1 waits for Thread 2's resource, Thread 2 waits for Thread 1's resource
+
+If you break any one of these conditions, the deadlock is prevented
 
 **Analogy**: Two people holding doors open for each other, but each refuses to enter first. They're both stuck.
 
@@ -766,7 +768,7 @@ int main() {
 **Prevention - Lock Ordering**:
 
 ```c
-// Solution: Always acquire locks in the same order
+// **Solution**: To prevent deadlocks, make sure all threads lock resources in the same order.
 void* thread1_fixed(void* arg) {
     pthread_mutex_lock(&lock_A); // Always A first
     pthread_mutex_lock(&lock_B); // Then B
