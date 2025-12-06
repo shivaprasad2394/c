@@ -69,6 +69,9 @@ shivaprasad@anonymous:~/chandu/husband/interview_coding_practice$ ./program
 #define CPP_CODE10 0
 #define C_CODE11 0
 #define CPP_CODE11 0
+#define C_CODE12 0
+#define C_CODE13 0
+#define C_CODE14 0
 
 /*
 1. Reverse a String
