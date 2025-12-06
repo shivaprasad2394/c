@@ -1516,3 +1516,176 @@ int main() {
     return 0;
 }
 #endif
+//Validate an IPv4 Address with isdigit func
+#if C_CODE13
+#include <stdio.h>
+#include <string.h>
+#include <ctype.h>
+
+int isValidIPv4(const char* ip) {
+    printf("Starting IPv4 validation for: %s\n", ip);
+
+    int len = strlen(ip);
+    printf("Length of input string: %d\n", len);
+
+    int dots = 0;     // Count number of dots
+    int num = 0;      // Current segment value
+    int digits = 0;   // Count digits in current segment
+
+    // Empty string check
+    if (len == 0) {
+        printf("Invalid: Empty string!\n");
+        return 0;
+    }
+
+    for (int i = 0; i <= len; i++) {
+        char ch = ip[i];
+
+        // Dot or end of string means the segment ended
+        if (ch == '.' || ch == '\0') {
+            printf("Segment ended. Digits=%d, Value=%d\n", digits, num);
+
+            // Validate segment size
+            if (digits == 0) {
+                printf("Invalid: Empty segment encountered!\n");
+                return 0;
+            }
+
+            // Leading zero check
+            if (digits > 1 && ip[i - digits] == '0') {
+                printf("Invalid: Leading zero in segment!\n");
+                return 0;
+            }
+
+            // Range check
+            if (num < 0 || num > 255) {
+                printf("Invalid: Segment %d out of range (0-255)!\n", num);
+                return 0;
+            }
+
+            // Reset for next segment
+            num = 0;
+            digits = 0;
+            dots++;
+
+            if (ch == '\0') break; // End processing
+        }
+        else if (isdigit(ch)) {
+            printf("Reading digit '%c'\n", ch);
+            num = num * 10 + (ch - '0');
+            digits++;
+        }
+        else {
+            printf("Invalid character '%c' detected!\n", ch);
+            return 0;
+        }
+    }
+
+    printf("Total segments: %d\n", dots);
+
+    // A valid IPv4 must have exactly 3 dots → 4 segments
+    if (dots != 4) {
+        printf("Invalid: Incorrect number of segments!\n");
+        return 0;
+    }
+
+    printf("IPv4 validation successful!\n");
+    return 1;
+}
+
+int main() {
+    char ip[50];
+
+    printf("Enter an IPv4 address: ");
+    scanf("%49s", ip);
+
+    if (isValidIPv4(ip)) {
+        printf("Final Result: VALID IPv4 address.\n");
+    } else {
+        printf("Final Result: INVALID IPv4 address.\n");
+    }
+
+    return 0;
+}
+#endif
+#if C_CODE14
+#include <stdio.h>
+#include <string.h>
+
+int isNumberChar(char c) {
+    // Check if character is a digit WITHOUT using isdigit()
+    return (c >= '0' && c <= '9');
+}
+
+int isValidIP(const char *ip) {
+
+    printf("Input IP: %s\n", ip);
+    printf("Starting validation...\n");
+
+    int len = strlen(ip);
+    int num = 0;
+    int dots = 0;
+    int countDigits = 0;
+
+    for (int i = 0; i <= len; i++) {
+
+        if (ip[i] == '.' || ip[i] == '\0') {
+
+            printf("Debug: Segment ended. Value = %d, Digits = %d\n", num, countDigits);
+
+            // Each segment must have at least 1 digit
+            if (countDigits == 0) {
+                printf("Error: Empty segment found.\n");
+                return 0;
+            }
+
+            // Range check
+            if (num < 0 || num > 255) {
+                printf("Error: Segment %d out of range.\n", num);
+                return 0;
+            }
+
+            // Count dots
+            if (ip[i] == '.') dots++;
+
+            // Reset for next segment
+            num = 0;
+            countDigits = 0;
+
+        } else {
+
+            // Check character is numeric (no isdigit!)
+            if (!isNumberChar(ip[i])) {
+                printf("Error: Invalid character '%c'\n", ip[i]);
+                return 0;
+            }
+
+            // Build the numeric value
+            num = num * 10 + (ip[i] - '0');
+            countDigits++;
+
+            // Avoid overflow like 00001 → OK but 1234 → invalid
+            if (countDigits > 3) {
+                printf("Error: Too many digits in a segment.\n");
+                return 0;
+            }
+        }
+    }
+
+    printf("Total dots found = %d\n", dots);
+
+    return (dots == 3); // IPv4 must have exactly 3 dots
+}
+
+int main() {
+    char ip[] = "192.168.0.1";
+
+    if (isValidIP(ip)) {
+        printf("Final Result: Valid IP address\n");
+    } else {
+        printf("Final Result: Invalid IP address\n");
+    }
+
+    return 0;
+}
+#endif
