@@ -1,3 +1,5 @@
+for ble_wifi_coex_minimal_opt_todo.7z -->source from 5.4 idf shivaprasad@anonymous:~/esp-at/esp-idf/components$
+
 1)find port
 
     ls /dev/ttyUSB* /dev/ttyACM* 2>/dev/null
