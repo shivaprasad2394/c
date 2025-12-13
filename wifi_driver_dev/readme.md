@@ -1,5 +1,6 @@
 for ble_wifi_coex_minimal_opt_todo.7z -->source from 5.4 idf shivaprasad@anonymous:~/esp-at/esp-idf/components$
 as of now
+```c
         I (16474) BLE_WIFI_COEX: Status: BLE Connected (pairing...)
         I (16474) BLE_WIFI_COEX: Dynamic heap total: 263464 bytes
         I (16474) BLE_WIFI_COEX: Dynamic free: 139580 bytes
@@ -7,7 +8,31 @@ as of now
         
         I (16474) BLE_WIFI_COEX: Approx total RAM used (static + dynamic): 169400 bytes
 
+        #include <inttypes.h>
+        uint32_t get_total_ram_used_bytes(void) {
+            // Total dynamic DRAM heap size (available for malloc at startup)
+            size_t total_heap = heap_caps_get_total_size(MALLOC_CAP_8BIT);
+            
+            // Current free dynamic DRAM heap
+            size_t free_heap = heap_caps_get_free_size(MALLOC_CAP_8BIT);
+            
+            // Dynamic used = total_heap - free_heap
+            uint32_t dynamic_used = total_heap - free_heap;
+            
+            // Approximate total used RAM = static DRAM + dynamic used
+            // Note: Static DRAM from idf.py size (e.g., your build ~45KB)
+            // For runtime estimate, use this (static not directly available runtime)
+            uint32_t approx_total_used = dynamic_used + 45516;  // Replace with your static DRAM from idf.py size
+            
+            ESP_LOGI(TAG, "Dynamic heap total: %zu bytes", total_heap);
+            ESP_LOGI(TAG, "Dynamic free: %zu bytes", free_heap);
+            ESP_LOGI(TAG, "Dynamic used: %" PRIu32 " bytes", dynamic_used);
+        	ESP_LOGI(TAG, "Approx total RAM used (static + dynamic): %" PRIu32 " bytes", approx_total_used);
+            
+            return approx_total_used;
+        }
 
+```
 1)find port
 
     ls /dev/ttyUSB* /dev/ttyACM* 2>/dev/null
