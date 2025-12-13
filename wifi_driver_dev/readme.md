@@ -1,4 +1,12 @@
 for ble_wifi_coex_minimal_opt_todo.7z -->source from 5.4 idf shivaprasad@anonymous:~/esp-at/esp-idf/components$
+as of now
+        I (16474) BLE_WIFI_COEX: Status: BLE Connected (pairing...)
+        I (16474) BLE_WIFI_COEX: Dynamic heap total: 263464 bytes
+        I (16474) BLE_WIFI_COEX: Dynamic free: 139580 bytes
+        I (16474) BLE_WIFI_COEX: Dynamic used: 123884 bytes
+        
+        I (16474) BLE_WIFI_COEX: Approx total RAM used (static + dynamic): 169400 bytes
+
 
 1)find port
 
