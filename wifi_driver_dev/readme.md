@@ -169,3 +169,350 @@ D (3234) event: running post IP_EVENT:2 with handler 0x400d6394 and context 0x3f
 ip connection done start uart task
 Initialising BLE controllerE (3244) CUSTOM_BLE: btdm_controller_init failed: -1
 Failed to init custom BLE: ESP_FAIL
+====================================================================================
+ncp set upguide
+This is a substantial but doable extension. Here's the step-by-step guide to add RPC-based AP start/stop control from host to slave.
+```c
+Step 1: Define new RPC messages in protobuf
+File: common/proto/esp_hosted_rpc.proto
+Open this file and find the existing Wi-Fi RPC message definitions (look for message RpcReqWifiSetMode, message RpcReqWifiStart, etc.).​
+
+Add two new messages for AP control. Append them near the other Wi-Fi request/response pairs:
+
+text
+// AP Start Request
+message RpcReqWifiApStart {
+    string ssid = 1;           // AP SSID
+    string password = 2;       // AP password
+    uint32 channel = 3;        // Wi-Fi channel (1-13)
+    uint32 max_connections = 4; // Max clients
+    string ip = 5;             // Static IP (e.g., "192.168.120.254")
+    string gateway = 6;        // Gateway IP
+    string netmask = 7;        // Netmask
+}
+
+message RpcRespWifiApStart {
+    uint32 resp = 1;  // 0 = success, non-zero = error code
+}
+
+// AP Stop Request
+message RpcReqWifiApStop {
+    // Empty for now; just stops AP
+}
+
+message RpcRespWifiApStop {
+    uint32 resp = 1;  // 0 = success, non-zero = error code
+}
+Then, find the main Rpc message (near the bottom of the file) that has a oneof union of all request/response pairs. Add your new messages to it:
+
+text
+message Rpc {
+    uint32 msg_type = 1;
+    uint32 msg_id = 2;
+    
+    oneof payload {
+        // ... existing messages ...
+        RpcReqWifiApStart req_wifi_ap_start = XX;    // pick a unique number
+        RpcRespWifiApStart resp_wifi_ap_start = YY;
+        RpcReqWifiApStop req_wifi_ap_stop = ZZ;
+        RpcRespWifiApStop resp_wifi_ap_stop = WW;
+        // ... rest ...
+    }
+}
+Use unique field numbers (e.g., 45, 46, 47, 48) that don't conflict with existing ones. Check what numbers are already used in the oneof block.​
+
+Step 2: Regenerate protobuf C code
+From the repo root:
+
+bash
+cd common/proto
+protoc --c_out=. --plugin=protoc-gen-c=../protobuf-c/protoc-c/protoc-gen-c \
+    esp_hosted_rpc.proto
+This generates updated esp_hosted_rpc.pb-c.c and esp_hosted_rpc.pb-c.h with your new messages.​
+
+If protoc is not installed, install it:
+
+bash
+sudo apt-get install protobuf-compiler libprotobuf-c-dev
+Step 3: Add RPC message ID constants
+File: common/rpc/esp_hosted_rpc.h
+Find the enum that defines RPC message IDs (look for RPC_ID__Req_WifiSetMode, etc.). Add your new message IDs:
+
+c
+#define RPC_ID__Req_WifiApStart   XX   // match the protobuf field number
+#define RPC_ID__Resp_WifiApStart  YY
+#define RPC_ID__Req_WifiApStop    ZZ
+#define RPC_ID__Resp_WifiApStop   WW
+Use the same field numbers you chose in the .proto file.​
+
+Step 4: Implement RPC handlers on slave
+File: slave/main/slave_control.c
+Add two handler functions. First, include the header you need:
+
+Near the top (after other includes):
+
+c
+#include "esp_netif.h"
+#include "lwip/ip4_addr.h"
+Then, before the main RPC handler table, add your two handler functions:
+
+c
+// Helper: start AP with config
+static esp_err_t start_ap_with_config(const char *ssid, const char *password, 
+                                      uint32_t channel, uint32_t max_conn,
+                                      const char *ip_str, const char *gw_str, const char *nm_str)
+{
+    esp_wifi_set_mode(WIFI_MODE_AP);
+    
+    wifi_config_t ap_config = { 0 };
+    strlcpy((char *)ap_config.ap.ssid, ssid, sizeof(ap_config.ap.ssid));
+    ap_config.ap.ssid_len = strlen(ssid);
+    strlcpy((char *)ap_config.ap.password, password, sizeof(ap_config.ap.password));
+    ap_config.ap.channel = channel;
+    ap_config.ap.max_connection = max_conn;
+    ap_config.ap.authmode = WIFI_AUTH_WPA2_PSK;
+    
+    esp_wifi_set_config(WIFI_IF_AP, &ap_config);
+    esp_wifi_start();
+    
+    // Set static IP
+    esp_netif_t *ap_netif = esp_netif_get_handle_from_ifkey("WIFI_AP_DEF");
+    if (ap_netif) {
+        esp_netif_ip_info_t ip_info = { 0 };
+        inet_pton(AF_INET, ip_str, &ip_info.ip);
+        inet_pton(AF_INET, gw_str, &ip_info.gw);
+        inet_pton(AF_INET, nm_str, &ip_info.netmask);
+        
+        esp_netif_dhcps_stop(ap_netif);
+        esp_netif_set_ip_info(ap_netif, &ip_info);
+        esp_netif_dhcps_start(ap_netif);
+        ESP_LOGI(TAG, "AP started: SSID=%s, IP=%s", ssid, ip_str);
+    }
+    
+    return ESP_OK;
+}
+
+// RPC handler: start AP
+static esp_err_t req_wifi_ap_start(Rpc *req, Rpc *resp, void *priv_data)
+{
+    RPC_TEMPLATE(RpcRespWifiApStart, resp_wifi_ap_start,
+                 RpcReqWifiApStart, req_wifi_ap_start,
+                 rpc__resp__wifi_ap_start__init);
+    
+    if (!req_payload || !req_payload->ssid || !req_payload->password) {
+        resp_payload->resp = ESP_ERR_INVALID_ARG;
+        return ESP_OK;
+    }
+    
+    esp_err_t ret = start_ap_with_config(
+        req_payload->ssid,
+        req_payload->password,
+        req_payload->channel ? req_payload->channel : 1,
+        req_payload->max_connections ? req_payload->max_connections : 4,
+        req_payload->ip ? req_payload->ip : "192.168.120.254",
+        req_payload->gateway ? req_payload->gateway : "192.168.120.254",
+        req_payload->netmask ? req_payload->netmask : "255.255.255.0"
+    );
+    
+    resp_payload->resp = ret;
+    return ESP_OK;
+}
+
+// RPC handler: stop AP
+static esp_err_t req_wifi_ap_stop(Rpc *req, Rpc *resp, void *priv_data)
+{
+    RPC_TEMPLATE_SIMPLE(RpcRespWifiApStop, resp_wifi_ap_stop,
+                        RpcReqWifiApStop, req_wifi_ap_stop,
+                        rpc__resp__wifi_ap_stop__init);
+    
+    esp_err_t ret = esp_wifi_stop();
+    resp_payload->resp = ret;
+    return ESP_OK;
+}
+Now find the RPC handler dispatch table (search for static const RpcHandler or similar, where all req_wifi_* handlers are registered). Add your handlers:
+
+c
+// In the handler table:
+{ RPC_ID__Req_WifiApStart, req_wifi_ap_start },
+{ RPC_ID__Req_WifiApStop, req_wifi_ap_stop },
+Step 5: Add host-side wrapper API
+File: host/api/src/esp_hosted_wifi.c (or create if doesn't exist)
+Add client wrapper functions that the host app will call:
+
+c
+#include "esp_hosted.h"
+#include "esp_hosted_rpc.h"
+
+esp_err_t esp_hosted_wifi_ap_start(const char *ssid, const char *password, 
+                                   uint32_t channel, uint32_t max_conn,
+                                   const char *ip, const char *gateway, const char *netmask)
+{
+    Rpc req = {0}, resp = {0};
+    
+    req.msg_type = RPC_MSG_TYPE__Request;
+    req.msg_id = RPC_MSG_ID__Increment();
+    
+    RpcReqWifiApStart wifi_ap_start = RPC_REQ_WIFI_AP_START__INIT;
+    wifi_ap_start.ssid = (char *)ssid;
+    wifi_ap_start.password = (char *)password;
+    wifi_ap_start.channel = channel;
+    wifi_ap_start.max_connections = max_conn;
+    wifi_ap_start.ip = (char *)ip;
+    wifi_ap_start.gateway = (char *)gateway;
+    wifi_ap_start.netmask = (char *)netmask;
+    
+    req.req_wifi_ap_start = &wifi_ap_start;
+    
+    int ret = esp_hosted_send_rpc(&req, &resp);
+    if (ret != 0) return ESP_FAIL;
+    
+    return resp.resp_wifi_ap_start->resp;
+}
+
+esp_err_t esp_hosted_wifi_ap_stop(void)
+{
+    Rpc req = {0}, resp = {0};
+    
+    req.msg_type = RPC_MSG_TYPE__Request;
+    req.msg_id = RPC_MSG_ID__Increment();
+    
+    RpcReqWifiApStop wifi_ap_stop = RPC_REQ_WIFI_AP_STOP__INIT;
+    req.req_wifi_ap_stop = &wifi_ap_stop;
+    
+    int ret = esp_hosted_send_rpc(&req, &resp);
+    if (ret != 0) return ESP_FAIL;
+    
+    return resp.resp_wifi_ap_stop->resp;
+}
+File: host/api/include/esp_hosted_wifi.h (or in host/esp_hosted.h)
+Add the function declarations:
+
+c
+esp_err_t esp_hosted_wifi_ap_start(const char *ssid, const char *password, 
+                                   uint32_t channel, uint32_t max_conn,
+                                   const char *ip, const char *gateway, const char *netmask);
+esp_err_t esp_hosted_wifi_ap_stop(void);
+Step 6: Use the new API in your host TLS server
+File: examples/host_tls_server/main/main.c
+Replace start_remote_ap() with a call to your new RPC wrapper:
+
+c
+#include "esp_hosted_wifi.h"  // your new header
+
+static void start_slave_ap(void)
+{
+    esp_err_t ret = esp_hosted_wifi_ap_start(
+        "MySecureAP",
+        "securepass123",
+        1,                          // channel
+        4,                          // max_connections
+        "192.168.120.254",          // IP
+        "192.168.120.254",          // gateway
+        "255.255.255.0"             // netmask
+    );
+    
+    if (ret == ESP_OK) {
+        ESP_LOGI(TAG, "Slave AP started via RPC");
+    } else {
+        ESP_LOGE(TAG, "Failed to start slave AP: %d", ret);
+    }
+}
+Then in app_main():
+
+c
+void app_main(void)
+{
+    esp_hosted_init();  // initialize esp-hosted
+    
+    start_slave_ap();   // trigger slave AP via RPC
+    
+    vTaskDelay(pdMS_TO_TICKS(1000));  // wait for AP to come up
+    
+    xTaskCreate(tls_server_task, "tls_server_task", 8192, NULL, 5, NULL);
+}
+Step 7: Rebuild and test
+Regenerate protobuf (Step 2 above) to get esp_hosted_rpc.pb-c.c/h.
+
+Rebuild slave:
+
+bash
+cd ~/esp-hosted-mcu/slave
+idf.py -p /dev/ttyUSB_SLAVE fullclean build flash monitor
+Rebuild host_tls_server:
+
+bash
+cd ~/esp-hosted-mcu/examples/host_tls_server
+idf.py -p /dev/ttyUSB_HOST fullclean build flash monitor
+Test:
+
+Host boots, sends RPC RpcReqWifiApStart to slave.
+
+Slave receives RPC, runs req_wifi_ap_start(), starts AP with SSID/password/IP.
+
+Host's TLS server listens and waits for clients on port 443.
+
+Client connects to slave AP, then to https://192.168.120.254:443.
+
+Monitor output:
+
+Slave: I (xxx) TAG: AP started: SSID=MySecureAP, IP=192.168.120.254
+
+Host: I (xxx) TAG: Slave AP started via RPC + I (xxx) TAG: TLS server listening on port 443
+
+Key points:
+
+The protobuf .proto file defines the interface (what data the RPC carries).
+
+esp_hosted_rpc.pb-c.c/h is the generated glue (serialization/deserialization).
+
+slave_control.c has the slave implementation (what happens when RPC arrives).
+
+esp_hosted_wifi.c has the host client wrapper (how the host calls the RPC).
+
+Your host app calls the wrapper, which sends the RPC over the transport (UART/SPI), slave handles it, responds.
+
+This extends the esp-hosted protocol to give the host full control over the slave's AP mode, exactly as you want.​​
+
+shivaprasad@anonymous:~/esp-hosted-mcu/common/proto$ protoc --c_out=. --plugin=protoc-gen-c=../protobuf-c/protoc-c/protoc-gen-c esp_hosted_rpc.proto
+../protobuf-c/protoc-c/protoc-gen-c: program not found or is not executable
+Please specify a program using absolute path or make sure the program is available in your PATH system variable
+--c_out: protoc-gen-c: Plugin failed with status code 1.
+shivaprasad@anonymous:~/esp-hosted-mcu/common/proto$
+The protoc-gen-c plugin needs to be built first. Here's how to fix it:
+
+Option 1: Build protobuf-c from source (recommended for this repo)
+bash
+cd ~/esp-hosted-mcu/common/protobuf-c
+mkdir -p build
+cd build
+cmake ..
+make
+make install
+Then try the protoc command again:
+
+bash
+cd ~/esp-hosted-mcu/common/proto
+protoc --c_out=. --plugin=protoc-gen-c=../protobuf-c/build/protoc-c/protoc-gen-c \
+    esp_hosted_rpc.proto
+Option 2: Use system protobuf-c (simpler)
+Install the prebuilt protobuf-c tools:
+
+bash
+sudo apt-get install protobuf-c-compiler libprotobuf-c-dev
+Then regenerate using the system binary:
+
+bash
+cd ~/esp-hosted-mcu/common/proto
+protoc-c --c_out=. esp_hosted_rpc.proto
+This will generate esp_hosted_rpc.pb-c.c and esp_hosted_rpc.pb-c.h directly.​
+
+Verify regeneration worked
+Check that the files were updated and contain your new messages:
+
+bash
+cd ~/esp-hosted-mcu/common/proto
+grep -i "wifi_ap_start" esp_hosted_rpc.pb-c.h
+You should see RpcReqWifiApStart, RpcRespWifiApStart, etc.
+
+Then proceed with Step 5: Add host-side wrapper API from the previous guide.
+```
