@@ -1,5 +1,88 @@
 ==============================COEX  GUIDE======================================================
+Current Status ✅
+Working successfully:
 
+Boot completes cleanly on ESP-IDF v5.0.1
+WiFi AP starts on Channel 6 — beacons transmitting every ~110ms
+Multiple devices are actively probing (3 different MAC addresses detected within first 4 seconds)
+RX pipeline working — frames being handed to MAC stack
+TX pipeline working — multiple slots cycling (0, 1, 2, 3) with correct CRC-appended lengths
+DHCP server started successfully
+A client actually connected and exchanged IP data (ARP + IP packets visible at ~81–84 seconds)
+TDM coexistence working — at t=4.67s the system detected 3 consecutive TX timeouts, stopped BLE advertising, restored WiFi PHY on ch6, and resumed cleanly
+BLE GAP stop advertising confirmed by NimBLE stack log
+
+
+What You CAN Do
+WiFi (AP mode):
+
+Beacon transmission ✅
+Probe request reception and response ✅
+Client association ✅
+DHCP assignment ✅
+ARP + IP data exchange ✅
+Channel selection ✅
+Multi-slot TX (up to 5 slots) ✅
+RX DMA chain management ✅
+
+BLE:
+
+BLE advertising (slow interval 1–2s) ✅
+TDM stop/start advertising from WiFi task ✅
+NimBLE host stack running on core 1 ✅
+BLE connection events handled ✅
+
+Coexistence:
+
+Software TDM arbitration ✅
+Automatic BLE pause on WiFi TX starvation ✅
+Full PHY restoration after BLE pause ✅
+BLE resumes after 5 seconds of WiFi-only window ✅
+
+
+What You CANNOT Do (Current Limitations)
+WiFi:
+
+No WPA2/security — open AP only (open-mac limitation, no crypto in open code)
+No power save / modem sleep — radio always on
+No scanning while in AP mode
+No STA+AP (dual interface) simultaneously
+No 802.11n HT rates — legacy rates only
+TX slot count limited to 5 — high throughput will saturate
+
+BLE:
+
+No BLE data transfer while WiFi is active — advertising only
+No BLE connections sustained during WiFi TX bursts (radio contention)
+No hardware PTA arbitration (intentionally disabled) — pure software TDM
+BLE connection reliability will be poor if a client tries to connect during heavy WiFi traffic
+
+Coexistence:
+
+No fine-grained time slicing — it's reactive, not predictive
+3-timeout threshold is a heuristic — may trigger false positives on RF noise
+5-second WiFi window is fixed — not adaptive to actual traffic load
+No feedback from BLE side about connection state to WiFi task
+
+
+Future Scope of Improvement
+Short term:
+
+Make TDM window sizes adaptive based on actual WiFi throughput and BLE connection state
+Add BLE connection awareness — don't pause advertising if a BLE client is connected
+Reduce the 3-timeout threshold logging noise by adding a debounce
+
+Medium term:
+
+Implement proper PTA (Packet Traffic Arbiter) with the coex library instead of bypassing it — the current bypass was needed to get it working but proper PTA would give better radio sharing
+Add WPA2 support to the open-mac WiFi stack
+Implement proper TX completion interrupts instead of polling
+
+Long term:
+
+Port to ESP32-C3/S3 which have native hardware coexistence support
+Implement 802.11n support for higher throughput
+Add BLE GATT server so connected BLE clients can query WiFi AP status
 
 ===============================================================================================
 
