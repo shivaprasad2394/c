@@ -1,4 +1,194 @@
 ==============================COEX  GUIDE======================================================
+---
+
+## Build & Flash Guide
+
+Tested on **Ubuntu 22.04**, **ESP-IDF v5.0.1**, **ESP32 chip rev v3.1**.
+
+---
+
+### Prerequisites
+
+- Python 3.10
+- Git
+- `build-essential`, `cmake`, `ninja-build`
+
+```bash
+sudo apt install git cmake ninja-build build-essential python3 python3-pip
+```
+
+---
+
+### 1. Install ESP-IDF v5.0.1
+
+```bash
+mkdir -p ~/esp && cd ~/esp
+git clone --recursive https://github.com/espressif/esp-idf.git
+cd esp-idf
+git checkout v5.0.1
+git submodule update --init --recursive
+./install.sh
+```
+
+> If you have another ESP-IDF version installed (e.g. v6.x), keep them separate.
+> This project **requires v5.0.1** — other versions are not tested.
+
+---
+
+### 2. Fix Python Environment
+
+ESP-IDF v5.0.1 depends on `pkg_resources`, which was removed from `setuptools >= 81`.
+After `install.sh`, apply these fixes **once**:
+
+```bash
+# Pin setuptools to a version that includes pkg_resources
+~/.espressif/python_env/idf5.0_py3.10_env/bin/python \
+  -m pip install --force-reinstall setuptools==69.5.1
+
+# Install ruamel.yaml with proper dist-info
+~/.espressif/python_env/idf5.0_py3.10_env/bin/python \
+  -m pip install --force-reinstall ruamel.yaml==0.17.21
+
+# Fix ruamel.yaml.clib namespace package dist-info (known pip bug)
+cd ~/.espressif/python_env/idf5.0_py3.10_env/lib/python3.10/site-packages/
+cp -r ruamel_yaml_clib-0.2.15.dist-info "ruamel.yaml.clib-0.2.15.dist-info"
+cd ~
+```
+
+Verify it works:
+
+```bash
+~/.espressif/python_env/idf5.0_py3.10_env/bin/python \
+  -c "import pkg_resources; print(pkg_resources.get_distribution('ruamel.yaml'))"
+# Expected: ruamel.yaml 0.17.21
+```
+
+---
+
+### 3. Activate ESP-IDF
+
+Run this in every new terminal before building or flashing:
+
+```bash
+source ~/esp/esp-idf/export.sh
+```
+
+**Recommended**: add an alias to `~/.bashrc` so you never forget:
+
+```bash
+echo "alias get_idf='. ~/esp/esp-idf/export.sh'" >> ~/.bashrc
+source ~/.bashrc
+```
+
+Then just type `get_idf` in any terminal.
+
+> Do **not** add `source export.sh` directly to `~/.bashrc` — it runs on every terminal
+> open and causes conflicts if you have multiple IDF versions.
+
+---
+
+### 4. Clone & Enter the Project
+
+```bash
+git clone <repo-url>
+cd <repo-folder>
+```
+
+---
+
+### 5. Set Target
+
+```bash
+idf.py set-target esp32
+```
+
+---
+
+### 6. Build
+
+```bash
+idf.py build
+```
+
+Expected output at the end:
+
+```
+Project build complete. To flash, run:
+  idf.py -p (PORT) flash
+```
+
+> **Tip for low-RAM machines (< 4 GB):** Close Chrome and other heavy apps before
+> building. ESP-IDF builds are memory-intensive. Swap usage during build is normal
+> but will slow things down significantly.
+
+---
+
+### 7. Flash
+
+Find your port first:
+
+```bash
+ls /dev/ttyUSB* /dev/ttyACM*
+```
+
+Flash and open serial monitor in one command:
+
+```bash
+idf.py -p /dev/ttyUSB0 flash monitor
+```
+
+Exit the monitor with `Ctrl + ]`.
+
+---
+
+### 8. Expected Boot Sequence
+
+A successful boot prints the following in order (timestamps approximate):
+
+```
+I (1550) COEX: Coeistence control initialized
+I (1560) MAIN: Initializing BLE Stack...
+I (2270) BLE_INIT: BLE Controller enabled
+I (2320) BLE_INIT: --- NimBLE Host SYNC Complete! ---
+I (2320) BLE_INIT: Device Address: xx:xx:xx:xx:xx:xx (type=0)
+I (2330) NimBLE: adv_itvl_min=1600 adv_itvl_max=3200
+I (2360) BLE_INIT: Advertising started!
+I (2410) BLE_INIT: BLE Initialization Complete - SUCCESS
+I (2420) MAIN: Custom BLE started successfully!
+I (2440) hwinit: Skipping coex init (PTA disabled) - WiFi and BLE share radio without arbitration
+I (2590) hardware.c: Wifi channel set to:6
+AP Started on Channel 6
+I (2760) MAIN: WiFi + BLE Coexistence Active
+```
+
+Within a few seconds you will see probe requests from nearby devices:
+
+```
+[PROBE #1] From xx:xx:xx... Ch=6
+```
+
+And the TDM coexistence kicking in automatically when needed:
+
+```
+W hardware.c: TDM:3 consecutive tx timeout - BLE has taken the radio
+I hardware.c: TDM: BLE stopped, wifi phy fully restored on ch6
+```
+
+---
+
+### Troubleshooting
+
+| Symptom | Fix |
+|---|---|
+| `pkg_resources cannot be imported` | Re-run step 2 (setuptools fix) |
+| `ruamel.yaml not found` | Re-run step 2 (ruamel.yaml fix) |
+| `source export.sh` resets `IDF_PATH` to wrong version | Check `~/.bashrc` for stale `source` lines pointing to another IDF install |
+| Flash fails: permission denied on `/dev/ttyUSB0` | `sudo usermod -aG dialout $USER` then log out and back in |
+| Flash fails: port not found | Check USB cable (must be data cable, not charge-only) |
+| Build runs out of memory / very slow | Close Chrome, run `sudo swapoff -a && sudo swapon -a` to flush swap |
+| `No such file or directory: esp32_heap_caps.h` | Wrong file — correct include is `esp_heap_caps.h` |
+| `xPortInISRContext undeclared` | ESP-IDF 5.x renamed it to `xPortInIsrContext` (lowercase Isr) |
+
 Current Status ✅
 Working successfully:
 
