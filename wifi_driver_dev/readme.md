@@ -1,4 +1,4 @@
-for ble_wifi_coex_minimal_opt_todo.7z -->source from 5.4 idf shivaprasad@anonymous:~/esp-at/esp-idf/components$
+1)for ble_wifi_coex_minimal_opt_todo.7z -->source from 5.4 idf shivaprasad@anonymous:~/esp-at/esp-idf/components$
 as of now
 ```c
         I (16474) BLE_WIFI_COEX: Status: BLE Connected (pairing...)
@@ -137,6 +137,7 @@ issue file path
 
 
 
+```txt
 shivaprasad@anonymous:~/chandu/husband/esp_rust_c/esp32-open-mac-main-Ap-working/esp32-open-mac-main$ xtensa-esp32-elf-nm components/ble/lib_esp32/esp32/libbtdm_app.a | grep -i "controller\|init\|enable" | head -20
          U ble_ll_qa_test_enable
          U bt_bb_init_cmplx
@@ -159,17 +160,13 @@ shivaprasad@anonymous:~/chandu/husband/esp_rust_c/esp32-open-mac-main-Ap-working
          U btdm_enable_scan_forever
 000003e4 T btdm_rom_ref_init
 
+```
+
+==============================COEX  GUIDE======================================================
 
 
-
-
-D (3234) event: running post IP_EVENT:2 with handler 0x400d6394 and context 0x3ffba1bc on loop 0x3ffb925c
-0x400d6394: on_wifi_event at /home/shivaprasad/chandu/husband/esp_rust_c/esp32-open-mac-main-Ap-working/esp32-open-mac-main/main/main.c:42
-
-ip connection done start uart task
-Initialising BLE controllerE (3244) CUSTOM_BLE: btdm_controller_init failed: -1
-Failed to init custom BLE: ESP_FAIL
 ====================================================================================
+
 ncp set upguide
 This is a substantial but doable extension. Here's the step-by-step guide to add RPC-based AP start/stop control from host to slave.
 ```c
