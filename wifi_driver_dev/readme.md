@@ -1,3 +1,8 @@
+==============================COEX  GUIDE======================================================
+
+
+===============================================================================================
+
 1)for ble_wifi_coex_minimal_opt_todo.7z -->source from 5.4 idf shivaprasad@anonymous:~/esp-at/esp-idf/components$
 as of now
 ```c
@@ -162,10 +167,7 @@ shivaprasad@anonymous:~/chandu/husband/esp_rust_c/esp32-open-mac-main-Ap-working
 
 ```
 
-==============================COEX  GUIDE======================================================
 
-
-====================================================================================
 
 ncp set upguide
 This is a substantial but doable extension. Here's the step-by-step guide to add RPC-based AP start/stop control from host to slave.
