@@ -1,4 +1,3 @@
-==============================COEX  GUIDE======================================================
 ---
 
 ## Build & Flash Guide
@@ -11,7 +10,7 @@ Tested on **Ubuntu 22.04**, **ESP-IDF v5.0.1**, **ESP32 chip rev v3.1**.
 
 - Python 3.10
 - Git
-- `build-essential`, `cmake`, `ninja-build`
+- Build tools
 
 ```bash
 sudo apt install git cmake ninja-build build-essential python3 python3-pip
@@ -27,40 +26,40 @@ git clone --recursive https://github.com/espressif/esp-idf.git
 cd esp-idf
 git checkout v5.0.1
 git submodule update --init --recursive
-./install.sh
+./install.sh esp32
 ```
 
-> If you have another ESP-IDF version installed (e.g. v6.x), keep them separate.
-> This project **requires v5.0.1** — other versions are not tested.
+> If you already have another ESP-IDF version installed (e.g. v6.x at `~/esp-idf`),
+> keep them separate. This project **requires v5.0.1** — other versions are not tested.
 
 ---
 
-### 2. Fix Python Environment
+### 2. Fix Python Environment (do this once after install)
 
-ESP-IDF v5.0.1 depends on `pkg_resources`, which was removed from `setuptools >= 81`.
-After `install.sh`, apply these fixes **once**:
+ESP-IDF v5.0.1 uses `pkg_resources`, which was removed in `setuptools >= 81`.
+Apply these three fixes after running `install.sh`:
 
 ```bash
-# Pin setuptools to a version that includes pkg_resources
+# Fix 1: Pin setuptools to a version that includes pkg_resources
 ~/.espressif/python_env/idf5.0_py3.10_env/bin/python \
   -m pip install --force-reinstall setuptools==69.5.1
 
-# Install ruamel.yaml with proper dist-info
+# Fix 2: Install ruamel.yaml with proper dist-info
 ~/.espressif/python_env/idf5.0_py3.10_env/bin/python \
   -m pip install --force-reinstall ruamel.yaml==0.17.21
 
-# Fix ruamel.yaml.clib namespace package dist-info (known pip bug)
+# Fix 3: Fix ruamel.yaml.clib namespace dist-info (known pip/setuptools bug)
 cd ~/.espressif/python_env/idf5.0_py3.10_env/lib/python3.10/site-packages/
 cp -r ruamel_yaml_clib-0.2.15.dist-info "ruamel.yaml.clib-0.2.15.dist-info"
 cd ~
 ```
 
-Verify it works:
+Verify the fix worked:
 
 ```bash
 ~/.espressif/python_env/idf5.0_py3.10_env/bin/python \
   -c "import pkg_resources; print(pkg_resources.get_distribution('ruamel.yaml'))"
-# Expected: ruamel.yaml 0.17.21
+# Expected output: ruamel.yaml 0.17.21
 ```
 
 ---
@@ -73,7 +72,7 @@ Run this in every new terminal before building or flashing:
 source ~/esp/esp-idf/export.sh
 ```
 
-**Recommended**: add an alias to `~/.bashrc` so you never forget:
+Add a permanent alias to `~/.bashrc` so you don't forget:
 
 ```bash
 echo "alias get_idf='. ~/esp/esp-idf/export.sh'" >> ~/.bashrc
@@ -82,8 +81,8 @@ source ~/.bashrc
 
 Then just type `get_idf` in any terminal.
 
-> Do **not** add `source export.sh` directly to `~/.bashrc` — it runs on every terminal
-> open and causes conflicts if you have multiple IDF versions.
+> **Do not** add `source export.sh` directly to `~/.bashrc` — it runs on every terminal
+> open and will conflict if you have multiple IDF versions installed.
 
 ---
 
@@ -117,21 +116,27 @@ Project build complete. To flash, run:
   idf.py -p (PORT) flash
 ```
 
-> **Tip for low-RAM machines (< 4 GB):** Close Chrome and other heavy apps before
-> building. ESP-IDF builds are memory-intensive. Swap usage during build is normal
-> but will slow things down significantly.
+> **Tip for low-RAM machines (< 4 GB):** Close Chrome before building.
+> ESP-IDF builds are memory-intensive. Run `sudo swapoff -a && sudo swapon -a`
+> to flush swap before building if the system is sluggish.
 
 ---
 
-### 7. Flash
+### 7. Flash & Monitor
 
-Find your port first:
+Find your serial port:
 
 ```bash
 ls /dev/ttyUSB* /dev/ttyACM*
 ```
 
-Flash and open serial monitor in one command:
+Erase flash (first time only, clears stale NVS/PHY cal data):
+
+```bash
+idf.py -p /dev/ttyUSB0 erase-flash
+```
+
+Flash and open serial monitor:
 
 ```bash
 idf.py -p /dev/ttyUSB0 flash monitor
@@ -167,11 +172,17 @@ Within a few seconds you will see probe requests from nearby devices:
 [PROBE #1] From xx:xx:xx... Ch=6
 ```
 
-And the TDM coexistence kicking in automatically when needed:
+The TDM coexistence kicks in automatically when WiFi TX is starved by BLE:
 
 ```
 W hardware.c: TDM:3 consecutive tx timeout - BLE has taken the radio
 I hardware.c: TDM: BLE stopped, wifi phy fully restored on ch6
+```
+
+After 5 seconds of WiFi-only operation, BLE advertising resumes:
+
+```
+I hardware.c: TDM: BLE advertising window started
 ```
 
 ---
@@ -180,99 +191,36 @@ I hardware.c: TDM: BLE stopped, wifi phy fully restored on ch6
 
 | Symptom | Fix |
 |---|---|
-| `pkg_resources cannot be imported` | Re-run step 2 (setuptools fix) |
-| `ruamel.yaml not found` | Re-run step 2 (ruamel.yaml fix) |
-| `source export.sh` resets `IDF_PATH` to wrong version | Check `~/.bashrc` for stale `source` lines pointing to another IDF install |
+| `pkg_resources cannot be imported` | Re-run Step 2 (all three fixes) |
+| `ruamel.yaml not found` | Re-run Step 2 Fix 2 and Fix 3 |
+| `source export.sh` resets `IDF_PATH` to wrong version | Check `~/.bashrc` for a stale `source` line pointing to another IDF install and remove it |
 | Flash fails: permission denied on `/dev/ttyUSB0` | `sudo usermod -aG dialout $USER` then log out and back in |
-| Flash fails: port not found | Check USB cable (must be data cable, not charge-only) |
-| Build runs out of memory / very slow | Close Chrome, run `sudo swapoff -a && sudo swapon -a` to flush swap |
-| `No such file or directory: esp32_heap_caps.h` | Wrong file — correct include is `esp_heap_caps.h` |
-| `xPortInISRContext undeclared` | ESP-IDF 5.x renamed it to `xPortInIsrContext` (lowercase Isr) |
+| Flash fails: port not found | Check USB cable — must be a data cable, not a charge-only cable |
+| Build is very slow / crashes | Close Chrome; run `sudo swapoff -a && sudo swapon -a` to free swap |
+| `No such file or directory: esp32_heap_caps.h` | Wrong include — correct header is `esp_heap_caps.h` |
+| `xPortInISRContext undeclared` | ESP-IDF 5.x renamed it to `xPortInIsrContext` (lowercase `s` in Isr) |
+| `itlv_min has no member` in `ble_gap_adv_params` | Typo — correct field names are `itvl_min` and `itvl_max` |
+| `conflicting types for coexistence_wifi_can_access` | Header declares `void`, implementation had `int timeout_ms` — must match |
 
-Current Status ✅
-Working successfully:
+---
 
-Boot completes cleanly on ESP-IDF v5.0.1
-WiFi AP starts on Channel 6 — beacons transmitting every ~110ms
-Multiple devices are actively probing (3 different MAC addresses detected within first 4 seconds)
-RX pipeline working — frames being handed to MAC stack
-TX pipeline working — multiple slots cycling (0, 1, 2, 3) with correct CRC-appended lengths
-DHCP server started successfully
-A client actually connected and exchanged IP data (ARP + IP packets visible at ~81–84 seconds)
-TDM coexistence working — at t=4.67s the system detected 3 consecutive TX timeouts, stopped BLE advertising, restored WiFi PHY on ch6, and resumed cleanly
-BLE GAP stop advertising confirmed by NimBLE stack log
+### Current Status
 
-
-What You CAN Do
-WiFi (AP mode):
-
-Beacon transmission ✅
-Probe request reception and response ✅
-Client association ✅
-DHCP assignment ✅
-ARP + IP data exchange ✅
-Channel selection ✅
-Multi-slot TX (up to 5 slots) ✅
-RX DMA chain management ✅
-
-BLE:
-
-BLE advertising (slow interval 1–2s) ✅
-TDM stop/start advertising from WiFi task ✅
-NimBLE host stack running on core 1 ✅
-BLE connection events handled ✅
-
-Coexistence:
-
-Software TDM arbitration ✅
-Automatic BLE pause on WiFi TX starvation ✅
-Full PHY restoration after BLE pause ✅
-BLE resumes after 5 seconds of WiFi-only window ✅
-
-
-What You CANNOT Do (Current Limitations)
-WiFi:
-
-No WPA2/security — open AP only (open-mac limitation, no crypto in open code)
-No power save / modem sleep — radio always on
-No scanning while in AP mode
-No STA+AP (dual interface) simultaneously
-No 802.11n HT rates — legacy rates only
-TX slot count limited to 5 — high throughput will saturate
-
-BLE:
-
-No BLE data transfer while WiFi is active — advertising only
-No BLE connections sustained during WiFi TX bursts (radio contention)
-No hardware PTA arbitration (intentionally disabled) — pure software TDM
-BLE connection reliability will be poor if a client tries to connect during heavy WiFi traffic
-
-Coexistence:
-
-No fine-grained time slicing — it's reactive, not predictive
-3-timeout threshold is a heuristic — may trigger false positives on RF noise
-5-second WiFi window is fixed — not adaptive to actual traffic load
-No feedback from BLE side about connection state to WiFi task
-
-
-Future Scope of Improvement
-Short term:
-
-Make TDM window sizes adaptive based on actual WiFi throughput and BLE connection state
-Add BLE connection awareness — don't pause advertising if a BLE client is connected
-Reduce the 3-timeout threshold logging noise by adding a debounce
-
-Medium term:
-
-Implement proper PTA (Packet Traffic Arbiter) with the coex library instead of bypassing it — the current bypass was needed to get it working but proper PTA would give better radio sharing
-Add WPA2 support to the open-mac WiFi stack
-Implement proper TX completion interrupts instead of polling
-
-Long term:
-
-Port to ESP32-C3/S3 which have native hardware coexistence support
-Implement 802.11n support for higher throughput
-Add BLE GATT server so connected BLE clients can query WiFi AP status
+| Feature | Status |
+|---|---|
+| WiFi AP — beacon TX | ✅ Working |
+| WiFi AP — probe request/response | ✅ Working |
+| WiFi AP — client association | ✅ Working |
+| WiFi AP — DHCP server | ✅ Working |
+| WiFi AP — ARP + IP data exchange | ✅ Working |
+| BLE advertising (1–2s interval) | ✅ Working |
+| TDM coexistence — auto BLE pause on WiFi starvation | ✅ Working |
+| TDM coexistence — PHY restoration after BLE pause | ✅ Working |
+| TDM coexistence — BLE resume after 5s WiFi window | ✅ Working |
+| WPA2 security | ❌ Not supported (open-mac limitation) |
+| BLE data transfer during WiFi operation | ❌ Not supported |
+| Hardware PTA arbitration | ❌ Intentionally disabled |
+| 802.11n HT rates | ❌ Legacy rates only |
 
 ===============================================================================================
 
