@@ -600,64 +600,52 @@ void testIsEven() {
 // ============================================================================
 
 /*
-Problem: Find position of rightmost set bit (1-indexed).
+Idea: Use n & (-n) to isolate rightmost set bit, then count position
 
-Algorithm/Logic:
-1. Use n & (-n) to isolate rightmost set bit
-2. Count position using log2 or bit counting
-3. Alternative: Use lookup table
+Example: 12 = 1100
+  12 & (-12) = 1100 & 0100 = 0100 (isolates rightmost 1)
+  0100 = 4 = 2^2 → position 3 (1-indexed not 0 indexed)
 
-Example: 12 (1100) → rightmost set bit at position 3
-
-Time Complexity: O(log n)
-Space Complexity: O(1)
+Why n & (-n)?
+  -12 in two's complement = ~12 + 1 = 0011 + 1 = 0100
+  12 & (-12) = 1100 & 0100 = 0100 ✓
 */
 
 int positionOfRightmostSetBit(int n) {
-    printf("Debug: Finding position of rightmost set bit in %d\n", n);
+    if (n == 0) return 0;
     
-    if (n == 0) {
-        printf("Debug: Number is 0, no set bits\n");
-        return 0;
-    }
-    
-    // Print binary
-    printf("Debug: Binary: ");
-    for (int i = 31; i >= 0; i--) {
-        printf("%d", (n >> i) & 1);
-        if (i % 4 == 0 && i > 0) printf(" ");
-    }
-    printf("\n");
-    
-    // Method 1: Using n & (-n)
-    int rightmostBit = n & (-n);
-    printf("Debug: n & (-n) = %d & (%d) = %d\n", n, -n, rightmostBit);
-    
-    // Count position
+    int rightmostBit = n & (-n);  // Isolate rightmost set bit
     int position = 0;
-    while (rightmostBit > 0) {
+    
+    while (rightmostBit > 1) {
         rightmostBit >>= 1;
         position++;
     }
     
-    printf("Debug: Position of rightmost set bit = %d\n", position);
-    return position;
+    return position + 1;  // 1-indexed
 }
 
 void testPositionOfRightmostSetBit() {
-    printf("=== PROBLEM 9: Position of Rightmost Set Bit ===\n");
+    printf("=== Rightmost Set Bit Position ===\n\n");
     
     int testCases[] = {12, 18, 5, 8, 0};
     int numTests = sizeof(testCases) / sizeof(testCases[0]);
     
     for (int i = 0; i < numTests; i++) {
-        printf("\nTest %d:\n", i+1);
-        int result = positionOfRightmostSetBit(testCases[i]);
-        printf("Result: Position = %d\n", result);
+        int n = testCases[i];
+        int result = positionOfRightmostSetBit(n);
+        
+        printf("n=%2d | Binary: ", n);
+        if (n == 0) {
+            printf("0000");
+        } else {
+            for (int j = 7; j >= 0; j--) {
+                printf("%d", (n >> j) & 1);
+            }
+        }
+        printf(" | Position: %d\n", result);
     }
-    printf("\n");
 }
-
 // ============================================================================
 // PROBLEM 10: Add Two Numbers Without Using + Operator
 // ============================================================================
