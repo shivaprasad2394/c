@@ -646,6 +646,38 @@ void testPositionOfRightmostSetBit() {
         printf(" | Position: %d\n", result);
     }
 }
+output:-
+=== Rightmost Set Bit Position ===
+
+n=12 | Binary: 00001100 | Position: 3
+n=18 | Binary: 00010010 | Position: 2
+n= 5 | Binary: 00000101 | Position: 1
+n= 8 | Binary: 00001000 | Position: 4
+n= 0 | Binary: 0000     | Position: 0
+
+explanation:-
+12 in binary: 1100
+Rightmost set bit is at position 3 (counting from right, 1-indexed)
+
+Step 1: Isolate rightmost set bit using n & (-n)
+  12 = 1100
+  -12 in two's complement:
+    Flip: ~1100 = 0011
+    Add 1: 0011 + 1 = 0100
+  
+  12 & (-12) = 1100 & 0100 = 0100 = 4
+
+Step 2: Count how many times to shift right to get to position
+  0100 >> 1 = 0010 (position++)
+  0010 >> 1 = 0001 (position++)
+  0001 = 1, stop
+  
+  position = 2, but we need 1-indexed, so answer = 2 + 1 = 3 ✓
+
+I use n & (-n) to isolate the rightmost set bit.
+Why? Because -n flips all bits and adds 1 (two's complement), so when you AND them, only the rightmost 1 survives.
+Then I shift that isolated bit right until it becomes 1, counting iterations to find the position.
+
 // ============================================================================
 // PROBLEM 10: Add Two Numbers Without Using + Operator
 // ============================================================================
