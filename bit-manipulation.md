@@ -33,7 +33,7 @@ Then n - 1 = 5 → binary: 0101
 Time Complexity: O(1)
 Space Complexity: O(1)
 */
-```c
+
 bool isPowerOfTwo(int n) {
     return n > 0 && (n & (n - 1)) == 0;
 }
@@ -61,6 +61,7 @@ output:
 16: ✓ Power of 2
 32: ✓ Power of 2
 ```
+```c
 // ============================================================================
 // PROBLEM 2: Count Set Bits (Number of 1s)
 // ============================================================================
