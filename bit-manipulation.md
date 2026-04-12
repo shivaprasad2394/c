@@ -254,6 +254,58 @@ Example:   0 0 0 0 1 1 0 0  (n = 12)
 ✓ Set:     n | (1 << pos)
 ✓ Clear:   n & ~(1 << pos)
 ✓ Toggle:  n ^ (1 << pos)
+
+Explanation:-
+trace through 12, 13, 14, 15 for each operation:
+Binary representations:
+12 = 1100
+13 = 1101
+14 = 1110
+15 = 1111
+
+CHECK BIT at position 1: (n >> pos) & 1
+n=12 (1100): (12 >> 1) & 1 = 0110 & 0001 = 0  ✗ bit is 0
+n=13 (1101): (13 >> 1) & 1 = 0110 & 0001 = 0  ✗ bit is 0
+n=14 (1110): (14 >> 1) & 1 = 0111 & 0001 = 1  ✓ bit is 1
+n=15 (1111): (15 >> 1) & 1 = 0111 & 0001 = 1  ✓ bit is 1
+
+How to explain:
+Shift right by pos positions → moves the target bit to position 0
+AND with 1 → extracts only that last bit
+
+SET BIT at position 1: n | (1 << pos)
+n=12 (1100): 12 | (1 << 1) = 1100 | 0010 = 1110 = 14
+n=13 (1101): 13 | (1 << 1) = 1101 | 0010 = 1111 = 15
+n=14 (1110): 14 | (1 << 1) = 1110 | 0010 = 1110 = 14 (already set)
+n=15 (1111): 15 | (1 << 1) = 1111 | 0010 = 1111 = 15 (already set)
+
+How to explain:
+Create a mask: 1 << 1 = position 1 has a 1
+OR operation turns bits ON (never turns OFF)
+If bit is already 1, it stays 1
+
+CLEAR BIT at position 2: n & ~(1 << pos)
+n=12 (1100): 12 & ~(1 << 2) = 1100 & ~0100 = 1100 & 1011 = 1000 = 8
+n=13 (1101): 13 & ~(1 << 2) = 1101 & ~0100 = 1101 & 1011 = 1001 = 9
+n=14 (1110): 14 & ~(1 << 2) = 1110 & ~0100 = 1110 & 1011 = 1010 = 10
+n=15 (1111): 15 & ~(1 << 2) = 1111 & ~0100 = 1111 & 1011 = 1011 = 11
+
+How to explain:
+
+Create mask: 1 << 2 = 0100
+Invert it: ~0100 = 1011 (all 1s except position 2)
+AND operation turns only that bit OFF
+
+TOGGLE BIT at position 1: n ^ (1 << pos)
+n=12 (1100): 12 ^ (1 << 1) = 1100 ^ 0010 = 1110 = 14 (0→1)
+n=13 (1101): 13 ^ (1 << 1) = 1101 ^ 0010 = 1111 = 15 (0→1)
+n=14 (1110): 14 ^ (1 << 1) = 1110 ^ 0010 = 1100 = 12 (1→0)
+n=15 (1111): 15 ^ (1 << 1) = 1111 ^ 0010 = 1101 = 13 (1→0)
+
+How to explain:
+
+XOR with 1 flips the bit: 1^1=0, 0^1=1
+If bit is 0, becomes 1. If bit is 1, becomes 0.
 */
 
 #include <stdio.h>
