@@ -13,7 +13,8 @@ Problem: Given a positive integer, check if it's a power of 2.
 
 Algorithm/Logic:
 1. A power of 2 has only one bit set (e.g., 4 = 100, 8 = 1000)
-2. If n is power of 2, then (n & (n-1)) == 0
+2. if you subtract 1 from a power of two, all the bits after the single 1-bit flip. Then when you AND these two numbers, you get 0!
+    Formula: n & (n - 1) == 0
 3. Also handle edge case: n > 0
 
 Examples:
