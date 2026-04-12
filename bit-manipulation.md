@@ -438,71 +438,120 @@ void testFindTwoNonRepeating() {
 }
 
 // ============================================================================
-// PROBLEM 7: Reverse Bits of a Number
+// Reverse Bits of a 32-bit Number
 // ============================================================================
 
 /*
-Problem: Reverse the binary representation of a 32-bit unsigned integer.
 
-Algorithm/Logic:
-1. Process each bit from right to left
-2. For each bit, add it to result and shift result left
-3. Alternative: Use lookup table for faster execution
-
-Time Complexity: O(log n) or O(32) = O(1)
-Space Complexity: O(1)
+After 32 iterations, all bits are reversed."
+Idea: Extract bits from right to left, build result by shifting left
+- Loop 32 times
+- Get rightmost bit of n using n & 1: n & 1
+- Shift result left and add that bit to result: result = (result << 1) | bit
+- Shift n right for next bit: n >>= 1
 */
 
 unsigned int reverseBits(unsigned int n) {
-    printf("Debug: Reversing bits of %u\n", n);
-    
-    // Print original binary
-    printf("Debug: Original binary: ");
-    for (int i = 31; i >= 0; i--) {
-        printf("%d", (n >> i) & 1);
-    }
-    printf("\n");
-    
     unsigned int result = 0;
     
     for (int i = 0; i < 32; i++) {
-        // Get the rightmost bit of n
-        int bit = n & 1;
-        
-        // Shift result left and add the bit
-        result = (result << 1) | bit;
-        
-        printf("Debug: Bit %d = %d, result = %u\n", i, bit, result);
-        
-        // Shift n right for next bit
-        n >>= 1;
+        int bit = n & 1;           // Extract rightmost bit
+        result = (result << 1) | bit;  // Shift result left, add bit
+        n >>= 1;                   // Move to next bit
     }
     
-    // Print reversed binary
-    printf("Debug: Reversed binary: ");
-    for (int i = 31; i >= 0; i--) {
-        printf("%d", (result >> i) & 1);
-    }
-    printf("\n");
-    
-    printf("Debug: Reversed number = %u\n", result);
     return result;
 }
 
+void printBinary32(unsigned int n) {
+    for (int i = 31; i >= 0; i--) {
+        printf("%d", (n >> i) & 1);
+        if (i % 4 == 0 && i > 0) printf(" ");
+    }
+}
+
 void testReverseBits() {
-    printf("=== PROBLEM 7: Reverse Bits ===\n");
+    printf("=== Reverse Bits ===\n\n");
     
-    unsigned int testCases[] = {43261596, 4294967293};
+    unsigned int testCases[] = {43261596, 4294967293, 1, 8};
     int numTests = sizeof(testCases) / sizeof(testCases[0]);
     
     for (int i = 0; i < numTests; i++) {
-        printf("\nTest %d: Input = %u\n", i+1, testCases[i]);
-        unsigned int result = reverseBits(testCases[i]);
-        printf("Output = %u\n", result);
+        unsigned int n = testCases[i];
+        unsigned int result = reverseBits(n);
+        
+        printf("Input:  ");
+        printBinary32(n);
+        printf("\nOutput: ");
+        printBinary32(result);
+        printf("\n\n");
     }
-    printf("\n");
 }
 
+Initial: n = 0101, result = 0000
+
+i=0: bit = 0101 & 1 = 1
+     result = (0000 << 1) | 1 = 0001
+     n = 0101 >> 1 = 0010
+
+i=1: bit = 0010 & 1 = 0
+     result = (0001 << 1) | 0 = 0010
+     n = 0010 >> 1 = 0001
+
+i=2: bit = 0001 & 1 = 1
+     result = (0010 << 1) | 1 = 0101
+     n = 0001 >> 1 = 0000
+
+i=3: bit = 0000 & 1 = 0
+     result = (0101 << 1) | 0 = 1010
+     n = 0000 >> 1 = 0000
+
+Final: result = 1010 (reversed!)
+
+explanation:-
+/*
+i=0: bit = 0101 & 1 = 1
+
+    0101  (5 in binary)
+  & 0001  (1 in binary)
+  ------
+    0001  = 1
+
+Why? AND gives 1 only when BOTH bits are 1
+Last bit of 0101 is 1, last bit of 0001 is 1 → result is 1 ✓
+
+result = (0000 << 1) | 1 = 0001
+
+Step 1: 0000 << 1  (shift left by 1)
+  0000
+  ↓ shift left
+  0000  (nothing changes, still all zeros)
+
+Step 2: 0000 | 1  (OR with 1)
+    0000
+  |  0001
+  ------
+    0001  = 1
+
+Why? OR gives 1 if ANY bit is 1
+Position 0: 0 | 1 = 1
+Other positions: 0 | 0 = 0
+Result: 0001 ✓
+
+n = 0101 >> 1 = 0010  (shift right by 1)
+
+  0101
+  ↓ shift right (all bits move right)
+  0010
+
+Bits that move right:
+- bit 3 → bit 2
+- bit 2 → bit 1  
+- bit 1 → bit 0
+- bit 0 → discarded
+
+Result: 0010 ✓
+*/
 // ============================================================================
 // PROBLEM 8: Check Even/Odd Using Bits
 // ============================================================================
