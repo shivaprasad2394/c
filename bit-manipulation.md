@@ -73,6 +73,20 @@ Key Idea: Use n & (n-1) to remove rightmost set bit one at a time
 
 Time: O(number of set bits)
 Space: O(1)
+example:-
+528 in binary: 1000010000
+
+Iteration 1: n = 528 (1000010000)
+  n & (n-1) = 1000010000 & 1000001111 = 1000000000 → 512
+  count = 1
+
+Iteration 2: n = 512 (1000000000)
+  n & (n-1) = 1000000000 & 0111111111 = 0 → 0
+  count = 2
+
+Loop ends (n = 0)
+
+Result: 2 set bits
 */
 
 int countSetBits(int n) {
