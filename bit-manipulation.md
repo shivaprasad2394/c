@@ -33,46 +33,34 @@ Then n - 1 = 5 → binary: 0101
 Time Complexity: O(1)
 Space Complexity: O(1)
 */
-
+```c
 bool isPowerOfTwo(int n) {
-    printf("Debug: Checking if %d is power of 2\n", n);
-    printf("Debug: Binary of %d = ", n);
-    
-    // Print binary representation
-    for (int i = 31; i >= 0; i--) {
-        printf("%d", (n >> i) & 1);
-        if (i % 4 == 0 && i > 0) printf(" ");
-    }
-    printf("\n");
-    
-    if (n <= 0) {
-        printf("Debug: %d is not positive, so not power of 2\n", n);
-        return false;
-    }
-    
-    int result = n & (n - 1);
-    printf("Debug: %d & %d = %d\n", n, n-1, result);
-    
-    bool isPower = (result == 0);
-    printf("Debug: %d is %s power of 2\n", n, isPower ? "a" : "not a");
-    
-    return isPower;
+    return n > 0 && (n & (n - 1)) == 0;
 }
 
 void testPowerOfTwo() {
-    printf("=== PROBLEM 1: Check Power of 2 ===\n");
+    printf("=== Power of 2 Check ===\n");
     
     int testCases[] = {1, 2, 4, 6, 8, 15, 16, 32};
     int numTests = sizeof(testCases) / sizeof(testCases[0]);
     
     for (int i = 0; i < numTests; i++) {
-        printf("\nTest %d: %d\n", i+1, testCases[i]);
         bool result = isPowerOfTwo(testCases[i]);
-        printf("Result: %s\n", result ? "True" : "False");
+        printf("%2d: %s\n", testCases[i], result ? "✓ Power of 2" : "✗ Not power of 2");
     }
-    printf("\n");
 }
 
+output:
+=== Power of 2 Check ===
+ 1: ✓ Power of 2
+ 2: ✓ Power of 2
+ 4: ✓ Power of 2
+ 6: ✗ Not power of 2
+ 8: ✓ Power of 2
+15: ✗ Not power of 2
+16: ✓ Power of 2
+32: ✓ Power of 2
+```
 // ============================================================================
 // PROBLEM 2: Count Set Bits (Number of 1s)
 // ============================================================================
