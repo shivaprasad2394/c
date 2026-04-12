@@ -18,6 +18,14 @@ Algorithm/Logic:
 3. Also handle edge case: n > 0
 
 Examples:
+If n = 8 → binary: 1000
+Then n - 1 = 7 → binary: 0111
+1000 & 0111 = 0000 ✓
+
+If n = 6 → binary: 0110
+Then n - 1 = 5 → binary: 0101
+0110 & 0101 = 0100 ≠ 0 ✗
+
 - 4 (100) & 3 (011) = 000 ✓
 - 8 (1000) & 7 (0111) = 0000 ✓
 - 6 (110) & 5 (101) = 100 ✗
