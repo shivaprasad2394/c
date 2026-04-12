@@ -63,82 +63,52 @@ output:
 ```
 ```c
 // ============================================================================
-// PROBLEM 2: Count Set Bits (Number of 1s)
+// Count Set Bits (Number of 1s in Binary)
 // ============================================================================
 
 /*
-Problem: Count the number of 1 bits in binary representation of a number.
+Key Idea: Use n & (n-1) to remove rightmost set bit one at a time
+- Each iteration removes one '1' bit
+- Count how many iterations until n becomes 0
 
-Algorithm/Logic Methods:
-1. Brian Kernighan's Algorithm: n & (n-1) removes rightmost set bit
-2. Built-in function: __builtin_popcount()
-3. Lookup table method
-4. Simple method: Check each bit position
-
-Time Complexity: O(log n) or O(number of set bits)
-Space Complexity: O(1)
+Time: O(number of set bits)
+Space: O(1)
 */
 
 int countSetBits(int n) {
-    printf("Debug: Counting set bits in %d\n", n);
-    printf("Debug: Binary representation: ");
-    
-    // Print binary
-    for (int i = 31; i >= 0; i--) {
-        int bit = (n >> i) & 1;
-        printf("%d", bit);
-        if (i % 4 == 0 && i > 0) printf(" ");
-    }
-    printf("\n");
-    
-    // Method 1: Brian Kernighan's Algorithm
     int count = 0;
-    int temp = n;
-    
-    while (temp) {
-        printf("Debug: temp = %d, temp & (temp-1) = %d\n", temp, temp & (temp-1));
-        temp = temp & (temp - 1);  // Remove rightmost set bit
+    while (n) {
+        n = n & (n - 1);  // Remove rightmost set bit
         count++;
     }
-    
-    printf("Debug: Total set bits = %d\n", count);
-    return count;
-}
-
-int countSetBitsSimple(int n) {
-    printf("Debug: Counting set bits using simple method for %d\n", n);
-    
-    int count = 0;
-    for (int i = 0; i < 32; i++) {
-        if (n & (1 << i)) {
-            printf("Debug: Bit at position %d is set\n", i);
-            count++;
-        }
-    }
-    
     return count;
 }
 
 void testCountSetBits() {
-    printf("=== PROBLEM 2: Count Set Bits ===\n");
+    printf("=== Count Set Bits ===\n");
+    printf("n\tBinary\t\tCount\n");
+    printf("---\t--------\t-----\n");
     
     int testCases[] = {7, 15, 255, 1023, 0};
     int numTests = sizeof(testCases) / sizeof(testCases[0]);
     
     for (int i = 0; i < numTests; i++) {
-        printf("\nTest %d: %d\n", i+1, testCases[i]);
+        int n = testCases[i];
+        int count = countSetBits(n);
         
-        printf("Method 1 (Kernighan's):\n");
-        int result1 = countSetBits(testCases[i]);
-        
-        printf("Method 2 (Simple):\n");
-        int result2 = countSetBitsSimple(testCases[i]);
-        
-        printf("Results: %d (both methods should match)\n", result1);
+        // Print binary (compact)
+        printf("%d\t", n);
+        if (n == 0) printf("0\t\t");
+        else {
+            for (int j = 31; j >= 0; j--) {
+                if ((n >> j) & 1) printf("1");
+                else if (j < 8) printf("0");  // Only show trailing zeros
+            }
+            printf("\t");
+        }
+        printf("%d\n", count);
     }
-    printf("\n");
 }
-
 // ============================================================================
 // PROBLEM 3: Find Single Non-Repeating Element
 // ============================================================================
