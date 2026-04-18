@@ -616,8 +616,15 @@ Why n & (-n)?
   -12 in two's complement = ~12 + 1 = 0011 + 1 = 0100
   12 & (-12) = 1100 & 0100 = 0100 ✓
 
-Number: 8 = 1000
+Number: 4 = 0100
+Rightmost Set Bit:
+  4 & (-4) = 0100 & 1100 = 0100 = 4
+  4 >> 1 = 2, position++
+  2 >> 1 = 1, position++
+  Stop, position = 2
+  Answer: position 3 (1-indexed) ✓
 
+Number: 8 = 1000
 Rightmost Set Bit:
   8 & (-8) = 1000 & 1000 = 1000 = 8
   8 >> 1 = 4, position++
