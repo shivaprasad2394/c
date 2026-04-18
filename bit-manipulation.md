@@ -63,7 +63,7 @@ output:
 ```
 ```c
 // ============================================================================
-// Count Set Bits (Number of 1s in Binary)
+// PROBLEM 2:Count Set Bits (Number of 1s in Binary)
 // ============================================================================
 
 /*
@@ -242,7 +242,7 @@ void testSwapWithoutTemp() {
 }
 
 // ============================================================================
-// Bit Manipulation: Check, Set, Clear, Toggle
+// PROBLEM 5:Bit Manipulation: Check, Set, Clear, Toggle
 // ============================================================================
 
 /*
@@ -438,7 +438,7 @@ void testFindTwoNonRepeating() {
 }
 
 // ============================================================================
-// Reverse Bits of a 32-bit Number
+// PROBLEM 7:Reverse Bits of a 32-bit Number
 // ============================================================================
 
 /*
@@ -679,7 +679,90 @@ Why? Because -n flips all bits and adds 1 (two's complement), so when you AND th
 Then I shift that isolated bit right until it becomes 1, counting iterations to find the position.
 
 // ============================================================================
-// PROBLEM 10: Add Two Numbers Without Using + Operator
+// PROBLEM 10:Set Multiple Bits in Range (17th to 21st bit)
+// ============================================================================
+
+/*
+Idea: Create a mask with 1s in the range, then OR with the register
+
+Example: Set bits 17-21 (5 bits total)
+  Create mask: (1 << 5) - 1 = 11111 (5 ones)
+  Shift left by 17: 11111 << 17
+  OR with register to set those bits
+*/
+
+// Method 1: SET bits in range [start, end]
+unsigned int setBitsInRange(unsigned int reg, int start, int end) {
+    int numBits = (end - start) + 1;          // Number of bits
+    unsigned int mask = (1 << numBits) - 1;   // Create all 1s
+    mask = mask << start;                      // Shift to position
+    
+    return reg | mask;  // OR to set bits
+}
+
+// Method 2: CLEAR bits in range [start, end]
+unsigned int clearBitsInRange(unsigned int reg, int start, int end) {
+    int numBits = (end - start) + 1;
+    unsigned int mask = (1 << numBits) - 1;
+    mask = mask << start;
+    
+    return reg & ~mask;  // AND with inverted mask to clear
+}
+
+// Method 3: MODIFY bits in range [start, end] with a value
+unsigned int modifyBitsInRange(unsigned int reg, int start, int end, unsigned int value) {
+    int numBits = (end - start) + 1;
+    unsigned int mask = (1 << numBits) - 1;
+    
+    value = value & mask;        // Ensure value fits in range
+    value = value << start;       // Shift value to position
+    
+    mask = mask << start;
+    return (reg & ~mask) | value;  // Clear then set with new value
+}
+
+void printBinary32(unsigned int n) {
+    for (int i = 31; i >= 0; i--) {
+        printf("%d", (n >> i) & 1);
+        if (i % 4 == 0 && i > 0) printf(" ");
+    }
+}
+
+void testBitsInRange() {
+    printf("=== Set/Clear/Modify Bits in Range ===\n\n");
+    
+    unsigned int reg = 0x00000000;  // All zeros
+    
+    printf("Initial:  ");
+    printBinary32(reg);
+    printf("\n\n");
+    
+    // SET bits 17-21
+    reg = setBitsInRange(reg, 17, 21);
+    printf("After SET bits 17-21:\n");
+    printBinary32(reg);
+    printf(" = 0x%X\n\n", reg);
+    
+    // CLEAR bits 17-21
+    reg = clearBitsInRange(reg, 17, 21);
+    printf("After CLEAR bits 17-21:\n");
+    printBinary32(reg);
+    printf(" = 0x%X\n\n", reg);
+    
+    // MODIFY bits 17-21 with value 0b10101 (21 in decimal)
+    reg = 0xFFFFFFFF;  // Start with all 1s
+    printf("Starting with: ");
+    printBinary32(reg);
+    printf("\n");
+    
+    reg = modifyBitsInRange(reg, 17, 21, 0b10101);
+    printf("After MODIFY bits 17-21 to 0b10101:\n");
+    printBinary32(reg);
+    printf(" = 0x%X\n\n", reg);
+}
+
+// ============================================================================
+// PROBLEM 11: Add Two Numbers Without Using + Operator
 // ============================================================================
 
 /*
@@ -738,7 +821,7 @@ void testAddWithoutPlus() {
 }
 
 // ============================================================================
-// PROBLEM 11: Multiply and Divide by Powers of 2
+// PROBLEM 12: Multiply and Divide by Powers of 2
 // ============================================================================
 
 /*
@@ -799,7 +882,7 @@ void testMultiplyDividePowerOf2() {
 }
 
 // ============================================================================
-// PROBLEM 12: Find Missing Number Using XOR
+// PROBLEM 13: Find Missing Number Using XOR
 // ============================================================================
 
 /*
