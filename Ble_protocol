@@ -1,0 +1,651 @@
+# BLE Protocol - Complete Deep Dive
+
+## Overview
+Beginners who want to understand every layer of BLE from radio waves to application data. This is a comprehensive guide covering BLE protocols with technical details and specifications.
+
+---
+
+## Table of Contents
+
+1. [Overview - Why BLE Has So Many Layers](#overview)
+   - 1.1 [Radio Basics](#radio-basics)
+   - 1.2 [BLE 4.x PHY Modes](#ble-phy-modes)
+
+2. [Physical Layer (PHY)](#physical-layer)
+   - 2.1 [Radio Basics](#radio-basics-details)
+   - 2.2 [BLE 5.x PHY Modes](#ble5-phy-modes)
+
+3. [Link Layer (LL)](#link-layer)
+   - 3.1 [LL States](#ll-states)
+   - 3.2 [Connection Events & Parameters](#connection-events)
+   - 3.3 [Advertising Channels (37, 38, 39)](#advertising-channels)
+
+4. [HCI - Host Controller Interface](#hci)
+   - 4.1 [HCI Packet Types](#hci-packet-types)
+   - 4.2 [HCI Commands, Events & Data](#hci-operations)
+
+5. [L2CAP - Logical Link Control & Adaptation Protocol](#l2cap)
+   - 5.1 [Basic L2CAP Channels](#l2cap-channels)
+   - 5.2 [Connection Parameters](#connection-parameters)
+
+6. [GATT - Generic Attribute Profile](#gatt)
+   - 6.1 [What is a Profile](#gatt-profile)
+   - 6.2 [Characteristic Anatomy](#characteristic-anatomy)
+   - 6.3 [Descriptors](#descriptors)
+   - 6.4 [Service Discovery Algorithm](#service-discovery)
+   - 6.5 [Notifications and Indications](#notifications-indications)
+   - 6.6 [Step-by-Step Process](#gatt-process)
+
+7. [GAP - Generic Access Profile](#gap)
+   - 7.1 [GAP Generic Attribute Profile](#gap-attribute)
+   - 7.2 [GAP Roles](#gap-roles)
+
+8. [EATT - Enhanced Attribute Protocol](#eatt)
+   - 8.1 [Why EATT](#why-eatt)
+
+9. [ATT - Attribute Protocol](#att)
+   - 9.1 [Attribute Protocol](#attribute-protocol)
+   - 9.2 [ATT Error Codes](#att-error-codes)
+   - 9.3 [ATT Operations - Complete Reference](#att-operations)
+   - 9.4 [ATT MTU Negotiation](#att-mtu)
+
+10. [SMP - Security Manager Protocol](#smp)
+    - 10.1 [Why Pairing is Needed](#pairing-needed)
+    - 10.2 [Three Phases of Pairing](#pairing-phases)
+    - 10.3 [IO Capabilities & Pairing Method Selection](#io-capabilities)
+    - 10.4 [LE Secure Connections](#le-secure)
+    - 10.5 [Key Distribution](#key-distribution)
+
+11. [BLE Profiles - Standard Use Cases](#ble-profiles)
+    - 11.1 [What is a Profile](#what-profile)
+    - 11.2 [Heart Rate Profile](#heart-rate-profile)
+    - 11.3 [Voice Streaming Over HID](#voice-streaming)
+    - 11.4 [BLE Audio Codecs - ADPCM, mSBC, LC3](#audio-codecs)
+    - 11.5 [mSBC for BLE Voice - Settings & Frame Format](#msbc-settings)
+    - 11.6 [LC3 for LE Audio - Settings & Frame Format](#lc3-settings)
+
+12. [Other Common Profiles](#other-profiles)
+    - 12.1 [Other Common Profiles - BLE Misc Indication-Deep-Dive](#other-profiles-detail)
+
+13. [Cryptographic Functions - The Why and How](#crypto)
+    - 13.1 [The Endianness Problem](#endianness)
+    - 13.2 [AES-128 and AES-CMAC](#aes-crypto)
+    - 13.3 [F4](#f4-function)
+    - 13.4 [F4O - SC Pairing Confirm](#f4o-pairing)
+    - 13.5 [F5 - SC Key Derivation](#f5-key-derivation)
+    - 13.6 [F6 - SC DH Key Check](#f6-dh-key)
+    - 13.7 [ECDH - Elliptic Curve Diffie-Hellman](#ecdh)
+
+14. [BLE Version History](#ble-version)
+
+15. [Glossary](#glossary)
+
+---
+
+## 1. Overview - Why BLE Has So Many Layers {#overview}
+
+### 1.1 Radio Basics {#radio-basics}
+
+BLE operates in the **2.4 GHz ISM (Industrial, Scientific, Medical) band** - the same band used by WiFi, Zigbee, and microwave ovens. It's a license-free spectrum.
+
+#### Key Radio Concepts:
+- **Frequency:** 2.4 GHz (2400-2483.5 MHz)
+- **Bandwidth:** Varies by PHY mode (1-2 MHz per channel)
+- **Range:** Typically 10-100 meters (varies with power, antenna, environment)
+- **Modulation:** GFSK (Gaussian Frequency Shift Keying) for classic BLE, PSK/FSK for BLE 5.x
+
+---
+
+## 2. Physical Layer (PHY) {#physical-layer}
+
+### 2.1 Radio Basics {#radio-basics-details}
+
+BLE operates in the **2.4 GHz ISM band** - the same band used by WiFi, Zigbee, and microwave ovens. It's a license-free spectrum.
+
+### 2.2 BLE 5.x PHY Modes {#ble5-phy-modes}
+
+BLE 4.x only had one PHY mode (1 Mbps, standard range). BLE 5.0 added more:
+
+| PHY Name | Data Rate | Range | Power | Use Case |
+|----------|-----------|-------|-------|----------|
+| **LE 1M** | 1 Mbps | Standard | Lower | Classic BLE, most devices |
+| **LE 2M** | 2 Mbps | Shorter (-sBm) | Lower (shorter TX time) | Faster data transfer |
+| **LE Coded** | 125/500 kbps | Higher (–20dBm line of sight) | Higher (longer range advertising) | Long range IoT |
+| **Why 2 MHz Channels?** | – | – | – | 2 MHz wide each; 37 for advertising, 37 for data; Bit "1" is higher freq, Bit "0" is lower freq |
+
+---
+
+## 3. Link Layer (LL) {#link-layer}
+
+### 3.1 LL States {#ll-states}
+
+The Link Layer runs on the **controller chip's own processor**. You never write LL code - you control it through HCI commands. It handles all the real-time radio stuff.
+
+**States:**
+
+| State | What Happens |
+|-------|--------------|
+| **Standby** | Transceiver off, minimal power |
+| **Advertising** | Transmitting advertisement packets to passive listeners |
+| **Scanning** | Listening for advertisements from other devices |
+| **Initiating** | Scanning + preparing to connect to a specific advertiser |
+| **Connection** | Actively connected; sending/receiving data on connection events |
+
+---
+
+### 3.2 Connection Events & Parameters {#connection-events}
+
+Once connected, a slave and master synchronize on **connection events**. A connection event is a synchronized exchange: master sends, slave listens; then slave sends, master listens (bidirectional).
+
+The hopping sequence is determined by:
+- **nextChannel = (currentChannel + hopIncrement) mod 37**
+- **where hopIncrement is a random value agreed during connection setup.**
+
+---
+
+### 3.3 Advertising Channels (37, 38, 39) {#advertising-channels}
+
+#### BLE Advertising Channels:
+
+| Channel | Frequency |
+|---------|-----------|
+| **37** | 2402 MHz |
+| **38** | 2426 MHz |
+| **39** | 2480 MHz |
+
+**These 3 channels are placed in the "gaps between WiFi channels" to minimize interference.**
+
+A device advertises on all 3 channels sequentially (37 → 38 → 39), then waits for the advertising interval before repeating. Scanning on all 3 increases the chance of hearing the advertisement.
+
+#### Advertising Data:
+
+BLE hops between data channels using a pseudo-random pattern:
+
+**Connection Event #1:** Channel 15 (2438 MHz)
+**Connection Event #2:** Channel 7 (2414 MHz)
+**Connection Event #3:** Channel 13 (2462 MHz)
+
+The hopping sequence is determined by:
+- **nextChannel = (currentChannel + hopIncrement) and 37**
+- **where hopIncrement is a random value agreed during connection setup.**
+
+---
+
+## 4. HCI - Host Controller Interface {#hci}
+
+The Link Layer runs on the **controller chip's own processor**. You never write LL code - you control it through HCI commands. It handles all the real-time radio stuff.
+
+### 4.1 HCI Packet Types {#hci-packet-types}
+
+| Packet Type | Direction | Purpose |
+|-------------|-----------|---------|
+| **HCI Command** | Host → Controller | Request the controller to do something |
+| **HCI Event** | Controller → Host | Notify the host of something that happened |
+| **HCI Data (ACL)** | Both directions | Actual user data (GATT, L2CAP, etc.) |
+
+---
+
+### 4.2 HCI Commands, Events & Data {#hci-operations}
+
+HCI commands are grouped by category. Some key ones:
+
+#### Device Management:
+- `HCI_Reset` – Resets the controller
+- `HCI_ReadBDAddr` – Get the device's unique MAC address
+- `HCI_SetEventMask` – Tell the controller which events to send
+
+#### Advertising & Scanning:
+- `HCI_LESetAdvertisingData` – Set what data to advertise
+- `HCI_LEScan` – Start scanning for other devices
+- `HCI_LECreateConnection` – Initiate a connection
+
+#### Connection Management:
+- `HCI_ReadConnectionState` – Query connection status
+- `HCI_Disconnect` – Drop the connection
+
+---
+
+## 5. L2CAP - Logical Link Control & Adaptation Protocol {#l2cap}
+
+The Link Layer runs on the **controller chip's own processor**. You never write LL code - you control it through HCI commands. It handles all the real-time radio stuff.
+
+### 5.1 Basic L2CAP Channels {#l2cap-channels}
+
+Once connected, BLE hosts exchange data using **L2CAP channels**. Each channel has a unique ID and carries a specific type of data.
+
+**Fixed Channels** (always available):
+
+| Channel ID | Purpose |
+|-----------|---------|
+| **0** | Signaling (connection management) |
+| **4** | ATT (Attribute Protocol) - used by GATT |
+| **5** | LE Signaling (protocol negotiation) |
+
+Each channel can carry different **MTU (Maximum Transmission Unit)** sizes. BLE default is 27 bytes for ATT data, but you can negotiate larger.
+
+---
+
+### 5.2 Connection Parameters {#connection-parameters}
+
+When a connection is established, two key parameters control the data exchange:
+
+| Parameter | Range | Meaning |
+|-----------|-------|---------|
+| **Connection Interval** | 7.5 ms to 4 seconds | How often master and slave synchronize. Lower = more responsive, higher power; higher = longer battery life |
+| **Slave Latency** | 0-499 connection intervals | Slave can skip responding for N connection intervals. Trades latency for power |
+
+**Slave Latency Example:**
+- Connection interval = 30 ms
+- Slave latency = 4
+- Slave can delay responding up to 4 × 30 ms = 120 ms
+
+---
+
+## 6. GATT - Generic Attribute Profile {#gatt}
+
+### 6.1 What is a Profile {#gatt-profile}
+
+**Think of BLE like the postal system:**
+
+| Postal Analogy | BLE Layer | Job |
+|---|---|---|
+| You write a letter | Application | Organize data into services/characteristics |
+| You put it in an envelope | ATT / GATT | Standardize how to access that data |
+| Mail carrier routes it | L2CAP | Route the envelope to the right channel |
+| Your address, stamps, routing | Link Layer (Controller) | Send bits over the radio waves |
+| **TRANSMIT bits over 2.4 GHz radio waves** | Physical Layer (Radio) | **TRANSMIT bits over 2.4 GHz radio waves** |
+
+Every layer has **ONE job** and doesn't care about layers above or below.
+
+**Post office wants it into mailboxes with a name and address with a name** – **"organization"** – **Encrypt and authenticate**
+
+**Needs to the right protocol (ATT or SMP)** – **Standardized between my CPU software and the radio chip hardware**
+
+**Road** – **Link Layer (Controller)** – **2.4 GHz radio saves**
+
+---
+
+### 6.2 Characteristic Anatomy {#characteristic-anatomy}
+
+A BLE **Characteristic** is like a variable in traditional programming:
+
+```
+Characteristic "Temperature"
+├─ UUID: 0x2A1C
+├─ Value: 22.5°C (4 bytes)
+├─ Properties: Read, Notify
+└─ Descriptors: CCCD (Client Characteristic Configuration Descriptor)
+```
+
+**Every characteristic in BLE is described with:**
+
+| Aspect | Detail | Why it Matters |
+|--------|--------|----------------|
+| **UUID** | Unique identifier with a name | Find data reliably across devices |
+| **Value** | The actual data (temperature, heart rate, battery %) | 1 for advertising, 37 for data; Bit "1" is higher freq, Bit "0" is lower freq; **How weak a signal can still be decoded** |
+| **Properties** | Permissions (Read, Write, Notify, Indicate) | For advertising, 37 for data; Bit "1" is higher freq, Bit "0" is lower freq |
+| **Descriptors** | Extra info about the characteristic (units, format, CCCD) | Organize data into services/characteristics |
+
+---
+
+### 6.3 Descriptors {#descriptors}
+
+Descriptors provide metadata about characteristics. The most important descriptor is the **CCCD (Client Characteristic Configuration Descriptor)**.
+
+**CCCD** = "Can I get push notifications from this characteristic?"
+
+- **Value 0:** No notifications
+- **Value 1:** Notifications enabled
+- **Value 2:** Indications enabled (with acknowledgment)
+
+---
+
+### 6.4 Service Discovery Algorithm {#service-discovery}
+
+When you connect to a BLE device, you need to discover what services and characteristics it offers.
+
+**Service Discovery Steps:**
+
+1. **Discover primary services** – Get list of services on the device
+2. **For each service, discover characteristics** – See what data each service offers
+3. **For each characteristic, discover descriptors** – See metadata (units, CCCD, etc.)
+
+This process is **always handled by the BLE stack**. You never manually write discovery code.
+
+---
+
+### 6.5 Notifications and Indications {#notifications-indications}
+
+Once you find a characteristic with Notify or Indicate permission, you can:
+
+**Notifications:** Server sends data; client receives it passively. No acknowledgment. Like shouting a word 8 times – even if some repetitions are garbled, the listener can figure out what you said.
+
+**Indications:** Server sends data; client MUST acknowledge. Guaranteed delivery. Like sending a word 1 time. The receiver reconstructs the transmission even if the transmission is noisy.
+
+---
+
+### 6.6 Step-by-Step Process {#gatt-process}
+
+1. **Discover services**
+2. **Discover characteristics for each service**
+3. **Enable notifications** by writing to CCCD (value = 0x0001)
+4. **Receive notifications** as ATT notifications arrive
+
+---
+
+## 7. GAP - Generic Access Profile {#gap}
+
+### 7.1 What is a Profile {#gap-attribute}
+
+The Generic Access Profile (GAP) handles how devices discover and connect to each other.
+
+---
+
+### 7.2 GAP Roles {#gap-roles}
+
+Every BLE device plays one or more of these roles:
+
+| Role | Definition | Example |
+|------|-----------|---------|
+| **Broadcaster** | Sends advertisements; doesn't accept connections | Beacon, temperature sensor |
+| **Observer** | Listens for advertisements; doesn't initiate connections | Mobile app scanning for devices |
+| **Peripheral** | Sends advertisements; accepts one connection | Heart rate monitor, headphones |
+| **Central** | Listens for advertisements; initiates connections | Phone, laptop, smartwatch |
+
+---
+
+## 8. EATT - Enhanced Attribute Protocol {#eatt}
+
+### 8.1 Why EATT {#why-eatt}
+
+Classic GATT has **one slow channel (4)** for all attribute operations. EATT adds more channels for parallelism.
+
+---
+
+## 9. ATT - Attribute Protocol {#att}
+
+### 9.1 Attribute Protocol {#attribute-protocol}
+
+ATT is the wire protocol for reading/writing GATT attributes. It defines how to structure and transmit attribute data.
+
+---
+
+### 9.2 ATT Error Codes {#att-error-codes}
+
+When an ATT operation fails, the server responds with an error code:
+
+| Error Code | Meaning |
+|-----------|---------|
+| 0x00 | Success |
+| 0x01 | Invalid Handle |
+| 0x02 | Read Not Permitted |
+| 0x03 | Write Not Permitted |
+| 0x04 | Invalid PDU |
+| 0x05 | Insufficient Authentication |
+| 0x06 | Insufficient Authorization |
+| 0x07 | Insufficient Encryption Key Size |
+| 0x08 | Insufficient Encryption |
+| 0x0C | Insufficient Resources |
+
+---
+
+### 9.3 ATT Operations - Complete Reference {#att-operations}
+
+**ATT defines 31 different operation types.** Here are the most common:
+
+| Operation | Format | Uses |
+|-----------|--------|------|
+| **Exchange MTU Request** | [Client ATT-size] → [Server ATT-size] | Negotiate attribute data size |
+| **Find Information Request** | [Start-handle, End-handle] | Discover all attributes in a range |
+| **Find By Type Request** | [Start-handle, End-handle, Type-UUID, Value] | Search for attributes by type and value |
+| **Read Request** | [Handle] | Read a single attribute |
+| **Read Blob Request** | [Handle, Offset] | Read partial data from an attribute |
+| **Read Multiple Request** | [Handle1, Handle2, ...] | Read multiple attributes at once |
+| **Read By Type Request** | [Start-handle, End-handle, Type-UUID] | Find all attributes of a given type |
+| **Write Request** | [Handle, Value] | Write an attribute (expects response) |
+| **Write Command** | [Handle, Value] | Write an attribute (no response) |
+| **Notify** | [Handle, Value] | Server pushes data to client |
+| **Indicate** | [Handle, Value] | Server pushes data to client (guaranteed) |
+
+---
+
+### 9.4 ATT MTU Negotiation {#att-mtu}
+
+**MTU = Maximum Transmission Unit**
+
+Default ATT MTU = 27 bytes per transaction. Larger MTU = fewer transactions for large data.
+
+Both sides propose their MTU during connection. The smaller of the two is used.
+
+---
+
+## 10. SMP - Security Manager Protocol {#smp}
+
+### 10.1 Why Pairing is Needed {#pairing-needed}
+
+BLE devices must pair before secure communication. Pairing creates shared secret keys (LTK - Long-Term Key) that both devices can later use to encrypt/authenticate.
+
+---
+
+### 10.2 Three Phases of Pairing {#pairing-phases}
+
+#### Phase 1: Pairing Feature Exchange
+Both devices advertise their pairing capabilities (IO capabilities, key distribution preferences).
+
+#### Phase 2: Secret Key Agreement
+Using ECDH or Out-of-Band methods, both devices derive shared secrets.
+
+#### Phase 3: Key Distribution
+Devices exchange long-term keys (LTK), identity keys (IRK), and connection signature resolving keys (CSRK).
+
+---
+
+### 10.3 IO Capabilities & Pairing Method Selection {#io-capabilities}
+
+Based on device input/output capabilities, BLE selects the best pairing method:
+
+| IO Capability | Pairing Method | Security |
+|---|---|---|
+| **Display only** | Passkey Display | Medium |
+| **Display + Input** | Passkey Entry | Medium |
+| **Keyboard only** | Passkey Entry | Medium |
+| **No Input/Output** | Just Works | Low (no user interaction) |
+| **Keyboard + Display** | Out-of-Band (OOB) | High (no passive eavesdropping) |
+
+**Just Works** is "pairing by default" – no human confirmation needed.
+
+---
+
+### 10.4 LE Secure Connections {#le-secure}
+
+BLE 4.2+ introduced **LE Secure Connections**, which use ECDH (Elliptic Curve Diffie-Hellman) instead of the older weaker key agreement.
+
+---
+
+### 10.5 Key Distribution {#key-distribution}
+
+After pairing, devices exchange these keys:
+
+| Key | Purpose |
+|-----|---------|
+| **LTK (Long-Term Key)** | Encryption key for future connections |
+| **IRK (Identity Resolving Key)** | Decrypt random MAC addresses to identify devices |
+| **CSRK (Connection Signature Resolving Key)** | Verify message authenticity (message integrity checking) |
+
+---
+
+## 11. BLE Profiles - Standard Use Cases {#ble-profiles}
+
+### 11.1 What is a Profile {#what-profile}
+
+A **Profile** is a standardized collection of services and characteristics for a specific use case (heart rate, weather station, fitness tracker, etc.).
+
+**Example: Heart Rate Profile**
+
+```
+Heart Rate Service
+├─ Heart Rate Characteristic (UUID: 0x2A37)
+│  └─ Read, Notify
+│  └─ CCCD Descriptor
+├─ Body Sensor Location (UUID: 0x2A38)
+│  └─ Read
+└─ Heart Rate Control Point (UUID: 0x2A39)
+   └─ Write
+```
+
+---
+
+### 11.2 Heart Rate Profile {#heart-rate-profile}
+
+A wearable device (like a fitness tracker) exposes heart rate data via:
+
+- **Service:** Heart Rate
+- **Characteristics:**
+  - Heart Rate Measurement (notifiable, shows BPM)
+  - Body Sensor Location (readable, shows placement on body)
+
+---
+
+### 11.3 Voice Streaming Over HID {#voice-streaming}
+
+Modern BLE devices (e.g., hearing aids) stream audio voice using HID over BLE.
+
+---
+
+### 11.4 BLE Audio Codecs - ADPCM, mSBC, LC3 {#audio-codecs}
+
+BLE supports multiple audio codecs for different quality/bandwidth tradeoffs:
+
+| Codec | Bitrate | Bandwidth | Quality | Use Case |
+|-------|---------|-----------|---------|----------|
+| **ADPCM** | 64 kbps | – | Lower | Low-power, older BLE devices |
+| **mSBC** | 64 kbps | – | Shorter (-sBm) | Voice calls, better than ADPCM |
+| **LC3** | 32-160 kbps | Higher (–20dBm line of sight) | Highest | New LE Audio standard; future-proof |
+
+---
+
+### 11.5 mSBC for BLE Voice - Settings & Frame Format {#msbc-settings}
+
+| Setting | Value | Notes |
+|---------|-------|-------|
+| **Frame Duration** | 7.5 ms, 10 ms | Shorter = lower latency, higher CPU |
+| **Bitrate** | 64 kbps | Fixed for mSBC |
+| **Sampling Rate** | 16 kHz | Voice quality |
+
+---
+
+### 11.6 LC3 for LE Audio - Settings & Frame Format {#lc3-settings}
+
+| Setting | Value | Notes |
+|---------|-------|-------|
+| **Frame Duration** | 7.5 ms, 10 ms | – |
+| **Bitrate** | 24-160 kbps | Configurable for quality vs. power tradeoff |
+| **Sampling Rate** | 8-48 kHz | Up to CD quality (44.1 kHz) |
+
+---
+
+## 12. Other Common Profiles {#other-profiles}
+
+### 12.1 Other Common Profiles - BLE Misc {#other-profiles-detail}
+
+Common standardized profiles:
+
+- **Battery Service** – Battery level notification
+- **Device Information** – Manufacturer, firmware version, serial number
+- **Environmental Sensing** – Temperature, humidity, pressure
+- **Health Thermometer** – Temperature readings
+- **Blood Pressure** – Systolic, diastolic, pulse
+- **Glucose Meter** – Blood glucose levels
+- **Weight Scale** – Weight measurements
+- **Cycling Speed & Cadence** – Bike data
+- **Running Speed & Cadence** – Running data
+
+---
+
+## 13. Cryptographic Functions - The Why and How {#crypto}
+
+### 13.1 The Endianness Problem {#endianness}
+
+BLE uses **Little-Endian** byte order for numeric values, while many cryptographic functions expect **Big-Endian**.
+
+**Example:**
+- Value: 0x12345678
+- Big-Endian: `12 34 56 78`
+- Little-Endian: `78 56 34 12`
+
+---
+
+### 13.2 AES-128 and AES-CMAC {#aes-crypto}
+
+**AES-128:** Symmetric encryption with 128-bit keys.
+
+**AES-CMAC:** Authenticated encryption using AES with a secret key. Produces a 128-bit authentication tag.
+
+---
+
+### 13.3 F4 {#f4-function}
+
+Confirms device pairing using a pre-shared secret and random values.
+
+---
+
+### 13.4 F4O - SC Pairing Confirm {#f4o-pairing}
+
+Computes a confirmation value to prevent man-in-the-middle attacks during pairing.
+
+---
+
+### 13.5 F5 - SC Key Derivation {#f5-key-derivation}
+
+Derives the LTK (Long-Term Key) from the DH shared secret during LE Secure Connections pairing.
+
+---
+
+### 13.6 F6 - SC DH Key Check {#f6-dh-key}
+
+Verifies that both devices have the same DH shared secret (prevents key derivation errors).
+
+---
+
+### 13.7 ECDH - Elliptic Curve Diffie-Hellman {#ecdh}
+
+Modern key agreement method used in LE Secure Connections pairing. Replaces older, weaker methods.
+
+---
+
+## 14. BLE Version History {#ble-version}
+
+| Version | Year | Major Changes |
+|---------|------|----------------|
+| **BLE 4.0** | 2010 | Initial release; 1 Mbps, limited range |
+| **BLE 4.1** | 2013 | BLE Peripheral role support |
+| **BLE 4.2** | 2014 | LE Secure Connections, larger ATT MTU |
+| **BLE 5.0** | 2016 | 2 Mbps, LE Coded (long range), 4x advertisement data |
+| **BLE 5.1** | 2019 | Direction Finding (angle of arrival) |
+| **BLE 5.2** | 2021 | LE Audio, Connected Isochronous Streams |
+| **BLE 5.3** | 2022 | Periodic Advertising with Responses, Enhanced Advertising |
+| **BLE 5.4** | 2023 | Further LE Audio improvements |
+
+---
+
+## 15. Glossary {#glossary}
+
+- **ATT:** Attribute Protocol - the wire format for GATT
+- **BLE:** Bluetooth Low Energy
+- **CCCD:** Client Characteristic Configuration Descriptor
+- **CSRK:** Connection Signature Resolving Key
+- **ECDH:** Elliptic Curve Diffie-Hellman key agreement
+- **GAP:** Generic Access Profile (discovery & connection)
+- **GATT:** Generic Attribute Profile (services & characteristics)
+- **HCI:** Host Controller Interface (communication between host CPU and radio chip)
+- **L2CAP:** Logical Link Control & Adaptation Protocol (channel routing)
+- **LE:** Low Energy (another name for BLE)
+- **LTK:** Long-Term Key (main encryption key)
+- **MTU:** Maximum Transmission Unit (max data per transaction)
+- **PHY:** Physical layer (the radio modes)
+- **SMP:** Security Manager Protocol (pairing & encryption)
+- **UUID:** Universally Unique Identifier (service/characteristic IDs)
+
+---
+
+**This is a comprehensive reference guide for understanding BLE from radio waves to application data. Each layer builds on the previous one, and together they enable efficient, secure wireless communication for IoT devices.**
