@@ -96,6 +96,7 @@ This is a comprehensive guide to understanding every layer of BLE from radio wav
 ---
 
 ## 1. Overview - Why BLE Has So Many Layers {#overview}
+BLE is complex—but the layering is intentional. A flat, simpler design would fail at one of these requirements: it would either drain batteries, lack flexibility, or break compatibility. The layers separate concerns
 
 ### 1.1 Radio Basics {#radio-basics}
 
