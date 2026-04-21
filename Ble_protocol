@@ -126,6 +126,8 @@ The BLE architecture is divided into three main building blocks: the Application
  │                         Physical Layer (PHY)                             │   │
  │   "The Radio" - 2.4GHz GFSK modulation and Bit-streaming                 │   │
  └──────────────────────────────────────────────────────────────────────────┘ ──┘
+
+
 ### 1.1 Radio Basics {#radio-basics}
 
 BLE operates in the **2.4 GHz ISM (Industrial, Scientific, Medical) band** - the same band used by WiFi, Zigbee, and microwave ovens. It's a license-free spectrum.
