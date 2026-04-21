@@ -98,6 +98,25 @@ This is a comprehensive guide to understanding every layer of BLE from radio wav
 ## 1. Overview - Why BLE Has So Many Layers {#overview}
 BLE is complex—but the layering is intentional. A flat, simpler design would fail at one of these requirements: it would either drain batteries, lack flexibility, or break compatibility. The layers separate concerns
 
+The BLE architecture is divided into three main building blocks: the Application, the Host, and the Controller.
+  ┌─────────────────────────────────────────┐
+  │              APPLICATION                │
+  ├─────────────────────────────────────────┤ ──┐
+  │ GAP (Generic Access Profile)            │   │
+  ├────────────────────────┬────────────────┤   │
+  │ GATT (Generic Attribute│ SMP (Security  │   │ HOST
+  │       Profile)         │      Manager)  │   │ (App CPU)
+  ├────────────────────────┴────────────────┤   │
+  │ ATT (Attribute Protocol)                │   │
+  ├─────────────────────────────────────────┤   │
+  │ L2CAP (Logical Link Control & Adapt.)   │   │
+  ├─────────────────────────────────────────┤ ──┘
+  │       HCI (Host Controller Interface)   │ ─── STANDARD API
+  ├─────────────────────────────────────────┤ ──┐
+  │ Link Layer (LL)                         │   │ CONTROLLER
+  ├─────────────────────────────────────────┤   │ (Radio Chip)
+  │ Physical Layer (PHY)                    │   │
+  └─────────────────────────────────────────┘ ──┘
 ### 1.1 Radio Basics {#radio-basics}
 
 BLE operates in the **2.4 GHz ISM (Industrial, Scientific, Medical) band** - the same band used by WiFi, Zigbee, and microwave ovens. It's a license-free spectrum.
