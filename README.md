@@ -8,7 +8,7 @@ http://cse.unl.edu/~cbourke/searchingSorting.pdf
 https://github.com/rafi007akhtar/c-algorithms/blob/master/single_pointer_doublelinkedlist.c
 
 https://github.com/caisah/Sedgewick-algorithms-in-c-exercises-and-examples
-
+https://claude.ai/share/51f26076-51c9-4d6b-b484-9d73b806fe97
 storage classes :- 
 ---------------
                    1)decide the extent(lifetime) of variable.
