@@ -134,7 +134,8 @@ The OS **loader** reads the executable from disk, maps the segments (text, data,
 ## 3. The Preprocessor & Macros
 
 A **macro** is a textual substitution rule applied *before* compilation. The compiler never sees the macro name — only the expanded text.
-
+or
+A **macro** is a name defined using a preprocessor directive (#define) that is replaced by its corresponding text during preprocessing, before compilation
 ```c
 #define CUBE(b) b*b*b
 
