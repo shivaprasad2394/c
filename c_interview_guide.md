@@ -1,8 +1,7 @@
 # Comprehensive C Programming Study Guide
 ### Built for Systems / Embedded / Low-Level Interviews
 
-> Reorganized, deduplicated, fact-checked, and expanded from the source notes.
-> All OS/Linux/WiFi/GPS/C++ content has been intentionally removed — this is **pure C**.
+> this is **pure C**.
 
 ---
 
