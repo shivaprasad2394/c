@@ -134,7 +134,9 @@ The OS **loader** reads the executable from disk, maps the segments (text, data,
 ## 3. The Preprocessor & Macros
 
 A **macro** is a textual substitution rule applied *before* compilation. The compiler never sees the macro name — only the expanded text.
+
 or
+
 A **macro** is a name defined using a preprocessor directive (#define) that is replaced by its corresponding text during preprocessing, before compilation
 ```c
 #define CUBE(b) b*b*b
@@ -222,6 +224,9 @@ Functions don't have this problem because arguments are evaluated exactly once b
 
 `inline` is a *hint* to the compiler to substitute the function body at the call site, avoiding call overhead.
 
+or
+
+An inline function is a function whose call may be expanded in-place by the compiler, eliminating function call overhead, though the compiler may choose not to inline it.
 ```c
 #include <stdio.h>
 
