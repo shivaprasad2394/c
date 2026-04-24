@@ -395,34 +395,38 @@ int main() {
 
 /*
 Algorithm/Logic Steps:
-1. Initialize maxSoFar = arr[0], maxEndingHere = arr[0]
-2. For each element from index 1:
-   - maxEndingHere = max(arr[i], maxEndingHere + arr[i])
-   - maxSoFar = max(maxSoFar, maxEndingHere)
-3. Return maxSoFar
-4. Time Complexity: O(n), Space Complexity: O(1)
+1. Initialize: maxSoFar = arr[0], maxEndingHere = arr[0].
+2. For each element from index 1 to n-1:
+   - Calculate maxEndingHere: Decide whether to extend the current "streak" or start a new subarray at the current element.
+     (Logic: If adding the current element to the previous sum makes it smaller than the element itself, start over.)
+   - Update maxSoFar: If the current streak (maxEndingHere) is the best we've ever seen, save it.
+3. Return maxSoFar.
 
-🧠 Kadane’s Algorithm Logic
+📊 Complexity:
+- Time: O(n) -> We only pass through the array once.
+- Space: O(1) -> We only use two variables regardless of array size.
 
-maxSoFar: Tracks the overall maximum sum found so far.
-maxEndingHere: Tracks the maximum sum ending at the current position (can reset if current number is better than extending previous subarray).
-ex:-
-arr = [−2, 1, −3, 4, −1, 2, 1, −5, 4]
-We want the maximum sum of a contiguous subarray.
-| i | arr[i] | maxEndingHere = max(arr[i], maxEndingHere + arr[i]) | maxSoFar = max(maxSoFar, maxEndingHere) |
-|---|--------|------------------------------------------------------|-------------------------------------------|
-| 1 |   1    | max(1, -2 + 1) = 1                                   | max(-2, 1) = 1                            |
-| 2 |  -3    | max(-3, 1 + -3) = -2                                 | max(1, -2) = 1                            |
-| 3 |   4    | max(4, -2 + 4) = 4                                   | max(1, 4) = 4                             |
-| 4 |  -1    | max(-1, 4 + -1) = 3                                  | max(4, 3) = 4                             |
-| 5 |   2    | max(2, 3 + 2) = 5                                    | max(4, 5) = 5                             |
-| 6 |   1    | max(1, 5 + 1) = 6                                    | max(5, 6) = 6                             |
-| 7 |  -5    | max(-5, 6 + -5) = 1                                  | max(6, 1) = 6                             |
-| 8 |   4    | max(4, 1 + 4) = 5                                    | max(6, 5) = 6                             |
-|---|--------|------------------------------------------------------|-------------------------------------------|
+🧠 The "Should I Restart?" Logic:
+- maxEndingHere = max(current_element, previous_streak + current_element)
+- If current_element is higher than (previous_streak + current_element), it means the previous streak was a "drag" (negative), so we cut it off and start fresh at the current index.
+
+Example Trace: arr = [-2, 1, -3, 4, -1, 2, 1, -5, 4]
+
+| i | arr[i] | maxEndingHere (Extend vs Restart) | maxSoFar (Global Best) | Result/Action |
+|---|--------|-----------------------------------|------------------------|---------------|
+| 0 |  -2    | -2                                | -2                     | Initialization |
+| 1 |   1    | max(1, -2 + 1) = 1                | max(-2, 1) = 1         | Restarted at 1 |
+| 2 |  -3    | max(-3, 1 + -3) = -2              | max(1, -2) = 1         | Extended (Streak drops) |
+| 3 |   4    | max(4, -2 + 4) = 4                | max(1, 4) = 4          | Restarted at 4 |
+| 4 |  -1    | max(-1, 4 + -1) = 3               | max(4, 3) = 4          | Extended |
+| 5 |   2    | max(2, 3 + 2) = 5                 | max(4, 5) = 5          | Extended (New Record!) |
+| 6 |   1    | max(1, 5 + 1) = 6                 | max(5, 6) = 6          | Extended (New Record!) |
+| 7 |  -5    | max(-5, 6 + -5) = 1               | max(6, 1) = 6          | Extended |
+| 8 |   4    | max(4, 1 + 4) = 5                 | max(6, 5) = 6          | Extended |
+
 🎯 Final Result:
 Maximum subarray sum = 6
-The subarray is [4, -1, 2, 1]
+The subarray producing this is [4, -1, 2, 1] (Indices 3 to 6).
 */
 
 #if C_CODE4
