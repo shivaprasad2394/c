@@ -138,7 +138,7 @@ App/Data → TCP/UDP → IP Packet → MSDU → MPDU → Wireless Transmission
 3. If still idle Backoff timer decrements, when the channel remains idle & the timer hits **zero**, the device transmits its frame(data).
 4. If the channel is **busy**, the device wait for next DIFS, and tries again later.
 5. - If an **ACK Handling** is received → success.
-   - If not → assume collision → **increase CW**, retry (up to a max retry limit).
+   - If not → assume collision → **increase CW**(contention window), retry (up to a max retry limit).
 
 ---
 
