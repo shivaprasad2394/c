@@ -152,6 +152,8 @@ When step 1 above says a device **"listens,"** that listening is performed by **
 | **Physical ED** | CCA-ED / Energy Detect | The PHY measures **raw RF energy** against a threshold (e.g., ~ −62 dBm in 20 MHz). Catches **non-802.11 interference** (microwaves, Bluetooth, radar) that can't be decoded. |
 | **Virtual CS** | NAV (Network Allocation Vector) | A **countdown timer** set from the **Duration field** of overheard frames (e.g., RTS/CTS). The medium is treated as busy until NAV reaches 0 — *even if the radio hears nothing*. |
 
+The L-SIG (Legacy Signal) is a 24-bit field in the Wi-Fi physical layer (PLCP) preamble. Its primary job is to tell all devices on the network—including older legacy clients—the data rate and length of the incoming frame, allowing them to calculate its duration and hold off transmitting to prevent collisions.
+
 **The rule:** the medium is considered **idle only when *both* physical CS/ED report idle *and* the NAV is zero.** Any one of them indicating "busy" freezes the backoff countdown.
 
 ```mermaid
