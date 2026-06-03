@@ -262,15 +262,17 @@ sequenceDiagram
 #### ✅ Solution: Why the Exposed Node Problem is Hard to Solve
 - Unlike the hidden node problem, basic RTS/CTS does **not** fix the exposed node problem — it can even make it worse, because C hears A's RTS and defers.
 - Practical mitigations:
-  - 1. Spatial Reuse and BSS Coloring (Wi-Fi 6 / 802.11ax)Wi-Fi 6 directly addresses exposed-node over-deferral in dense environments using BSS Coloring [1].
-       - The Mechanism: Every Wi-Fi 6 Access Point (AP) assigns a numerical "color" (from 1 to 63) to its Basic Service Set (BSS) [1]. This color is included right in the PHY (physical layer) header of every wireless frame [1].
-       - How it Solves the Problem:
-           - When an exposed node (Node C) hears a transmission from a neighbor (Node A), it checks the color [1].If the color belongs to a different network (Overlapping BSS or OBSS), Node C switches to an adaptive threshold called OBSS_PD (Preamble Detection) [1].
-           - This threshold is higher (less sensitive) than the standard clear-channel assessment (CCA) threshold [1].If Node A's signal strength is below this new OBSS_PD limit, Node C completely ignores Node A and transmits anyway [1]
+  - **Spatial Reuse and BSS Coloring (Wi-Fi 6 / 802.11ax)Wi-Fi 6** directly addresses exposed-node over-deferral in dense environments using BSS Coloring.
+       - The Mechanism: Every Wi-Fi 6 Access Point (AP) assigns a numerical "color" (from 1 to 63) to its Basic Service Set (BSS) .
+       - This color is included right in the PHY (physical layer) header of every wireless frame.
+       - **How it Solves the Problem**:
+           - When an exposed node (Node C) hears a transmission from a neighbor (Node A), it checks the color .If the color belongs to a different network (Overlapping BSS or OBSS), Node C switches to an adaptive threshold called OBSS_PD (Preamble Detection).
+           - This threshold is higher (less sensitive) than the standard clear-channel assessment (CCA) threshold .If Node A's signal strength is below this new OBSS_PD limit, Node C completely ignores Node A and transmits anyway.
   - **Directional / beamformed antennas (MU-MIMO, 802.11ac/ax):** spatially separate A→B and C→D so they genuinely don't collide, allowing concurrent transmission.
-  - .2. Receiver-Based Carrier Sensing (Dynamic CCA)Traditional Wi-Fi operates on Transmitter-Based Carrier Sensing:
-      - "If I hear someone talking, I must stay quiet." Exposed node solutions shift the focus to the receiver.The Mechanism: The real metric that matters is whether Node C's target (Node D) can cleanly receive data, not whether Node C can hear Node A.
-      - How it Solves the Problem: Advanced physical layer configurations use Dynamic CCA thresholds.
+  - **Receiver-Based Carrier Sensing (Dynamic CCA)** Traditional Wi-Fi operates on Transmitter-Based Carrier Sensing:
+      - **If I hear someone talking, I must stay quiet.** Exposed node solutions shift the focus to the receiver.
+      - **The Mechanism**: The real metric that matters is whether Node C's target (Node D) can cleanly receive data, not whether Node C can hear Node A.
+      - **How it Solves the Problem**: Advanced physical layer configurations use Dynamic CCA thresholds.
       - If Node C detects that its neighbor's signal is weak enough, it calculates that its own transmission will not bleed into Node D's space with enough power to disrupt anything, allowing parallel transmissions.
   - **Tighter power control / cell planning:** reducing TX power and overlapping coverage limits the range over which C senses A.
 - **Key point:** the exposed node problem is fundamentally about *over-conservative carrier sensing*. The fixes loosen or spatially refine that sensing rather than reserving the medium (which is the hidden-node fix).
