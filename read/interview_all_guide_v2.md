@@ -2253,7 +2253,95 @@ int main(void) {
 ```text
 5*8=40 40/4=10
 ```
+***bitwise multiply***
+This function uses an ancient algorithm known as **Egyptian Multiplication** or the **Russian Peasant Method**, which maps perfectly to how modern digital circuits handle multiplication at the hardware level.
 
+The core rule of binary multiplication is simple: **Any decimal number can be broken down into a sum of powers of 2.**
+
+For example, if you want to multiply $13 \times 5$:
+1. Look at the multiplier, `5`. In binary, `5` is `0101`.
+2. This means $5 = (4 + 1)$, or $(2^2 + 2^0)$.
+3. Therefore, $13 \times 5$ is exactly the same as:
+   $$(13 \times 4) + (13 \times 1)$$
+
+---
+
+## Step-by-Step Execution Trace
+
+Let's look at exactly what happens inside the `while` loop when you pass `a = 13` and `b = 5`.
+
+### **Initial State:**
+* `a = 13` (Binary: `1101`)
+* `b = 5`  (Binary: `0101`)
+* `result = 0`
+
+---
+
+### **Iteration 1:**
+* **Check Bit (`b & 1`):** `5 & 1` is **True** (the lowest bit of `0101` is `1`).
+* **Action:** Add the current value of `a` to our result.
+  * `result = 0 + 13 = 13`
+* **Shift Operations:**
+  * `a <<= 1` $\rightarrow$ `13` becomes **`26`** (Doubled)
+  * `b >>= 1` $\rightarrow$ `5` (`0101`) becomes **`2`** (`0010`) (Halved)
+
+---
+
+### **Iteration 2:**
+* **Check Bit (`b & 1`):** `2 & 1` is **False** (the lowest bit of `0010` is `0`).
+* **Action:** Do nothing to `result`. We skip adding because this column in the multiplier is zero.
+  * `result` remains **`13`**
+* **Shift Operations:**
+  * `a <<= 1` $\rightarrow$ `26` becomes **`52`** (Doubled)
+  * `b >>= 1` $\rightarrow$ `2` (`0010`) becomes **`1`** (`0001`) (Halved)
+
+---
+
+### **Iteration 3:**
+* **Check Bit (`b & 1`):** `1 & 1` is **True** (the lowest bit of `0001` is `1`).
+* **Action:** Add the current scaled value of `a` to our result.
+  * `result = 13 + 52 = 65`
+* **Shift Operations:**
+  * `a <<= 1` $\rightarrow$ `52` becomes **`104`**
+  * `b >>= 1` $\rightarrow$ `1` (`0001`) becomes **`0`** (`0000`)
+
+---
+
+## **Loop Termination:**
+The loop checks `while (b > 0)`. Because `b` is now `0`, the loop exits.
+
+The function returns `result`, which is **65** ($13 \times 5 = 65$).
+```c
+#include <stdio.h>
+
+/**
+ * Multiplies two integers using only bitwise shifts and addition.
+ * Works for any non-negative integers.
+ */
+int bitwise_multiply(int a, int b) {
+    int result = 0; // Stores the final accumulated answer
+    
+    while (b > 0) {
+        // Step 1: Check if the lowest bit of 'b' is 1 (is 'b' odd?)
+        if (b & 1) {
+            result += a; 
+        }
+        
+        // Step 2: Prepare for the next bit
+        a <<= 1;  // Double 'a' (Shift left by 1)
+        b >>= 1;  // Halve 'b' (Shift right by 1)
+    }
+    
+    return result;
+}
+
+int main(void) {
+    int x = 13;
+    int y = 5;
+    printf("%d * %d = %d\n", x, y, bitwise_multiply(x, y));
+    return 0;
+}
+```
 ### 44. Missing Number from 1..N (XOR variant)
 
 ```text
