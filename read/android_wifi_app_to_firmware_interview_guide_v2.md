@@ -463,31 +463,59 @@ A single radio (`wiphy`) can host several netdevs (`wlan0` STA + `ap0` SoftAP) �
 **The birth sequence of `wlan0`, end to end:**
 
 ```text
-1 BUS PROBE
-    PCIe/SDIO/AHB bus enumerates the chip -> driver .probe() runs
-    (e.g. ath10k_pci_probe): map BARs/registers, set up the Copy Engine
-2 FIRMWARE
-    BMI loads firmware + board-2.bin over the Copy Engine (see §4.4),
-    target CPU released, WMI 'ready' event returns
-3 RADIO REGISTERED
-    driver calls ieee80211_alloc_hw() then ieee80211_register_hw()
-    -> the wiphy now exists in cfg80211 (you'd see it as 'phy0')
-    -> but there is no usable wlanX netdev yet
-4 INTERFACE ADDED  (this is the step that creates wlanX)
-    userspace asks for an interface:
-      desktop:  iw phy phy0 interface add wlan0 type managed
-      Android:  the Wi-Fi Vendor HAL requests a STA iface (via WifiNative)
-    -> nl80211 NL80211_CMD_NEW_INTERFACE -> cfg80211
-    -> mac80211 ieee80211_if_add(): alloc_netdev() builds the struct,
-       sets dev->netdev_ops = mac80211's handlers, dev->ieee80211_ptr = wdev
-    -> register_netdevice(): assigns ifindex, creates /sys/class/net/wlan0,
-       sends an RTM_NEWLINK uevent, interface appears DOWN
-5 BROUGHT UP
-    'ip link set wlan0 up'  (or the framework's equivalent)
-    -> dev_open() -> dev->netdev_ops->ndo_open()
-    -> for mac80211 that's ieee80211_open -> driver .start / .add_interface
-    -> firmware brings up a 'vdev' (virtual device), queues enabled,
-       NAPI enabled, IRQ requested, netif_start_queue(): now it can carry traffic
+The Linux Wi-Fi Bootstrap Lifecycle
+1. Bus Probe (Hardware Introduction)
+    The Linux kernel detects the physical chip via the bus (typically PCIe for desktop/server, SDIO/AHB for embedded/mobile).
+    
+    The Trigger: The bus core matches the chip's Vendor/Device ID with the driver's registry.
+    
+    The Action: ath10k_pci_probe (or equivalent) maps the Base Address Registers (BARs) into kernel memory space so the CPU can talk to the chip's registers.
+    
+    The Setup: Initializing the Copy Engine (CE)—the ring-buffer-based DMA channels used for host-to-target communication before the main network data paths are alive.
+
+2. Firmware Download & Target Boot
+    Modern Wi-Fi chips are complex SoC microcontrollers that run their own operating systems. They start up "blank" and need the host driver to feed them brains.
+    
+    BMI (Bootloader Messaging Interface): A primitive, pre-firmware protocol used to blast data over the Copy Engine.
+    
+    The Payload: The driver reads firmware-X.bin (the code) and board-2.bin (calibration data, MAC addresses, RF tuning for that specific hardware board) from /lib/firmware/ and uploads them.
+    
+    The Wakeup: The host releases the target CPU from reset. The firmware boots, initializes its internal MAC/PHY, and fires back a WMI (Wireless Management Interface) READY event to signal that it is ready for wireless commands.
+
+3. Radio Registration (The Wireless Framework)
+    At this stage, the driver knows the chip is alive, but Linux doesn't know it's a Wi-Fi device yet.
+    
+    The Handoff: The driver calls ieee80211_alloc_hw() and ieee80211_register_hw() to register itself with mac80211 / cfg80211.
+    
+    The Result: A physical wireless device (wiphy) is born. If you run iw list, you will see phy0 (or phy1), detailing the chip's capabilities (supported channels, HT20/40, VHT80, TX chains, etc.).
+    
+    Note: You still cannot pass traffic because no network interface (net_device) exists.
+
+4. Interface Creation (The Virtualization Step)
+    Linux separates the physical radio (phyX) from the logical interface (wlanX). This allows a single radio to act simultaneously as a Station (STA) and an Access Point (AP).
+    
+    The Trigger: Userspace (NetworkManager, wpa_supplicant, or the Android Vendor HAL via nl80211 Netlink sockets) requests a new managed interface.
+    
+    The Structure: mac80211 handles ieee80211_if_add() and calls alloc_netdev(). This allocates the standard Linux struct net_device.
+    
+    The Wire-up: The kernel points netdev->netdev_ops to mac80211's function pointers. When the kernel wants to transmit a packet, it will now call mac80211's handlers, which in turn pass it to ath10k.
+    
+    The Sysfs Birth: register_netdevice() assigns an ifindex (e.g., 4) and populates /sys/class/net/wlan0. An RTM_NEWLINK event is broadcast to userspace. The interface is visible in ip link, but its state is strictly DOWN.
+
+5. Interface Bring Up (The Data Path Ignites)
+    This is the final hurdle where the interface goes from passive configuration to actively processing packets.
+    
+    The Trigger: Userspace executes ip link set wlan0 up.
+    
+    The Core Call: The kernel triggers dev_open(), leading directly to ndo_open(). For wireless, this routes to ieee80211_open, which tells the underlying driver (ath10k) to spin up.
+    
+    The Firmware VDEV: The driver sends a WMI command to the firmware to create a VDEV (Virtual Device)—a logical container inside the chip's firmware matching our wlan0.
+    
+    The Engines Roar: * NAPI (New API) is enabled to allow high-speed polling of incoming frames instead of relying purely on spammy hardware interrupts.
+    
+    Interrupts (IRQs) are requested and unmasked.
+    
+    netif_start_queue(dev) is called. This tells the Linux network stack: "The pipes are clear. You can start dumping outbound network packets onto this interface.
 ```
 
 So the precise answer to **"how does the wlan net device get created?"** is: the driver registers a *radio* (`wiphy`) at probe; the *netdev* (`wlanX`) is created later, when an interface is added via `nl80211 NEW_INTERFACE`, which routes through `cfg80211` → `mac80211`'s `add_interface` → `alloc_netdev` + `register_netdevice`. The `net_device_ops` table wired up there is what the whole stack calls into from then on.
