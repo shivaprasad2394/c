@@ -60,6 +60,47 @@ However, using it this way as a general locking mechanism is considered **bad pr
 * **Binary Semaphore (Count = 1):** Used for simple signaling ("The event happened").
 * **Counting Semaphore (Count = $N$):** Used when you have **$N$ identical items** or need to track multiple occurrences of an event.
 
+Yes, **both are synchronization primitives**, but they serve fundamentally different purposes. While you can use both to restrict access to shared resources, they behave very differently under the hood.
+
+The easiest way to remember the difference is: **A Mutex is about *locking* (Ownership), while a Semaphore is about *signaling* (Coordination).**
+
+---
+
+### Key Differences at a Glance
+
+| Feature | Mutex (Mutual Exclusion) | Semaphore |
+| --- | --- | --- |
+| **Primary Purpose** | Protecting a shared resource so only **one** task can access it at a time. | **Signaling** between tasks, or managing access to a **pool** of identical resources (e.g., 3 printers). |
+| **Ownership** | **Strict Ownership:** Only the task that locked (took) the mutex is allowed to unlock (give) it. | **No Ownership:** Any task—or even an Interrupt Service Routine (ISR)—can signal (give) or wait (take) a semaphore. |
+| **Types** | Binary (Locked/Unlocked), sometimes recursive. | Binary (0 or 1) or **Counting** (0 to $N$). |
+| **Priority Inheritance** | **Supported:** If a low-priority task holds a mutex and blocks a high-priority task, the OS temporarily boosts the low task's priority. | **Not Supported:** Semaphores do not track who owns them, so priority inheritance is impossible. |
+
+---
+
+### 1. Mutex: The "Key to the Bathroom"
+
+Think of a mutex as a physical key to a single-occupancy restroom.
+
+* **Exclusive Access:** Only one person can hold the key and enter the room at a time.
+* **Strict Rules:** The person who went inside is the *only* person allowed to unlock the door and hand the key back.
+* **Use Case:** Protecting a critical section of code, a global variable, or a hardware peripheral that cannot be accessed concurrently without breaking data integrity.
+
+### 2. Semaphore: The "Traffic Light" or "Counter"
+
+Think of a semaphore as a counter or a stack of parking tokens at a lot with a limited capacity.
+
+* **Signaling:** One task can signal (give) a semaphore to wake up another waiting task, acting like a baton passed in a relay race.
+* **No Rules on Who Gives:** Task A can take the semaphore, and Task B (or an interrupt) can give it back.
+* **Counting Semaphores:** If you have 3 identical database connections available, you initialize a counting semaphore with a value of 3. Tasks can take a token to use a connection and return it when done.
+
+---
+
+### Summary: Which one should you use?
+
+* Use a **Mutex** when you want to protect a shared resource where **who holds the lock matters** (and you need features like priority inheritance to avoid locking up your system).
+* Use a **Semaphore** when you are doing **task synchronization** (e.g., "Wait until the data packet arrives from the ISR, then process it") or managing a finite pool of resources.
+
+
 To truly understand how semaphores and mutexes work internally, you have to look at what the FreeRTOS kernel and its Scheduler are actually doing in memory and CPU registers.
 
 Here is what happens under the hood inside the OS when you use them.
