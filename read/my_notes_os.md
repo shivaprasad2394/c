@@ -223,3 +223,37 @@ while (lock is taken) {
 
 * **Mutex:** Used for **long tasks** (like writing to an SD card or waiting for I/O). If it's busy, the OS **sleeps** the task to save CPU power. *Never use in an ISR.*
 * **Spinlock:** Used for **micro-tasks** (like updating a multi-core variable for a few clock cycles). If it's busy, the CPU **loops frantically** until it gets it. *Safe in both tasks and ISRs.*
+
+
+**Yes, exactly!** Priority inheritance is the standard OS solution to the **Priority Inversion** problem.
+
+To see why it's such a clever fix, let's look at the problem it solves and how the fix works step-by-step.
+
+---
+
+### The Problem: Priority Inversion
+
+Imagine a scenario with three tasks:
+
+1. **Task H** (High Priority)
+2. **Task M** (Medium Priority)
+3. **Task L** (Low Priority)
+
+* **Step 1:** **Task L** takes a Mutex to use a shared resource.
+* **Step 2:** **Task H** wakes up, needs that same Mutex, and blocks because Task L has it.
+* **Step 3 (The Inversion Trap):** **Task M** (Medium Priority) wakes up. Because Task M has a higher priority than Task L, the CPU stops Task L.
+* **The Disaster:** Task H (the highest priority task in the system) is now indirectly blocked by Task M (a medium priority task) because Task M is starving Task L, preventing Task L from releasing the mutex!
+
+---
+
+### The Solution: Priority Inheritance
+
+This is where the OS "magic" you saw earlier kicks in:
+
+* **The Boost:** The moment **Task H** blocks waiting for the Mutex, the OS checks who holds it (Task L). The OS says, *"Hey, Task L is holding up a high-priority task!"* and **temporarily boosts Task L's priority** to match Task H.
+* **The Execution:** Because Task L now has High Priority, the CPU kicks **Task M** out of the way. Task L quickly finishes its critical section and releases the Mutex.
+* **The Restore:** Task H immediately gets the Mutex and runs. Task L drops back down to its original low priority.
+
+### Summary
+
+Without **Priority Inheritance**, a medium-priority task can accidentally freeze out a high-priority task (Priority Inversion). With **Priority Inheritance**, the OS ensures the low-priority task holding the lock gets pushed to the front of the line so it can finish as fast as possible.
