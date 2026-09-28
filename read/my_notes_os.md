@@ -613,3 +613,92 @@ If the UART isn't just used for plain text logs, but is actually connected to an
 2. **Bootloader** hands this binary map (DTB) to the kernel.
 3. **OS Kernel** matches the `compatible` string and triggers the driver's `probe()` function.
 4. **Driver** maps memory, turns on clocks, configures pins, hooks up the IRQ, and registers a serial port (`/dev/ttyS...`).
+
+
+An **ISR (Interrupt Service Routine)**—often called an **Interrupt Handler**—is a special block of code that the CPU executes automatically when a hardware event or urgent signal occurs.
+
+---
+
+### 1. What is an ISR?
+
+Think of an ISR as a **fire alarm** in a building.
+
+* You could be sitting at your desk writing code (running a normal task).
+* Suddenly, a smoke detector goes off (a hardware interrupt line pulses).
+* You drop what you are doing, instantly execute an emergency response plan (the ISR), and *then* go back to your desk to finish your code where you left off.
+
+#### Golden Rules of an ISR:
+
+1. **Be Fast:** An ISR pauses whatever the CPU is currently doing. If your ISR takes too long, your system will lag or miss other critical deadlines.
+2. **Never Block:** You **cannot** call functions that block or sleep (like `vTaskDelay()` or `mutex_lock()`) inside an ISR because there is no task context to put to sleep!
+
+---
+
+### 2. How to Add / Register an ISR Routine
+
+To make the CPU jump to your custom function when a specific hardware event happens, you have to **register** it. This links a hardware IRQ (Interrupt Request) line to your C function.
+
+The registration method depends slightly on your environment:
+
+#### A. In Linux Drivers (Using `request_irq`)
+
+In Linux, drivers register their interrupt handlers dynamically during the `probe()` function using the kernel API:
+
+```c
+// Example Linux IRQ Registration
+static irqreturn_t my_wifi_irq_handler(int irq, void *dev_id) {
+    // 1. Acknowledge the hardware interrupt
+    // 2. Schedule bottom-half processing
+    return IRQ_HANDLED;
+}
+
+// Inside the driver's probe function:
+result = request_irq(irq_number, my_wifi_irq_handler, IRQF_SHARED, "my_wifi_device", dev_id);
+
+```
+
+#### B. In Bare-Metal / RTOS (CMSIS or Vector Tables)
+
+In microcontrollers (like ARM Cortex-M), you either populate a static **Vector Table** in your startup file or use a vendor HAL function:
+
+```c
+// Example using an ARM CMSIS-style approach
+// 1. Configure the interrupt priority
+NVIC_SetPriority(EXTI0_IRQn, 2);
+
+// 2. Enable the interrupt line in the hardware controller
+NVIC_EnableIRQ(EXTI0_IRQn);
+
+// 3. Define the exact function name expected by the vector table
+void EXTI0_IRQHandler(void) {
+    // Handle the pin change event instantly
+    // Clear the hardware interrupt flag!
+}
+
+```
+
+---
+
+### 3. Types of ISRs & Handling Strategies
+
+When engineers talk about "types" or styles of ISRs, they are usually referring to **where** the event originates (Hardware vs. Software) and **how** it is processed (Top-Half vs. Bottom-Half).
+
+#### A. Classification by Source
+
+1. **Hardware Interrupts (Asynchronous):** Triggered by physical external devices (e.g., a packet arriving on a Wi-Fi chip, a byte hitting a UART RX pin, a button press). The CPU cannot predict *when* they will happen.
+2. **Software Interrupts / Exceptions (Synchronous):** Triggered by the CPU itself due to exceptional conditions or explicit software triggers (e.g., a Hard Fault, a system call/trap, or a software-triggered interrupt for task switching like FreeRTOS's PendSV).
+
+#### B. Classification by Processing Strategy (Top-Half vs. Bottom-Half)
+
+Because an ISR must execute instantly, complex work cannot be done inside the ISR itself. Operating systems split interrupt handling into two stages:
+
+* **The Top-Half (The Real ISR):**
+* **What it is:** The actual interrupt handler registered with the CPU.
+* **What it does:** Runs immediately. It clears the hardware flag (so the chip stops screaming), grabs raw data from hardware registers, and exits as fast as possible (microseconds).
+
+
+* **The Bottom-Half (Deferred Processing):**
+* **What it is:** The delayed execution of the heavy workload triggered by the top-half.
+* **How it works:**
+* In **FreeRTOS**, the top-half uses an API ending in `FromISR` (like `xSemaphoreGiveFromISR()`) to wake up a background task. That background task handles the heavy lifting safely.
+* In **Linux**, the kernel uses mechanisms like **Tasklets**, **Workqueues**, or **SoftIRQs** to defer heavy processing out of the critical interrupt context.
