@@ -1,1 +1,70 @@
-To truly understand how semaphores and mutexes work internally, you have to look at what the FreeRTOS kernel and its Scheduler are actually doing in memory and CPU registers.Here is what happens under the hood inside the OS when you use them.The Big Secret: They Are Both Just QueuesIn the FreeRTOS source code (queue.c), semaphores and mutexes do not have their own separate code engines.Instead, FreeRTOS creates a standard Queue, but plays tricks with the item size and rules:A Semaphore is a queue where the item size is 0 bytes. No actual data is copied; the queue only tracks how many items (tokens) are currently inside it (uxMessagesWaiting).A Mutex is a binary semaphore (queue of length 1, item size 0) attached to an extra block of memory that tracks who owns it.1. What Happens Inside the OS for a SemaphoreWhen a task calls xSemaphoreTake() (and the count is 0) or xSemaphoreGive(), here is the exact sequence of OS events:When you Take a Semaphore (and it's empty, count = 0):State Change: The OS changes the running task’s state from Running to Blocked.Task List Movement: The OS takes the task's TCB (Task Control Block) out of the CPU's "Ready List" and inserts it into the Queue's internal Waiting-to-Receive List (sorted by task priority).Yielding the CPU: The OS immediately triggers a Context Switch (portYIELD()). The CPU stops running this task and switches to the next highest-priority ready task.When you Give a Semaphore (releasing a token):Count Check: The OS increments the internal counter (uxMessagesWaiting).Waiter Check: The OS checks the Queue's waiting list to see if any tasks are blocked waiting for this semaphore.Unblocking: If a task is waiting, the OS removes the highest-priority task from the waiting list, moves it back to the Ready List, and updates its state to Ready.Context Switch Decision: If the unblocked task has a higher priority than the currently running task, the OS instantly forces a context switch so the high-priority task can run right now.2. What Happens Inside the OS for a MutexA Mutex does everything a semaphore does, but adds ownership tracking and Priority Inheritance. Here is what changes inside the OS:The Extra Data Fields:Inside the Mutex control structure, FreeRTOS tracks:pxMutexHolder: A pointer to the TCB of the exact task currently holding the mutex.uxRecursiveCallCount: A number tracking how many times the owner has nested its "Takes".When Priority Inheritance Happens (The OS Magic):Imagine a Low-Priority Task (Task L) holds a Mutex, and a High-Priority Task (Task H) tries to Take it and gets blocked.The Trap: When Task H blocks, the OS looks at the Mutex and sees it is owned by Task L (pxMutexHolder).The Comparison: The OS compares Task H's priority with Task L's priority. It discovers: Wait, a high-priority task is being held up by a low-priority task! (This is the "Priority Inversion" problem).The Boost: FreeRTOS temporarily rewrites Task L's priority in its TCB to match Task H's priority.The Result: Because Task L now has high priority, the CPU scheduler immediately kicks other medium-priority tasks out of the way and lets Task L finish its critical section and release the mutex.The Restore: The exact moment Task L calls xSemaphoreGive(), the OS looks at the mutex, sees it's being released, and instantly restores Task L back to its original low priority.Quick Comparison of OS ActionsActionSemaphore OS MechanismMutex OS MechanismData StructureQueue (size 0, length $N$)Queue (size 0, length 1) + Owner TCB PointerWho can release?Anyone (Tasks or ISRs)Only the owner taskPriority HandlingNone (FIFO or Priority waiting)Priority Inheritance (boosts owner)ISR SafetyYes (FromISR API exists)No (ISRs have no TCB to own a mutex)
+To truly understand how semaphores and mutexes work internally, you have to look at what the FreeRTOS kernel and its Scheduler are actually doing in memory and CPU registers.
+
+Here is what happens under the hood inside the OS when you use them.
+
+## The Big Secret: They Are Both Just Queues
+
+In the FreeRTOS source code (`queue.c`), semaphores and mutexes do not have their own separate code engines.
+
+Instead, FreeRTOS creates a standard `Queue`, but plays tricks with the item size and rules:
+
+* **A Semaphore** is a queue where the item size is 0 bytes. No actual data is copied; the queue only tracks how many items (tokens) are currently inside it (`uxMessagesWaiting`).
+
+* **A Mutex** is a binary semaphore (queue of length 1, item size 0) attached to an extra block of memory that tracks who owns it.
+
+## 1. What Happens Inside the OS for a Semaphore
+
+When a task calls `xSemaphoreTake()` (and the count is 0) or `xSemaphoreGive()`, here is the exact sequence of OS events:
+
+### When you Take a Semaphore (and it's empty, count = 0):
+
+1. **State Change:** The OS changes the running task’s state from `Running` to `Blocked`.
+
+2. **Task List Movement:** The OS takes the task's TCB (Task Control Block) out of the CPU's "Ready List" and inserts it into the Queue's internal Waiting-to-Receive List (sorted by task priority).
+
+3. **Yielding the CPU:** The OS immediately triggers a Context Switch (`portYIELD()`). The CPU stops running this task and switches to the next highest-priority ready task.
+
+### When you Give a Semaphore (releasing a token):
+
+1. **Count Check:** The OS increments the internal counter (`uxMessagesWaiting`).
+
+2. **Waiter Check:** The OS checks the Queue's waiting list to see if any tasks are blocked waiting for this semaphore.
+
+3. **Unblocking:** If a task is waiting, the OS removes the highest-priority task from the waiting list, moves it back to the Ready List, and updates its state to `Ready`.
+
+4. **Context Switch Decision:** If the unblocked task has a higher priority than the currently running task, the OS instantly forces a context switch so the high-priority task can run right now.
+
+## 2. What Happens Inside the OS for a Mutex
+
+A Mutex does everything a semaphore does, but adds ownership tracking and Priority Inheritance. Here is what changes inside the OS:
+
+### The Extra Data Fields:
+
+Inside the Mutex control structure, FreeRTOS tracks:
+
+* `pxMutexHolder`: A pointer to the TCB of the exact task currently holding the mutex.
+
+* `uxRecursiveCallCount`: A number tracking how many times the owner has nested its "Takes".
+
+### When Priority Inheritance Happens (The OS Magic):
+
+Imagine a Low-Priority Task (Task L) holds a Mutex, and a High-Priority Task (Task H) tries to Take it and gets blocked.
+
+1. **The Trap:** When Task H blocks, the OS looks at the Mutex and sees it is owned by Task L (`pxMutexHolder`).
+
+2. **The Comparison:** The OS compares Task H's priority with Task L's priority. It discovers: *Wait, a high-priority task is being held up by a low-priority task!* (This is the "Priority Inversion" problem).
+
+3. **The Boost:** FreeRTOS temporarily rewrites Task L's priority in its TCB to match Task H's priority.
+
+4. **The Result:** Because Task L now has high priority, the CPU scheduler immediately kicks other medium-priority tasks out of the way and lets Task L finish its critical section and release the mutex.
+
+5. **The Restore:** The exact moment Task L calls `xSemaphoreGive()`, the OS looks at the mutex, sees it's being released, and instantly restores Task L back to its original low priority.
+
+## Quick Comparison of OS Actions
+
+| **Action** | **Semaphore OS Mechanism** | **Mutex OS Mechanism** | 
+| --- | --- | --- |
+| **Data Structure** | Queue (size 0, length $N$) | Queue (size 0, length 1) + Owner TCB Pointer | 
+| **Who can release?** | Anyone (Tasks or ISRs) | Only the owner task | 
+| **Priority Handling** | None (FIFO or Priority waiting) | Priority Inheritance (boosts owner) | 
+| **ISR Safety** | Yes (FromISR API exists) | No (ISRs have no TCB to own a mutex) | 
