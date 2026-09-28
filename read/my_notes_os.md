@@ -257,3 +257,48 @@ This is where the OS "magic" you saw earlier kicks in:
 ### Summary
 
 Without **Priority Inheritance**, a medium-priority task can accidentally freeze out a high-priority task (Priority Inversion). With **Priority Inheritance**, the OS ensures the low-priority task holding the lock gets pushed to the front of the line so it can finish as fast as possible.
+
+
+To fully tie together how FreeRTOS manages tasks, memory, and synchronization, you need to understand **TCBs (Task Control Blocks)** and **Pre-emption**. They are the foundation of how the scheduler works.
+
+---
+
+### 1. What is a TCB (Task Control Block)?
+
+Think of the **TCB** as a task's **ID badge, resume, and backpack** all rolled into one. Every single task in FreeRTOS has its own TCB stored in RAM.
+
+When the OS needs to stop one task and start another, it uses the TCB to remember everything about that task. A TCB holds critical information like:
+
+* **Stack Pointer (`pxTopOfStack`):** Points to where the task left off in its private stack memory.
+* **Task State:** Is it Running, Ready, Blocked, or Suspended?
+* **Priority:** The task’s current priority level (which can change dynamically if **Priority Inheritance** happens!).
+* **Task Name:** Used for debugging.
+* **List Pointers:** Links that allow the OS to snap the TCB into "Ready Lists" or "Queue Waiting Lists."
+
+---
+
+### 2. What is Pre-emption?
+
+**Pre-emption** means the OS has the authority to **violently yank the CPU away from a running task** without asking, and give it to a different task.
+
+FreeRTOS uses a **Fixed-Priority Pre-emptive Scheduler** by default. This operates on one strict rule: **The highest-priority task that is *ready* to run must always be running.**
+
+#### How Pre-emption looks in action:
+
+1. **Task L (Low Priority)** is currently running on the CPU.
+2. Suddenly, an **Interrupt (ISR)** fires (e.g., a packet arrives on a UART port) and unblocks **Task H (High Priority)** via a semaphore or queue.
+3. Because **Task H** is now ready, its priority is higher than **Task L**.
+4. **The Pre-emption:** The OS immediately halts Task L mid-sentence, saves Task L's CPU registers to its stack, updates its TCB, loads Task H's registers from its TCB, and hands the CPU to Task H.
+5. Task L doesn't even know it was interrupted!
+
+---
+
+### 3. How TCBs and Pre-emption Connect to Semaphores/Mutexes
+
+When you put everything together, the lifecycle of a synchronization primitive relies entirely on the TCB and pre-emption:
+
+1. **Blocking:** When a task calls `xSemaphoreTake()` and it's empty, the OS grabs that task's **TCB** out of the Ready List and drops it into the Semaphore's Waiting List. The task's state changes from *Running* to *Blocked*.
+2. **Context Switching:** Because the running task is now blocked, the OS looks at the TCBs in the Ready List, picks the next best task, and executes a context switch.
+3. **The Priority Boost (Mutex):** If a High-Priority task blocks on a Mutex, the OS inspects the TCB of the Low-Priority task holding it, edits its priority field directly inside its TCB, and moves it up in the scheduling line.
+
+Everything the FreeRTOS kernel does—whether managing locks, tracking timeouts, or switching tasks—is just manipulating **TCB lists** in RAM!
