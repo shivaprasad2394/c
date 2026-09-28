@@ -768,3 +768,55 @@ Because an ISR must execute instantly, complex work cannot be done inside the IS
 * **How it works:**
 * In **FreeRTOS**, the top-half uses an API ending in `FromISR` (like `xSemaphoreGiveFromISR()`) to wake up a background task. That background task handles the heavy lifting safely.
 * In **Linux**, the kernel uses mechanisms like **Tasklets**, **Workqueues**, or **SoftIRQs** to defer heavy processing out of the critical interrupt context.
+
+You are likely referring to a **SoftIRQ** (Software Interrupt)—a core bottom-half mechanism used heavily in operating systems like Linux to handle high-frequency deferred work, especially networking!
+
+---
+
+### 1. What is a SoftIRQ?
+
+Remember how a **Top-Half (Hardware ISR)** must be lightning-fast because it pauses the CPU? If a network card receives 10,000 packets a second, the top-half can't process them all right there; it would freeze the system.
+
+Instead, the top-half grabs the data, and says: *"Hey kernel, I got work to do, schedule a **SoftIRQ** to handle it soon."*
+
+SoftIRQs are statically defined at compile time and are designed for high-performance, time-sensitive deferred tasks like **networking packet reception (`NET_RX`)**, transmission (`NET_TX`), and block device I/O.
+
+---
+
+### 2. How a SoftIRQ Happens (Step-by-Step Flow)
+
+Here is the exact lifecycle of how a SoftIRQ is triggered and executed:
+
+#### Step A: The Top-Half Raises the SoftIRQ
+
+1. A hardware event occurs (e.g., a packet arrives at the Ethernet/Wi-Fi controller).
+2. The **Hardware ISR (Top-Half)** runs immediately. It acknowledges the hardware, pulls the packet out of the hardware buffer, and saves it.
+3. Because parsing the packet takes time, the top-half **"raises"** a SoftIRQ by setting a bit in a pending mask register:
+```c
+// Inside the hardware ISR
+raise_softirq(NET_RX_SOFTIRQ);
+
+```
+
+
+4. The Hardware ISR exits instantly.
+
+#### Step B: The Kernel Checks for Pending SoftIRQs
+
+The operating system kernel regularly checks if any SoftIRQs have been "raised." It checks at two main moments:
+
+1. **Immediately upon exiting a hardware interrupt (`irq_exit()`):** This is the most common way. Right before the CPU goes back to what it was doing, it checks: *"Did any SoftIRQ get flagged during that interrupt?"* If yes, it runs them right then and there.
+2. **Via the `ksoftirqd` Kernel Thread:** If too many SoftIRQs are flooding the system and taking too long, a dedicated background kernel thread named `ksoftirqd` wakes up to process them so they don't starve user-space tasks.
+
+#### Step C: Execution in SoftIRQ Context
+
+When the kernel decides to run the SoftIRQ, it executes the registered handler function (for example, the network stack's packet processing function).
+
+* **Crucial Rule:** Unlike Hardware ISRs (Top-Halves) which often run with interrupts disabled, **SoftIRQs run with hardware interrupts enabled**. This means while the CPU is processing network packets in a SoftIRQ, a *new* hardware interrupt can still break in if it needs to!
+
+---
+
+### 3. Summary: Why use a SoftIRQ?
+
+* **Top-Half:** Acknowledges hardware in microseconds (minimal work).
+* **SoftIRQ:** Handles heavy lifting (like parsing TCP/IP packets or handling block storage) right after the hardware interrupt finishes, but safely *outside* the critical interrupt restriction zone.
