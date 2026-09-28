@@ -263,6 +263,53 @@ To fully tie together how FreeRTOS manages tasks, memory, and synchronization, y
 
 ---
 
+It is very easy to confuse **Context Switch** and **Pre-emption** because they often happen at the exact same time, but they mean two completely different things in an operating system.
+
+Here is the easiest way to tell them apart:
+
+* **Pre-emption** is the **policy** (*"Who gets to run next and when?"*).
+* **Context Switch** is the **mechanism** (*"How do we actually swap the tasks out in hardware?"*).
+
+---
+
+### 1. Pre-emption (The Policy)
+
+Pre-emption is when the OS forcibly stops a running task **against its will** because a higher-priority task is ready to run.
+
+* **It’s a decision.** The scheduler looks at priorities and says, *"Stop what you're doing, Task L, Task H needs the CPU right now."*
+* **Can you have pre-emption without a context switch?** No. If the OS decides to pre-empt a task, it *must* perform a context switch to swap it out.
+
+*(Note: FreeRTOS also supports **Cooperative Scheduling** where tasks voluntarily give up the CPU using `taskYIELD()`. In that case, a context switch happens, but it is **not** pre-emption because the task chose to step down).*
+
+### 2. Context Switch (The Mechanism)
+
+A context switch is the actual **heavy lifting** the CPU and OS do to swap Task A for Task B in memory and hardware registers.
+
+When a context switch happens, the OS does this exact sequence:
+
+1. **Save Context:** It takes all the CPU registers (Program Counter, Stack Pointer, general-purpose registers) of the *current* task and saves them onto that task's private stack (its TCB).
+2. **Switch TCBs:** It updates its internal tracking to point to the new task.
+3. **Restore Context:** It loads up the saved CPU registers of the *incoming* task from that task's stack.
+4. **Jump:** The CPU jumps to the new task's instructions and resumes execution.
+
+---
+
+### Quick Comparison Table
+
+| Feature | Pre-emption | Context Switch |
+| --- | --- | --- |
+| **What is it?** | A **scheduling rule** (forcing a task out for a higher-priority one). | A **hardware/software action** (saving and loading CPU registers). |
+| **Who triggers it?** | The Scheduler (based on priorities and interrupts/timers). | The OS kernel (whenever any task transition happens). |
+| **Always required?** | No (you can yield voluntarily). | Yes (every single time the CPU switches tasks). |
+
+### Summary Analogy
+
+Imagine a busy restaurant kitchen:
+
+* **Pre-emption** is the Head Chef walking up to a line cook and saying: *"Drop that garnish, an VIP order just came in, step aside!"* (The decision to change tasks).
+* **The Context Switch** is the line cook quickly clearing their cutting board, putting their tools away, and the next cook stepping up to the exact same board with *their* tools.
+
+
 ### 1. What is a TCB (Task Control Block)?
 
 Think of the **TCB** as a task's **ID badge, resume, and backpack** all rolled into one. Every single task in FreeRTOS has its own TCB stored in RAM.
