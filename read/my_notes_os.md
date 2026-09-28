@@ -820,3 +820,54 @@ When the kernel decides to run the SoftIRQ, it executes the registered handler f
 
 * **Top-Half:** Acknowledges hardware in microseconds (minimal work).
 * **SoftIRQ:** Handles heavy lifting (like parsing TCP/IP packets or handling block storage) right after the hardware interrupt finishes, but safely *outside* the critical interrupt restriction zone.
+
+
+**Shared Memory IPC** (Inter-Process Communication) is the fastest, most raw way for two different tasks or processors to talk to each other, but it is also the most dangerous if you don't handle it right.
+
+Here is everything you need to know about it under the hood, especially how it fits into RTOS and embedded systems:
+
+---
+
+### 1. What is Shared Memory?
+
+Normally, operating systems isolate tasks so they can't mess with each other's memory. Task A has its own memory space, and Task B has its own.
+
+With **Shared Memory**, the OS carves out a specific block of RAM and maps it into the address space of **both** tasks.
+
+* **The Magic:** Both Task A and Task B are looking at the *exact same physical bytes in RAM*.
+* **Zero-Copy:** If Task A writes a massive chunk of data (like a camera frame or a network packet) into that memory, Task B can read it instantly. There is no copying of data from buffer to buffer; it's already there.
+
+---
+
+### 2. The Golden Rule: The Danger of Race Conditions
+
+Because there is no middleman copying the data, shared memory has a massive catch: **Race Conditions**.
+
+Imagine Task A is writing a packet of data into the shared memory, and halfway through writing it, a pre-emption happens. Task B jumps in and starts *reading* that memory.
+
+* Task B gets half old data and half new data (**Data Corruption**).
+
+---
+
+### 3. How to Protect Shared Memory (The Solution)
+
+You can *never* use raw shared memory without a synchronization wrapper. To make it safe, you must combine it with the primitives we discussed earlier:
+
+1. **Mutexes / Critical Sections:** To ensure only *one* task is writing to or reading from the shared memory block at a time.
+2. **Semaphores / Event Flags:** Task A writes the data, finishes, and then *gives* a semaphore. Task B is blocked waiting on that semaphore. Once it wakes up, it knows the data in the shared memory is fresh and safe to read.
+
+---
+
+### 4. Shared Memory in Modern Embedded Systems (Multi-Core & AMP)
+
+In modern microcontrollers (like dual-core ARM Cortex-M or heterogeneous chips running Linux on Core 0 and FreeRTOS on Core 1), shared memory is used for **Inter-Processor Communication (IPC)**:
+
+* A dedicated chunk of physical SRAM is carved out in the linker script as a "Shared Memory Region."
+* Core 0 writes data there, triggers a hardware mailbox interrupt to Core 1.
+* Core 1 wakes up via an ISR and reads the shared memory block instantly. (This is the backbone of frameworks like **OpenAMP** and **RPMsg**).
+
+### Summary
+
+* **What it is:** A raw block of RAM shared directly between tasks or processors ("Zero-Copy").
+* **Why use it:** Maximum speed for large data transfers.
+* **The Catch:** It requires strict protection using **Mutexes and Semaphores**, otherwise race conditions will silently corrupt your data.
