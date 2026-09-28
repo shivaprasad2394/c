@@ -28,6 +28,33 @@ Imagine a parking lot with **3 parking spaces**:
 
 ---
 
+In a **Semaphore**, **the same task (or an ISR) can both take (lock) and give (release) it**, just like a mutex.
+
+The real difference in how they handle "giving" isn't about *who* does it—it's about **ownership rules** and **intent**:
+
+### 1. The Semaphore Signaling Pattern (Producer-Consumer)
+
+When a semaphore is used for **synchronization** (signaling), one task usually *waits* for an event, and *another* task or interrupt *causes* the event.
+
+* **Task A (The Worker)** calls `xSemaphoreTake()` and goes to sleep, waiting for data.
+* **Task B (or an ISR) (The Producer)** gets new data, and calls `xSemaphoreGive()` to wake Task A up.
+* *Here, Task B is giving the semaphore that Task A took.* **This is valid.**
+
+### 2. Can a Task take a semaphore and another task release it?
+
+**Technically yes, the OS will allow it.** Because semaphores have no concept of "ownership" (`pxMutexHolder`), FreeRTOS doesn't check who took the semaphore when someone calls `xSemaphoreGive()`.
+
+However, using it this way as a general locking mechanism is considered **bad practice** because:
+
+* It breaks code clarity (it's hard to debug who is unlocking what).
+* It lacks **Priority Inheritance**, meaning if a low-priority task takes a semaphore and gets preempted, you risk priority inversion bugs.
+
+### The Golden Rule to Remember
+
+* **Semaphore:** Used for **Signaling / Coordination** (Task A tells Task B: *"Hey, the data is ready"*). Any task or ISR can give it.
+* **Mutex:** Used for **Mutual Exclusion / Locking** (Task A tells everyone else: *"I am using this resource, nobody else touch it"*). Only the task that locked it is allowed to unlock it.
+
+
 ### Summary
 
 * **Binary Semaphore (Count = 1):** Used for simple signaling ("The event happened").
