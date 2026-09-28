@@ -615,6 +615,72 @@ If the UART isn't just used for plain text logs, but is actually connected to an
 4. **Driver** maps memory, turns on clocks, configures pins, hooks up the IRQ, and registers a serial port (`/dev/ttyS...`).
 
 
+The boot sequence of an embedded system or computer is split cleanly into three distinct phases: **Pre-Kernel**, **Kernel**, and **Post-Kernel**.
+
+Here is exactly when each phase happens and what responsibilities belong to it.
+
+---
+
+### Phase 1: Pre-Kernel (The Bootloader & Hardware Bring-Up)
+
+* **When it happens:** The exact microsecond power is applied to the chip, right up until the operating system kernel is loaded into RAM and execution is handed over to it.
+* **Who is in charge:** ROM code (hardcoded inside the silicon by the manufacturer) and secondary bootloaders (like U-Boot, SPL, or UEFI).
+
+**What happens here:**
+
+1. **The Reset Vector:** The CPU boots up, reads the initial Main Stack Pointer (MSP) value from address `0x00000000`, and jumps to the Reset Handler.
+2. **Low-Level Hardware Init:** The bootloader sets up basic system clocks, configures the memory controller, and initializes external **DRAM** (RAM must be initialized before the kernel can be copied into it).
+3. **Loading the Payload:** The bootloader reads the storage media (Flash, eMMC, SD card) to find the Kernel image and the **Device Tree Blob (DTB)**, copying both into RAM.
+4. **Handover:** The bootloader prepares the CPU registers (passing pointers to the DTB) and executes a jump instruction to the kernel's entry point. **The pre-kernel phase ends here.**
+
+---
+
+### Phase 2: Kernel Initialization (The OS Core Boot)
+
+* **When it happens:** From the moment the CPU jumps into the kernel code until the OS scheduler starts running or the first user-space application/task is spawned.
+* **Who is in charge:** The OS Kernel (Linux kernel, FreeRTOS kernel core, etc.).
+
+**What happens here:**
+
+1. **Parsing the Device Tree (DTB):** The kernel reads the hardware map passed from the pre-kernel phase to learn what hardware exists (e.g., memory layout, UART addresses, pin controllers).
+2. **Subsystem Setup:** The kernel initializes its core internal machinery:
+* Memory management and paging.
+* Interrupt exception vectors.
+* The scheduler (preparing task lists and TCBs).
+
+
+3. **Driver Probing:** The kernel iterates through its compiled drivers and calls their **`probe()` functions** (like matching our UART DTS node, mapping its memory, registering IRQs, and setting up `/dev/ttyS0`).
+4. **Mounting Storage & Filesystem:** The kernel mounts the root filesystem (RootFS) from flash or network.
+5. **Spawning the First Task:**
+* In **Linux**, the kernel executes the final setup and launches **PID 1 (`init` or `systemd`)** in user-space.
+* In an **RTOS (like FreeRTOS)**, this is when you call `vTaskStartScheduler()`, and the first created tasks begin executing. **The kernel initialization phase ends here.**
+
+
+
+---
+
+### Phase 3: Post-Kernel (User-Space & Application Layer)
+
+* **When it happens:** Everything that occurs *after* the OS kernel is fully running and has handed control over to user-space applications or system services.
+* **Who is in charge:** User-space daemons, network managers, initialization scripts, and your custom application code.
+
+**What happens here:**
+
+1. **System Initialization Scripts:** User-space managers (like `systemd` or custom RTOS init tasks) start executing configuration scripts.
+2. **Network & Device Bring-Up:** Services configure network interfaces (bringing up `wlan0` or `eth0`, running DHCP clients, setting up IP addresses).
+3. **Firmware Uploads:** Background processes or drivers push firmware binaries (`.bin`) and NVRAM settings over buses (like SDIO/UART) to wake up external peripherals.
+4. **Application Execution:** Your main software application starts running, opening sockets, listening for data, and executing business logic.
+
+---
+
+### Summary Checklist
+
+* **Pre-Kernel:** ROM & Bootloader turn on RAM, load files, and jump.
+* **Kernel:** OS boots, parses DTB, runs driver `probe()` functions, and starts the scheduler.
+* **Post-Kernel:** User space wakes up, configures networks (`wlan0`), and runs applications.
+
+
+
 An **ISR (Interrupt Service Routine)**—often called an **Interrupt Handler**—is a special block of code that the CPU executes automatically when a hardware event or urgent signal occurs.
 
 ---
