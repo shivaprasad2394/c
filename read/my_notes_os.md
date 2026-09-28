@@ -349,3 +349,111 @@ When you put everything together, the lifecycle of a synchronization primitive r
 3. **The Priority Boost (Mutex):** If a High-Priority task blocks on a Mutex, the OS inspects the TCB of the Low-Priority task holding it, edits its priority field directly inside its TCB, and moves it up in the scheduling line.
 
 Everything the FreeRTOS kernel does—whether managing locks, tracking timeouts, or switching tasks—is just manipulating **TCB lists** in RAM!
+
+Here is the breakdown of these four core embedded systems and FreeRTOS concepts. These are the exact mechanics of how systems stay stable, diagnose failures, and print logs when things go wrong.
+
+---
+
+### 1. What is PSP and MSP? (ARM Cortex-M Architecture)
+
+ARM Cortex-M processors provide **two stack pointers**, but only one is active at any given moment. This separation is what allows an operating system like FreeRTOS to safely isolate tasks from the kernel.
+
+* **MSP (Main Stack Pointer):**
+* This is the default stack pointer after the CPU boots up.
+* It is used exclusively by the **OS Kernel, exception handlers, and Interrupt Service Routines (ISRs)**.
+* It uses a dedicated block of RAM allocated in your linker script as the main system stack.
+
+
+* **PSP (Process Stack Pointer):**
+* This is used by **regular user tasks/threads**.
+* When FreeRTOS performs a context switch to run a task, it loads that task's private stack address into the PSP.
+* Every task in FreeRTOS has its own chunk of stack memory managed via its TCB, tracked by the PSP.
+
+
+
+> **Why two stacks?** If a task crashes or overflows its stack, it corrupts *its own* PSP stack. Because the OS kernel runs on the MSP, the kernel remains safe, stable, and able to log the error rather than crashing the entire chip instantly.
+
+---
+
+### 2. How Hard Faults are Handled and Logged
+
+A **Hard Fault** is the CPU's ultimate panic button. It triggers when something illegal happens, such as a null-pointer dereference, an invalid memory address access, or executing bad instructions.
+
+#### How it works under the hood:
+
+1. **The Trap:** The hardware instantly suspends execution and vectors to the `HardFault_Handler` assembly routine.
+2. **Register Stacking:** Before jumping, the CPU automatically pushes critical registers (`R0-R3, R12, LR, PC, xPSR`) onto the active stack (PSP or MSP). These registers contain the exact address of the instruction that caused the crash (`PC`).
+3. **The Handler & Fault Status Registers:** Inside the handler, software reads ARM's internal **Fault Status Registers** (like CFSR - Configurable Fault Status Register) to decode the exact cause (e.g., Bus Fault, Memory Management Fault, Usage Fault).
+4. **The Log Trace:** A robust firmware writes a crash logger. It extracts the stacked PC, LR, and fault registers, formats them into a readable string, and flushes it out via UART or saves it to flash memory before resetting:
+```text
+[CRASH] Hard Fault Detected!
+- PC (Program Counter): 0x08003F4A (Where it crashed)
+- LR (Link Register): 0x0800128C (Who called it)
+- CFSR: 0x00020000 (Precise cause code)
+
+```
+
+
+
+---
+
+### 3. How Malloc & Stack Overflow are Handled and Logged
+
+Embedded systems run out of memory or stack space frequently if not managed well. FreeRTOS provides built-in hooks to catch these before they cause silent, unpredictable bugs.
+
+#### A. Malloc Failure (`pvPortMalloc()`)
+
+* **The Problem:** When FreeRTOS or your code tries to create a task, queue, or semaphore, it dynamically allocates RAM using `pvPortMalloc()`. If the heap is full, it returns `NULL`.
+* **How it's handled:** FreeRTOS provides a hook function named `vApplicationMallocFailedHook()`.
+* **The Log:** If a malloc fails, FreeRTOS immediately jumps into this hook. Developers write code here to print a log:
+```c
+void vApplicationMallocFailedHook(void) {
+    printf("[ERROR] FreeRTOS Malloc Failed! Heap exhausted.\n");
+    taskDISABLE_INTERRUPTS();
+    for(;;); // Trap for debugging
+}
+
+```
+
+
+
+#### B. Stack Overflow
+
+* **The Problem:** A task uses too many local variables or deep function recursion, overflowing its allocated stack size in its TCB and overwriting adjacent memory.
+* **How it's handled:** By enabling `configCHECK_FOR_STACK_OVERFLOW` (Level 1 or 2) in `FreeRTOSConfig.h`, the OS checks if the stack pointer has crossed safety boundaries during every context switch.
+* **The Log:** FreeRTOS triggers the `vApplicationStackOverflowHook()`, passing the task handle and its name:
+```c
+void vApplicationStackOverflowHook(TaskHandle_t xTask, char *pcTaskName) {
+    printf("[FATAL] Stack overflow detected in task: %s\n", pcTaskName);
+    // Log stack usage and trigger system reset
+    NVIC_SystemReset();
+}
+
+```
+
+
+
+---
+
+### 4. How Assert is Handled and Logged
+
+An `assert` is a developer safety net used to check assumptions during runtime (e.g., *"Make sure this pointer is never null before using it"*).
+
+#### How it works:
+
+1. **The Macro (`configASSERT`):** In FreeRTOS and modern embedded code, `configASSERT(x)` evaluates a condition `x`.
+2. **The Failure Trap:** If `x` evaluates to `false` (0), the code triggers the assertion failure routine.
+3. **The Log Trace:** A well-written assert macro captures the exact file name and line number where the code failed using standard C preprocessor macros (`__FILE__` and `__LINE__`):
+```c
+#define configASSERT(x) \
+    if ((x) == 0) { \
+        printf("[ASSERT FAILED] File: %s, Line: %d\n", __FILE__, __LINE__); \
+        taskDISABLE_INTERRUPTS(); \
+        for(;;); \
+    }
+
+```
+
+
+
+If a parameter passed to a FreeRTOS function is invalid, the OS hits `configASSERT`, prints out the exact source file and line number in your project, and halts, making debugging instantaneous.
